@@ -1,0 +1,26 @@
+# Weekly process signal: handover artifact completeness (not individual blame).
+name: Process health report
+
+on:
+  schedule:
+    - cron: "0 7 * * 1"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate report
+        run: |
+          python3 02_build/scripts/process_health_report.py --window-days 14 \
+            | tee process-health.md
+          {
+            echo "## Process health (auto)"
+            echo ""
+            cat process-health.md
+          } >> "${GITHUB_STEP_SUMMARY}"

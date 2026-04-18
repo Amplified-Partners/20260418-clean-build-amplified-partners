@@ -1,0 +1,144 @@
+============================================================
+CIS BENCHMARKS SUMMARY - Key Security Recommendations
+============================================================
+Extracted 2026-04-14 from PDF using pymupdf
+
+============================================================
+1) CIS GitHub Benchmark v1.2.0 (2026-02-18)
+============================================================
+A comprehensive 232-page benchmark covering the entire software
+supply chain on GitHub. 5 major sections, ~100+ recommendations.
+
+MAJOR SECTIONS:
+  1. Source Code
+  2. Build Pipelines
+  3. Dependencies
+  4. Artifacts
+  5. Deployment
+
+TOP SECURITY RECOMMENDATIONS BY CATEGORY:
+
+--- 1. SOURCE CODE - Code Changes (Branch Protection) ---
+- 1.1.3  Require approval of two strongly authenticated users for code changes
+- 1.1.4  Dismiss previous approvals when updates are introduced to a PR
+- 1.1.5  Restrict who can dismiss code change reviews
+- 1.1.6  Set code owners for sensitive code/configuration
+- 1.1.9  Require all checks to pass before merging
+- 1.1.12 Require signed commits verification before merging
+- 1.1.14 Enforce branch protection rules for administrators
+- 1.1.16 Deny force push to branches
+- 1.1.17 Deny branch deletions
+- 1.1.18 Automatically scan code merges for risks
+- 1.1.20 Enforce branch protection on default branch
+
+--- 1. SOURCE CODE - Repository Management ---
+- 1.2.1  All public repos must contain a SECURITY.md file
+- 1.2.2  Limit repository creation to specific members
+- 1.2.3  Limit repository deletion to specific users
+- 1.2.5  Track and account for all forks
+
+--- 1. SOURCE CODE - Access & Authentication ---
+- 1.3.1  Review and remove inactive users periodically
+- 1.3.3  Set minimum number of org administrators
+- 1.3.4  Require MFA for contributors of new code
+- 1.3.5  Require all org members to use MFA
+- 1.3.7  Set two administrators for each repository
+- 1.3.8  Set strict base permissions for repositories
+- 1.3.12 Limit Git access based on IP addresses
+
+--- 1. SOURCE CODE - Third-Party Applications ---
+- 1.4.1  Require admin approval for every installed application
+- 1.4.3  Limit application access to least privilege
+- 1.4.4  Use only secured webhooks
+
+--- 1. SOURCE CODE - Code Scanning ---
+- 1.5.1  Scan for sensitive data (secrets) in code
+- 1.5.2  Scan CI pipeline instructions for security
+- 1.5.3  Scan Infrastructure as Code (IaC) for security
+- 1.5.4  Scan for code vulnerabilities
+- 1.5.5  Scan for open-source vulnerabilities in packages
+
+--- 2. BUILD PIPELINES ---
+- 2.1.2  Make pipeline infrastructure and configuration immutable
+- 2.1.5  Limit access to build environments
+- 2.1.7  Limit build secrets to minimal necessary scope
+- 2.1.9  Do not use default passwords
+- 2.2.1  Use single-use build workers
+- 2.2.4  Ensure build workers have minimal network connectivity
+- 2.3.1  Define all build steps as code
+- 2.3.4  Track and review changes to pipeline files
+- 2.4.1  Sign all artifacts on all releases
+- 2.4.2  Lock all external dependencies used in build process
+- 2.4.5  Produce a Software Bill of Materials (SBOM)
+
+--- 3. DEPENDENCIES ---
+- 3.1.1  Verify third-party artifacts and open-source libraries
+- 3.1.2  Require SBOM from all third-party suppliers
+- 3.1.5  Define and prioritize trusted package managers/repos
+- 3.1.7  Pin dependencies to specific, verified versions
+- 3.1.8  Only use packages more than 60 days old
+- 3.2.2  Auto-scan packages for known vulnerabilities
+
+--- 4. ARTIFACTS ---
+- 4.1.1  Sign all artifacts by the build pipeline itself
+- 4.1.2  Encrypt artifacts before distribution
+- 4.2.3  Require MFA for package registry access
+- 4.2.5  Revoke anonymous access to artifacts
+
+--- 5. DEPLOYMENT ---
+- 5.1.1  Separate deployment config from source code
+- 5.1.3  Scan for sensitive data in deployment configuration
+- 5.2.1  Automate deployments
+- 5.2.3  Limit access to production environment
+- 5.2.4  Do not use default passwords
+
+============================================================
+2) CIS Visual Studio Code GPO Benchmark v1.0.0 (2025-09-25)
+============================================================
+A focused 32-page benchmark for securing VS Code via Group
+Policy Objects (GPOs). Tested against VS Code v1.104 on
+Windows Server 2025. Only 6 recommendations total.
+
+ALL RECOMMENDATIONS (6 total):
+
+Level 1 (Baseline - apply to all orgs):
+  1.1.2 Disable ChatToolsAutoApprove
+    - Prevents auto-approval of agent mode chat tools
+    - Stops inadvertent disclosure of sensitive data to
+      third-party servers or unexpected file modifications
+    - Registry: HKLM\SOFTWARE\Policies\Microsoft\VSCode:ChatToolsAutoApprove = 0
+
+  1.3.2 Set TelemetryLevel to "off"
+    - Disables telemetry to Microsoft and extension developers
+    - Prevents sensitive data exposure
+    - Default sends crash reports, usage data, and error telemetry
+    - Registry: HKLM\SOFTWARE\Policies\Microsoft\VSCode:TelemetryLevel = "off"
+
+  1.4.1 Enable Automatic Update Checks
+    - Ensures VS Code checks for and applies security patches
+    - Registry: HKLM\SOFTWARE\Policies\Microsoft\VSCode:UpdateMode = "default"
+
+Level 2 (Higher security environments):
+  1.1.1 Disable ChatMCP (Model Context Protocol)
+    - Blocks integration with third-party MCP servers
+    - Prevents unintended information disclosure
+    - Registry: HKLM\SOFTWARE\Policies\Microsoft\VSCode:ChatMCP = 0
+
+  1.2.1 Configure AllowedExtensions allowlist
+    - Restrict which extensions users can install
+    - Prevents malware installation and data leakage
+    - Registry: HKLM\SOFTWARE\Policies\Microsoft\VSCode:AllowedExtensions = JSON
+
+  1.3.1 Disable EnableFeedback
+    - Disables the issue reporter and surveys
+    - Prevents inadvertent disclosure of system configuration info
+    - Registry: HKLM\SOFTWARE\Policies\Microsoft\VSCode:EnableFeedback = 0
+
+GPO TEMPLATE: VScode.admx (found in VS Code installation
+directory under the "policies" folder)
+GP PATH PREFIX: Computer Configuration\Policies\Administrative
+Templates\Visual Studio Code\
+
+============================================================
+END OF SUMMARY
+============================================================
