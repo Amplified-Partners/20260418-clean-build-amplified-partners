@@ -1,6 +1,8 @@
 <!--
 Reviewer: see AGENTS.md § "PR reviewers" for what to flag vs. ignore.
 Author: tick only what applies. Keep answers short.
+
+Authored by Devon (Devin session 4cc8b0d727684f94a8f055853099d8e6), 2026-04-23.
 -->
 
 ## What changed

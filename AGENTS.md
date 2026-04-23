@@ -65,7 +65,7 @@ This section is the **single source of truth** for "where do I start?" Other fil
 - `03_shadow/`: experiments, wrap-ups, Kaizen probes — never authoritative by default.
 - `90_archive/`: reference and provenance — not current authority. Do not treat archive copies as "what we do now"; do not rewrite audit/history snapshots. New drops follow `00_authority/PARTNER_TRANSFER_INSTRUCTIONS.md` + `90_archive/README.md`.
 
-Do not dump raw research into this workspace. Raw research lands in `Amplified-Partners/corpus-raw` and is promoted in small, cited nuggets.
+Do not dump raw research into this workspace. Raw research lands in `Amplified-Partners/corpus-raw` (<https://github.com/Amplified-Partners/corpus-raw>, private, created 2026-04-23) and is promoted in small, cited nuggets.
 
 ## PR reviewers (Devin Review, Codex, Copilot, human) — what to flag
 
