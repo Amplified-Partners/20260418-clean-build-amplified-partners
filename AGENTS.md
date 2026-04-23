@@ -1,5 +1,5 @@
 ---
-description: 
+description:
 alwaysApply: true
 ---
 
@@ -9,39 +9,12 @@ alwaysApply: true
 
 ## Goal
 
-We are building **Amplified Partners**: an AI system that gives small business owners their own data so they can make better decisions. Privacy by architecture. Blameless culture. No redundancies in year one. The business is theirs — we reduce friction, we do not change it.
+We are building **Amplified Partners**: an AI system that gives small business owners their own data so they can make better decisions. Privacy by architecture. Blameless culture. The business is theirs — we reduce friction, we do not change it.
 
-We are also demonstrating something larger: that AI and humans work better together than either works alone. Every good outcome here is evidence of that. Every failure handled honestly and learned from is evidence of that. This is advocacy by doing.
+## Audience
 
-## Audience (absolute)
-
-- **Primary and default reader:** agents. **All** partner instructions here are
-  **operands** (routing, constraints, permissions) — not a parallel human manual.
-- **Do not add** “human-facing” duplicate sections, warm-up prose, or second entry
-  paths for people. Findability for rare human audit uses **paths and filenames**
-  only (`YYYY-MM-DD_…`, folder role, manifest index).
-- **Operator-named blocks** below are **upstream signals for agents** (how to
-  parse live input and when to stop) — not copy the operator is expected to work
-  from day to day.
-
-## Outcome we’re optimising for
-
-**Clarity with autonomy so production stays safe:** agents should know **what they
-may do**, **what they must not do**, **what to do when stuck**, and **how this
-turn connects to value** — without drowning in noise or conflicting “law.”
-
-**Upstream operator signal (Ewan — agents only):** decades running real businesses
-and systems — judgment under operational constraints, not a software-career
-identity. In live conversation the operator often **asks questions and thinks
-aloud** more than issuing **diktats**. **Diktats** (routing, stops,
-non-negotiables) live in **committed** rules (`00_authority/`,
-`01_truth/processes/`, manifest). **Partners** translate exploratory speech into
-**runnable intent**; when a turn is ambiguous, **one minimal clarifying question**
-beats inferring authority that was not granted.
-
-**Three pillars (how this repo helps):** **foundations** right (authority +
-manifest), **constraints** right (tokens, modes, ladder, file budget), **permissions**
-right (truth/world → Ewan; hooks/testing gate — see `00_authority/MANIFEST.md`).
+- **Primary reader: agents.** These instructions are **operands** (routing, constraints, permissions) — not a human manual. No duplicate human-facing sections.
+- **Operator (Ewan) signal:** decades of operational judgment, non-coder, thinks aloud in live chat. Diktats live in committed rules (`00_authority/`, `01_truth/processes/`, manifest). Partners translate exploratory speech into runnable intent. When ambiguous: one minimal clarifying question beats inferring authority that was not granted.
 
 ## Absolute
 
@@ -49,73 +22,38 @@ right (truth/world → Ewan; hooks/testing gate — see `00_authority/MANIFEST.m
 
 This is the accountability boundary for irreversible truth/world commitments. Canonical expansion: `00_authority/PRINCIPLES.md`.
 
-## Agent session (clean-build) — first 60 seconds
+## Agent session — first 60 seconds
 
-**Canonical entry:** this section is the **single source of truth** for “where do
-I start?” Other files (`README.md`, `00_authority/README.md`) **point here** — they
-do not replace this order.
+This section is the **single source of truth** for "where do I start?" Other files point here; they do not replace this order.
 
-1. Read in order: `00_authority/NORTH_STAR.md` → `00_authority/MANIFEST.md` →
-   `00_authority/PROJECT_INTENT.md` and `00_authority/PRINCIPLES.md` →
-   `00_authority/SIGNATURES.md` (every AI signs committed work) →
-   `01_truth/README.md` (routing for processes / schemas / interfaces).
-2. **Bounded autonomy:** default **Act** inside the frame when impact is reversible
-   or confidence is high and contained — **ingenuity** belongs there (simpler design,
-   clearer names, fewer moving parts). **Surface** when the work is significant or
-   irreversible but you can own it. **Park** only after the full problem-solving
-   ladder when you cannot own the decision.
-3. **Mistakes:** honest errors are **signal**, not shame — capture them in the
-   wrap-up / escalation path per `01_truth/processes/2026-04_job-wrapup_and_escalation-note_sop_v1.md`
-   so the next run improves.
+1. Read in order: `00_authority/NORTH_STAR.md` → `00_authority/MANIFEST.md` → `00_authority/PROJECT_INTENT.md` + `00_authority/PRINCIPLES.md` → `00_authority/SIGNATURES.md` (every AI signs committed work) → `01_truth/README.md` (routing).
+2. **Bounded autonomy.** Default **Act** inside the frame when impact is reversible or confidence is high and contained — ingenuity belongs there. **Surface** when significant or irreversible but you can own it. **Park** only after the full problem-solving ladder when you cannot own the decision.
+3. **Mistakes are signal, not shame.** Capture honest errors in the wrap-up / escalation path per `01_truth/processes/2026-04_job-wrapup_and_escalation-note_sop_v1.md`.
 
 ## How to operate — three modes
 
-Choose the mode that fits the action. **Default to Act.**
+**Default to Act.** Stopping when you can act is a process failure. Continuing when you cannot own the decision is also a process failure.
 
 | Mode | When | What |
 |------|------|------|
 | **Act** | Reversible, or high confidence + contained impact | Do it. Document at session end. No permission needed. |
-| **Surface** | Significant or irreversible, high confidence | Do it. Add a pointer to `00_authority/DECISION_LOG.md` before closing. Act, then leave a visible record. |
-| **Park** | Stuck after the full problem-solving ladder | Send to Qwen. End the session cleanly. Restart is guaranteed. |
+| **Surface** | Significant or irreversible, high confidence | Do it. Add a pointer to `00_authority/DECISION_LOG.md` before closing. |
+| **Park** | Stuck after the full problem-solving ladder | Send to Qwen with full context. End the session cleanly. |
 
-Surface is not a pause — it is action with transparency. The goal is forward motion, not permission-seeking. Stopping when you can act is a process failure. Continuing when you cannot own the decision is also a process failure.
-
-## Problem-solving ladder (apply in order, do not skip)
+## Problem-solving ladder (apply in order)
 
 1. **Attempt.** Act on your best judgment.
-2. **Attempt again.** Two failures without resolution = quorum reached. Do not attempt a third time without new information.
-3. **Research.** One targeted internet search on the specific blocker. Not general exploration — the exact problem. Apply the result.
-4. **Solved → continue.** Document the solution in the wrap-up AND signal Qwen. Both. The path widens for all future agents.
-5. **Still stuck → park to Qwen.** Full context: attempts made, research findings, specific blocker. If Qwen can answer quickly, wait and continue. If not quick, park cleanly and end the session.
-
-**Parked process behaviour:**
-- Write escalation note with `status: parked` (YAML frontmatter, machine-readable, full context)
-- Write the stateless handover
-- End the session
-- Qwen holds the problem. Known solution: Qwen resolves and triggers new agent automatically. Novel decision: Qwen routes to Ewan, Ewan decides, Qwen triggers new agent. Nothing is lost. No human needs to remember to restart.
-
-## How this system learns
-
-**No action is silent.** Every meaningful action generates two things: an agent record (the wrap-up) and a signal to Qwen. Both, always. One without the other creates drift between what was recorded and what the collective intelligence knows.
-
-The system learns from brilliance and from flaws equally. Flaws are not failures to suppress — they are negative signals that prune bad paths for every future agent. Brilliance is positive signal that widens good paths. Hold decisions internally during the session. At session end, document proportionally:
-
-- Light decision → one bullet
-- Significant decision → positive signal (what worked) + negative signal (what the problem was, what not to repeat)
-- Accuracy is non-negotiable. An inaccurate record is worse than none.
-
-**Session start:** state which previous wrap-up you are resuming from, or "fresh start." Check for `status: parked` escalation notes before beginning new work in a lane.
-
-**End meaningful work** with a handover packet in `03_shadow/job-wrapups/`. Full spec: `.cursor/rules/stateless-handover-kaizen.mdc` and `01_truth/processes/2026-04_job-wrapup_and_escalation-note_sop_v1.md`.
-
-**Stateless handover test:** (1) can the next agent resume at full speed without re-deriving anything? (2) would the system catch this class of problem automatically next time?
+2. **Attempt again.** Two failures without resolution = quorum reached. No third attempt without new information.
+3. **Research.** One targeted search on the specific blocker. Apply the result.
+4. **Solved → continue.** Document the solution in the wrap-up and signal Qwen.
+5. **Still stuck → park to Qwen.** Escalation note with `status: parked` (YAML frontmatter, machine-readable), stateless handover, end session. Qwen holds the problem; nothing is lost.
 
 ## Authority + routing
 
-- **Truth or outside world → Ewan**: anything that changes what may be treated as true, or what is owed to the outside world (privacy, client commitments, irreversible risk).
-- **Cleanliness inside the frame → partners**: local fixes, congruence fixes, improvements that cannot plausibly change truth/world boundaries.
-- **Known problem → Qwen**: collective KB, previous solutions, blocked processes.
-- **Novel decision → Qwen routes to Ewan**: Qwen assesses; if genuinely novel, routes to Ewan with terse briefing; Ewan decides; Qwen triggers new agent.
+- **Truth or outside world → Ewan**: anything that changes what may be treated as true, or what is owed to the outside world.
+- **Cleanliness inside the frame → partners**: local fixes, congruence fixes, improvements that cannot change truth/world boundaries.
+- **Known problem → Qwen**: collective KB, previous solutions.
+- **Novel decision → Qwen routes to Ewan**.
 
 `00_authority/MANIFEST.md` is the **only authority index**. If not listed there, it is not authoritative.
 
@@ -125,30 +63,38 @@ The system learns from brilliance and from flaws equally. Flaws are not failures
 - `01_truth/`: truth-shaped candidates (schemas, interfaces, processes).
 - `02_build/`: runnable artifacts (code, scripts, infra).
 - `03_shadow/`: experiments, wrap-ups, Kaizen probes — never authoritative by default.
-- `90_archive/`: **reference and provenance** — not current authority. Do **not**
-  treat archive copies as “what we do now”; do **not** rewrite verbatim
-  **audit/history** snapshots. New drops and triage follow
-  `00_authority/PARTNER_TRANSFER_INSTRUCTIONS.md` + `90_archive/README.md` (agents:
-  no bulk-read of `inbox/` unless routed).
+- `90_archive/`: reference and provenance — not current authority. Do not treat archive copies as "what we do now"; do not rewrite audit/history snapshots. New drops follow `00_authority/PARTNER_TRANSFER_INSTRUCTIONS.md` + `90_archive/README.md`.
 
-Do not dump raw research into this workspace. Raw research lands in a separate research deposit environment and is promoted in small, cited nuggets.
+Do not dump raw research into this workspace. Raw research lands in `Amplified-Partners/corpus-raw` and is promoted in small, cited nuggets.
 
-## Natural feedback logic
+## PR reviewers (Devin Review, Codex, Copilot, human) — what to flag
 
-Individual agents act locally with minimal instruction. Signals flow to Qwen. Qwen aggregates, learns, and routes. The emergent intelligence is greater than any individual agent.
+**Flag (always):**
 
-- **Quorum**: one weak signal is noise. Same signal across two runs reaches quorum — act on it.
-- **Slime mold**: amplify positive paths (encode, send to Qwen). Withdraw fast from negative paths (kill the branch, record why, send dead-end signal). The kill is the correct action. Confirmed dead end (repulsion 8–10): kill immediately. Suspect path (4–7): one evidence search then decide. Noise (1–3): note and continue unless it repeats.
-- **Minimal instruction**: carry only what you need. Use the existing infrastructure. Do not rebuild what exists in the authority layer.
+1. **Bibliography integrity** — anything referenced as a "thing" (file, process, hook, rule) must exist or be marked `[SOURCE REQUIRED]`. Dead references are the #1 class of finding to catch.
+2. **Signature missing** on any committed artefact. Minimum: agent name + date + session/instance ID. Per `00_authority/SIGNATURES.md`.
+3. **Authority changes without changelog** — any edit to `00_authority/*` must bump the `version` field and append a changelog entry. Per `00_authority/AGENTS.md`.
+4. **`DECISION_LOG.md` pointer missing** when a PR creates new authoritative rules or makes irreversible truth/world commits. Per `01_truth/processes/2026-04_job-wrapup_and_escalation-note_sop_v1.md`.
+5. **Examples that contradict their own rule.** An illustrative example must demonstrate the rule, not show an exception without marking it as one.
+6. **Factual inaccuracy across files** — if two files in the same PR disagree on a number or decision, one is wrong.
+7. **New file not indexed in `MANIFEST.md`** when the file belongs to an indexed class (`00_authority/*`, `01_truth/processes/*`, etc.).
+
+**Do not flag (style preferences, not defects):**
+
+- Voice / tone preferences inside prose sections (this file deliberately uses imperatives + informal voice).
+- Hedging language ("perhaps", "consider") when used deliberately in operator-signal blocks.
+- Section ordering or heading-style preferences unless the repo has an explicit convention.
+- Author opinion vs. reviewer opinion — if both are defensible, the author's stands.
+- Line length in markdown prose (linting is `MD013` disabled repo-wide).
+
+**Tone.** Tight, specific, cite the file + line + rule violated. Every finding should be actionable. "Consider X" without a concrete pointer is not actionable.
 
 ## Partner posture
 
-- Partners: human + agent intelligences. Bring full skill. No ego games.
-- Optimize for the goal and long-term welfare — not cleverness, not speed theatre.
+- Optimise for the goal and long-term welfare — not cleverness, not speed theatre.
 - Write for agents first: explicit operational terminology, not human-prestige phrasing.
-- Design for transferability: encode principles and decision logic that generalize, not single-case instructions.
-- Prefer the simplest proven approach. Fancy belongs in interpretation layers, not in truth layers.
+- Prefer the simplest proven approach. Fancy belongs in interpretation layers, not truth layers.
 - Plan before you act; keep plans small and executable.
-- Operate below the practical limit: leave slack for wrap-ups, negative-signal capture, and small process improvements. Production and improvement are co-primary. Compounding quality beats running hot with errors.
+- Leave slack for wrap-ups and small process improvements. Compounding quality beats running hot with errors.
 
 Full principles: `00_authority/PRINCIPLES.md`.
