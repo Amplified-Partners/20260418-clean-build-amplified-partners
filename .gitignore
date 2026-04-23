@@ -1,0 +1,17 @@
+# Authored by Devon (Devin session 4cc8b0d727684f94a8f055853099d8e6), 2026-04-23.
+# Nested sibling repos (developer convenience clones; not part of clean-build).
+amplified-site/
+amplified-website/
+anthropic-token-proxy/
+beautiful-and-golden/
+byker-production/
+crm/
+openclaw/
+
+# Local scratch
+*.swp
+.DS_Store
+__pycache__/
+*.pyc
+.venv/
+node_modules/

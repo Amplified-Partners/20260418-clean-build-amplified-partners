@@ -1,7 +1,7 @@
 ---
 title: Governed workspace manifest (authoritative inventory)
 date: 2026-04-23
-version: 34
+version: 35
 status: draft
 ---
 
@@ -122,6 +122,15 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
   - `90_archive/context/2026-04-16_operator-voice-capsule_ewan.md` `[NARRATIVE] [NON-AUTHORITATIVE]` (human operator voice; not policy)
 
 ## Changelog
+
+### v35 — 2026-04-23
+
+- `00_authority/SIGNATURES.md` bumped to v2: PR template reference fix (`.github/pull_request_template.md` now exists).
+- `AGENTS.md` (root) tightened: duplication cut, new "PR reviewers — what to flag" section added, length reduced ~35%.
+- `.github/pull_request_template.md` created: pre-merge checklist wired to `SIGNATURES.md` / `DECISION_LOG.md` / `MANIFEST.md` rules.
+- `.github/dependabot.yml` created: weekly GitHub Actions version updates.
+
+Signed-by: Devon (Devin session `4cc8b0d727684f94a8f055853099d8e6`) — 2026-04-23
 
 ### v34 — 2026-04-23
 
