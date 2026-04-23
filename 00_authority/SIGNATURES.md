@@ -1,7 +1,7 @@
 ---
 title: Signatures — every AI signs its work
 date: 2026-04-23
-version: 1
+version: 2
 status: authoritative
 ---
 
@@ -55,10 +55,26 @@ Applies to anything committed to any Amplified-Partners repository: documents, c
 Low-key by design. Trust the agent; the tooling is a catch, not a gate.
 
 - **Pre-commit hook** (to be built as a follow-on): scans staged markdown and scripts for a signature pattern. Warns on miss. Blocks only on missing signatures inside `00_authority/`.
-- **PR template** (to be created as a follow-on): reminder line that reviewer confirms signatures present.
+- **PR template** (`.github/pull_request_template.md`): pre-merge checklist includes "signatures present on every committed artefact".
 - **`AGENTS.md`**: first-60-seconds entry cites this file so every session sees the rule early.
 
 Absence of a signature on a committed artefact is a process defect to fix, not a person to blame. Fix-forward: add the signature in the next commit and note the miss in the wrap-up.
+
+---
+
+## Changelog
+
+### v2 — 2026-04-23
+
+Fixed bibliography reference: PR template now exists at `.github/pull_request_template.md`; removed "(to be created)" qualifier.
+
+Signed-by: Devon (Devin session `4cc8b0d727684f94a8f055853099d8e6`) — 2026-04-23
+
+### v1 — 2026-04-23
+
+Initial promotion to authoritative. Rule + enforcement + examples.
+
+Signed-by: Devon (Devin session `4cc8b0d727684f94a8f055853099d8e6`) — 2026-04-23
 
 ---
 
