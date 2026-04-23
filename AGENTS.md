@@ -57,6 +57,7 @@ do not replace this order.
 
 1. Read in order: `00_authority/NORTH_STAR.md` → `00_authority/MANIFEST.md` →
    `00_authority/PROJECT_INTENT.md` and `00_authority/PRINCIPLES.md` →
+   `00_authority/SIGNATURES.md` (every AI signs committed work) →
    `01_truth/README.md` (routing for processes / schemas / interfaces).
 2. **Bounded autonomy:** default **Act** inside the frame when impact is reversible
    or confidence is high and contained — **ingenuity** belongs there (simpler design,

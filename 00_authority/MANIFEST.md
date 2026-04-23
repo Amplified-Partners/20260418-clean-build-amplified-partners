@@ -1,7 +1,7 @@
 ---
 title: Governed workspace manifest (authoritative inventory)
-date: 2026-04-17
-version: 33
+date: 2026-04-23
+version: 34
 status: draft
 ---
 
@@ -70,6 +70,9 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
 - `00_authority/REMIT_PARTNER_CURSOR.md`
 - `00_authority/PARTNER_TRANSFER_INSTRUCTIONS.md`
 - `00_authority/PRINCIPLES.md` `[LOGIC TO BE CONFIRMED]` (norms downstream of **Absolute** in root `AGENTS.md`; `anchor_lineage: 35` in file frontmatter — see § Provenance and versioning there)
+- `00_authority/SIGNATURES.md` (every AI signs committed work; Radical Attribution applied mechanically; agent chooses format)
+- `00_authority/USE_IT_OR_CUT_IT.md` (sounds good + built + unused = cut; remediation rule for bloat; archive exempt)
+- `00_authority/OPINION_CONFIDENCE.md` (opinions labelled + confidence numbered; tiered thresholds 50% / 85% / 95% by reversibility)
 - `00_authority/PROMOTION_GATE.md`
 - `00_authority/BUILD_LOOP.md`
 - `00_authority/DECISION_LOG.md`
@@ -97,6 +100,7 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
   - `01_truth/processes/2026-04_job-wrapup_and_escalation-note_sop_v1.md` `[LOGIC TO BE CONFIRMED]`
   - `01_truth/processes/2026-04_research-operations-cadence_v1.md` `[LOGIC TO BE CONFIRMED]`
   - `01_truth/processes/2026-04_research-on-research_bootstrap-remit_v1.md` `[LOGIC TO BE CONFIRMED]`
+  - `01_truth/processes/2026-04_stateless-handover_neutrality-clause_v1.md` `[LOGIC TO BE CONFIRMED]` (candidate addendum to the job-wrapup SOP; neutrality rule for stateless handovers; authoritative `00_authority/OPINION_CONFIDENCE.md` references this file)
 - `01_truth/schemas/` `[LOGIC TO BE CONFIRMED]` (schema contracts to be populated)
   - `01_truth/schemas/README.md` `[LOGIC TO BE CONFIRMED]` (folder purpose stub)
 - `01_truth/interfaces/` `[LOGIC TO BE CONFIRMED]` (API contracts to be populated)
@@ -118,6 +122,15 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
   - `90_archive/context/2026-04-16_operator-voice-capsule_ewan.md` `[NARRATIVE] [NON-AUTHORITATIVE]` (human operator voice; not policy)
 
 ## Changelog
+
+### v34 — 2026-04-23
+
+- Indexed three new **Authoritative now** entries: `00_authority/SIGNATURES.md` (every AI signs committed work), `00_authority/USE_IT_OR_CUT_IT.md` (unused implementations are cut; archive exempt), `00_authority/OPINION_CONFIDENCE.md` (opinions labelled + confidence numbered; tiered thresholds 50% / 85% / 95% by reversibility).
+- Indexed one new **Candidate authority** entry: `01_truth/processes/2026-04_stateless-handover_neutrality-clause_v1.md` (candidate addendum to the job-wrapup SOP).
+- Updated `AGENTS.md` first-60-seconds read-order to reference `SIGNATURES.md`.
+- Frontmatter `date` advanced to 2026-04-23 to reflect this edit.
+
+Signed-by: Devon (Devin session `4cc8b0d727684f94a8f055853099d8e6`) — 2026-04-23
 
 ### v2 — 2026-04-16
 
