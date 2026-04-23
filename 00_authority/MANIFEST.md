@@ -70,6 +70,9 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
 - `00_authority/REMIT_PARTNER_CURSOR.md`
 - `00_authority/PARTNER_TRANSFER_INSTRUCTIONS.md`
 - `00_authority/PRINCIPLES.md` `[LOGIC TO BE CONFIRMED]` (norms downstream of **Absolute** in root `AGENTS.md`; `anchor_lineage: 35` in file frontmatter — see § Provenance and versioning there)
+- `00_authority/SIGNATURES.md` (every AI signs committed work; Radical Attribution applied mechanically; agent chooses format)
+- `00_authority/USE_IT_OR_CUT_IT.md` (sounds good + built + unused = cut; remediation rule for bloat; archive exempt)
+- `00_authority/OPINION_CONFIDENCE.md` (opinions labelled + confidence numbered; tiered thresholds 50% / 85% / 95% by reversibility)
 - `00_authority/PROMOTION_GATE.md`
 - `00_authority/BUILD_LOOP.md`
 - `00_authority/DECISION_LOG.md`
