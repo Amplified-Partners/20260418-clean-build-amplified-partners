@@ -1,0 +1,211 @@
+{
+  "pluginsSettings": {
+    "customTheme": {
+      "settings": {
+        "enabled": true,
+        "themeId": "complexity"
+      },
+      "meta": {}
+    },
+    "thread:artifacts": {
+      "settings": {
+        "enabled": false
+      },
+      "meta": {}
+    },
+    "thread:betterCodeBlocks": {
+      "settings": {
+        "enabled": true,
+        "maxHeight": {
+          "collapseByDefault": false,
+          "enabled": true,
+          "showToggleButton": true,
+          "value": 500
+        },
+        "maxWidth": {
+          "enabled": false,
+          "value": 100
+        },
+        "showLineNumbers": false,
+        "stickyHeader": true,
+        "unwrap": {
+          "enabled": true,
+          "showToggleButton": true
+        }
+      },
+      "meta": {}
+    },
+    "thread:betterMessageCopyButtons": {
+      "settings": {
+        "enabled": true
+      },
+      "meta": {}
+    },
+    "thread:customThreadContainerWidth": {
+      "settings": {
+        "enabled": false,
+        "value": 740
+      },
+      "meta": {}
+    },
+    "thread:exportThread": {
+      "settings": {
+        "enabled": true
+      },
+      "meta": {}
+    },
+    "thread:messageCompletionNotification": {
+      "settings": {
+        "enabled": true
+      },
+      "meta": {}
+    },
+    "thread:messageMetrics": {
+      "settings": {
+        "enabled": false,
+        "showTokens": false
+      },
+      "meta": {}
+    },
+    "thread:messageTts": {
+      "settings": {
+        "enabled": false,
+        "playbackRate": 1
+      },
+      "meta": {}
+    },
+    "thread:rawHeadings": {
+      "settings": {
+        "enabled": false
+      },
+      "meta": {}
+    },
+    "thread:toc": {
+      "settings": {
+        "enabled": true
+      },
+      "meta": {}
+    },
+    "betterSearchParams": {
+      "settings": {
+        "enabled": true
+      },
+      "meta": {}
+    },
+    "blockAnalyticEvents": {
+      "settings": {
+        "enabled": false
+      },
+      "meta": {}
+    },
+    "cloudflareTimeoutAutoReload": {
+      "settings": {
+        "behavior": "reload",
+        "enabled": false
+      },
+      "meta": {}
+    },
+    "comet:isolatedZoom": {
+      "settings": {
+        "enabled": false,
+        "zoomLevel": 1
+      },
+      "meta": {}
+    },
+    "commandMenu": {
+      "settings": {
+        "enabled": false,
+        "keybindings": {
+          "spacesSearch": [
+            "Alt",
+            "y"
+          ],
+          "threadsSearch": [
+            "Alt",
+            "t"
+          ],
+          "toggle": [
+            "Meta",
+            "i"
+          ],
+          "toggleSidecar": [
+            "Meta",
+            "e"
+          ]
+        }
+      },
+      "meta": {}
+    },
+    "queryBox:spacesThreadsForceWritingMode": {
+      "settings": {
+        "enabled": false
+      },
+      "meta": {}
+    },
+    "home:customSlogan": {
+      "settings": {
+        "enabled": false,
+        "slogan": ""
+      },
+      "meta": {}
+    },
+    "imageGenModelSelector": {
+      "settings": {
+        "enabled": false
+      },
+      "meta": {}
+    },
+    "incognitoByDefault": {
+      "settings": {
+        "enabled": false
+      },
+      "meta": {}
+    },
+    "noFocusByDefault": {
+      "settings": {
+        "enabled": true
+      },
+      "meta": {}
+    },
+    "promptHistory": {
+      "settings": {
+        "enabled": false,
+        "shortcut": {
+          "type": "command",
+          "value": "h"
+        },
+        "trigger": {
+          "onNavigation": true,
+          "onSubmit": true
+        }
+      },
+      "meta": {}
+    },
+    "queryBox:submitOnCtrlEnter": {
+      "settings": {
+        "enabled": false
+      },
+      "meta": {}
+    },
+    "zenMode": {
+      "settings": {
+        "alwaysHideRelatedQuestions": false,
+        "enabled": false,
+        "hotkey": [
+          "Meta",
+          "Alt",
+          "z"
+        ],
+        "persistent": false
+      },
+      "meta": {}
+    }
+  },
+  "indexedDb": "{\n  \"formatName\": \"dexie\",\n  \"formatVersion\": 1,\n  \"data\": {\n    \"databaseName\": \"ComplexityDatabase\",\n    \"databaseVersion\": 8,\n    \"tables\": [\n      {\n        \"name\": \"customTheme\",\n        \"schema\": \"id,title,author\",\n        \"rowCount\": 0\n      },\n      {\n        \"name\": \"promptHistory\",\n        \"schema\": \"id,prompt,createdAt\",\n        \"rowCount\": 0\n      },\n      {\n        \"name\": \"thread:betterCodeBlocks\",\n        \"schema\": \"language\",\n        \"rowCount\": 0\n      }\n    ],\n    \"data\": [{\n      \"tableName\": \"customTheme\",\n      \"inbound\": true,\n      \"rows\": []\n    },{\n      \"tableName\": \"promptHistory\",\n      \"inbound\": true,\n      \"rows\": []\n    },{\n      \"tableName\": \"thread:betterCodeBlocks\",\n      \"inbound\": true,\n      \"rows\": []\n    }]\n  }\n}",
+  "misc": {
+    "local:misc:extensionIconAction": {
+      "settings": "dashboard",
+      "meta": {}
+    }
+  }
+}

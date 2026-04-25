@@ -1,0 +1,25 @@
+# Cove Orchestrator — Python Dependencies
+
+# Temporal SDK
+temporalio>=1.7.0
+
+# Claude Agent SDK
+anthropic>=0.40.0
+
+# MCP Framework
+mcp[cli]>=1.0.0
+
+# Database
+asyncpg>=0.29.0
+
+# HTTP client (for MCP servers)
+httpx>=0.27.0
+
+# Data validation
+pydantic>=2.5.0
+
+# LLM observability
+langfuse>=2.0.0
+
+# Utilities
+python-dotenv>=1.0.0

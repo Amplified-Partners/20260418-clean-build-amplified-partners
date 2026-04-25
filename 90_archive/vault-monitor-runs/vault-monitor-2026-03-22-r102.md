@@ -1,0 +1,22 @@
+# Vault Monitor — 2026-03-22 r102
+
+## 1. Claude Code Output
+- **_working/**: 205 monitor reports (including this one). No new non-monitor files since EXECUTION-LOG.md (Mar 15).
+- **_master-docs/**: Empty.
+
+## 2. FalkorDB Ingestion
+- **Beast SSH**: CONNECTION REFUSED — port 22 still down.
+- Cannot check ingestion process, logs, or errors.
+- Last known state: Ingestion complete, 293 errors in log (unchanged since r94).
+
+## 3. Porch
+- Cannot check — Beast unreachable.
+
+## 4. Vault Health
+- **Qdrant**: Cannot check — Beast unreachable.
+- **FalkorDB**: Cannot check — Beast unreachable.
+- Last known: Qdrant 57,434 points | FalkorDB 4,973 nodes.
+
+## Flags
+- **CRITICAL**: Beast (135.181.161.131) SSH down since ~Mar 21 23:00 — now ~10+ hours of continuous refusal. Connection refused on port 22. Requires manual intervention via Hetzner console or support ticket.
+- No new local file activity beyond monitor reports.
