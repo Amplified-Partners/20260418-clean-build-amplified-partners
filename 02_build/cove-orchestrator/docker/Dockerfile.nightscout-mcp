@@ -1,0 +1,12 @@
+# NightScout MCP Server — FastMCP over stdio
+FROM python:3.12-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY nightscout/ /app/nightscout/
+COPY mcp-servers/nightscout-mcp/ /app/mcp_servers/nightscout_mcp/
+
+CMD ["python", "-m", "mcp_servers.nightscout_mcp.server"]

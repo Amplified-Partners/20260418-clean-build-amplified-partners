@@ -1,0 +1,14 @@
+{
+  "applets": [{
+    "lastAccessTime": "2026-01-31T09:38:38.758740Z",
+    "firstAccessTime": "2026-01-31T08:21:55.044968Z",
+    "source": {
+      "drive": {
+        "resourceId": "1PzM4RYltFfdG2O4-_-uwCT0BDEIsMLoV",
+        "revisionId": "0B63jUqvR9EMgbFgrd1lZbVJaWGJ1emdHSU5teXkyRjFSOEZNPQ"
+      }
+    },
+    "name": "Copy of Melanin Muse Creative Studio",
+    "description": "A high-fashion creative assistant for Lucy to build her melanin-inspired design brand. Collect inspirations, record voice notes, and use Gemini to generate stunning product designs for Etsy."
+  }]
+}

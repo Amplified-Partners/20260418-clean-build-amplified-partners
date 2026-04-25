@@ -1,0 +1,8 @@
+"File","Size","Description"
+"360-GAP-RESEARCH.md","59KB","Initial gap analysis research (800 lines, framework recommendations)"
+"search-results-batch1.json","48KB","25 SearXNG queries (financial, HR, H&S, GDPR, payroll)"
+"search-results-batch2.json","83KB","45 SearXNG queries (sales, CS, pricing, SOP, Gary Vee, continuity)"
+"search-detail-batch1.json","42KB","25 detail queries"
+"search-detail-batch2.json","48KB","27 detail queries"
+"search-deepen-batch3.json","107KB","39 SearXNG queries for Sections 8-14 deepening"
+"process-inventory.json","23KB","176 processes extracted for workbook population"

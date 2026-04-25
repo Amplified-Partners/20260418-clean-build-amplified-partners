@@ -1,0 +1,28 @@
+# NightScout — Intelligence Pipeline
+# Runs as a cron-like service: pipeline every 6 hours, briefing at 06:00 UTC
+FROM python:3.12-slim
+
+WORKDIR /app
+
+# System deps
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    cron \
+    && rm -rf /var/lib/apt/lists/*
+
+# Python deps
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# NightScout code
+COPY nightscout/ /app/nightscout/
+
+# Cron schedule: pipeline every 6h, briefing at 06:00 UTC
+RUN echo "0 */6 * * * cd /app && python -m nightscout run >> /var/log/nightscout.log 2>&1" > /etc/cron.d/nightscout \
+    && echo "0 6 * * * cd /app && python -m nightscout briefing >> /var/log/nightscout-briefing.log 2>&1" >> /etc/cron.d/nightscout \
+    && chmod 0644 /etc/cron.d/nightscout \
+    && crontab /etc/cron.d/nightscout \
+    && touch /var/log/nightscout.log /var/log/nightscout-briefing.log
+
+# Also support one-shot mode via CMD override
+# Default: start cron daemon and tail logs
+CMD ["sh", "-c", "printenv > /etc/environment && cron && tail -f /var/log/nightscout.log /var/log/nightscout-briefing.log"]

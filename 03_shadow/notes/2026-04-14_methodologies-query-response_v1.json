@@ -1,0 +1,308 @@
+{
+  "run_id": "25db5dd1-230c-40ca-b52a-92914cb57f19",
+  "timestamp_start": "2026-04-14T10:06:31.983834",
+  "timestamp_end": "2026-04-14T10:07:28.947800",
+  "entries": [
+    {
+      "stage": "INTAKE",
+      "timestamp": "2026-04-14T10:06:31.983950",
+      "data": {
+        "intake_id": "9859a7b3-1da0-4441-a647-5b7d54634ca5",
+        "timestamp": "2026-04-14T10:06:31.983948",
+        "question": "What methodologies exist for measuring cognitive bias in decision-making?",
+        "goal": "Research review",
+        "domain": "general",
+        "constraints": [
+          "peer-reviewed preferred",
+          "foundational + current"
+        ],
+        "intent_classification": "science-seeking",
+        "loaded_language_flags": []
+      }
+    },
+    {
+      "stage": "INTERPRETER",
+      "timestamp": "2026-04-14T10:06:43.618710",
+      "data": {
+        "interpreter_id": "6dcd0294-7ec9-4373-91b5-c70981d18af9",
+        "intake_ref": "9859a7b3-1da0-4441-a647-5b7d54634ca5",
+        "neutralised_question": "What methodologies exist for measuring cognitive bias in decision-making?",
+        "component_analysis": {
+          "factual": [
+            "Existence of documented methodologies",
+            "Specific techniques and instruments used in research",
+            "Published protocols for bias measurement",
+            "Established measurement scales and frameworks"
+          ],
+          "judgment_calls": [
+            "What constitutes a 'methodology' vs a technique or approach",
+            "Boundaries of what qualifies as 'cognitive bias'",
+            "What level of validation makes a methodology legitimate"
+          ],
+          "logical_structure": "Descriptive inquiry seeking enumeration and categorization of existing measurement approaches",
+          "scientific": "Testing reliability and validity of different measurement instruments, comparing measurement outcomes across methodologies, reproducibility of bias detection methods"
+        },
+        "loaded_language_flags": [],
+        "researcher_guidance": "Focus on: (1) Established measurement paradigms (IAT, cognitive reflection tests, behavioral tasks), (2) Self-report vs behavioral measures, (3) Domain-specific vs general bias measurements, (4) Validity and reliability data for each methodology, (5) Distinction between detecting bias presence vs measuring bias magnitude, (6) Consider both laboratory and field measurement approaches"
+      }
+    },
+    {
+      "stage": "CURATOR1",
+      "timestamp": "2026-04-14T10:06:50.449029",
+      "data": {
+        "curator1_id": "c59d4354-540b-4f08-b19e-b89139d4f443",
+        "interpreter_ref": "6dcd0294-7ec9-4373-91b5-c70981d18af9",
+        "search_strategy": {
+          "round": 1,
+          "queries": [
+            {
+              "query": "(\"cognitive bias measurement\" OR \"measuring cognitive bias\" OR \"bias assessment methods\") AND (\"decision making\" OR \"judgment\") AND (methodology OR paradigm OR framework)",
+              "engines": [
+                "exa",
+                "arxiv"
+              ],
+              "pass": "broad_landscape",
+              "expected_results": 40,
+              "confidence": "high"
+            },
+            {
+              "query": "(\"Implicit Association Test\" OR IAT OR \"cognitive reflection test\" OR CRT) AND (validity OR reliability OR psychometric) AND \"cognitive bias\"",
+              "engines": [
+                "arxiv"
+              ],
+              "pass": "foundational",
+              "expected_results": 20,
+              "confidence": "high"
+            },
+            {
+              "query": "(\"behavioral measures\" OR \"self-report measures\") AND \"cognitive bias\" AND (\"field study\" OR \"laboratory experiment\") AND (detection OR magnitude OR quantification)",
+              "engines": [
+                "exa"
+              ],
+              "pass": "recent_applications",
+              "expected_results": 25,
+              "confidence": "high"
+            }
+          ],
+          "sufficiency_criteria": {
+            "minimum_representations": 3,
+            "ideal_representations": 5,
+            "depth_required": "background logic + implementation",
+            "diversity_check": "at least 2 schools of thought",
+            "source_dominance": "no single source >40%"
+          }
+        }
+      }
+    },
+    {
+      "stage": "SEARCH",
+      "timestamp": "2026-04-14T10:06:54.545712",
+      "data": {
+        "search_id": "6a26e472-0c7c-44ff-9a06-37ee1af3d05a",
+        "total_results": 17
+      }
+    },
+    {
+      "stage": "CURATOR2",
+      "timestamp": "2026-04-14T10:07:28.947466",
+      "data": {
+        "curator2_id": "77e6b733-6d4c-48ea-8211-7c7f742da9f9",
+        "search_ref": "6a26e472-0c7c-44ff-9a06-37ee1af3d05a",
+        "sufficiency_check": {
+          "verdict": "SUFFICIENT",
+          "representations_found": 7,
+          "depth_assessment": "deep",
+          "diversity_assessment": "high",
+          "dominance_flag": false,
+          "dominance_note": null,
+          "iteration_reason": null
+        },
+        "synthesis": {
+          "methodologies": [
+            {
+              "name": "Perception of Cognitive Biases in Decision-Making Scale (PCBDM-S)",
+              "source": "Springer, 2025",
+              "core_premise": "Self-report measure focusing on individuals' awareness and perception of their own cognitive biases.",
+              "operationalization": [
+                "Self-assessment questionnaire",
+                "Likert scale ratings",
+                "Multiple bias domains evaluation"
+              ],
+              "strengths": [
+                "Easy to administer",
+                "Direct measurement of bias awareness"
+              ],
+              "limitations": [
+                "Subject to self-report bias",
+                "May not capture actual bias behavior"
+              ],
+              "school": "psychology"
+            },
+            {
+              "name": "Davos Assessment of Cognitive Biases Scale (DACOBS)",
+              "source": "ScienceDirect, 2012",
+              "core_premise": "Clinical assessment tool for measuring cognitive biases particularly in psychiatric populations.",
+              "operationalization": [
+                "Scenario-based items",
+                "Response pattern analysis",
+                "Statistical bias score calculation"
+              ],
+              "strengths": [
+                "Validated in clinical populations",
+                "Comprehensive bias coverage"
+              ],
+              "limitations": [
+                "May not generalize to healthy populations",
+                "Requires trained administration"
+              ],
+              "school": "psychology"
+            },
+            {
+              "name": "Individual Differences Framework",
+              "source": "Frontiers in Psychology, 2021",
+              "core_premise": "Measuring cognitive biases through systematic assessment of individual variation patterns.",
+              "operationalization": [
+                "Multiple task battery",
+                "Within-subject variance analysis",
+                "Cross-bias correlation matrices"
+              ],
+              "strengths": [
+                "Captures individual variability",
+                "Psychometrically robust"
+              ],
+              "limitations": [
+                "Time-intensive",
+                "Complex scoring procedures"
+              ],
+              "school": "behavioral"
+            },
+            {
+              "name": "Dual-Probe Attentional Bias Measure",
+              "source": "PMC, 2021",
+              "core_premise": "Using paired probe tasks to achieve reliable measurement of attentional biases.",
+              "operationalization": [
+                "Two concurrent probe presentations",
+                "Response time differential analysis",
+                "Split-half reliability testing"
+              ],
+              "strengths": [
+                "High test-retest reliability",
+                "Minimizes measurement error"
+              ],
+              "limitations": [
+                "Limited to attentional biases",
+                "Requires specialized equipment"
+              ],
+              "school": "behavioral"
+            },
+            {
+              "name": "Bias Blind Spot Assessment",
+              "source": "INFORMS, 2014",
+              "core_premise": "Measuring the metacognitive bias of perceiving oneself as less biased than others.",
+              "operationalization": [
+                "Self-other comparison tasks",
+                "Bias susceptibility ratings",
+                "Behavioral prediction discrepancies"
+              ],
+              "strengths": [
+                "Captures metacognitive dimension",
+                "Reveals self-serving biases"
+              ],
+              "limitations": [
+                "Indirect bias measurement",
+                "Cultural variability in responses"
+              ],
+              "school": "psychology"
+            },
+            {
+              "name": "Judgment Bias Task Framework",
+              "source": "MICLAB, 2023",
+              "core_premise": "Behavioral tasks that reveal biases through systematic judgment patterns.",
+              "operationalization": [
+                "Ambiguous stimuli presentation",
+                "Decision threshold mapping",
+                "Signal detection analysis"
+              ],
+              "strengths": [
+                "Objective behavioral measure",
+                "Minimal self-report reliance"
+              ],
+              "limitations": [
+                "Task-specific biases only",
+                "Practice effects possible"
+              ],
+              "school": "behavioral"
+            },
+            {
+              "name": "MITRE Cognitive Bias Assessment Protocol",
+              "source": "MITRE, 2016",
+              "core_premise": "Comprehensive framework for assessing multiple cognitive biases in organizational contexts.",
+              "operationalization": [
+                "Multi-method assessment battery",
+                "Contextual scenario evaluation",
+                "Performance-based metrics"
+              ],
+              "strengths": [
+                "Real-world applicability",
+                "Holistic bias profile"
+              ],
+              "limitations": [
+                "Resource intensive",
+                "Requires organizational context"
+              ],
+              "school": "other"
+            }
+          ],
+          "pudding_technique": {
+            "symbiotic_pairs": [
+              {
+                "method_a": "PCBDM-S",
+                "method_b": "Judgment Bias Task Framework",
+                "why_they_complement": "Self-report awareness paired with behavioral validation creates comprehensive bias profile"
+              },
+              {
+                "method_a": "Bias Blind Spot Assessment",
+                "method_b": "Individual Differences Framework",
+                "why_they_complement": "Metacognitive blindness assessment combined with individual variation mapping reveals bias hierarchy"
+              },
+              {
+                "method_a": "DACOBS",
+                "method_b": "Dual-Probe Attentional Bias Measure",
+                "why_they_complement": "Clinical scenario assessment with precise attentional measurement captures both explicit and implicit biases"
+              }
+            ],
+            "novel_taxonomy": {
+              "measurement_directness": [
+                "Judgment Bias Task",
+                "Dual-Probe Measure",
+                "MITRE Protocol",
+                "Individual Differences",
+                "DACOBS",
+                "Bias Blind Spot",
+                "PCBDM-S"
+              ],
+              "temporal_stability": [
+                "Dual-Probe Measure",
+                "Individual Differences",
+                "DACOBS",
+                "MITRE Protocol",
+                "Judgment Bias Task",
+                "PCBDM-S",
+                "Bias Blind Spot"
+              ],
+              "ecological_validity": [
+                "MITRE Protocol",
+                "DACOBS",
+                "Bias Blind Spot",
+                "PCBDM-S",
+                "Individual Differences",
+                "Judgment Bias Task",
+                "Dual-Probe Measure"
+              ]
+            }
+          }
+        }
+      }
+    }
+  ]
+}
