@@ -152,8 +152,8 @@ async def beast_stats():
         async with httpx.AsyncClient(timeout=HTTP_TIMEOUT) as client:
             r = await client.get(f"{BEAST_VOICE_URL}/api/stats")
             return r.json()
-    except Exception as e:
-        return {"error": str(e), "source": "beast_voice_pipeline"}
+    except Exception:
+        return {"error": "upstream unavailable", "source": "beast_voice_pipeline"}
 
 
 @app.get("/api/beast/transcripts")
@@ -163,8 +163,8 @@ async def beast_transcripts():
         async with httpx.AsyncClient(timeout=HTTP_TIMEOUT) as client:
             r = await client.get(f"{BEAST_VOICE_URL}/api/transcripts")
             return r.json()
-    except Exception as e:
-        return {"error": str(e), "source": "beast_voice_pipeline"}
+    except Exception:
+        return {"error": "upstream unavailable", "source": "beast_voice_pipeline"}
 
 
 @app.get("/api/beast/briefings")
@@ -174,8 +174,8 @@ async def beast_briefings():
         async with httpx.AsyncClient(timeout=HTTP_TIMEOUT) as client:
             r = await client.get(f"{BEAST_VOICE_URL}/api/briefings")
             return r.json()
-    except Exception as e:
-        return {"error": str(e), "source": "beast_voice_pipeline"}
+    except Exception:
+        return {"error": "upstream unavailable", "source": "beast_voice_pipeline"}
 
 
 # ════════════════════════════════════════════════════════
@@ -195,8 +195,8 @@ async def enforcer_health():
         if result.returncode == 0 and result.stdout.strip():
             return json.loads(result.stdout.strip())
         return {"overall_health": "unknown", "error": result.stderr[:200] if result.stderr else "no output"}
-    except Exception as e:
-        return {"overall_health": "error", "error": str(e)}
+    except Exception:
+        return {"overall_health": "error", "error": "connection failed"}
 
 
 @app.get("/api/kaizen/health")
@@ -212,8 +212,8 @@ async def kaizen_health():
         if result.returncode == 0 and result.stdout.strip():
             return json.loads(result.stdout.strip())
         return {"overall_health": "unknown", "error": result.stderr[:200] if result.stderr else "no output"}
-    except Exception as e:
-        return {"overall_health": "error", "error": str(e)}
+    except Exception:
+        return {"overall_health": "error", "error": "connection failed"}
 
 
 @app.get("/api/graphiti/stats")
@@ -248,8 +248,8 @@ print(json.dumps(stats))
         if result.returncode == 0 and result.stdout.strip():
             return json.loads(result.stdout.strip())
         return {"error": result.stderr[:200] if result.stderr else "no output"}
-    except Exception as e:
-        return {"error": str(e)}
+    except Exception:
+        return {"error": "graph query failed"}
 
 
 # ════════════════════════════════════════════════════════
@@ -287,8 +287,8 @@ async def search(q: str, categories: str = "general", page: int = 1):
                 "search_id": search_id,
                 "is_watched": search_db.is_watched(q),
             }
-    except Exception as e:
-        return {"error": str(e), "query": q, "results": []}
+    except Exception:
+        return {"error": "search unavailable", "query": q, "results": []}
 
 
 @app.get("/api/searches")
