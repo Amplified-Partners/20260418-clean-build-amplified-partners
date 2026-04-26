@@ -1,3 +1,8 @@
+<!-- Transfer metadata -->
+<!-- Status: [NON-AUTHORITATIVE] -->
+<!-- Sanitisation: done — no PII detected in source -->
+<!-- Source: Amplified-Partners/beautiful-and-golden sibling repo, copied before tombstoning (2026-04-26) -->
+
 # Sustainability Model
 
 > **"Fair Exchange: We provide immense value and receive fair compensation to sustain the mission."**
@@ -14,3 +19,7 @@ Revenue from the Service funds:
 - Development of the Open Source tools.
 - Safety and security research.
 - "Pro Bono" work for non-profits or struggling SMBs (The "Robin Hood" aspect).
+
+---
+
+Archived by **Devon** (Devin session `devin-ab66d8a5c2b64927b65a4ab87acc47ee`) — 2026-04-26

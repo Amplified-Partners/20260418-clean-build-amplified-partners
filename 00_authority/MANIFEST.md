@@ -1,7 +1,7 @@
 ---
 title: Governed workspace manifest (authoritative inventory)
-date: 2026-04-23
-version: 35
+date: 2026-04-26
+version: 36
 status: draft
 ---
 
@@ -120,8 +120,19 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
   - `90_archive/2026-03_amplified-consolidated-architecture_full.txt` `[NON-AUTHORITATIVE]`
   - `90_archive/context/README.md` `[NON-AUTHORITATIVE]` (context folder convention)
   - `90_archive/context/2026-04-16_operator-voice-capsule_ewan.md` `[NARRATIVE] [NON-AUTHORITATIVE]` (human operator voice; not policy)
+  - `90_archive/beautiful-and-golden/` `[NON-AUTHORITATIVE]` (archived architecture docs from the beautiful-and-golden sibling repo, preserved before tombstoning)
+    - `90_archive/beautiful-and-golden/ARCHITECTURE.md` `[NON-AUTHORITATIVE]`
+    - `90_archive/beautiful-and-golden/PUBLIC_README.md` `[NON-AUTHORITATIVE]`
+    - `90_archive/beautiful-and-golden/SUSTAINABILITY.md` `[NON-AUTHORITATIVE]`
 
 ## Changelog
+
+### v36 — 2026-04-26
+
+- Indexed new `90_archive/beautiful-and-golden/` entries (3 files: `ARCHITECTURE.md`, `PUBLIC_README.md`, `SUSTAINABILITY.md`) under "Reference only". Archived from sibling repo before tombstoning.
+- Frontmatter `date` advanced to 2026-04-26.
+
+Signed-by: Devon (Devin session `devin-ab66d8a5c2b64927b65a4ab87acc47ee`) — 2026-04-26
 
 ### v35 — 2026-04-23
 

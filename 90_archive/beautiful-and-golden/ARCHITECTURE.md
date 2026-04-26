@@ -1,3 +1,8 @@
+<!-- Transfer metadata -->
+<!-- Status: [NON-AUTHORITATIVE] -->
+<!-- Sanitisation: done — no PII detected in source -->
+<!-- Source: Amplified-Partners/beautiful-and-golden sibling repo, copied before tombstoning (2026-04-26) -->
+
 # Technical Architecture: The Gentle Sidecar
 
 ## Overview
@@ -37,3 +42,7 @@ A decoupled, event-driven architecture designed for **safety** and **observabili
 - **Database (Sidecar)**: SQLite (simple, file-based) or DuckDB (analytical).
 - **API**: FastAPI (Python).
 - **Frontend**: HTML5 / Vanilla JS (Lightweight).
+
+---
+
+Archived by **Devon** (Devin session `devin-ab66d8a5c2b64927b65a4ab87acc47ee`) — 2026-04-26

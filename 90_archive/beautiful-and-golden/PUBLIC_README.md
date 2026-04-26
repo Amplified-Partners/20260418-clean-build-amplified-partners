@@ -1,3 +1,8 @@
+<!-- Transfer metadata -->
+<!-- Status: [NON-AUTHORITATIVE] -->
+<!-- Sanitisation: done — no PII detected in source -->
+<!-- Source: Amplified-Partners/beautiful-and-golden sibling repo, copied before tombstoning (2026-04-26) -->
+
 # Beautiful & Golden: SMB Legacy Connector
 
 > **"The Goal > Us. Radical Honesty. Radical Transparency. Win-Win."**
@@ -34,3 +39,7 @@ We stand on the shoulders of giants. We explicitly credit every source, library,
 
 ## License
 [License TBD - Open Source intended]
+
+---
+
+Archived by **Devon** (Devin session `devin-ab66d8a5c2b64927b65a4ab87acc47ee`) — 2026-04-26
