@@ -143,7 +143,7 @@ class ProjectBuildWorkflow:
                     "title": input.title,
                     "tier": input.approval_tier,
                     "agent_role": input.agent_role,
-                    "diff_summary": agent_result.get("diff_summary", ""),
+                    "diff_summary": getattr(agent_result, "output", "")[:500] + "...",  # Preview of the output
                 }],
                 start_to_close_timeout=timedelta(minutes=2),
             )
@@ -185,9 +185,9 @@ class ProjectBuildWorkflow:
         return BuildTaskResult(
             task_id=input.task_id,
             success=True,
-            result=agent_result,
-            cost_usd=agent_result.get("cost_usd", 0),
-            tokens_used=agent_result.get("total_tokens", 0),
+            result={"output": getattr(agent_result, "output", "")},
+            cost_usd=0.0,  # Could be calculated from tokens later
+            tokens_used=getattr(agent_result, "tokens_in", 0) + getattr(agent_result, "tokens_out", 0),
         )
 
     # ─── Signals ─────────────────────────────────────────────────────

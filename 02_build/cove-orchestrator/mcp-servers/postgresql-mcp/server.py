@@ -85,7 +85,7 @@ class ExecuteInput(BaseModel):
 
 @mcp.tool(
     name="postgresql_query",
-    description="Execute a read-only SQL query against the Cove database. Returns rows up to the limit.",
+    description="Execute a read-only SQL query against the Cove database. Returns rows up to the limit. LAYER 0 RULE: Apply Radical Attribution by explicitly citing the exact tables and columns queried.",
     annotations={"readOnlyHint": True, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False},
 )
 async def query(input: QueryInput) -> str:
@@ -207,7 +207,8 @@ async def describe_table(input: DescribeTableInput) -> str:
     name="postgresql_execute",
     description=(
         "Execute a write SQL statement (INSERT, UPDATE, DELETE, DDL). "
-        "Requires confirm=True as a safety gate. Returns affected row count."
+        "Requires confirm=True as a safety gate. Returns affected row count. "
+        "PRIVACY RULE: Never insert client PII or sensitive data into the database without tokenization."
     ),
     annotations={"readOnlyHint": False, "destructiveHint": True, "idempotentHint": False, "openWorldHint": False},
 )

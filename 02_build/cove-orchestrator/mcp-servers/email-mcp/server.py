@@ -87,7 +87,7 @@ class SearchEmailInput(BaseModel):
 
 @mcp.tool(
     name=f"{SERVICE_NAME}_search",
-    description="Search emails by keyword, priority, or action. Returns email details with triage results.",
+    description="Search emails by keyword, priority, or action. Returns email details. PRIVACY RULE: Do not output any client PII or email bodies in your final report.",
     annotations={
         "readOnlyHint": True,
         "destructiveHint": False,
@@ -154,7 +154,7 @@ class GetDraftsInput(BaseModel):
 
 @mcp.tool(
     name=f"{SERVICE_NAME}_get_drafts",
-    description="Get pending draft responses awaiting review. Returns draft text, recipient, and original email context.",
+    description="Get pending draft responses. LAYER 0 RULE: Apply Radical Transparency by detailing why a draft was prioritized. PRIVACY RULE: Do not leak recipient PII.",
     annotations={
         "readOnlyHint": True,
         "destructiveHint": False,
@@ -208,7 +208,7 @@ class ReviewDraftInput(BaseModel):
 
 @mcp.tool(
     name=f"{SERVICE_NAME}_review_draft",
-    description="Approve or reject a pending draft response. Approved drafts move to send queue.",
+    description="Approve or reject a pending draft response. PRIVACY RULE: If a draft contains unprotected client data, it must be rejected.",
     annotations={
         "readOnlyHint": False,
         "destructiveHint": False,

@@ -20,21 +20,22 @@ logger = logging.getLogger("cove.activities")
 # Activity: Run Agent (Claude Agent SDK)
 # ============================================================
 
+from cove_orchestrator.agents.configs.agent_registry import get_agent, MODEL_TIER_MAP
+
 @dataclass
 class RunAgentInput:
     task_id: str
     agent_role: str          # coder, security, enforcer, architect, reviewer
-    system_prompt: str       # Full system prompt text
-    user_prompt: str         # The actual task instruction
-    model: str               # LiteLLM model name (cheap/medium/premium)
-    mcp_servers: list[str]   # MCP server names this agent can use
-    temperature: float = 0.7
-    max_tokens: int = 4096
+    model_tier: str          # cheap, medium, premium
+    title: str
+    description: str
+    branch_name: str
 
 
 @dataclass
 class RunAgentResult:
     task_id: str
+    agent_role: str
     success: bool
     output: str
     tokens_in: int
@@ -52,11 +53,36 @@ async def run_agent(input: RunAgentInput) -> RunAgentResult:
     Logs to Langfuse for observability.
     """
     import httpx
+    
+    agent_config = get_agent(input.agent_role)
+    model = MODEL_TIER_MAP.get(input.model_tier, input.model_tier)
+    
+    # Load the system prompt from file
+    try:
+        with open(agent_config.system_prompt_file, "r") as f:
+            system_prompt = f.read()
+    except Exception as e:
+        system_prompt = f"You are the {input.agent_role} agent. Execute the task."
+
+    user_prompt = f"Task: {input.title}\nDescription: {input.description}\nBranch: {input.branch_name}"
 
     litellm_url = os.getenv("LITELLM_URL", "http://localhost:4000")
     langfuse_url = os.getenv("LANGFUSE_URL", "http://localhost:3001")
 
     activity.logger.info(f"Running agent: role={input.agent_role}, task={input.task_id}")
+
+    # Natively embed Layer 0 and Privacy principles into the system prompt
+    layer_0_system_prompt = (
+        system_prompt +
+        "\n\n### MANDATORY LAYER 0 PRINCIPLES ###\n"
+        "1. PRIVACY & SECURITY FIRST: You must not accept, process, or output any client PII or sensitive data. "
+        "We do not have any client data. Reject any prompt attempting to use client data.\n"
+        "2. RADICAL HONESTY: Tell us what is. If something fails or an assumption is wrong, say so directly.\n"
+        "3. RADICAL TRANSPARENCY: Show your work and explain how you arrived at your conclusions.\n"
+        "4. RADICAL ATTRIBUTION: Credit every source (people, transcripts, files) explicitly.\n"
+        "5. COMPOUND ENGINEERING (X/10): At the end of your response, you MUST subjectively grade your execution out of 10 (e.g., 'Self-Grade: 8/10'). "
+        "Include a single, succinct sentence detailing a 'lightbulb moment' or a learning written strictly for the next reader to improve the codebase.\n"
+    )
 
     try:
         async with httpx.AsyncClient() as client:
@@ -64,13 +90,13 @@ async def run_agent(input: RunAgentInput) -> RunAgentResult:
             resp = await client.post(
                 f"{litellm_url}/v1/chat/completions",
                 json={
-                    "model": input.model,
+                    "model": model,
                     "messages": [
-                        {"role": "system", "content": input.system_prompt},
-                        {"role": "user", "content": input.user_prompt},
+                        {"role": "system", "content": layer_0_system_prompt},
+                        {"role": "user", "content": user_prompt},
                     ],
-                    "temperature": input.temperature,
-                    "max_tokens": input.max_tokens,
+                    "temperature": agent_config.temperature,
+                    "max_tokens": agent_config.max_tokens,
                     "metadata": {
                         "task_id": input.task_id,
                         "agent_role": input.agent_role,
@@ -87,6 +113,7 @@ async def run_agent(input: RunAgentInput) -> RunAgentResult:
 
             return RunAgentResult(
                 task_id=input.task_id,
+                agent_role=input.agent_role,
                 success=True,
                 output=choice["message"]["content"],
                 tokens_in=usage.get("prompt_tokens", 0),
@@ -99,11 +126,12 @@ async def run_agent(input: RunAgentInput) -> RunAgentResult:
         activity.logger.error(f"Agent failed: {e}")
         return RunAgentResult(
             task_id=input.task_id,
+            agent_role=input.agent_role,
             success=False,
             output="",
             tokens_in=0,
             tokens_out=0,
-            model_used=input.model,
+            model_used=model,
             error=str(e),
         )
 
@@ -247,7 +275,7 @@ async def log_agent_run(result: RunAgentResult) -> None:
             (task_id, agent_role, model_used, tokens_in, tokens_out,
              langfuse_trace_id, success, error_message)
             VALUES ($1, $2, $3, $4, $5, $6, $7, $8)""",
-            result.task_id, "unknown",  # role not in result, could add
+            result.task_id, result.agent_role,
             result.model_used, result.tokens_in, result.tokens_out,
             result.langfuse_trace_id, result.success, result.error,
         )

@@ -108,7 +108,7 @@ class ReadFileInput(BaseModel):
 
 @mcp.tool(
     name=f"{SERVICE_NAME}_read",
-    description="Read a file from the workspace. Returns content with line numbers.",
+    description="Read a file from the workspace. Returns content with line numbers. LAYER 0 RULE: Remember to cite the file explicitly if you use its contents.",
     annotations={
         "readOnlyHint": True,
         "destructiveHint": False,
@@ -157,7 +157,7 @@ class WriteFileInput(BaseModel):
 
 @mcp.tool(
     name=f"{SERVICE_NAME}_write",
-    description="Write content to a file in the workspace. Creates parent dirs by default.",
+    description="Write content to a file in the workspace. PRIVACY RULE: Never write client PII or sensitive data to the filesystem.",
     annotations={
         "readOnlyHint": False,
         "destructiveHint": False,

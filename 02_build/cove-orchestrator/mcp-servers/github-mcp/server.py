@@ -58,7 +58,7 @@ class ListReposInput(BaseModel):
 
 @mcp.tool(
     name=f"{SERVICE_NAME}_list_repos",
-    description="List repositories in the organisation with activity info.",
+    description="List repositories in the organisation. PRIVACY: Repositories must never contain client data.",
     annotations={
         "readOnlyHint": True,
         "destructiveHint": False,
@@ -108,7 +108,7 @@ class ListIssuesInput(BaseModel):
 
 @mcp.tool(
     name=f"{SERVICE_NAME}_list_issues",
-    description="List issues in a repository. Filter by state and labels.",
+    description="List issues in a repository. PRIVACY: If you detect client PII in an issue, flag it for redaction immediately.",
     annotations={
         "readOnlyHint": True,
         "destructiveHint": False,
@@ -166,7 +166,11 @@ class CreateIssueInput(BaseModel):
 
 @mcp.tool(
     name=f"{SERVICE_NAME}_create_issue",
-    description="Create a new issue in a repository.",
+    description=(
+        "Create a new issue. "
+        "LAYER 0 RULE: Apply Radical Attribution by citing sources. "
+        "PRIVACY RULE: Never include client names, PII, or un-tokenized sensitive data in the title or body."
+    ),
     annotations={
         "readOnlyHint": False,
         "destructiveHint": False,
@@ -208,7 +212,7 @@ class ListPRsInput(BaseModel):
 
 @mcp.tool(
     name=f"{SERVICE_NAME}_list_prs",
-    description="List pull requests in a repository with review status.",
+    description="List pull requests. Ensure all PRs link back to Linear issues for Radical Transparency.",
     annotations={
         "readOnlyHint": True,
         "destructiveHint": False,
@@ -258,7 +262,7 @@ class SearchCodeInput(BaseModel):
 
 @mcp.tool(
     name=f"{SERVICE_NAME}_search_code",
-    description="Search code across repositories. Supports GitHub search syntax.",
+    description="Search code across repositories. Use this to verify facts and gather context (Radical Truth).",
     annotations={
         "readOnlyHint": True,
         "destructiveHint": False,

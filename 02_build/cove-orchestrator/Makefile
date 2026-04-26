@@ -101,6 +101,12 @@ mcp-filesystem: ## Start Filesystem MCP server (stdio)
 mcp-email: ## Start Email MCP server (stdio)
 	python -m mcp_servers.email_mcp.server
 
+mcp-linear: ## Start official Linear MCP server via npx (stdio)
+	npx -y @modelcontextprotocol/server-linear
+
+mcp-slack: ## Start official Slack MCP server via npx (stdio)
+	npx -y @modelcontextprotocol/server-slack
+
 # ─── NightScout ───────────────────────────────────────────────────────
 nightscout-run: ## Run NightScout pipeline (one-shot)
 	python -m nightscout run

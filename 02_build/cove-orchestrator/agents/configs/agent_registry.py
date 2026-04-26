@@ -66,6 +66,15 @@ AGENT_REGISTRY: dict[str, AgentConfig] = {
         approval_tier=2,                     # Agent review sufficient
         description="Reviews PRs, checks quality, suggests improvements.",
     ),
+    "openclaw": AgentConfig(
+        role="openclaw",
+        display_name="OpenClaw Recorder",
+        model_tier="medium",                 # Sonnet — good enough for synthesis and logging
+        system_prompt_file="agents/prompts/openclaw.md",
+        mcp_servers=["filesystem_mcp", "github_mcp", "linear_mcp"],
+        approval_tier=0,                     # Auto-approve for writing notes
+        description="Note-taker and recorder. Maintains session logs and records all decisions, enforcing Layer 0 laws.",
+    ),
 }
 
 
