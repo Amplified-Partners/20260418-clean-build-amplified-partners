@@ -22,7 +22,7 @@
 ## A. NightScout — Intelligence Pipeline
 
 **Location:** `clean-build/02_build/cove-orchestrator/nightscout/`
-**Status:** Complete module. 6 files, ~750 lines. Has its own DB schema, MCP server, and SQL migrations.
+**Status:** Complete module. 7 files, ~895 lines. Has its own DB schema, MCP server, and SQL migrations.
 **What it does:** Nightly scrape → LLM score → fork → morning briefing. Fetches 50+ sources (RSS + SearXNG), scores each item on four dimensions (relevance, impact, applicability, novelty) using Ollama via LiteLLM, forks by tier (noise / briefing / R&D pipeline / critical), stores in PostgreSQL, generates markdown morning briefings, sends Telegram alerts for critical items.
 
 | File | Lines | Purpose |
@@ -137,7 +137,7 @@
 ## G. Email Agent
 
 **Location:** `clean-build/02_build/cove-orchestrator/email_agent/`
-**Status:** Complete module. 6 files, ~1,000 lines.
+**Status:** Complete module. 8 files, ~1,200 lines.
 
 | File | Lines | What it does |
 |------|-------|-------------|
