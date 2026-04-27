@@ -291,4 +291,4 @@ Layer 4: Content      atomiser, scheduler, telegram_gate, social integrations
 Layer 5: Coordination command_centre, cove-orchestrator, AG2 executive team, Temporal, MCP servers
 ```
 
-The vault/_inbox code is Layer 0-4. The clean-build code is Layer 1 and 5. They're the same product at different stages of organisation.
+The vault/_inbox code is Layer 0-4. The clean-build code is Layer 1, 2, 3, and 5. They're the same product at different stages of organisation.
