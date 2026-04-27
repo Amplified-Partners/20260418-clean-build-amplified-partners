@@ -1,0 +1,914 @@
+[
+  {
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "count": 6,
+    "files": [
+      {
+        "path": "corpus-raw/vault/_inbox/2026-02-08.md",
+        "size": 0,
+        "is_keeper": false
+      },
+      {
+        "path": "clean-build/02_build/cove-orchestrator/mcp-servers/email-mcp/__init__.py",
+        "size": 0,
+        "is_keeper": true
+      },
+      {
+        "path": "clean-build/02_build/cove-orchestrator/temporal/activities/__init__.py",
+        "size": 0,
+        "is_keeper": false
+      },
+      {
+        "path": "clean-build/02_build/cove-orchestrator/temporal/workers/__init__.py",
+        "size": 0,
+        "is_keeper": false
+      },
+      {
+        "path": "clean-build/02_build/cove-orchestrator/temporal/workflows/__init__.py",
+        "size": 0,
+        "is_keeper": false
+      },
+      {
+        "path": "clean-build/02_build/command-centre/backend/searches.db-wal",
+        "size": 0,
+        "is_keeper": false
+      }
+    ],
+    "bytes_wasted": 0
+  },
+  {
+    "sha256": "e723b04a5f329ec63b573a4be9b65420fa412d7362def387bb59b0f34ac1bcd0",
+    "count": 4,
+    "files": [
+      {
+        "path": "corpus-raw/vault/research/2026-02-24-session-notes-2026-02-11.md",
+        "size": 7047,
+        "is_keeper": true
+      },
+      {
+        "path": "corpus-raw/vault/research/2026-02-24-session-notes-2026-02-11-e723b0.md",
+        "size": 7047,
+        "is_keeper": false
+      },
+      {
+        "path": "corpus-raw/vault/_inbox/session-notes-2026-02-11-v2.md",
+        "size": 7047,
+        "is_keeper": false
+      },
+      {
+        "path": "corpus-raw/vault/_inbox/session-notes-2026-02-11.md",
+        "size": 7047,
+        "is_keeper": false
+      }
+    ],
+    "bytes_wasted": 21141
+  },
+  {
+    "sha256": "e8ced036f88a0f4ed174c702b8e3cedc965face24b05b9ac7db4a34e33931115",
+    "count": 3,
+    "files": [
+      {
+        "path": "corpus-raw/vault/research/2026-02-24-technical-decision-self-hosted-only.md",
+        "size": 8069,
+        "is_keeper": true
+      },
+      {
+        "path": "corpus-raw/vault/research/2026-02-24-TECHNICAL-DECISION-SELF-HOSTED-ONLY-e8ced0.md",
+        "size": 8069,
+        "is_keeper": false
+      },
+      {
+        "path": "corpus-raw/vault/_inbox/TECHNICAL-DECISION-SELF-HOSTED-ONLY.md",
+        "size": 8069,
+        "is_keeper": false
+      }
+    ],
+    "bytes_wasted": 16138
+  },
+  {
+    "sha256": "49a6b48ec744843658a629893a9a8b198cc13406f72bfda1947f2f4ca616675a",
+    "count": 3,
+    "files": [
+      {
+        "path": "corpus-raw/vault/work/sessions/gates/COMMITMENT-SYSTEM-REVIEW.md",
+        "size": 5299,
+        "is_keeper": true
+      },
+      {
+        "path": "corpus-raw/vault/imported-business-docs/openclaw-workspace/COMMITMENT-SYSTEM-REVIEW.md",
+        "size": 5299,
+        "is_keeper": false
+      },
+      {
+        "path": "corpus-raw/vault/imported-business-docs/openclaw-workspace/REVIEW.md",
+        "size": 5299,
+        "is_keeper": false
+      }
+    ],
+    "bytes_wasted": 10598
+  },
+  {
+    "sha256": "0de79fd5aef30cb074c0d8cd48e137522f21b7ba2e82dc8bd1c70d59619fee92",
+    "count": 3,
+    "files": [
+      {
+        "path": "corpus-raw/vault/imported-business-docs/openclaw-workspace/PERSONA-TECH-STACKS.md",
+        "size": 27770,
+        "is_keeper": true
+      },
+      {
+        "path": "corpus-raw/vault/projects/PERSONA-TECH-STACKS.md",
+        "size": 27770,
+        "is_keeper": false
+      },
+      {
+        "path": "corpus-raw/vault/projects/personas/PERSONA-TECH-STACKS.md",
+        "size": 27770,
+        "is_keeper": false
+      }
+    ],
+    "bytes_wasted": 55540
+  },
+  {
+    "sha256": "c50a67f804679b38fcbdb098c8526294843d2aa38d8a66c17efe16dffa841b34",
+    "count": 2,
+    "files": [
+      {
+        "path": "corpus-raw/vault/research/2026-02-25-staged-sprouting-sifakis.md",
+        "size": 5500,
+        "is_keeper": true
+      },
+      {
+        "path": "corpus-raw/vault/_inbox/2026-02-25-staged-sprouting-sifakis.md",
+        "size": 5500,
+        "is_keeper": false
+      }
+    ],
+    "bytes_wasted": 5500
+  },
+  {
+    "sha256": "8c4dbbfb92fc8ffe8bf3dba923f0ebdc122ac9ef4fc164b6fdfdb44847be2014",
+    "count": 2,
+    "files": [
+      {
+        "path": "corpus-raw/vault/research/2026-02-24-PUBLISHING-SEQUENCE.md",
+        "size": 7100,
+        "is_keeper": false
+      },
+      {
+        "path": "clean-build/03_shadow/sessions/2026-02-24_publishing-sequence_v1.md",
+        "size": 7100,
+        "is_keeper": true
+      }
+    ],
+    "bytes_wasted": 7100
+  },
+  {
+    "sha256": "134787c4394bb8d95a4192640deb055279dfa4fd730ea0f6e6b8f26212585c02",
+    "count": 2,
+    "files": [
+      {
+        "path": "corpus-raw/vault/research/2026-02-25-cuddly-munching-popcorn.md",
+        "size": 4635,
+        "is_keeper": true
+      },
+      {
+        "path": "corpus-raw/vault/_inbox/2026-02-25-cuddly-munching-popcorn.md",
+        "size": 4635,
+        "is_keeper": false
+      }
+    ],
+    "bytes_wasted": 4635
+  },
+  {
+    "sha256": "842cba5ce962de795b345fd59928551fd74f25ca751a132fef563ab8c2d4086d",
+    "count": 2,
+    "files": [
+      {
+        "path": "corpus-raw/vault/research/2026-02-24-content-draft-001-linkedin-first-post.md",
+        "size": 1789,
+        "is_keeper": true
+      },
+      {
+        "path": "corpus-raw/vault/_inbox/content/content-draft-001-linkedin-first-post.md",
+        "size": 1789,
+        "is_keeper": false
+      }
+    ],
+    "bytes_wasted": 1789
+  },
+  {
+    "sha256": "1059c48b0fd26b345b3aed6c6a2d3c8a588fa09ebb3f9e3b1aca22007fcabf3a",
+    "count": 2,
+    "files": [
+      {
+        "path": "corpus-raw/vault/research/2026-02-24-DAVE-WORKFLOW-SPEC-V1-68138e.md",
+        "size": 8146,
+        "is_keeper": false
+      },
+      {
+        "path": "clean-build/03_shadow/sessions/2026-02-24_dave-workflow-spec_v1.md",
+        "size": 8146,
+        "is_keeper": true
+      }
+    ],
+    "bytes_wasted": 8146
+  },
+  {
+    "sha256": "4c5a05174d0515b47a80b2b956a8412356bf1c7ff77e3053950e838040200f26",
+    "count": 2,
+    "files": [
+      {
+        "path": "corpus-raw/vault/research/2026-02-25-jaunty-kindling-shore-8251ac.md",
+        "size": 4635,
+        "is_keeper": true
+      },
+      {
+        "path": "corpus-raw/vault/_inbox/2026-02-25-jaunty-kindling-shore-8251ac.md",
+        "size": 4635,
+        "is_keeper": false
+      }
+    ],
+    "bytes_wasted": 4635
+  },
+  {
+    "sha256": "58018e4148d80301829fd71b63ece36cf6351a7260cb7569e16abb7329ad18cc",
+    "count": 2,
+    "files": [
+      {
+        "path": "corpus-raw/vault/research/2026-02-25-logical-percolating-swan.md",
+        "size": 3425,
+        "is_keeper": true
+      },
+      {
+        "path": "corpus-raw/vault/_inbox/2026-02-25-logical-percolating-swan.md",
+        "size": 3425,
+        "is_keeper": false
+      }
+    ],
+    "bytes_wasted": 3425
+  },
+  {
+    "sha256": "fde0d5b068559ab5a627dc0326eba4206c54c040a9d71cd5fdc6787802f2bcbe",
+    "count": 2,
+    "files": [
+      {
+        "path": "corpus-raw/vault/research/2026-02-25-jaunty-kindling-shore.md",
+        "size": 5027,
+        "is_keeper": true
+      },
+      {
+        "path": "corpus-raw/vault/_inbox/2026-02-25-jaunty-kindling-shore.md",
+        "size": 5027,
+        "is_keeper": false
+      }
+    ],
+    "bytes_wasted": 5027
+  },
+  {
+    "sha256": "cae0eb1ea10a71922ca0ea85e11aefc1184f857b812c8f4b2b9ee0d7bc65047c",
+    "count": 2,
+    "files": [
+      {
+        "path": "corpus-raw/vault/research/2026-02-25-abundant-growing-emerson.md",
+        "size": 2257,
+        "is_keeper": true
+      },
+      {
+        "path": "corpus-raw/vault/_inbox/2026-02-25-abundant-growing-emerson.md",
+        "size": 2257,
+        "is_keeper": false
+      }
+    ],
+    "bytes_wasted": 2257
+  },
+  {
+    "sha256": "b77a024b534a8d901b0f3ac7bbb1a33c25a2f890293bbb98c27e3f7a3ec2678b",
+    "count": 2,
+    "files": [
+      {
+        "path": "corpus-raw/vault/research/2026-02-24-FILESYSTEM-SWEEP-COMPLETE.md",
+        "size": 4548,
+        "is_keeper": true
+      },
+      {
+        "path": "corpus-raw/vault/_inbox/FILESYSTEM-SWEEP-COMPLETE.md",
+        "size": 4548,
+        "is_keeper": false
+      }
+    ],
+    "bytes_wasted": 4548
+  },
+  {
+    "sha256": "08be443046a590f7cadf9a0b8a6aa334dfdf1a5a4c06f5b715f19cad49b486a2",
+    "count": 2,
+    "files": [
+      {
+        "path": "corpus-raw/vault/work/sessions/gates/content-draft-001-linkedin-first-post.md",
+        "size": 1791,
+        "is_keeper": true
+      },
+      {
+        "path": "corpus-raw/vault/imported-business-docs/openclaw-workspace/content-draft-001-linkedin-first-post.md",
+        "size": 1791,
+        "is_keeper": false
+      }
+    ],
+    "bytes_wasted": 1791
+  },
+  {
+    "sha256": "cd73abbb87f25345ad58824959cbbff8e7ac8d2934bddaa6b4159d228aeb1654",
+    "count": 2,
+    "files": [
+      {
+        "path": "corpus-raw/vault/work/sessions/gates/IDENTITY.md",
+        "size": 194,
+        "is_keeper": true
+      },
+      {
+        "path": "corpus-raw/vault/imported-business-docs/openclaw-workspace/IDENTITY.md",
+        "size": 194,
+        "is_keeper": false
+      }
+    ],
+    "bytes_wasted": 194
+  },
+  {
+    "sha256": "0d5e42ce90a3161bc1d35aaf1e89e7b3d78f415f2b425fc727c75b745f525a2e",
+    "count": 2,
+    "files": [
+      {
+        "path": "corpus-raw/vault/work/sessions/gates/TELEGRAM-BOT-SETUP.md",
+        "size": 3310,
+        "is_keeper": true
+      },
+      {
+        "path": "corpus-raw/vault/imported-business-docs/amplified-crm-docs/TELEGRAM-BOT-SETUP.md",
+        "size": 3310,
+        "is_keeper": false
+      }
+    ],
+    "bytes_wasted": 3310
+  },
+  {
+    "sha256": "66c325f196324fcb6e301680248068914221c42fdddb1c1db1cc0c3686d9c261",
+    "count": 2,
+    "files": [
+      {
+        "path": "corpus-raw/vault/work/sessions/gates/content-draft-002-linkedin-immutable-accountability.md",
+        "size": 1516,
+        "is_keeper": true
+      },
+      {
+        "path": "corpus-raw/vault/imported-business-docs/openclaw-workspace/content-draft-002-linkedin-immutable-accountability.md",
+        "size": 1516,
+        "is_keeper": false
+      }
+    ],
+    "bytes_wasted": 1516
+  },
+  {
+    "sha256": "842e53ec4980aaa6c924edc3204f94d978f1a238b16a396d7dcfa978e8c356dc",
+    "count": 2,
+    "files": [
+      {
+        "path": "corpus-raw/vault/work/sessions/gates/content-draft-001-linkedin-ai-what-is-it.md",
+        "size": 1327,
+        "is_keeper": true
+      },
+      {
+        "path": "corpus-raw/vault/imported-business-docs/openclaw-workspace/content-draft-001-linkedin-ai-what-is-it.md",
+        "size": 1327,
+        "is_keeper": false
+      }
+    ],
+    "bytes_wasted": 1327
+  },
+  {
+    "sha256": "fb48eb7331508801bd6564a5f430dcf40608b7652ed1f85facc90f06ca43a3a3",
+    "count": 2,
+    "files": [
+      {
+        "path": "corpus-raw/vault/work/sessions/gates/RECOVERY-SUMMARY.md",
+        "size": 10258,
+        "is_keeper": true
+      },
+      {
+        "path": "corpus-raw/vault/imported-business-docs/amplified-crm-docs/RECOVERY-SUMMARY.md",
+        "size": 10258,
+        "is_keeper": false
+      }
+    ],
+    "bytes_wasted": 10258
+  },
+  {
+    "sha256": "dac422286075ba178e9bae58154cc0ae8749a66854e438c9c58e8eb91f22c126",
+    "count": 2,
+    "files": [
+      {
+        "path": "corpus-raw/vault/work/sessions/gates/HEARTBEAT.md",
+        "size": 168,
+        "is_keeper": true
+      },
+      {
+        "path": "corpus-raw/vault/imported-business-docs/openclaw-workspace/HEARTBEAT.md",
+        "size": 168,
+        "is_keeper": false
+      }
+    ],
+    "bytes_wasted": 168
+  },
+  {
+    "sha256": "2df4fa8258b5f140f95e303251511981323fa6b95faa3e954f9db17f390a789e",
+    "count": 2,
+    "files": [
+      {
+        "path": "corpus-raw/vault/work/sessions/gates/TELEGRAM-BOT-QUICK-START.md",
+        "size": 5417,
+        "is_keeper": true
+      },
+      {
+        "path": "corpus-raw/vault/imported-business-docs/amplified-crm-docs/TELEGRAM-BOT-QUICK-START.md",
+        "size": 5417,
+        "is_keeper": false
+      }
+    ],
+    "bytes_wasted": 5417
+  },
+  {
+    "sha256": "2b44378e4ae08c786defa5216b1c3b51aa89a9aecfb2bd8b8a0a0269a88280da",
+    "count": 2,
+    "files": [
+      {
+        "path": "corpus-raw/vault/work/sessions/gates/AI-REVIEW-REQUEST.md",
+        "size": 6817,
+        "is_keeper": true
+      },
+      {
+        "path": "corpus-raw/vault/imported-business-docs/openclaw-workspace/AI-REVIEW-REQUEST.md",
+        "size": 6817,
+        "is_keeper": false
+      }
+    ],
+    "bytes_wasted": 6817
+  },
+  {
+    "sha256": "0065e6587c6d18f85b0d224cf504263e4e884ccce59b07655995685ffba50345",
+    "count": 2,
+    "files": [
+      {
+        "path": "corpus-raw/vault/work/sessions/gates/COMMITMENT-SYSTEM-README.md",
+        "size": 5646,
+        "is_keeper": true
+      },
+      {
+        "path": "corpus-raw/vault/imported-business-docs/openclaw-workspace/COMMITMENT-SYSTEM-README.md",
+        "size": 5646,
+        "is_keeper": false
+      }
+    ],
+    "bytes_wasted": 5646
+  },
+  {
+    "sha256": "915da7aa5913e62dd27eaa841fb4e83486c46098a0fb80f61501b76eb828597e",
+    "count": 2,
+    "files": [
+      {
+        "path": "corpus-raw/vault/work/sessions/gates/API-TOKENS-TO-COLLECT.md",
+        "size": 3833,
+        "is_keeper": true
+      },
+      {
+        "path": "corpus-raw/vault/imported-business-docs/openclaw-workspace/API-TOKENS-TO-COLLECT.md",
+        "size": 3833,
+        "is_keeper": false
+      }
+    ],
+    "bytes_wasted": 3833
+  },
+  {
+    "sha256": "9ad3ddbb143fbdbaa0c9f4b2149210e5326507b31a0d40e4098230b218c0b345",
+    "count": 2,
+    "files": [
+      {
+        "path": "corpus-raw/vault/work/sessions/gates/content-draft-002-linkedin-play-doh-barbershop.md",
+        "size": 861,
+        "is_keeper": true
+      },
+      {
+        "path": "corpus-raw/vault/imported-business-docs/openclaw-workspace/content-draft-002-linkedin-play-doh-barbershop.md",
+        "size": 861,
+        "is_keeper": false
+      }
+    ],
+    "bytes_wasted": 861
+  },
+  {
+    "sha256": "5d6dc27b18e1119fa2b44a7a594ed422e221bc4426c912670f9253ac9b9e2bf4",
+    "count": 2,
+    "files": [
+      {
+        "path": "corpus-raw/vault/work/sessions/gates/database-schema.md",
+        "size": 32013,
+        "is_keeper": true
+      },
+      {
+        "path": "corpus-raw/vault/imported-business-docs/amplified-crm-docs/database-schema.md",
+        "size": 32013,
+        "is_keeper": false
+      }
+    ],
+    "bytes_wasted": 32013
+  },
+  {
+    "sha256": "e8070696660118d7e717f548485f18acd33920b1a62d5560bc82124da2dba735",
+    "count": 2,
+    "files": [
+      {
+        "path": "corpus-raw/vault/_inbox-voice/voice-20260221-012350.md",
+        "size": 511,
+        "is_keeper": false
+      },
+      {
+        "path": "clean-build/03_shadow/sessions/2026-02-21_voice-session_v1.md",
+        "size": 511,
+        "is_keeper": true
+      }
+    ],
+    "bytes_wasted": 511
+  },
+  {
+    "sha256": "f989ca840bd9b43e993c9679d89a6809cecc35f7ae9f54a1efd50299898ba1d4",
+    "count": 2,
+    "files": [
+      {
+        "path": "corpus-raw/vault/transcripts/monologue-full/monologue-unknown-1796-1796.md",
+        "size": 3153,
+        "is_keeper": false
+      },
+      {
+        "path": "clean-build/03_shadow/sessions/monologue-unknown-1796_v1.md",
+        "size": 3153,
+        "is_keeper": true
+      }
+    ],
+    "bytes_wasted": 3153
+  },
+  {
+    "sha256": "53317dfb1b434c1ed96a683381c30059484e3551983f730965a7b1aacb18af95",
+    "count": 2,
+    "files": [
+      {
+        "path": "corpus-raw/vault/imported-business-docs/INTELLIGENCE_SYSTEM_COMPLETE.md",
+        "size": 10763,
+        "is_keeper": true
+      },
+      {
+        "path": "corpus-raw/vault/imported-business-docs/amplified-crm-docs/INTELLIGENCE_SYSTEM_COMPLETE.md",
+        "size": 10763,
+        "is_keeper": false
+      }
+    ],
+    "bytes_wasted": 10763
+  },
+  {
+    "sha256": "4e71f5371a91ce504f5be0b3dfaeed933ff17e5abb144edfa10e300007936eb4",
+    "count": 2,
+    "files": [
+      {
+        "path": "corpus-raw/vault/imported-business-docs/DEMO-BUSINESS-BIBLE-DAVE.md",
+        "size": 36708,
+        "is_keeper": true
+      },
+      {
+        "path": "corpus-raw/vault/imported-business-docs/amplified-crm-docs/DEMO-BUSINESS-BIBLE-DAVE.md",
+        "size": 36708,
+        "is_keeper": false
+      }
+    ],
+    "bytes_wasted": 36708
+  },
+  {
+    "sha256": "3496fed5555963ed1c6b6cba65dc80a89c271b8bf0796556e572ab972d1543c2",
+    "count": 2,
+    "files": [
+      {
+        "path": "corpus-raw/vault/imported-business-docs/PHASE_8_EXIT_STRATEGY_COMPLETE.md",
+        "size": 18901,
+        "is_keeper": true
+      },
+      {
+        "path": "corpus-raw/vault/imported-business-docs/amplified-crm-docs/PHASE_8_EXIT_STRATEGY_COMPLETE.md",
+        "size": 18901,
+        "is_keeper": false
+      }
+    ],
+    "bytes_wasted": 18901
+  },
+  {
+    "sha256": "ba82ebdb08c84ab606684c8c7328186322f38660fc8fe9f35f851c587b643a5e",
+    "count": 2,
+    "files": [
+      {
+        "path": "corpus-raw/vault/imported-business-docs/STAFF-INTERVIEW-SYSTEM-COMPLETE.md",
+        "size": 13494,
+        "is_keeper": true
+      },
+      {
+        "path": "corpus-raw/vault/imported-business-docs/amplified-crm-docs/STAFF-INTERVIEW-SYSTEM-COMPLETE.md",
+        "size": 13494,
+        "is_keeper": false
+      }
+    ],
+    "bytes_wasted": 13494
+  },
+  {
+    "sha256": "35d8f4d6a904c6c5f500479c9e934f53ddeea2fc236e53c1965ba38638c9b4c0",
+    "count": 2,
+    "files": [
+      {
+        "path": "corpus-raw/vault/imported-business-docs/business-knowledge-foundation.md",
+        "size": 111011,
+        "is_keeper": true
+      },
+      {
+        "path": "corpus-raw/vault/imported-business-docs/amplified-crm-docs/business-knowledge-foundation.md",
+        "size": 111011,
+        "is_keeper": false
+      }
+    ],
+    "bytes_wasted": 111011
+  },
+  {
+    "sha256": "5b78e2a763162131c642627fd433b9821af4d3797d501df6d795cdec2875fbe6",
+    "count": 2,
+    "files": [
+      {
+        "path": "corpus-raw/vault/imported-business-docs/BUSINESS-BRAIN-LANDING-PAGE-STRATEGY.md",
+        "size": 31829,
+        "is_keeper": true
+      },
+      {
+        "path": "corpus-raw/vault/imported-business-docs/amplified-crm-docs/BUSINESS-BRAIN-LANDING-PAGE-STRATEGY.md",
+        "size": 31829,
+        "is_keeper": false
+      }
+    ],
+    "bytes_wasted": 31829
+  },
+  {
+    "sha256": "5119bf283caa10265187f4340f9e186791637a74195a6323eed9a337481302f4",
+    "count": 2,
+    "files": [
+      {
+        "path": "corpus-raw/vault/imported-business-docs/SESSION-2026-02-14-BUSINESS-BRAIN.md",
+        "size": 24223,
+        "is_keeper": true
+      },
+      {
+        "path": "corpus-raw/vault/imported-business-docs/amplified-crm-docs/SESSION-2026-02-14-BUSINESS-BRAIN.md",
+        "size": 24223,
+        "is_keeper": false
+      }
+    ],
+    "bytes_wasted": 24223
+  },
+  {
+    "sha256": "2379db30f47995345c23d08260f882da54699711ea8523812156930342a603c5",
+    "count": 2,
+    "files": [
+      {
+        "path": "corpus-raw/vault/imported-business-docs/IMAGINE-THE-WOWS-FRAMEWORK.md",
+        "size": 16005,
+        "is_keeper": true
+      },
+      {
+        "path": "corpus-raw/vault/imported-business-docs/amplified-crm-docs/IMAGINE-THE-WOWS-FRAMEWORK.md",
+        "size": 16005,
+        "is_keeper": false
+      }
+    ],
+    "bytes_wasted": 16005
+  },
+  {
+    "sha256": "f0b009d99ba891e723830d50d8debe089add23344b539478551674700f7f81b1",
+    "count": 2,
+    "files": [
+      {
+        "path": "corpus-raw/vault/imported-business-docs/amplified-crm-docs/EXPERT-CONSULTANT-PERSONAS-TIER-3.md",
+        "size": 106707,
+        "is_keeper": true
+      },
+      {
+        "path": "corpus-raw/vault/projects/personas/EXPERT-CONSULTANT-PERSONAS-TIER-3.md",
+        "size": 106707,
+        "is_keeper": false
+      }
+    ],
+    "bytes_wasted": 106707
+  },
+  {
+    "sha256": "1f85ebf2aea3c6e5e14c677287856f5e9ac9a8ef0327dd0b7040ce8808bb209a",
+    "count": 2,
+    "files": [
+      {
+        "path": "corpus-raw/vault/imported-business-docs/amplified-crm-docs/EXPERT-CONSULTANT-PERSONAS-TIER-4-TRIPLE-WIN.md",
+        "size": 144101,
+        "is_keeper": true
+      },
+      {
+        "path": "corpus-raw/vault/projects/personas/EXPERT-CONSULTANT-PERSONAS-TIER-4-TRIPLE-WIN.md",
+        "size": 144101,
+        "is_keeper": false
+      }
+    ],
+    "bytes_wasted": 144101
+  },
+  {
+    "sha256": "94a5e510de3534eaec98c74015a5eaf3dc2bb2ddd345d6b0ab4776d6e0da53ef",
+    "count": 2,
+    "files": [
+      {
+        "path": "corpus-raw/vault/imported-business-docs/openclaw-workspace/TESTING-PERSONAS-DETAILED.md",
+        "size": 40405,
+        "is_keeper": true
+      },
+      {
+        "path": "corpus-raw/vault/projects/personas/testing-personas-detailed.md",
+        "size": 40405,
+        "is_keeper": false
+      }
+    ],
+    "bytes_wasted": 40405
+  },
+  {
+    "sha256": "328a36831a5f74df36af82b0abb82145ebbf0709ae5849c666601e1c69db25c8",
+    "count": 2,
+    "files": [
+      {
+        "path": "corpus-raw/vault/work-covered-ai/research-agent-memory-systems-2026-02-22.md",
+        "size": 61785,
+        "is_keeper": true
+      },
+      {
+        "path": "corpus-raw/vault/work-covered-ai/_research/research-agent-memory-systems-2026.md",
+        "size": 61785,
+        "is_keeper": false
+      }
+    ],
+    "bytes_wasted": 61785
+  },
+  {
+    "sha256": "ee7873fa9f6d63b9bb5c10f1ea6a57f78ae14ea9e8f440d2c8dfae18f6a5f5f0",
+    "count": 2,
+    "files": [
+      {
+        "path": "corpus-raw/vault/work-covered-ai/research-ai-marketing-agency-blueprint-v1.md",
+        "size": 23098,
+        "is_keeper": true
+      },
+      {
+        "path": "corpus-raw/vault/work-covered-ai/_research/research-ai-marketing-agency-blueprint-v1.md",
+        "size": 23098,
+        "is_keeper": false
+      }
+    ],
+    "bytes_wasted": 23098
+  },
+  {
+    "sha256": "0653c9a8231098696213f0846bb447ca62fc0dcaf4851557b9574193c6ffb8a9",
+    "count": 2,
+    "files": [
+      {
+        "path": "corpus-raw/vault/work-covered-ai/research-multi-agent-orchestration-patterns.md",
+        "size": 78928,
+        "is_keeper": true
+      },
+      {
+        "path": "corpus-raw/vault/work-covered-ai/_research/research-multi-agent-orchestration-patterns.md",
+        "size": 78928,
+        "is_keeper": false
+      }
+    ],
+    "bytes_wasted": 78928
+  },
+  {
+    "sha256": "94f0f97e4a35854457615099ea460992de08e65c0087bcd6a939035b5710484c",
+    "count": 2,
+    "files": [
+      {
+        "path": "corpus-raw/vault/work-covered-ai/_research/research-success-stories-matthew-berman-bhanu-2026.md",
+        "size": 19535,
+        "is_keeper": true
+      },
+      {
+        "path": "corpus-raw/vault/work-covered-ai/_research/research-success-stories-2026.md",
+        "size": 19535,
+        "is_keeper": false
+      }
+    ],
+    "bytes_wasted": 19535
+  },
+  {
+    "sha256": "328469d65b83eb9e56ae3f09147dc1803260a9dd23b7e0b6b8e1129873eb093d",
+    "count": 2,
+    "files": [
+      {
+        "path": "clean-build/01_truth/data/drive-complexity-settings-2026-03-19t18-39-39-687z.json",
+        "size": 4871,
+        "is_keeper": true
+      },
+      {
+        "path": "clean-build/01_truth/data/drive-complexity-settings-2026-03-19t19-29-07-908z.json",
+        "size": 4871,
+        "is_keeper": false
+      }
+    ],
+    "bytes_wasted": 4871
+  },
+  {
+    "sha256": "4c4527165e99e056b2d190870ea11f6444993023ec97fb28130eda0217958426",
+    "count": 2,
+    "files": [
+      {
+        "path": "clean-build/01_truth/processes/2026-04_hygiene-role-charter_v1.md",
+        "size": 1247,
+        "is_keeper": true
+      },
+      {
+        "path": "clean-build/90_archive/truth-history/2026-04-16_2026-04_hygiene-role-charter_v1.md",
+        "size": 1247,
+        "is_keeper": false
+      }
+    ],
+    "bytes_wasted": 1247
+  },
+  {
+    "sha256": "9886dd697a9d82cded86478819d2402d3a60108f06186d991cb6cd90a3ea99f2",
+    "count": 2,
+    "files": [
+      {
+        "path": "clean-build/01_truth/processes/AGENTS.md",
+        "size": 561,
+        "is_keeper": true
+      },
+      {
+        "path": "clean-build/90_archive/truth-history/2026-04-16_AGENTS.md",
+        "size": 561,
+        "is_keeper": false
+      }
+    ],
+    "bytes_wasted": 561
+  },
+  {
+    "sha256": "cc74193c1b9b091fb8f976d573d1a806459dbf91d3a4033fb44092ddf361bb45",
+    "count": 2,
+    "files": [
+      {
+        "path": "clean-build/01_truth/processes/2026-03_bible-consolidation_five-phase-approach_v1.md",
+        "size": 1376,
+        "is_keeper": true
+      },
+      {
+        "path": "clean-build/90_archive/truth-history/2026-04-16_2026-03_bible-consolidation_five-phase-approach_v1.md",
+        "size": 1376,
+        "is_keeper": false
+      }
+    ],
+    "bytes_wasted": 1376
+  },
+  {
+    "sha256": "69aa73cf5bc3377a7d97f2e8d2bb773195815efe225af7f1be6f5b9306bbe14f",
+    "count": 2,
+    "files": [
+      {
+        "path": "clean-build/02_build/command-centre/.gitignore",
+        "size": 5,
+        "is_keeper": true
+      },
+      {
+        "path": "clean-build/02_build/command-centre/backend/.gitignore",
+        "size": 5,
+        "is_keeper": false
+      }
+    ],
+    "bytes_wasted": 5
+  },
+  {
+    "sha256": "1b2163c1397ce2d30b0071ee50354042dbb96bf663bc0dc51afec926ee5ed0b4",
+    "count": 2,
+    "files": [
+      {
+        "path": "clean-build/03_shadow/sessions/perplexity/perplexity-export-history-2026-03-20-1.json",
+        "size": 31281,
+        "is_keeper": true
+      },
+      {
+        "path": "clean-build/03_shadow/sessions/perplexity/perplexity-export-history-2026-03-20.json",
+        "size": 31281,
+        "is_keeper": false
+      }
+    ],
+    "bytes_wasted": 31281
+  }
+]
