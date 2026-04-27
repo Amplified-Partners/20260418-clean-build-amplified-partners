@@ -1,0 +1,82 @@
+{
+  "rubric": {
+    "dimensions": [
+      {
+        "id": "calm_surface",
+        "name": "Calm Surface",
+        "weight": 0.15,
+        "prompt": "Rate the visual calmness of this interface. A calm surface is mostly neutral with accent color used sparingly. The eye should rest, not bounce. Consider: number of distinct colors visible, ratio of neutral to accent, visual noise level.",
+        "scale": { "min": 1, "max": 10, "anchor_low": "Noisy, many competing colors", "anchor_high": "Serene, accent draws eye precisely where needed" }
+      },
+      {
+        "id": "clear_hierarchy",
+        "name": "Clear Hierarchy",
+        "weight": 0.15,
+        "prompt": "Rate the visual hierarchy. Squint at the screenshot — can you immediately identify 3-4 levels of importance? Is the most important element (key metric, primary action) the most visually prominent?",
+        "scale": { "min": 1, "max": 10, "anchor_low": "Everything same weight, no focal point", "anchor_high": "Instantly clear what matters most, 3-4 distinct levels" }
+      },
+      {
+        "id": "typographic_rhythm",
+        "name": "Typographic Rhythm",
+        "weight": 0.12,
+        "prompt": "Evaluate the typography. Is there a consistent scale? Do headings, body, and captions form a clear progression? Is line length comfortable? Is spacing between text blocks consistent?",
+        "scale": { "min": 1, "max": 10, "anchor_low": "Inconsistent sizes, poor spacing, uncomfortable to read", "anchor_high": "Beautiful rhythm, clear scale, every text element feels intentional" }
+      },
+      {
+        "id": "spatial_breathing",
+        "name": "Spatial Breathing",
+        "weight": 0.12,
+        "prompt": "Assess whitespace and breathing room. Is content given enough space to be parsed without effort? Are groups of related items clearly separated from unrelated items? Does the layout feel spacious without feeling empty?",
+        "scale": { "min": 1, "max": 10, "anchor_low": "Cramped, elements touching, no breathing room", "anchor_high": "Generous, intentional whitespace, clear grouping through space" }
+      },
+      {
+        "id": "state_clarity",
+        "name": "State Clarity",
+        "weight": 0.10,
+        "prompt": "Can you identify the current state of interactive elements? Are hover targets clear? Do buttons look clickable? Are disabled states obviously disabled? Loading states present?",
+        "scale": { "min": 1, "max": 10, "anchor_low": "States ambiguous, can't tell what's interactive", "anchor_high": "Every state obvious, interaction model clear at a glance" }
+      },
+      {
+        "id": "consistent_density",
+        "name": "Consistent Density",
+        "weight": 0.08,
+        "prompt": "Is information density consistent across the view? Are similar sections equally dense? No areas that feel much tighter or looser than their neighbors?",
+        "scale": { "min": 1, "max": 10, "anchor_low": "Wildly varying density, inconsistent spacing", "anchor_high": "Uniform density, every section feels calibrated to the same standard" }
+      },
+      {
+        "id": "motion_purpose",
+        "name": "Motion Purpose",
+        "weight": 0.08,
+        "prompt": "If any animations or transitions are visible/implied, do they serve information or feedback purposes? No gratuitous effects?",
+        "scale": { "min": 1, "max": 10, "anchor_low": "Decorative animation, distracting motion", "anchor_high": "Every motion carries meaning or provides feedback" }
+      },
+      {
+        "id": "component_cohesion",
+        "name": "Component Cohesion",
+        "weight": 0.08,
+        "prompt": "Do all components look like they belong to the same design system? Consistent border radius, shadow treatment, padding, button styles?",
+        "scale": { "min": 1, "max": 10, "anchor_low": "Components from different design systems, inconsistent", "anchor_high": "Every component clearly from the same family" }
+      },
+      {
+        "id": "data_legibility",
+        "name": "Data Legibility",
+        "weight": 0.07,
+        "prompt": "Are numbers, charts, tables, and data immediately scannable? Do key metrics stand out? Is data density appropriate — not too sparse, not overwhelming?",
+        "scale": { "min": 1, "max": 10, "anchor_low": "Data hard to parse, metrics buried", "anchor_high": "Data jumps off the screen, instantly scannable" }
+      },
+      {
+        "id": "congruent_trust",
+        "name": "Congruent Trust",
+        "weight": 0.05,
+        "prompt": "Does this interface feel honest and trustworthy? Not over-polished to the point of seeming fake, not under-designed to seem unprofessional? Would a prospective customer trust this product?",
+        "scale": { "min": 1, "max": 10, "anchor_low": "Feels fake or untrustworthy", "anchor_high": "Inspires quiet confidence, feels like a tool built by experts" }
+      }
+    ],
+    "overall_prompt": "After rating each dimension, provide an overall polish score (1-10) and 2-3 specific, actionable suggestions for the single most impactful improvement.",
+    "examples": {
+      "positive": ["references/positive-examples/linear-dashboard.png", "references/positive-examples/vercel-dashboard.png"],
+      "negative": ["references/negative-examples/cluttered-dashboard.png", "references/negative-examples/inconsistent-cards.png"]
+    }
+  }
+}
+

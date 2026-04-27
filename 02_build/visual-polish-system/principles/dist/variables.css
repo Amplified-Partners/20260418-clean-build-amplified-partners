@@ -1,0 +1,103 @@
+/**
+ * Do not edit directly, this file was auto-generated.
+ */
+
+:root {
+  --color-primitive-neutral-0: [object Object];
+  --color-primitive-neutral-50: [object Object];
+  --color-primitive-neutral-100: [object Object];
+  --color-primitive-neutral-200: [object Object];
+  --color-primitive-neutral-300: [object Object];
+  --color-primitive-neutral-400: [object Object];
+  --color-primitive-neutral-500: [object Object];
+  --color-primitive-neutral-900: [object Object];
+  --color-primitive-neutral-1000: [object Object];
+  --color-primitive-teal-400: [object Object];
+  --color-primitive-teal-500: [object Object];
+  --color-primitive-teal-600: [object Object];
+  --color-primitive-red-500: [object Object];
+  --color-primitive-amber-500: [object Object];
+  --color-primitive-green-500: [object Object];
+  --duration-instant: [object Object]; /** Opacity changes, micro-feedback */
+  --duration-fast: [object Object]; /** Hover states, tooltips */
+  --duration-normal: [object Object]; /** Standard transitions, panel open/close */
+  --duration-slow: [object Object]; /** Page transitions, modal entrance */
+  --duration-slower: [object Object]; /** Complex transitions only. Maximum. */
+  --easing-default: cubic-bezier(0.25, 0.1, 0.25, 1); /** Standard ease — most transitions */
+  --easing-in: cubic-bezier(0.42, 0, 1, 1); /** Ease in — elements exiting */
+  --easing-out: cubic-bezier(0, 0, 0.58, 1); /** Ease out — elements entering */
+  --easing-in-out: cubic-bezier(0.42, 0, 0.58, 1); /** Ease in-out — position changes */
+  --easing-spring: cubic-bezier(0.34, 1.56, 0.64, 1); /** Slight overshoot — playful feedback only */
+  --shadow-none: [object Object] [object Object] [object Object] [object Object] [object Object];
+  --shadow-sm: [object Object] [object Object] [object Object] [object Object] [object Object]; /** Subtle elevation. Cards on surface. */
+  --shadow-md: [object Object] [object Object] [object Object] [object Object] [object Object]; /** Standard elevation. Dropdowns, popovers. */
+  --shadow-lg: [object Object] [object Object] [object Object] [object Object] [object Object]; /** High elevation. Modals, dialogs. */
+  --shadow-xl: [object Object] [object Object] [object Object] [object Object] [object Object]; /** Maximum elevation. Command palette, floating panels. */
+  --space-0: [object Object];
+  --space-1: [object Object]; /** Hairline borders only */
+  --space-2: [object Object]; /** Tight inline gaps */
+  --space-4: [object Object]; /** Icon-to-text gap, badge padding */
+  --space-6: [object Object]; /** Small component internal padding */
+  --space-8: [object Object]; /** Standard internal padding, small gaps */
+  --space-12: [object Object]; /** Medium gaps, input padding */
+  --space-16: [object Object]; /** Card padding, standard section gaps */
+  --space-20: [object Object]; /** Comfortable gaps between groups */
+  --space-24: [object Object]; /** Large section padding */
+  --space-32: [object Object]; /** Section separation */
+  --space-40: [object Object]; /** Large layout gaps */
+  --space-48: [object Object]; /** Page-level vertical rhythm */
+  --space-64: [object Object]; /** Hero spacing, major sections */
+  --space-80: [object Object]; /** Page margins, max section gaps */
+  --space-96: [object Object]; /** Landing page hero spacing only */
+  --radius-none: [object Object];
+  --radius-sm: [object Object]; /** Badges, small chips */
+  --radius-md: [object Object]; /** Buttons, inputs, small cards */
+  --radius-lg: [object Object]; /** Cards, panels */
+  --radius-xl: [object Object]; /** Modals, dialogs */
+  --radius-2xl: [object Object]; /** Large containers, landing sections */
+  --radius-full: [object Object]; /** Circles, pills */
+  --font-sans: Geist, system-ui, -apple-system, sans-serif; /** Primary sans-serif. Used for all UI text. */
+  --font-mono: 'Geist Mono', 'JetBrains Mono', Consolas, monospace; /** Monospace. Used for code, data values, and transcripts. */
+  --font-size-2xs: [object Object]; /** Smallest allowed. Badges, fine print only. */
+  --font-size-xs: [object Object]; /** Captions, labels, timestamps */
+  --font-size-sm: [object Object]; /** Secondary text, metadata */
+  --font-size-base: [object Object]; /** Default body text */
+  --font-size-md: [object Object]; /** Emphasized body */
+  --font-size-lg: [object Object]; /** Section headings */
+  --font-size-xl: [object Object]; /** Page headings */
+  --font-size-2xl: [object Object]; /** View titles */
+  --font-size-3xl: [object Object]; /** Hero/display */
+  --font-size-4xl: [object Object]; /** Hero display, landing pages only */
+  --font-weight-regular: 400; /** Body text */
+  --font-weight-medium: 500; /** Emphasis, labels */
+  --font-weight-semibold: 600; /** Headings, key metrics */
+  --font-weight-bold: 700; /** Hero text, strong emphasis only */
+  --line-height-tight: 1.2; /** Headings, display text */
+  --line-height-snug: 1.35; /** Subheadings, compact body */
+  --line-height-normal: 1.5; /** Body text — default */
+  --line-height-relaxed: 1.625; /** Long-form content, landing pages */
+  --letter-spacing-tighter: [object Object]; /** Display/hero only (>28px) */
+  --letter-spacing-tight: [object Object]; /** Headings (18-28px) */
+  --letter-spacing-normal: [object Object]; /** Body text */
+  --letter-spacing-wide: [object Object]; /** ALL-CAPS labels only */
+  --color-semantic-bg: var(--color-primitive-neutral-50);
+  --color-semantic-surface: var(--color-primitive-neutral-100);
+  --color-semantic-surface-alt: var(--color-primitive-neutral-0);
+  --color-semantic-border: var(--color-primitive-neutral-200);
+  --color-semantic-text: var(--color-primitive-neutral-900);
+  --color-semantic-text-muted: var(--color-primitive-neutral-400);
+  --color-semantic-text-faint: var(--color-primitive-neutral-300);
+  --color-semantic-primary: var(--color-primitive-teal-500);
+  --color-semantic-primary-hover: var(--color-primitive-teal-600);
+  --color-semantic-error: var(--color-primitive-red-500);
+  --color-semantic-warning: var(--color-primitive-amber-500);
+  --color-semantic-success: var(--color-primitive-green-500);
+  --typography-display: var(--font-weight-bold) var(--font-size-3xl)/var(--line-height-tight) var(--font-sans); /** Hero and display text. Landing pages and key metrics. */
+  --typography-heading1: var(--font-weight-semibold) var(--font-size-2xl)/var(--line-height-tight) var(--font-sans);
+  --typography-heading2: var(--font-weight-semibold) var(--font-size-xl)/var(--line-height-tight) var(--font-sans);
+  --typography-heading3: var(--font-weight-medium) var(--font-size-lg)/var(--line-height-snug) var(--font-sans);
+  --typography-body: var(--font-weight-regular) var(--font-size-base)/var(--line-height-normal) var(--font-sans);
+  --typography-caption: var(--font-weight-regular) var(--font-size-xs)/var(--line-height-normal) var(--font-sans);
+  --typography-code: var(--font-weight-regular) var(--font-size-sm)/var(--line-height-normal) var(--font-mono); /** Inline code, data values, transcript content */
+  --typography-metric: var(--font-weight-semibold) var(--font-size-2xl)/var(--line-height-tight) var(--font-mono); /** Large numeric values in KPI cards. Use tabular-nums. */
+}

@@ -1,0 +1,128 @@
+{
+  "$schema": "./schema/token.schema.json",
+  "$version": "1.0.0",
+  "font": {
+    "$type": "fontFamily",
+    "sans": {
+      "$value": ["Geist", "system-ui", "-apple-system", "sans-serif"],
+      "$description": "Primary sans-serif. Used for all UI text."
+    },
+    "mono": {
+      "$value": ["Geist Mono", "JetBrains Mono", "Consolas", "monospace"],
+      "$description": "Monospace. Used for code, data values, and transcripts."
+    }
+  },
+  "fontSize": {
+    "$type": "dimension",
+    "2xs": { "$value": { "value": 11, "unit": "px" }, "$description": "Smallest allowed. Badges, fine print only." },
+    "xs":  { "$value": { "value": 12, "unit": "px" }, "$description": "Captions, labels, timestamps" },
+    "sm":  { "$value": { "value": 13, "unit": "px" }, "$description": "Secondary text, metadata" },
+    "base": { "$value": { "value": 14, "unit": "px" }, "$description": "Default body text" },
+    "md":  { "$value": { "value": 15, "unit": "px" }, "$description": "Emphasized body" },
+    "lg":  { "$value": { "value": 18, "unit": "px" }, "$description": "Section headings" },
+    "xl":  { "$value": { "value": 22, "unit": "px" }, "$description": "Page headings" },
+    "2xl": { "$value": { "value": 28, "unit": "px" }, "$description": "View titles" },
+    "3xl": { "$value": { "value": 36, "unit": "px" }, "$description": "Hero/display" },
+    "4xl": { "$value": { "value": 48, "unit": "px" }, "$description": "Hero display, landing pages only" }
+  },
+  "fontWeight": {
+    "$type": "fontWeight",
+    "regular": { "$value": 400, "$description": "Body text" },
+    "medium":  { "$value": 500, "$description": "Emphasis, labels" },
+    "semibold": { "$value": 600, "$description": "Headings, key metrics" },
+    "bold":    { "$value": 700, "$description": "Hero text, strong emphasis only" }
+  },
+  "lineHeight": {
+    "$type": "number",
+    "tight":   { "$value": 1.2, "$description": "Headings, display text" },
+    "snug":    { "$value": 1.35, "$description": "Subheadings, compact body" },
+    "normal":  { "$value": 1.5, "$description": "Body text — default" },
+    "relaxed": { "$value": 1.625, "$description": "Long-form content, landing pages" }
+  },
+  "letterSpacing": {
+    "$type": "dimension",
+    "tighter": { "$value": { "value": -0.03, "unit": "em" }, "$description": "Display/hero only (>28px)" },
+    "tight":   { "$value": { "value": -0.015, "unit": "em" }, "$description": "Headings (18-28px)" },
+    "normal":  { "$value": { "value": 0, "unit": "em" }, "$description": "Body text" },
+    "wide":    { "$value": { "value": 0.05, "unit": "em" }, "$description": "ALL-CAPS labels only" }
+  },
+  "typography": {
+    "$type": "typography",
+    "display": {
+      "$value": {
+        "fontFamily": "{font.sans}",
+        "fontSize": "{fontSize.3xl}",
+        "fontWeight": "{fontWeight.bold}",
+        "letterSpacing": "{letterSpacing.tighter}",
+        "lineHeight": "{lineHeight.tight}"
+      },
+      "$description": "Hero and display text. Landing pages and key metrics."
+    },
+    "heading1": {
+      "$value": {
+        "fontFamily": "{font.sans}",
+        "fontSize": "{fontSize.2xl}",
+        "fontWeight": "{fontWeight.semibold}",
+        "letterSpacing": "{letterSpacing.tight}",
+        "lineHeight": "{lineHeight.tight}"
+      }
+    },
+    "heading2": {
+      "$value": {
+        "fontFamily": "{font.sans}",
+        "fontSize": "{fontSize.xl}",
+        "fontWeight": "{fontWeight.semibold}",
+        "letterSpacing": "{letterSpacing.tight}",
+        "lineHeight": "{lineHeight.tight}"
+      }
+    },
+    "heading3": {
+      "$value": {
+        "fontFamily": "{font.sans}",
+        "fontSize": "{fontSize.lg}",
+        "fontWeight": "{fontWeight.medium}",
+        "letterSpacing": "{letterSpacing.normal}",
+        "lineHeight": "{lineHeight.snug}"
+      }
+    },
+    "body": {
+      "$value": {
+        "fontFamily": "{font.sans}",
+        "fontSize": "{fontSize.base}",
+        "fontWeight": "{fontWeight.regular}",
+        "letterSpacing": "{letterSpacing.normal}",
+        "lineHeight": "{lineHeight.normal}"
+      }
+    },
+    "caption": {
+      "$value": {
+        "fontFamily": "{font.sans}",
+        "fontSize": "{fontSize.xs}",
+        "fontWeight": "{fontWeight.regular}",
+        "letterSpacing": "{letterSpacing.normal}",
+        "lineHeight": "{lineHeight.normal}"
+      }
+    },
+    "code": {
+      "$value": {
+        "fontFamily": "{font.mono}",
+        "fontSize": "{fontSize.sm}",
+        "fontWeight": "{fontWeight.regular}",
+        "letterSpacing": "{letterSpacing.normal}",
+        "lineHeight": "{lineHeight.normal}"
+      },
+      "$description": "Inline code, data values, transcript content"
+    },
+    "metric": {
+      "$value": {
+        "fontFamily": "{font.mono}",
+        "fontSize": "{fontSize.2xl}",
+        "fontWeight": "{fontWeight.semibold}",
+        "letterSpacing": "{letterSpacing.tight}",
+        "lineHeight": "{lineHeight.tight}"
+      },
+      "$description": "Large numeric values in KPI cards. Use tabular-nums."
+    }
+  }
+}
+

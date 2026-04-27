@@ -1,0 +1,17 @@
+{
+  "extends": ["stylelint-config-standard"],
+  "plugins": [],
+  "rules": {
+    "color-no-hex": true,
+    "declaration-property-value-allowed-list": {
+      "font-size": ["/var\\(--fontSize-/"],
+      "color": ["/var\\(--color-/", "transparent", "currentColor", "inherit"],
+      "background-color": ["/var\\(--color-/", "transparent", "inherit"],
+      "border-color": ["/var\\(--color-/", "transparent", "inherit"],
+      "margin": ["/var\\(--space-/", "0", "auto"],
+      "padding": ["/var\\(--space-/", "0"],
+      "gap": ["/var\\(--space-/", "0"],
+      "border-radius": ["/var\\(--radius-/", "0"]
+    }
+  }
+}

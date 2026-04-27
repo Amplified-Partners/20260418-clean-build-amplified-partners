@@ -1,0 +1,49 @@
+{
+  "$schema": "./schema/token.schema.json",
+  "$version": "1.0.0",
+  "shadow": {
+    "$type": "shadow",
+    "none": { "$value": { "color": { "colorSpace": "srgb", "components": [0, 0, 0], "alpha": 0 }, "offsetX": { "value": 0, "unit": "px" }, "offsetY": { "value": 0, "unit": "px" }, "blur": { "value": 0, "unit": "px" }, "spread": { "value": 0, "unit": "px" } } },
+    "sm": {
+      "$value": {
+        "color": { "colorSpace": "srgb", "components": [0, 0, 0], "alpha": 0.04 },
+        "offsetX": { "value": 0, "unit": "px" },
+        "offsetY": { "value": 1, "unit": "px" },
+        "blur": { "value": 2, "unit": "px" },
+        "spread": { "value": 0, "unit": "px" }
+      },
+      "$description": "Subtle elevation. Cards on surface."
+    },
+    "md": {
+      "$value": {
+        "color": { "colorSpace": "srgb", "components": [0, 0, 0], "alpha": 0.06 },
+        "offsetX": { "value": 0, "unit": "px" },
+        "offsetY": { "value": 2, "unit": "px" },
+        "blur": { "value": 8, "unit": "px" },
+        "spread": { "value": -2, "unit": "px" }
+      },
+      "$description": "Standard elevation. Dropdowns, popovers."
+    },
+    "lg": {
+      "$value": {
+        "color": { "colorSpace": "srgb", "components": [0, 0, 0], "alpha": 0.08 },
+        "offsetX": { "value": 0, "unit": "px" },
+        "offsetY": { "value": 4, "unit": "px" },
+        "blur": { "value": 16, "unit": "px" },
+        "spread": { "value": -4, "unit": "px" }
+      },
+      "$description": "High elevation. Modals, dialogs."
+    },
+    "xl": {
+      "$value": {
+        "color": { "colorSpace": "srgb", "components": [0, 0, 0], "alpha": 0.12 },
+        "offsetX": { "value": 0, "unit": "px" },
+        "offsetY": { "value": 8, "unit": "px" },
+        "blur": { "value": 24, "unit": "px" },
+        "spread": { "value": -6, "unit": "px" }
+      },
+      "$description": "Maximum elevation. Command palette, floating panels."
+    }
+  }
+}
+

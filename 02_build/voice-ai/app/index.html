@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#0a0a0a">
+    <title>Voice</title>
+    <link rel="manifest" href="manifest.json">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #0a0a0a;
+            --surface: #1a1a1a;
+            --text: #e5e5e5;
+            --text-dim: #666;
+            --accent: #3b82f6;
+            --accent-glow: rgba(59, 130, 246, 0.3);
+            --success: #22c55e;
+            --warning: #f59e0b;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Main content - centered talk button */
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        /* The Talk Button */
+        .talk-button {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            border: none;
+            background: var(--surface);
+            color: var(--text);
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            outline: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .talk-button:hover {
+            background: #252525;
+        }
+
+        .talk-button:active,
+        .talk-button.listening {
+            background: var(--accent);
+            box-shadow: 0 0 40px var(--accent-glow);
+        }
+
+        .talk-button.listening {
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        .talk-button.processing {
+            background: var(--warning);
+            animation: none;
+        }
+
+        .talk-button.speaking {
+            background: var(--success);
+            animation: none;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* Status text below button */
+        .status {
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            height: 1.5rem;
+        }
+
+        /* Text fallback input */
+        .text-fallback {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 1rem;
+            background: var(--surface);
+            border-top: 1px solid #333;
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .text-input {
+            flex: 1;
+            background: var(--bg);
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            color: var(--text);
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .text-input:focus {
+            border-color: var(--accent);
+        }
+
+        .text-input::placeholder {
+            color: var(--text-dim);
+        }
+
+        .send-button {
+            background: var(--accent);
+            border: none;
+            border-radius: 8px;
+            padding: 0.75rem 1.25rem;
+            color: white;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .send-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Notification stack */
+        .notifications {
+            position: fixed;
+            bottom: 80px;
+            left: 1rem;
+            right: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            pointer-events: none;
+        }
+
+        .notification {
+            background: var(--surface);
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            font-size: 0.9rem;
+            pointer-events: auto;
+            cursor: pointer;
+            animation: slideUp 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notification:hover {
+            background: #252525;
+        }
+
+        .notification.success {
+            border-left: 3px solid var(--success);
+        }
+
+        .notification.info {
+            border-left: 3px solid var(--accent);
+        }
+
+        .notification .dismiss {
+            color: var(--text-dim);
+            font-size: 0.8rem;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .notification.dismissing {
+            animation: slideOut 0.2s ease forwards;
+        }
+
+        @keyframes slideOut {
+            to {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 400px) {
+            .talk-button {
+                width: 120px;
+                height: 120px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main">
+        <button class="talk-button" id="talkButton">Talk</button>
+        <div class="status" id="status"></div>
+    </div>
+
+    <div class="notifications" id="notifications"></div>
+
+    <div class="text-fallback">
+        <input 
+            type="text" 
+            class="text-input" 
+            id="textInput" 
+            placeholder="Type if voice doesn't work..."
+            autocomplete="off"
+        >
+        <button class="send-button" id="sendButton">Send</button>
+    </div>
+
+    <script>
+        // State
+        let isListening = false;
+        let isProcessing = false;
+        let mediaRecorder = null;
+        let audioChunks = [];
+
+        // Elements
+        const talkButton = document.getElementById('talkButton');
+        const status = document.getElementById('status');
+        const textInput = document.getElementById('textInput');
+        const sendButton = document.getElementById('sendButton');
+        const notifications = document.getElementById('notifications');
+
+        // API endpoint (configure this)
+        const API_URL = '/api/voice';  // Will be replaced with actual endpoint
+
+        // Talk button handler
+        talkButton.addEventListener('mousedown', startListening);
+        talkButton.addEventListener('mouseup', stopListening);
+        talkButton.addEventListener('touchstart', (e) => { e.preventDefault(); startListening(); });
+        talkButton.addEventListener('touchend', (e) => { e.preventDefault(); stopListening(); });
+
+        async function startListening() {
+            if (isProcessing) return;
+            
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+
+                mediaRecorder.ondataavailable = (e) => {
+                    audioChunks.push(e.data);
+                };
+
+                mediaRecorder.onstop = async () => {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                    stream.getTracks().forEach(track => track.stop());
+                    await processAudio(audioBlob);
+                };
+
+                mediaRecorder.start();
+                isListening = true;
+                talkButton.classList.add('listening');
+                talkButton.textContent = 'Listening...';
+                status.textContent = 'Speak now';
+            } catch (err) {
+                console.error('Mic error:', err);
+                status.textContent = 'Microphone access denied';
+                showNotification('Could not access microphone. Use text input below.', 'info');
+            }
+        }
+
+        function stopListening() {
+            if (!isListening || !mediaRecorder) return;
+            
+            mediaRecorder.stop();
+            isListening = false;
+            talkButton.classList.remove('listening');
+        }
+
+        async function processAudio(audioBlob) {
+            isProcessing = true;
+            talkButton.classList.add('processing');
+            talkButton.textContent = 'Thinking...';
+            status.textContent = 'Processing...';
+
+            try {
+                // Send to backend
+                const formData = new FormData();
+                formData.append('audio', audioBlob);
+
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) throw new Error('API error');
+
+                const result = await response.json();
+                
+                // Play response audio
+                if (result.audio) {
+                    talkButton.classList.remove('processing');
+                    talkButton.classList.add('speaking');
+                    talkButton.textContent = 'Speaking...';
+                    status.textContent = '';
+                    
+                    await playAudio(result.audio);
+                }
+
+                // Show any notifications (completed tasks, etc)
+                if (result.notifications) {
+                    result.notifications.forEach(n => showNotification(n.text, n.type));
+                }
+
+            } catch (err) {
+                console.error('Process error:', err);
+                status.textContent = 'Something went wrong';
+                showNotification('Failed to process. Try again or use text.', 'info');
+            } finally {
+                isProcessing = false;
+                talkButton.classList.remove('processing', 'speaking');
+                talkButton.textContent = 'Talk';
+            }
+        }
+
+        async function playAudio(base64Audio) {
+            return new Promise((resolve) => {
+                const audio = new Audio('data:audio/wav;base64,' + base64Audio);
+                audio.onended = resolve;
+                audio.onerror = resolve;
+                audio.play();
+            });
+        }
+
+        // Text input handler
+        sendButton.addEventListener('click', sendText);
+        textInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendText();
+        });
+
+        async function sendText() {
+            const text = textInput.value.trim();
+            if (!text || isProcessing) return;
+
+            isProcessing = true;
+            talkButton.classList.add('processing');
+            talkButton.textContent = 'Thinking...';
+            sendButton.disabled = true;
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text })
+                });
+
+                if (!response.ok) throw new Error('API error');
+
+                const result = await response.json();
+                textInput.value = '';
+
+                // Play response
+                if (result.audio) {
+                    talkButton.classList.remove('processing');
+                    talkButton.classList.add('speaking');
+                    talkButton.textContent = 'Speaking...';
+                    await playAudio(result.audio);
+                }
+
+                if (result.notifications) {
+                    result.notifications.forEach(n => showNotification(n.text, n.type));
+                }
+
+            } catch (err) {
+                console.error('Send error:', err);
+                showNotification('Failed to send. Try again.', 'info');
+            } finally {
+                isProcessing = false;
+                talkButton.classList.remove('processing', 'speaking');
+                talkButton.textContent = 'Talk';
+                sendButton.disabled = false;
+            }
+        }
+
+        // Notification system
+        function showNotification(text, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <span>${text}</span>
+                <span class="dismiss">tap to dismiss</span>
+            `;
+
+            notification.addEventListener('click', () => {
+                notification.classList.add('dismissing');
+                setTimeout(() => notification.remove(), 200);
+            });
+
+            notifications.appendChild(notification);
+
+            // Auto-dismiss after 10 seconds if not acknowledged
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.classList.add('dismissing');
+                    setTimeout(() => notification.remove(), 200);
+                }
+            }, 10000);
+        }
+
+        // Register service worker for PWA
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').catch(console.error);
+        }
+    </script>
+</body>
+</html>

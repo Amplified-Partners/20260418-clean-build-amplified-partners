@@ -1,0 +1,153 @@
+{
+  "$version": "1.0.0",
+  "rules": [
+    {
+      "id": "TYP-001",
+      "name": "No arbitrary font sizes",
+      "category": "typography",
+      "severity": "error",
+      "condition": {
+        "check_type": "css_lint",
+        "property": "font-size",
+        "allowed_tokens": [
+          "var(--fontSize-2xs)", "var(--fontSize-xs)", "var(--fontSize-sm)",
+          "var(--fontSize-base)", "var(--fontSize-md)", "var(--fontSize-lg)",
+          "var(--fontSize-xl)", "var(--fontSize-2xl)", "var(--fontSize-3xl)",
+          "var(--fontSize-4xl)"
+        ]
+      },
+      "rationale": "All font sizes must come from the typographic scale. Arbitrary sizes break visual rhythm and make Kaizen impossible — you can't improve what you can't measure.",
+      "source": "Linear typography system; Bringhurst typographic scale",
+      "added": "2026-03-14"
+    },
+    {
+      "id": "TYP-002",
+      "name": "Body text line length limit",
+      "category": "typography",
+      "severity": "warning",
+      "condition": {
+        "check_type": "metric_range",
+        "selector": "p, .body-text, [data-text-role='body']",
+        "property": "characters-per-line",
+        "max": 75,
+        "min": 35
+      },
+      "rationale": "Optimal reading comfort: 45-75 characters per line (66 ideal). Below 35 causes excessive line breaks; above 75 causes tracking loss.",
+      "source": "Bringhurst 'Elements of Typographic Style'; WCAG SC 1.4.8",
+      "added": "2026-03-14"
+    },
+    {
+      "id": "CLR-001",
+      "name": "No arbitrary colour values",
+      "category": "color",
+      "severity": "error",
+      "condition": {
+        "check_type": "css_lint",
+        "property": "color|background-color|border-color|fill|stroke",
+        "selector": "*",
+        "allowed_tokens": ["var(--color-*)", "transparent", "currentColor", "inherit"]
+      },
+      "rationale": "All colours must come from the token system. Arbitrary hex/rgb values break theming, dark mode, and visual consistency.",
+      "source": "Atlassian Stylelint plugin; Shadcn token system",
+      "added": "2026-03-14"
+    },
+    {
+      "id": "LAY-001",
+      "name": "Maximum distinct card styles per view",
+      "category": "layout",
+      "severity": "warning",
+      "condition": {
+        "check_type": "count_limit",
+        "selector": "[data-component='card']",
+        "property": "distinct-visual-styles",
+        "max": 3
+      },
+      "rationale": "More than 3 visually distinct card patterns on one screen creates cognitive overhead. Users must learn multiple container metaphors. Consolidate to max 3: primary, secondary, metric.",
+      "source": "UICrit Layout cluster (23%); Miller's Law (chunking)",
+      "added": "2026-03-14"
+    },
+    {
+      "id": "LAY-002",
+      "name": "Spacing uses token values only",
+      "category": "spacing",
+      "severity": "error",
+      "condition": {
+        "check_type": "css_lint",
+        "property": "margin|padding|gap|row-gap|column-gap",
+        "allowed_tokens": [
+          "var(--space-0)", "var(--space-1)", "var(--space-2)", "var(--space-4)",
+          "var(--space-6)", "var(--space-8)", "var(--space-12)", "var(--space-16)",
+          "var(--space-20)", "var(--space-24)", "var(--space-32)", "var(--space-40)",
+          "var(--space-48)", "var(--space-64)", "var(--space-80)", "var(--space-96)",
+          "0", "auto"
+        ]
+      },
+      "rationale": "Arbitrary spacing breaks visual rhythm. Every spacing value must be from the 4px/8px grid.",
+      "source": "Atlassian 8px system; design token best practice",
+      "added": "2026-03-14"
+    },
+    {
+      "id": "DEN-001",
+      "name": "Maximum interactive elements per viewport",
+      "category": "density",
+      "severity": "suggestion",
+      "condition": {
+        "check_type": "count_limit",
+        "selector": "button, a, input, select, [role='button'], [tabindex]",
+        "property": "count-in-viewport",
+        "max": 40
+      },
+      "rationale": "High interactive density increases cognitive load. If viewport has >40 interactive elements, consider progressive disclosure or grouping.",
+      "source": "Hick's Law; UICrit Learnability cluster",
+      "added": "2026-03-14"
+    },
+    {
+      "id": "MOT-001",
+      "name": "Animation duration constraints",
+      "category": "motion",
+      "severity": "error",
+      "condition": {
+        "check_type": "css_lint",
+        "property": "animation-duration|transition-duration",
+        "allowed_tokens": [
+          "var(--duration-instant)", "var(--duration-fast)", "var(--duration-normal)",
+          "var(--duration-slow)", "var(--duration-slower)"
+        ]
+      },
+      "rationale": "No animation longer than 500ms. No animation shorter than 50ms (imperceptible). All durations from token set.",
+      "source": "Material Design motion guidelines; Nielsen response time limits",
+      "added": "2026-03-14"
+    },
+    {
+      "id": "A11Y-001",
+      "name": "Text contrast ratio (body)",
+      "category": "accessibility",
+      "severity": "error",
+      "condition": {
+        "check_type": "ratio_check",
+        "selector": "p, span, li, td, label, .body-text",
+        "property": "contrast-ratio",
+        "min": 4.5
+      },
+      "rationale": "WCAG AA requires 4.5:1 for normal text. Non-negotiable.",
+      "source": "WCAG 2.1 SC 1.4.3",
+      "added": "2026-03-14"
+    },
+    {
+      "id": "CMP-001",
+      "name": "KPI card structure",
+      "category": "component",
+      "severity": "warning",
+      "condition": {
+        "check_type": "dom_query",
+        "selector": "[data-component='kpi-card']",
+        "property": "required-children",
+        "allowed_tokens": ["[data-role='value']", "[data-role='label']"]
+      },
+      "rationale": "Every KPI card must have a large value and a descriptive label. Delta indicator and sparkline are optional. Value is the dominant visual element.",
+      "source": "Data viz best practice; design-foundations skill",
+      "added": "2026-03-14"
+    }
+  ]
+}
+

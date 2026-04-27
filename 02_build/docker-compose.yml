@@ -1,0 +1,58 @@
+services:
+  # 1. The Intake
+  voice-ai:
+    build: 
+      context: ./voice-ai
+    ports:
+      - "8001:8000"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-dummy}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-dummy}
+      - CARTESIA_API_KEY=${CARTESIA_API_KEY:-dummy}
+    restart: unless-stopped
+
+  # 2. The Truth Layer
+  librarian-api:
+    build:
+      context: ./librarian-api
+    ports:
+      - "8002:8000"
+    volumes:
+      - /Users/ewansair/Vaults/Ewan:/Users/ewanbramley/Knowledge:ro
+    restart: unless-stopped
+
+  # 3. The Execution Hub
+  crm:
+    build:
+      context: ./crm
+    ports:
+      - "8003:8000"
+    env_file:
+      - .env
+    depends_on:
+      - librarian-api
+    restart: unless-stopped
+
+  # 4. The Intelligence Engine
+  byker-swarm:
+    build:
+      context: ./byker-production
+      dockerfile: Dockerfile.ollama
+    ports:
+      - "8004:11434"
+    depends_on:
+      - librarian-api
+    restart: unless-stopped
+
+  # 5. WhatsApp Integration Gateway
+  whatsapp-gateway:
+    build:
+      context: ./whatsapp-gateway
+    container_name: 02_build-whatsapp-gateway-1
+    env_file:
+      - .env
+    ports:
+      - "8005:8003"
+    depends_on:
+      - voice-ai
+    restart: unless-stopped

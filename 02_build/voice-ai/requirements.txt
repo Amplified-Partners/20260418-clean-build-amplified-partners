@@ -1,0 +1,23 @@
+# Voice AI Pipeline - Dependencies
+# =================================
+
+# Web server
+fastapi
+uvicorn[standard]
+python-multipart
+
+# AI APIs
+anthropic
+openai
+cartesia
+
+# HTTP client (for TickTick)
+httpx
+
+# Audio processing
+soundfile
+numpy
+
+# Utils
+python-dotenv
+pydantic
