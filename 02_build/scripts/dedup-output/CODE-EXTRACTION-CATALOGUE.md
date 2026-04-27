@@ -13,7 +13,7 @@
 |-------|----------|-----------|--------------|-------|
 | Vault _inbox | `corpus-raw/vault/_inbox/` | 93 Python | 32 unique modules | 61 (versions, empties, tests) |
 | Vault scripts | `corpus-raw/vault/scripts/` | 7 files | 5 | 2 (bake.py superseded by bake_fixed.py) |
-| Clean-build | `clean-build/02_build/` | ~90 files | ~90 (already organised) | 0 |
+| Clean-build | `clean-build/02_build/` | ~90 files | ~88 (already organised) | 2 (test files) |
 
 **Total useful code extracted:** ~127 files across 12 functional systems.
 
@@ -23,7 +23,7 @@
 
 **Location:** `clean-build/02_build/cove-orchestrator/nightscout/`
 **Status:** Complete module. 7 files, ~895 lines. Has its own DB schema, MCP server, and SQL migrations.
-**What it does:** Nightly scrape → LLM score → fork → morning briefing. Fetches 50+ sources (RSS + SearXNG), scores each item on four dimensions (relevance, impact, applicability, novelty) using Ollama via LiteLLM, forks by tier (noise / briefing / R&D pipeline / critical), stores in PostgreSQL, generates markdown morning briefings, sends Telegram alerts for critical items.
+**What it does:** Nightly scrape → LLM score → fork → morning briefing. Fetches 25+ sources (RSS + SearXNG), scores each item on four dimensions (relevance, impact, applicability, novelty) using Ollama via LiteLLM, forks by tier (noise / briefing / R&D pipeline / critical), stores in PostgreSQL, generates markdown morning briefings, sends Telegram alerts for critical items.
 
 | File | Lines | Purpose |
 |------|-------|---------|
