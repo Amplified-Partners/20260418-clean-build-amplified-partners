@@ -1,6 +1,6 @@
 # Dedup Statistics Report
 
-Generated: 2026-04-27 03:04 UTC
+Generated: 2026-04-27 03:47 UTC
 Signed-by: Devon (Devin) | 2026-04-27 | session 7cd95caf339c46a2896fbf6ffbda02be
 
 ---
@@ -9,13 +9,13 @@ Signed-by: Devon (Devin) | 2026-04-27 | session 7cd95caf339c46a2896fbf6ffbda02be
 
 | Metric | Value |
 |--------|-------|
-| Total files scanned | 5,505 |
-| Unique files (SHA-256) | 5,445 |
+| Total files scanned | 5,509 |
+| Unique files (SHA-256) | 5,449 |
 | Exact duplicate sets | 51 |
 | Duplicate files (would be removed) | 60 |
 | Bytes that would be saved | 980.6 KB |
-| Near-duplicate pairs (ssdeep >90) | 1,459 |
-| Possible near-duplicates (60-90) | 37,085 |
+| Near-duplicate pairs (ssdeep >90) | 1,645 |
+| Possible near-duplicates (60-90) | 36,899 |
 
 ---
 
@@ -30,7 +30,7 @@ Signed-by: Devon (Devin) | 2026-04-27 | session 7cd95caf339c46a2896fbf6ffbda02be
 | corpus-raw/vault/_inbox | 359 |
 | clean-build/01_truth | 236 |
 | corpus-raw/vault/research | 169 |
-| clean-build/02_build | 134 |
+| clean-build/02_build | 138 |
 | corpus-raw/vault/imported-business-docs | 122 |
 | clean-build/03_shadow | 101 |
 | corpus-raw/vault/work | 96 |
@@ -52,9 +52,9 @@ Signed-by: Devon (Devin) | 2026-04-27 | session 7cd95caf339c46a2896fbf6ffbda02be
 
 | Extension | Files |
 |-----------|-------|
-| .md | 5,253 |
+| .md | 5,254 |
 | .py | 160 |
-| .json | 13 |
+| .json | 16 |
 | .sh | 11 |
 | .tsx | 10 |
 | .xlsx | 9 |
@@ -129,8 +129,8 @@ Signed-by: Devon (Devin) | 2026-04-27 | session 7cd95caf339c46a2896fbf6ffbda02be
 
 | Score band | Pairs |
 |------------|-------|
-| 90+ (auto-flag) | 1,459 |
-| 80-90 | 4,215 |
+| 90+ (auto-flag) | 1,645 |
+| 80-90 | 4,029 |
 | 70-80 | 14,563 |
 | 60-70 | 18,307 |
 

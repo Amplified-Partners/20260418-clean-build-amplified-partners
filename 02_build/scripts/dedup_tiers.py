@@ -206,8 +206,8 @@ def tier1_exact(files: list[dict], vault_path: str, clean_build_path: str) -> tu
 def tier2_fuzzy(unique_files: list[dict], vault_path: str, clean_build_path: str) -> tuple[list[dict], list[dict]]:
     """Return (near_duplicates, review_queue).
 
-    near_duplicates: pairs with score > 90.
-    review_queue: pairs with score 60-90.
+    near_duplicates: pairs with score >= 90.
+    review_queue: pairs with score 60-89.
     """
     # Compute fuzzy hashes
     print(f"  Tier 2: computing fuzzy hashes for {len(unique_files)} unique files…", file=sys.stderr)
@@ -267,7 +267,7 @@ def tier2_fuzzy(unique_files: list[dict], vault_path: str, clean_build_path: str
                             "preview": first_n_chars(group[j]["path"]),
                         },
                     }
-                    if score > 90:
+                    if score >= 90:
                         near_dupes.append(pair)
                     else:
                         review.append(pair)
@@ -524,22 +524,29 @@ def main():
     # --- Output ---
     os.makedirs(output_dir, exist_ok=True)
 
+    signature = {
+        "signed_by": "Devon (Devin)",
+        "session": "7cd95caf339c46a2896fbf6ffbda02be",
+        "date": time.strftime("%Y-%m-%d", time.gmtime()),
+        "description": "Dedup Tier 1+2 analysis output",
+    }
+
     # Tier 1 JSON
     t1_path = os.path.join(output_dir, "tier1-exact-duplicates.json")
     with open(t1_path, "w") as f:
-        json.dump(duplicate_sets, f, indent=2)
+        json.dump({**signature, "data": duplicate_sets}, f, indent=2)
     print(f"  Wrote {t1_path}", file=sys.stderr)
 
     # Tier 2 near-dupes JSON
     t2_path = os.path.join(output_dir, "tier2-near-duplicates.json")
     with open(t2_path, "w") as f:
-        json.dump(near_dupes, f, indent=2)
+        json.dump({**signature, "data": near_dupes}, f, indent=2)
     print(f"  Wrote {t2_path}", file=sys.stderr)
 
     # Tier 2 review queue JSON
     rq_path = os.path.join(output_dir, "tier2-review-queue.json")
     with open(rq_path, "w") as f:
-        json.dump(review_queue, f, indent=2)
+        json.dump({**signature, "data": review_queue}, f, indent=2)
     print(f"  Wrote {rq_path}", file=sys.stderr)
 
     # Statistics markdown
