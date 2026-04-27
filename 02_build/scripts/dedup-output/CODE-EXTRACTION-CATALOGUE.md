@@ -257,7 +257,7 @@
 
 ## What to Discard
 
-These are the version duplicates and genuine noise. 61 files:
+These are the version duplicates and genuine noise. 65 files:
 
 **Version duplicates (keep latest only):**
 - `*-v1.py` through `*-vN.py` where a later version exists (see "best version" notes above)
