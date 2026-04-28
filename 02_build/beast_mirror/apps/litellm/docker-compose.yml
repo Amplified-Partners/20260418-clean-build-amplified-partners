@@ -1,0 +1,34 @@
+services:
+  litellm:
+    image: ghcr.io/berriai/litellm:main-latest
+    container_name: litellm
+    restart: unless-stopped
+    volumes:
+      - ./litellm_config.yaml:/app/config.yaml
+    environment:
+      - LITELLM_MASTER_KEY=REDACTED
+      - DATABASE_URL=postgresql://amplified:REDACTED@postgres:5432/litellm
+      - ANTHROPIC_API_KEY=REDACTED
+      - OPENAI_API_KEY=REDACTED
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    command:
+      - "--config"
+      - "/app/config.yaml"
+      - "--port"
+      - "4000"
+    networks:
+      - amplified-net
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.litellm.rule=Host(`litellm.beast.amplifiedpartners.ai`)"
+      - "traefik.http.routers.litellm.tls.certresolver=letsencrypt"
+      - "traefik.http.services.litellm.loadbalancer.server.port=4000"
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+
+networks:
+  amplified-net:
+    external: true

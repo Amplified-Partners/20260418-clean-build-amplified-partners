@@ -1,0 +1,27 @@
+services:
+  searxng:
+    image: searxng/searxng:latest
+    container_name: searxng
+    restart: unless-stopped
+    volumes:
+      - searxng-data:/etc/searxng
+    environment:
+      - SEARXNG_BASE_URL=https://search.beast.amplifiedpartners.ai
+    networks:
+      - amplified-net
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.searxng.rule=Host(`search.beast.amplifiedpartners.ai`)"
+      - "traefik.http.routers.searxng.tls.certresolver=letsencrypt"
+      - "traefik.http.services.searxng.loadbalancer.server.port=8080"
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+
+volumes:
+  searxng-data:
+
+networks:
+  amplified-net:
+    external: true

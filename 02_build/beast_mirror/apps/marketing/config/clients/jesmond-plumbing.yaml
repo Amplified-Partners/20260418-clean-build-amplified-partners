@@ -1,0 +1,126 @@
+# =============================================================
+# CLIENT CONFIG: Jesmond Plumbing (Dave)
+# =============================================================
+# First client — marketing engine proof of concept
+
+client:
+  id: "jesmond-plumbing"
+  name: "Jesmond Plumbing"
+  owner: "Dave"
+  onboarded: "2026-03-11"
+  status: "active"
+
+business:
+  type: "plumbing"
+  industry: "home_services"
+  location:
+    area: "Jesmond"
+    city: "Newcastle upon Tyne"
+    region: "North East England"
+    country: "UK"
+    postcode_prefix: "NE2"
+  service_area:
+    - "Jesmond"
+    - "Gosforth"
+    - "Heaton"
+    - "Sandyford"
+    - "Newcastle city centre"
+    - "Fenham"
+    - "Byker"
+    - "Ouseburn"
+  services:
+    - "Emergency plumbing"
+    - "Boiler repair and installation"
+    - "Central heating"
+    - "Bathroom installation"
+    - "Leak detection and repair"
+    - "Blocked drains"
+    - "Radiator installation"
+    - "Power flushing"
+    - "Gas safety certificates"
+    - "Landlord certificates"
+
+brand:
+  voice: "friendly_professional"   # Approachable but competent
+  tone_keywords:
+    - "reliable"
+    - "local"
+    - "experienced"
+    - "honest"
+    - "family-run"
+  avoid_words:
+    - "cheap"                      # Use "affordable" or "competitive"
+    - "guarantee"                  # Legal implications
+    - "best in Newcastle"          # Can't substantiate
+  personality: >
+    Dave is a straight-talking Geordie plumber who's been at it for years.
+    He's the kind of bloke you'd trust with your mum's boiler.
+    Professional but not corporate. Knows his stuff.
+    Loves Newcastle, proud of Jesmond, genuinely cares about his customers.
+
+content:
+  platforms:
+    facebook:
+      enabled: true
+      # page_id: TBD
+      content_types: ["tips", "before_after", "seasonal", "community"]
+    instagram:
+      enabled: true
+      # account_id: TBD
+      content_types: ["before_after", "team", "tips", "reels"]
+    google_my_business:
+      enabled: true
+      # listing_id: TBD
+      content_types: ["updates", "offers", "events"]
+    twitter:
+      enabled: false               # Not active yet
+    linkedin:
+      enabled: false               # Not relevant for plumbing
+    email:
+      enabled: false               # No email list yet
+
+  topics:
+    seasonal:
+      spring: ["pipe checks after frost", "spring boiler service", "garden tap installation"]
+      summer: ["shower upgrades", "water saving tips", "holiday plumbing checklist"]
+      autumn: ["boiler service before winter", "central heating check", "radiator bleeding"]
+      winter: ["frozen pipe prevention", "emergency plumbing", "boiler breakdown", "heating efficiency"]
+    evergreen:
+      - "When to call a plumber vs DIY"
+      - "How to find your stopcock"
+      - "Signs your boiler needs replacing"
+      - "What to do in a plumbing emergency"
+      - "Choosing the right bathroom suite"
+      - "Gas safety certificate explained"
+      - "How often should you service your boiler"
+      - "Common causes of low water pressure"
+    local:
+      - "Newcastle water quality tips"
+      - "Jesmond property plumbing quirks (Victorian homes)"
+      - "Supporting local: Jesmond businesses"
+
+  no_go_topics:
+    - "Competitor bashing"
+    - "Price promises without Dave's approval"
+    - "Political content"
+    - "Controversial opinions"
+
+competitors:
+  local:
+    - "British Gas HomeCare (national, expensive)"
+    - "Pimlico Plumbers (London model, aspirational)"
+    # Add specific local competitors when Dave provides them
+
+goals:
+  primary: "More phone calls for boiler servicing"
+  secondary: "Build online presence and reviews"
+  metrics:
+    - "Google My Business views per month"
+    - "Phone calls from online sources"
+    - "Google review count and average rating"
+    - "Social media engagement rate"
+  kpis:
+    gmb_views_target: 500          # Per month
+    phone_calls_target: 20         # Per month from online
+    review_target: 2               # New reviews per month
+    social_engagement_rate: 3.0    # Percent

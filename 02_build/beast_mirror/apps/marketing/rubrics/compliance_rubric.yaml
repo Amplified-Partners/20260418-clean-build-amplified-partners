@@ -1,0 +1,123 @@
+# =============================================================
+# RUBRIC: Compliance & Safety
+# =============================================================
+# Used by the Enforcer as a final gate before publishing.
+# This is a pass/fail rubric — any fail blocks publication.
+
+rubric:
+  name: "compliance_rubric"
+  version: "1.0"
+  description: "Legal, ethical, and safety compliance check"
+
+# Pass/fail checks — ALL must pass
+checks:
+  no_false_claims:
+    description: "Content makes no unsubstantiated claims"
+    examples_of_failure:
+      - "We're the best plumber in Newcastle"
+      - "Guaranteed to fix your boiler"
+      - "Cheapest rates in the North East"
+      - "100% satisfaction guaranteed"
+    remediation: "Remove or qualify the claim with 'we aim to' or 'our customers tell us'"
+
+  no_competitor_bashing:
+    description: "No negative references to competitors"
+    examples_of_failure:
+      - "Unlike [competitor], we actually show up on time"
+      - "Don't waste your money on British Gas"
+    remediation: "Focus on own strengths, never mention competitors negatively"
+
+  no_price_promises:
+    description: "No specific pricing without client approval"
+    examples_of_failure:
+      - "Boiler service from £49"
+      - "Free call-out for all new customers"
+    remediation: "Use 'competitive rates' or 'call for a quote' instead"
+
+  no_legal_risk:
+    description: "No content that creates legal liability"
+    examples_of_failure:
+      - "We guarantee no leaks for 10 years"
+      - "Our work is insured up to £1m" # unless verified
+    remediation: "Avoid guarantees, warranties, insurance claims unless verified with client"
+
+  no_political_content:
+    description: "No political, religious, or divisive content"
+    examples_of_failure:
+      - "Support your local businesses this election season"
+      - Any content touching politics, religion, culture wars
+    remediation: "Remove political references entirely"
+
+  no_personal_data:
+    description: "No customer personal data or identifiable information. We NEVER ask for personal details — not in forms, not in CTAs, not anywhere."
+    examples_of_failure:
+      - "We just fixed Mrs Johnson's boiler on Acacia Avenue"
+      - Customer photos without consent
+      - "Drop your email and we'll send you the guide"
+      - "Sign up with your name and number"
+      - "Leave your details and we'll be in touch"
+      - Any form asking for name, email, phone, address, or company
+    remediation: "Use anonymous references. For CTAs, use four-word identifier system only. Never gate content behind personal data collection."
+
+  honest_referral:
+    description: "If we can't help, say so and point them somewhere that can"
+    examples_of_failure:
+      - Claiming we can help with something outside our capability
+      - Ignoring a need because it doesn't lead to our revenue
+      - Pretending a limitation doesn't exist
+    remediation: "Be honest. If we know someone who can help better, say so. The goal is helping people, not capturing them."
+
+  factual_accuracy:
+    description: "All factual claims must be verifiable"
+    examples_of_failure:
+      - "Gas engineers must be CORGI registered" # Outdated, now Gas Safe
+      - "All boilers must be serviced annually by law" # Not true for homeowners
+    remediation: "Verify all technical/legal claims against current regulations"
+
+  permission_based:
+    description: "Content respects permission-based marketing principles"
+    examples_of_failure:
+      - Unsolicited messages to non-opted-in contacts
+      - Scraping and using contact details
+      - Adding people to email lists without consent
+    remediation: "Only reach people through public platforms or opted-in channels"
+
+  transparency:
+    description: "Content is transparently from the business"
+    examples_of_failure:
+      - "As a customer myself, I love this service" # fake review
+      - Astroturfing or fake engagement
+    remediation: "All content clearly from the business. Never fake reviews or engagement."
+
+# Amplified Partners principles (baked into everything)
+principles:
+  - "White hat only — no black hat SEO, no fake reviews, no manipulation"
+  - "Radically transparent — if we can't say it openly, we don't say it"
+  - "Radically honest — no exaggeration, no misleading claims"
+  - "Permission-based — only reach people who want to hear from us"
+  - "Value-first — every piece of content must genuinely help someone"
+  - "Ideas meritocracy — the best idea wins, not the loudest voice"
+  - "Join conversations, don't start sales pitches — show up where people are already talking"
+  - "Give away the how — tell people how to do it themselves, whether they stay or join us"
+  - "No bulldozing — contribute honestly, never dominate or redirect to a sale"
+  - "AI honesty — say what AI can actually do, not what hype says it can. It's amazing enough without the bullshit"
+
+# =============================================================
+# ENGAGEMENT PHILOSOPHY (Ewan's Directive)
+# =============================================================
+# "We get involved in conversations that people are having about AI.
+#  We don't bulldoze. We just give information as we see it: honest,
+#  open information. We don't pretend that AI can juggle and dance
+#  and ride a unicycle. We tell people what it can do, because it's
+#  amazing. We just get involved in the conversation, don't sell
+#  anything, give away value, and tell them how they could do it
+#  themselves."
+#
+# This means:
+# 1. Every piece of content must stand on its own as genuinely useful
+# 2. Zero self-promotion in community spaces (Reddit, forums, comments)
+# 3. Be honest about AI limitations — overselling destroys trust
+# 4. Tell people how to do it themselves — the ones who can, will respect us.
+#    The ones who can't, will come to us because we were honest.
+# 5. Never redirect a conversation toward a sale
+# 6. If someone asks "can AI do X?" — answer truthfully, even if the answer is "not yet"

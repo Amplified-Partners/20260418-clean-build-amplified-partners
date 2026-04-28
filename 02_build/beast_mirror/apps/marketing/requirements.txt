@@ -1,0 +1,11 @@
+httpx>=0.28.0,<1
+pyyaml>=6.0
+asyncpg>=0.31.0,<1
+fastapi>=0.120.0,<1.0
+uvicorn[standard]>=0.32.0,<1.0
+pydantic>=2.11,<3
+pydantic-settings>=2.6,<3
+structlog>=25.0.0,<26
+langfuse>=2.0.0,<3
+sib-api-v3-sdk>=7.6.0
+python-multipart>=0.0.9

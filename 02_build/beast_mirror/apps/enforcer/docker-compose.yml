@@ -1,0 +1,44 @@
+services:
+  enforcer:
+    build: .
+    container_name: enforcer
+    restart: unless-stopped
+    user: "1000:988"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /opt/amplified/logs:/logs
+      - /opt/amplified/vault:/opt/amplified/vault:rw
+    networks:
+      - amplified-net
+    environment:
+      - CHECK_INTERVAL=600
+      - ALERT_WEBHOOK_URL=
+      - LANGFUSE_HOST=http://langfuse:3000
+      - LOG_LEVEL=INFO
+      - FALKORDB_HOST=falkordb
+      - FALKORDB_PORT=6379
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - QDRANT_HOST=qdrant
+      - QDRANT_PORT=6333
+      - SESSION_STATE_PATH=/opt/amplified/vault/00-handover/SESSION-STATE.md
+      - MAX_SESSION_STATE_AGE_HOURS=24
+      - FAIL2BAN_ENABLED=false
+      - EXPECTED_CONTAINERS=traefik,falkordb,postgres,redis,qdrant,langfuse,portainer,openclaw-agents,litellm,searxng,ollama
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.enforcer.rule=Host(`enforcer.beast.amplifiedpartners.ai`)
+      - traefik.http.routers.enforcer.tls.certresolver=letsencrypt
+      - traefik.http.services.enforcer.loadbalancer.server.port=8000
+    healthcheck:
+      test: ["CMD", "python", "-c", "import httpx; httpx.get('http://localhost:8000/health').raise_for_status()"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+networks:
+  amplified-net:
+    external: true

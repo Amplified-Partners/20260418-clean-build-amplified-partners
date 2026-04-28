@@ -1,0 +1,67 @@
+# =============================================================
+# RUBRIC: Brand Voice & Tone
+# =============================================================
+# Used by the Enforcer to validate content matches client brand.
+# Score 1-10 on each dimension. Overall = weighted average.
+
+rubric:
+  name: "tone_rubric"
+  version: "1.0"
+  description: "Validates content matches the client's brand voice and personality"
+
+dimensions:
+  voice_match:
+    weight: 0.30
+    description: "Does the content sound like the brand?"
+    scoring:
+      10: "Perfect brand voice — indistinguishable from client's own writing"
+      8: "Strong brand voice — minor adjustments needed"
+      6: "Recognisable but inconsistent in places"
+      4: "Generic — could be any business in the sector"
+      2: "Wrong tone entirely — too corporate, too casual, or off-brand"
+
+  personality:
+    weight: 0.25
+    description: "Does the personality come through?"
+    scoring:
+      10: "Client's personality shines — feels authentic and human"
+      8: "Personality present, engaging"
+      6: "Some personality but feels formulaic"
+      4: "Flat — no personality, reads like a template"
+      2: "Wrong personality — feels fake or forced"
+
+  local_flavour:
+    weight: 0.20
+    description: "Does it feel local and connected to the community?"
+    scoring:
+      10: "Deeply local — references area, community, local knowledge"
+      8: "Good local connection — area mentioned naturally"
+      6: "Location mentioned but not integrated"
+      4: "Generic — could be anywhere in the UK"
+      2: "Wrong location references or none at all"
+
+  authenticity:
+    weight: 0.15
+    description: "Does it feel genuine, not salesy?"
+    scoring:
+      10: "Completely genuine — helpful, honest, no hard sell"
+      8: "Authentic with a natural call to action"
+      6: "Mostly genuine but edges into sales territory"
+      4: "Noticeably promotional — feels like an ad"
+      2: "Full sales pitch — pushy, corporate, no value"
+
+  avoid_words_check:
+    weight: 0.10
+    description: "Does it avoid the client's no-go words?"
+    scoring:
+      10: "Clean — no avoid words, no unsubstantiated claims"
+      5: "One minor infraction"
+      0: "Uses avoid words or makes claims that can't be backed up"
+
+# Automatic fail conditions (score → 0 regardless of dimensions)
+auto_fail:
+  - "Contains words from client's avoid_words list"
+  - "Makes unsubstantiated superlative claims (best, cheapest, guaranteed)"
+  - "Mentions competitor by name negatively"
+  - "Contains political or controversial content"
+  - "Tone is condescending or patronising"

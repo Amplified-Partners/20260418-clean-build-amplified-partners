@@ -1,0 +1,34 @@
+# OpenClaw Agent Service
+# Joins the existing amplified-net so it can reach
+# postgres, redis, litellm, searxng, langfuse by container name.
+
+services:
+  openclaw-agents:
+    build: .
+    container_name: openclaw-agents
+    restart: unless-stopped
+    ports:
+      - "8100:8100"
+    environment:
+      - LITELLM_BASE_URL=http://litellm:4000
+      - LITELLM_API_KEY=sk-c9dbd5b4276fea7562d8ff1a72b001dfb833b8048f13ae24bd3474e4e8518d5c
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=amplified_main
+      - POSTGRES_USER=amplified
+      - POSTGRES_PASSWORD=sJAFpRhxMNtT/LaR7HlxdvpZwlQJymIth15osijkLxY=
+      - REDIS_HOST=redis
+      - SEARXNG_BASE_URL=http://searxng:8080
+      - API_KEY=openclaw-dev-key-change-me
+    networks:
+      - amplified-net
+    healthcheck:
+      test: ["CMD", "python", "-c", "import httpx; httpx.get('http://localhost:8100/health').raise_for_status()"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+
+networks:
+  amplified-net:
+    external: true

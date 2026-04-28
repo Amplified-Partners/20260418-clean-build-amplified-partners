@@ -1,0 +1,110 @@
+services:
+  clickhouse:
+    image: clickhouse/clickhouse-server:latest
+    container_name: clickhouse
+    restart: unless-stopped
+    environment:
+      - CLICKHOUSE_DB=langfuse
+      - CLICKHOUSE_USER=langfuse
+      - CLICKHOUSE_PASSWORD=langfuse_ch_pass_2026
+    volumes:
+      - clickhouse-data:/var/lib/clickhouse
+    networks:
+      - amplified-net
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+
+  minio:
+    image: minio/minio:latest
+    container_name: minio
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      - MINIO_ROOT_USER=amplified
+      - MINIO_ROOT_PASSWORD=5a053bad8bb064897046b79d1f050834
+    volumes:
+      - minio-data:/data
+    networks:
+      - amplified-net
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.minio-console.rule=Host(`minio.beast.amplifiedpartners.ai`)"
+      - "traefik.http.routers.minio-console.tls.certresolver=letsencrypt"
+      - "traefik.http.services.minio-console.loadbalancer.server.port=9001"
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+
+  minio-init:
+    image: minio/mc:latest
+    container_name: minio-init
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+      sleep 5;
+      mc alias set local http://minio:9000 amplified 5a053bad8bb064897046b79d1f050834;
+      mc mb --ignore-existing local/langfuse-events;
+      mc mb --ignore-existing local/langfuse-media;
+      echo Buckets created;
+      exit 0;
+      "
+    networks:
+      - amplified-net
+
+  langfuse:
+    image: langfuse/langfuse:latest
+    container_name: langfuse
+    restart: unless-stopped
+    depends_on:
+      - clickhouse
+      - minio
+    environment:
+      - DATABASE_URL=postgresql://amplified:sJAFpRhxMNtT%2FLaR7HlxdvpZwlQJymIth15osijkLxY%3D@postgres:5432/langfuse
+      - CLICKHOUSE_URL=http://clickhouse:8123
+      - CLICKHOUSE_MIGRATION_URL=clickhouse://clickhouse:9000
+      - CLICKHOUSE_USER=langfuse
+      - CLICKHOUSE_PASSWORD=langfuse_ch_pass_2026
+      - CLICKHOUSE_CLUSTER_ENABLED=false
+      - NEXTAUTH_SECRET=06c4ed2daa1dcadb8c306035042c0b4f441393920d3717ba36411ccb6b0966be
+      - SALT=784456586122aadebe86e4ffd1c1cacec3f0d07d1149f8a87a21fe021a21dcd9
+      - ENCRYPTION_KEY=5bc1db1be629bb880bc0b5e91a7c8977c9ab0aadaca181e9193793f9a40c3023
+      - NEXTAUTH_URL=https://langfuse.beast.amplifiedpartners.ai
+      - TELEMETRY_ENABLED=false
+      - LANGFUSE_ENABLE_EXPERIMENTAL_FEATURES=true
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - LANGFUSE_S3_EVENT_UPLOAD_BUCKET=langfuse-events
+      - LANGFUSE_S3_EVENT_UPLOAD_REGION=us-east-1
+      - LANGFUSE_S3_EVENT_UPLOAD_ACCESS_KEY_ID=amplified
+      - LANGFUSE_S3_EVENT_UPLOAD_SECRET_ACCESS_KEY=5a053bad8bb064897046b79d1f050834
+      - LANGFUSE_S3_EVENT_UPLOAD_ENDPOINT=http://minio:9000
+      - LANGFUSE_S3_EVENT_UPLOAD_FORCE_PATH_STYLE=true
+      - LANGFUSE_S3_MEDIA_UPLOAD_BUCKET=langfuse-media
+      - LANGFUSE_S3_MEDIA_UPLOAD_REGION=us-east-1
+      - LANGFUSE_S3_MEDIA_UPLOAD_ACCESS_KEY_ID=amplified
+      - LANGFUSE_S3_MEDIA_UPLOAD_SECRET_ACCESS_KEY=5a053bad8bb064897046b79d1f050834
+      - LANGFUSE_S3_MEDIA_UPLOAD_ENDPOINT=http://minio:9000
+      - LANGFUSE_S3_MEDIA_UPLOAD_FORCE_PATH_STYLE=true
+    networks:
+      - amplified-net
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.langfuse.rule=Host(`langfuse.beast.amplifiedpartners.ai`)"
+      - "traefik.http.routers.langfuse.tls.certresolver=letsencrypt"
+      - "traefik.http.services.langfuse.loadbalancer.server.port=3000"
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+
+volumes:
+  clickhouse-data:
+  minio-data:
+
+networks:
+  amplified-net:
+    external: true

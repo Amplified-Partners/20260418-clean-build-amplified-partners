@@ -1,0 +1,96 @@
+# =============================================================
+# RUBRIC: Content Quality
+# =============================================================
+# Used by the Enforcer to validate content quality and engagement potential.
+
+rubric:
+  name: "quality_rubric"
+  version: "1.0"
+  description: "Validates content quality, structure, and engagement potential"
+
+dimensions:
+  engagement_potential:
+    weight: 0.25
+    description: "Will people actually engage with this?"
+    scoring:
+      10: "Scroll-stopping — compelling hook, shareworthy, drives action"
+      8: "Strong engagement — good hook, clear value, likely to get interaction"
+      6: "Decent — will get some engagement but nothing standout"
+      4: "Forgettable — scrolls right past"
+      2: "Actively off-putting — would hurt the brand"
+
+  value_delivered:
+    weight: 0.25
+    description: "Does this genuinely help the reader?"
+    scoring:
+      10: "Highly valuable — reader learns something actionable"
+      8: "Good value — useful information, practical tips"
+      6: "Some value — informative but not groundbreaking"
+      4: "Low value — filler content, nothing new"
+      2: "No value — self-serving with nothing for the reader"
+
+  clarity:
+    weight: 0.20
+    description: "Is it clear, well-written, and easy to understand?"
+    scoring:
+      10: "Crystal clear — well-structured, flows naturally, no jargon"
+      8: "Clear and readable — minor improvements possible"
+      6: "Understandable but could be tighter"
+      4: "Confusing in places — rambling or unclear"
+      2: "Poorly written — hard to follow, errors"
+
+  call_to_action:
+    weight: 0.15
+    description: "Is the CTA effective and appropriate?"
+    scoring:
+      10: "Natural CTA that feels helpful, not pushy"
+      8: "Good CTA — clear next step for the reader"
+      6: "CTA present but generic (call us today!)"
+      4: "Weak or missing CTA"
+      2: "Aggressive CTA — hard sell, pressure tactics"
+
+  platform_fit:
+    weight: 0.15
+    description: "Is it right for the target platform?"
+    scoring:
+      10: "Perfect platform fit — length, format, style all correct"
+      8: "Good fit — works well on the platform"
+      6: "Acceptable — a bit off for the platform norms"
+      4: "Wrong format — too long/short, wrong style for platform"
+      2: "Completely wrong — would look out of place"
+
+# Platform-specific requirements
+platform_rules:
+  facebook:
+    ideal_length: "100-200 words"
+    must_include: ["question or engagement prompt"]
+    avoid: ["link-only posts", "walls of text"]
+  instagram:
+    ideal_length: "50-150 words"
+    must_include: ["visual description or suggestion"]
+    avoid: ["links in caption (they don't work)", "walls of text"]
+  twitter:
+    ideal_length: "under 280 characters"
+    must_include: ["hook in first line"]
+    avoid: ["thread-style without clear value", "too many hashtags"]
+  gmb:
+    ideal_length: "50-100 words"
+    must_include: ["call to action", "service area reference"]
+    avoid: ["hashtags", "overly casual tone"]
+  linkedin:
+    ideal_length: "100-300 words"
+    must_include: ["professional insight or expertise"]
+    avoid: ["emoji overuse", "overly casual language"]
+  blog:
+    ideal_length: "500-800 words"
+    must_include: ["subheadings", "practical tips", "SEO keywords"]
+    avoid: ["keyword stuffing", "thin content under 300 words"]
+
+# Auto-fail conditions
+auto_fail:
+  - "Content is under 20 words (excluding GMB)"
+  - "Blog article under 300 words"
+  - "Tweet over 280 characters"
+  - "Duplicate of content published in last 30 days"
+  - "Contains placeholder text or template markers"
+  - "Grammar errors that change meaning"

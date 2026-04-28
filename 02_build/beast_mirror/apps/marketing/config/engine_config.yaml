@@ -1,0 +1,685 @@
+# =============================================================
+# MARKETING ENGINE CONFIGURATION
+# =============================================================
+# Controls all marketing engine behavior
+
+engine:
+  name: "Amplified Marketing Engine"
+  version: "0.1.0"
+  environment: "production"
+
+# Service endpoints (on The Beast)
+services:
+  litellm:
+    base_url: "http://litellm:4000"
+    # api_key loaded from env: LITELLM_MASTER_KEY
+  searxng:
+    base_url: "http://searxng:8080"
+    format: "json"
+    max_results: 10
+  langfuse:
+    base_url: "http://langfuse:3000"
+    # keys loaded from env: LANGFUSE_API_KEY, LANGFUSE_SECRET_KEY
+  falkordb:
+    host: "falkordb"
+    port: 6379
+    graph_name: "amplified_brain"
+  postgres:
+    # connection string from env: DATABASE_URL
+    pool_size: 5
+  redis:
+    host: "redis"
+    port: 6379
+    db: 1  # db 0 is LiteLLM cache
+
+# Model routing — which tier for which task
+models:
+  research:
+    model: "gpt-4.1-mini"         # Fast, capable research
+    temperature: 0.3
+    max_tokens: 2000
+  content_social:
+    model: "gpt-4.1-mini"         # Social posts
+    temperature: 0.7
+    max_tokens: 500
+  content_blog:
+    model: "claude-sonnet-4"       # Long-form, high quality
+    temperature: 0.6
+    max_tokens: 4000
+  content_gmb:
+    model: "gpt-4.1-nano"         # Short, simple updates
+    temperature: 0.5
+    max_tokens: 300
+  content_email:
+    model: "claude-sonnet-4"       # Newsletter quality
+    temperature: 0.5
+    max_tokens: 3000
+  review_response:
+    model: "gpt-4.1-mini"         # Quick, empathetic
+    temperature: 0.4
+    max_tokens: 300
+  quality_check:
+    model: "gpt-4.1-nano"         # Fast validation
+    temperature: 0.1
+    max_tokens: 500
+
+# Schedule (cron, Beast timezone)
+schedule:
+  research: "0 6 * * *"          # Daily 6am
+  content_generation: "0 7 * * *" # Daily 7am
+  publishing:                      # Platform-specific
+    facebook: "9,13,17"           # 9am, 1pm, 5pm
+    instagram: "8,12,18"          # 8am, 12pm, 6pm
+    twitter: "8,11,14,17"         # 4x daily
+    linkedin: "9,14"              # 9am, 2pm (business hours)
+    gmb: "10"                     # 10am
+    email: "tue:9"                # Tuesday 9am
+
+# Quality thresholds (passed to Enforcer)
+quality:
+  minimum_score: 7.0              # Out of 10
+  tone_match_threshold: 0.8       # Brand voice similarity
+  max_retry_attempts: 3           # Regenerate if below threshold
+  require_human_review: false     # Auto-publish if score >= 8.5
+  human_review_threshold: 7.0     # Flag for review if 7.0-8.4
+
+# Content limits
+limits:
+  max_posts_per_day: 5
+  max_blog_articles_per_week: 2
+  min_hours_between_posts: 2
+  max_hashtags: 5
+  duplicate_check_days: 30        # Don't repeat topics within 30 days
+
+# =============================================================
+# CONTENT PYRAMID (Gary Vee Model)
+# =============================================================
+# One pillar piece → atomized into 10+ platform pieces
+content_pyramid:
+  pillar:
+    platform: "substack"
+    created_by: "Ewan + Eli (Claude)"   # Human-AI partnership
+    format: "long-form article"
+    typical_length: "1000-3000 words"
+    frequency: "1-2 per week"
+
+  atomized_outputs:
+    - platform: "linkedin"
+      type: "professional article"
+      model: "anthropic/claude-sonnet-4-20250514"
+    - platform: "twitter"
+      type: "thread (3-7 tweets)"
+      model: "openai/gpt-4.1-mini"
+    - platform: "facebook"
+      type: "conversational post"
+      model: "openai/gpt-4.1-mini"
+    - platform: "instagram"
+      type: "visual caption"
+      model: "openai/gpt-4.1-mini"
+    - platform: "gmb"
+      type: "local update"
+      model: "openai/gpt-4.1-nano"
+    - platform: "blog"
+      type: "SEO excerpt linking to pillar"
+      model: "anthropic/claude-sonnet-4-20250514"
+    - platform: "heygen_script"
+      type: "60-90s talking head video"
+      model: "anthropic/claude-sonnet-4-20250514"
+    - platform: "synthesia_script"
+      type: "polished educational video"
+      model: "anthropic/claude-sonnet-4-20250514"
+    - platform: "email"
+      type: "newsletter teaser"
+      model: "openai/gpt-4.1-mini"
+    - platform: "reddit"
+      type: "genuine value post (zero promo)"
+      model: "anthropic/claude-sonnet-4-20250514"
+
+# =============================================================
+# MEASUREMENT & OPTIMISATION
+# =============================================================
+# Data-driven everything. Measure, test, A/B split, iterate.
+measurement:
+  ab_testing:
+    enabled: true
+    min_sample_size: 50          # Minimum impressions before declaring winner
+    confidence_threshold: 0.95    # 95% statistical significance
+    test_dimensions:
+      - "hook_variant"            # Different opening lines
+      - "cta_variant"             # Different calls to action
+      - "tone_variant"            # Slight tone adjustments per personality type
+      - "format_variant"          # Carousel vs single image, thread vs single tweet
+      - "posting_time"            # Time-of-day testing
+    max_concurrent_tests: 3       # Per client, per platform
+
+  tracking:
+    engagement_metrics:
+      - "impressions"
+      - "clicks"
+      - "shares"
+      - "comments"
+      - "saves"
+      - "profile_visits"
+      - "four_word_requests"      # People asking for more info via 4-word ID
+    sentiment_tracking: true       # Monitor comment sentiment
+    topic_performance: true        # Which pain points resonate most
+    personality_response: true     # Which personality types engage most
+
+  feedback_loop:
+    store: "falkordb"              # Engagement data → FalkorDB graph
+    cycle: "weekly"                # Weekly analysis of what worked
+    adjustments:
+      - "topic_weighting"          # Increase topics that performed well
+      - "tone_calibration"         # Shift tone toward what resonated
+      - "timing_optimisation"      # Move posting times based on data
+      - "personality_targeting"    # Refine personality-specific messaging
+
+# =============================================================
+# PERSONALITY-TYPE TARGETING
+# =============================================================
+# Not to sell. To help them understand we can help.
+# Speak their language. Meet them where they are.
+personality_types:
+  framework: "disc"   # DISC as primary — simple, actionable, well-researched
+  # We adapt MESSAGE FRAMING, not the offer. Same truth, different lens.
+  profiles:
+    dominant:
+      # "D" types — Results-oriented, decisive, competitive
+      # The business owner who says "just tell me what it does and how fast"
+      messaging_style: "direct, bottom-line, results-focused"
+      lead_with: "outcome and speed"
+      avoid: "long explanations, theory, small talk"
+      hook_pattern: "Here's the result. Here's how fast. Questions?"
+      example: "Cut your admin time 40%. One setup. Works by Friday."
+
+    influential:
+      # "I" types — Enthusiastic, collaborative, optimistic
+      # The business owner who gets excited about possibilities
+      messaging_style: "enthusiastic, story-driven, people-focused"
+      lead_with: "vision and collaboration"
+      avoid: "too much detail, negativity, isolation"
+      hook_pattern: "Imagine this... and here's who's already doing it"
+      example: "Picture this: your team spends Tuesday mornings on work that matters, not paperwork that doesn't. Dave in Jesmond did exactly that."
+
+    steady:
+      # "S" types — Patient, reliable, team-oriented
+      # The business owner who wants to know it's safe and proven
+      messaging_style: "reassuring, step-by-step, trust-building"
+      lead_with: "safety, proven results, support"
+      avoid: "urgency, disruption, sudden change"
+      hook_pattern: "Here's how it works, step by step. And here's the support behind it."
+      example: "No big bang changes. We start small, prove it works, then build from there. You're never on your own."
+
+    conscientious:
+      # "C" types — Analytical, detail-oriented, quality-focused
+      # The business owner who reads the fine print
+      messaging_style: "detailed, evidence-based, logical"
+      lead_with: "data, methodology, accuracy"
+      avoid: "vague claims, hype, emotional appeals"
+      hook_pattern: "Here's the data. Here's the method. Here's what we measured."
+      example: "We A/B tested 12 content variations across 6 months. The data shows a 34% increase in qualified enquiries for businesses using research-grounded content vs generic posts."
+
+  # HOW THIS WORKS IN THE ENGINE:
+  # 1. Default content uses a balanced tone (works for everyone)
+  # 2. When we know a prospect's likely type (from interaction patterns),
+  #    the atomizer generates personality-specific variants
+  # 3. A/B testing validates which framing resonates with which audience segments
+  # 4. The feedback loop refines over time
+  # 5. We NEVER manipulate — we clarify. Same honest message, framed for comprehension.
+
+# =============================================================
+# FOUR-WORD IDENTIFIER SYSTEM
+# =============================================================
+# We never ask for personal details. If someone wants more info,
+# they pick four unique words. That's their identifier.
+# No email capture. No name. No phone. Just four words.
+identity:
+  type: "four_word_passphrase"
+  description: "Privacy-first identifier — no personal data collected"
+  generation: "user_chosen"        # They pick their own four words
+  storage: "hashed"                # We store a hash, not the words themselves
+  lookup: "exact_match"            # They give us the words, we find their record
+  # What we store against a four-word ID:
+  associated_data:
+    - "interaction_history"        # What content they engaged with
+    - "personality_signals"        # Inferred type from interaction patterns
+    - "topics_of_interest"        # What pain points they responded to
+    - "preferred_channel"          # Where they found us
+    - "conversation_thread"        # Any ongoing dialogue
+  # What we NEVER store:
+  never_stored:
+    - "name"
+    - "email"
+    - "phone"
+    - "address"
+    - "company_name"             # Not until THEY choose to share it
+    - "ip_address"
+    - "device_fingerprint"
+
+# =============================================================
+# EMAIL CAMPAIGNS (Value-First, Permission-Based)
+# =============================================================
+# Not "campaigns" in the sales sense. Conversations that help.
+email:
+  philosophy: "Here's a problem. Here's the solution. Need help? Here's help."
+  sending_platform: "postmark"  # Best deliverability for educational email
+  # API key from env: POSTMARK_API_KEY
+
+  domains:
+    primary: "amplifiedpartners.ai"       # Never used for outbound
+    educational: "learn.amplifiedpartners.ai"  # Value-first sequences
+    transactional: "notify.amplifiedpartners.ai"  # Account-related
+
+  authentication:
+    spf: true
+    dkim: true
+    dmarc_policy: "quarantine"
+    dedicated_ip: true
+
+  sequence:
+    # The four-email Amplified sequence
+    email_1:
+      name: "here_is_the_problem"
+      delay_from_trigger: "immediate"
+      purpose: "Name a specific pain point. Be empathetic. Give context."
+      max_words: 200
+      cta: "none"  # No ask. Just value.
+      model: "openai/gpt-4.1-mini"
+
+    email_2:
+      name: "here_is_the_solution"
+      delay_from_previous: "3-5 days"
+      purpose: "Complete, actionable solution. Not a teaser. The whole thing."
+      max_words: 500
+      cta: "none"  # Still no ask. Just more value.
+      model: "anthropic/claude-sonnet-4-20250514"  # Needs quality for the solution
+
+    email_3:
+      name: "do_you_need_help"
+      delay_from_previous: "5-7 days"
+      purpose: "Genuine check-in. Short. Not a sales push."
+      max_words: 100
+      cta: "four_word_reply"  # "Pick four words. Reply. We'll help."
+      model: "openai/gpt-4.1-mini"
+
+    email_4:
+      name: "here_is_help"
+      trigger: "four_word_reply_received"
+      purpose: "1:1 conversation. Actually help. If we can't, point them somewhere that can."
+      max_words: null  # As long as it needs to be
+      cta: "contextual"
+      model: "anthropic/claude-sonnet-4-20250514"
+
+  personality_variants: true  # Generate 4 DISC variants of each sequence
+  # D: short, results-first. I: story-driven. S: reassuring, step-by-step. C: detailed, evidence-based.
+
+  limits:
+    max_sequences_per_recipient: 1      # Never send more than one sequence without engagement
+    unsubscribe_in_every_email: true     # One-click, GDPR/CAN-SPAM compliant
+    remove_bounces: "immediate"
+    remove_inactive_after_days: 90
+    daily_send_limit_warmup: 50          # Start here, increase 10%/day
+    daily_send_limit_target: 10000
+
+  never_do:
+    - "buy email lists"
+    - "scrape personal data"
+    - "misleading subject lines"
+    - "countdown timers or fake urgency"
+    - "gate content behind personal data"
+    - "pretend AI email is from a human"
+    - "send more than one sequence without engagement"
+    - "ignore unsubscribe requests"
+
+# =============================================================
+# SOLUTIONS DATABASE (R&D → Knowledge Base → Content → Help)
+# =============================================================
+# Everything feeds everything. Research finds solutions.
+# Solutions become content. Content helps people.
+# People who need more help get it. Solutions expand.
+solutions_database:
+  store: "falkordb"
+  purpose: "Living database of SMB problems and their solutions"
+  feeds_into:
+    - "email_sequences"          # Problems become email topics
+    - "pillar_content"           # Solutions become Substack articles
+    - "video_scripts"            # How-tos become HeyGen/Synthesia videos
+    - "direct_help"              # When someone replies with 4 words, we search here first
+  sourced_from:
+    - "research_agent"           # Automated discovery of new pain points
+    - "community_conversations"  # Reddit, forums, trade groups
+    - "client_interactions"      # What Dave at Jesmond actually needed help with
+    - "open_source_discovery"    # Finding free tools that solve real problems
+    - "trade_body_publications"  # Industry-specific regulatory changes
+  # When we don't know the answer:
+  unknown_solution_protocol:
+    action: "research_and_respond"
+    message: "We don't know yet, but we'll find out. We have the tools to research this."
+    use_bandwidth: true           # 10 gigabit on The Beast — use it
+    store_result: true            # Every answer we find goes into the database
+    share_publicly: true          # If we find a solution, publish it for everyone
+
+# Video platforms
+video:
+  heygen:
+    # API key from env: HEYGEN_API_KEY
+    use_cases:
+      - "talking head clips from pillar content"
+      - "quick tip videos for social"
+      - "client testimonial intros"
+    avatar: "ewan_avatar"  # To be created
+    max_duration_seconds: 90
+  synthesia:
+    # API key from env: SYNTHESIA_API_KEY
+    use_cases:
+      - "onboarding videos for new clients"
+      - "training content for SMB staff"
+      - "product explainers"
+      - "how-to guides from pillar content"
+    avatar: "ewan_professional"  # To be created
+    max_duration_seconds: 300
+
+# =============================================================
+# PRICING MODEL
+# =============================================================
+# "There's a price point for everyone."
+# We charge for the software, but we're not here to squeeze people.
+# The goal is helping. Revenue follows.
+pricing:
+  philosophy: "Price point for everyone. Never a barrier to getting help."
+  currency: "GBP"
+
+  tiers:
+    startup:
+      name: "New Business"
+      price_monthly: 0
+      duration_months: 3
+      description: "Free for 3 months. New businesses get a running start."
+      includes: "Full platform access — no feature gating"
+      after_trial: "Moves to small_business tier unless struggling"
+
+    struggling:
+      name: "Recovery"
+      price_monthly: 0  # or reduced, case by case
+      description: "If a business is struggling, we reduce fees or waive them until they recover."
+      criteria: "Self-declared or identified through engagement patterns"
+      review_cycle: "quarterly"
+      notes: "We don't kick people when they're down. Period."
+
+    small_business:
+      name: "Small Business"
+      price_monthly: 99
+      description: "£99/month. The basics done properly."
+      target: "1-10 employees, local trades, sole traders"
+
+    mid_market:
+      name: "Growing Business"
+      price_monthly: 499
+      description: "£499/month. Scaling up with full automation."
+      target: "10-50 employees, multi-site, growing fast"
+
+    enterprise:
+      name: "Enterprise"
+      price_monthly: 3000
+      description: "£3,000/month. Full AI operating system. Changes their lives."
+      target: "50+ employees, complex operations, multi-department"
+
+  principles:
+    - "No feature gating between tiers — everyone gets the full platform"
+    - "Tier determines scale (volume of content, number of users, API calls)"
+    - "Free tier is real free, not crippled free"
+    - "Struggling businesses never get cut off"
+    - "Price increases communicated 90 days in advance, always"
+    - "All who are involved will be rewarded — baked into software and legal structure"
+
+# =============================================================
+# INFRASTRUCTURE REQUIREMENTS
+# =============================================================
+# "We've got to have 99.98% uptime. Totally secure. Totally private.
+#  Bake it in from the start."
+infrastructure:
+  uptime:
+    target: 99.98  # percentage — allows ~1.75 hours downtime per year
+    monitoring: "24/7 automated — Uptime Kuma + alerting"
+    redundancy: "failover-ready architecture"
+    maintenance_windows: "scheduled, communicated 7 days in advance"
+
+  security:
+    philosophy: "Baked in from the start, not bolted on after"
+    encryption_at_rest: true
+    encryption_in_transit: true  # TLS everywhere
+    api_keys: "environment variables only — never in code, never in config files"
+    access_control: "principle of least privilege"
+    audit_logging: true
+    vulnerability_scanning: "automated, weekly"
+    dependency_updates: "Watchtower for containers, Dependabot for code"
+    incident_response: "documented protocol, <1 hour response time"
+
+  privacy:
+    philosophy: "Total privacy. We store what we need, nothing more."
+    gdpr_compliant: true
+    data_minimisation: true
+    four_word_id: "No personal data collected unless user volunteers it"
+    data_retention:
+      interaction_history: "active account lifetime + 30 days"
+      four_word_hashes: "until user requests deletion"
+      analytics: "aggregated and anonymised, retained indefinitely"
+      personal_data: "deleted within 30 days of account closure"
+    right_to_deletion: true
+    right_to_export: true
+    data_location: "EU (Hetzner, Finland)"
+    third_party_sharing: "never, unless legally compelled"
+    breach_notification: "within 72 hours, per GDPR"
+
+  always_on:
+    description: "10 gigabit bandwidth, always researching, always building the database"
+    research_continuous: true
+    bandwidth: "10 Gbps"
+    purpose: "Build the solutions database fast. The more we know, the more we can help."
+    compounding_effect: "Every answered question helps the next person with the same problem"
+
+# =============================================================
+# REACTIVE HELP SYSTEM
+# =============================================================
+# "I've had a shit day at work. This client gave me grief."
+# We don't sell them an upgrade. We send them Chris Voss.
+# Zig Ziglar: "The more people you help, the more successful you'll be."
+reactive_help:
+  philosophy: "When someone's struggling, help them. No strings. No upsell. Just help."
+  store: "falkordb"
+
+  signals:
+    # How we detect someone might need help
+    sentiment_analysis: true
+    direct_statements: true  # "I've had a terrible day"
+    engagement_dropoff: true  # sudden disengagement pattern
+    explicit_request: true  # they ask for help
+    # What we NEVER do:
+    # - Surveillance. We act on what they tell us, not what we spy on.
+    # - Use emotional data to sell.
+    # - Share emotional signals with anyone.
+
+  problem_categories:
+    - id: "difficult_client"
+      triggers: ["client", "customer", "complaint", "angry", "grief", "abuse", "confrontation"]
+      primary_resources:
+        - name: "Chris Voss — Tactical Empathy"
+          type: "youtube_clip"
+          duration_minutes: 12
+          cost: "free"
+          why: "FBI negotiator. Not theory — actual phrases you use tomorrow."
+        - name: "Chris Voss — Never Split the Difference summary"
+          type: "youtube_clip"
+          duration_minutes: 20
+          cost: "free"
+          why: "Mirroring, labelling, the accusation audit. Immediate application."
+      disc_routing:
+        dominant: "Chris Voss — direct techniques, tactical"
+        influential: "Brené Brown — connection-based conflict resolution"
+        steady: "Harvard PON — structured framework, step by step"
+        conscientious: "Harvard PON — research-backed, systematic approach"
+
+    - id: "overwhelmed"
+      triggers: ["overwhelmed", "drowning", "too much", "can't cope", "exhausted", "burned out"]
+      primary_resources:
+        - name: "Tim Ferriss — Fear Setting TED Talk"
+          type: "ted_talk"
+          duration_minutes: 13
+          cost: "free"
+          why: "Practical exercise. Define fears, prevent, repair. Do it now with pen and paper."
+        - name: "Harvard — Resilient Leadership"
+          type: "micro_course"
+          duration_minutes: 35
+          cost: "free"
+          why: "Leading with courage when everything's on fire."
+        - name: "Steven Bartlett — Diary of a CEO clips"
+          type: "youtube_clip"
+          duration_minutes: 15
+          cost: "free"
+          why: "UK-based. Speaks plainly. Been through it."
+
+    - id: "leadership_struggles"
+      triggers: ["team", "staff", "employee", "manage", "lead", "delegate", "trust"]
+      primary_resources:
+        - name: "Simon Sinek — Start With Why TED Talk"
+          type: "ted_talk"
+          duration_minutes: 18
+          cost: "free"
+          why: "Why people follow leaders. Universal, not corporate."
+        - name: "Brené Brown — Dare to Lead podcast"
+          type: "podcast"
+          duration_minutes: 30
+          cost: "free"
+          why: "Vulnerability in leadership. Why 'I don't know' beats pretending."
+
+    - id: "sales_aversion"
+      triggers: ["selling", "sales", "close", "pitch", "hate selling", "can't close"]
+      primary_resources:
+        - name: "Zig Ziglar — Secrets of Closing the Sale clips"
+          type: "youtube_clip"
+          duration_minutes: 15
+          cost: "free"
+          why: "The godfather. Not sleazy. Help people get what they want."
+        - name: "Ziglar Inc — Sequence to Success"
+          type: "video_training"
+          duration_minutes: 20
+          cost: "free"
+          why: "Modern application of Zig's principles."
+
+    - id: "isolation"
+      triggers: ["alone", "lonely", "isolated", "nobody understands", "on my own"]
+      primary_resources:
+        - name: "Owned and Operated podcast"
+          type: "podcast"
+          duration_minutes: 30
+          cost: "free"
+          why: "Two trades business owners talking honestly. Real people, real problems."
+        - name: "Diary of a CEO — vulnerability episodes"
+          type: "youtube_clip"
+          duration_minutes: 20
+          cost: "free"
+          why: "UK entrepreneur. No bravado. Honest about the hard bits."
+
+    - id: "hard_conversation"
+      triggers: ["fire", "sack", "confront", "difficult conversation", "bad news", "let go"]
+      primary_resources:
+        - name: "Harvard PON — Three Conversations Framework"
+          type: "article"
+          duration_minutes: 10
+          cost: "free"
+          why: "What happened? Feelings? Identity? Works every time."
+        - name: "Chris Voss — Labelling Technique"
+          type: "youtube_clip"
+          duration_minutes: 8
+          cost: "free"
+          why: "'It seems like...' — the most powerful defusing phrase."
+
+  message_templates:
+    # These are what we actually send. Honest, human, no sales pitch.
+    style: "Short. Human. Like a mate who's been there sending you something useful."
+    sign_off: "No strings. Just thought it might help."
+    never_include: ["upgrade link", "pricing", "feature announcement", "survey"]
+
+  never_do:
+    - "Use someone's bad day to sell them anything"
+    - "Pretend we created the content — always credit the source"
+    - "Send unsolicited 'are you okay?' messages based on surveillance"
+    - "Gate any resource behind a paywall or login"
+    - "Track emotional data for anything other than serving better help"
+    - "Share emotional signals with third parties, ever"
+
+# =============================================================
+# ADDITIONAL MARKETING CHANNELS
+# =============================================================
+# Beyond Substack, LinkedIn, YouTube, GMB, Reddit, SEO, podcast,
+# trade press, email, partnerships — what else?
+additional_channels:
+  community_led_growth:
+    description: "Build communities of practice, not audiences"
+    tactics:
+      - name: "Amplified Champions"
+        what: "Train trusted local trades people as certified AI advocates"
+        model: "Structured training → credentials → ongoing support → evangelism"
+        reference: "Corinne Riley CLG framework — Coda, Figma examples"
+      - name: "Industry Masterminds"
+        what: "Trade-specific peer groups (e.g., 'Electricians AI Co-op')"
+        model: "Monthly calls, shared problems, peer solutions"
+      - name: "Template Marketplace"
+        what: "Pre-configured workflows for common SMB problems"
+        model: "User-contributed, quality-checked, free to use"
+
+  trade_associations:
+    description: "Partner with the bodies SMBs already trust"
+    targets:
+      - name: "Federation of Small Businesses (FSB)"
+        members: 160000
+        opportunity: "Recommended supplier / member benefit"
+      - name: "British Chambers of Commerce"
+        opportunity: "Regional partnership, training delivery"
+      - name: "CIPHE"
+        trade: "plumbing"
+        opportunity: "Digital transformation partner"
+      - name: "NICEIC"
+        trade: "electrical"
+        opportunity: "Technology partner for member businesses"
+
+  government_grants:
+    description: "Align with funded digital transformation programmes"
+    programmes:
+      - name: "Made Smarter"
+        funding: "up to £2,000 per SME"
+        opportunity: "Become approved technology provider"
+      - name: "Help to Grow: Digital"
+        opportunity: "Listed as approved software provider"
+      - name: "Innovate UK / Local Enterprise Partnerships"
+        opportunity: "Innovation funding for AI-for-SMB research"
+
+  referral_system:
+    description: "Not 'refer a friend get 10% off' — genuine referral"
+    model: "The product helps. They tell someone. That person tries it. We help them too."
+    mechanics:
+      - "Make the product so good they can't NOT tell people"
+      - "Four-word identifier makes sharing frictionless"
+      - "Track referral source for thank-you, not commission"
+      - "Reference: SmartBear $6M revenue from referral programme"
+
+  local_presence:
+    description: "Show up where SMBs actually are"
+    tactics:
+      - "Trade shows and expos (not a booth — a help desk)"
+      - "Local business breakfasts"
+      - "BNI and similar networking (one-to-one rule)"
+      - "Chamber of Commerce events"
+    approach: "Don't sell. Help. Same principle as everything else."
+
+  help_desk_model:
+    description: "Free advice line where any SMB can ask any question"
+    implementation: "AI-powered first line (Retell/VAPI voice), human escalation"
+    cost_model: "Free for anyone. Not a lead gen tool. A help tool."
+    flywheel: "Every question feeds the solutions database"
+
+  micro_influencers:
+    description: "Partner with respected local trades people and advisors"
+    model: "Not paid endorsements. Genuine partnerships with people who believe in what we do."
+    target: "50 partners across UK trades and professional services"
+    reference: "Adobe case study — authentic practitioner partnerships"

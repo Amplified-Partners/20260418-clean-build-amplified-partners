@@ -1,0 +1,26 @@
+# The Optimizer (Kaizen) — Continuous Quality Daemon
+# Checks every 10 minutes that everything is working correctly.
+
+services:
+  kaizen:
+    build: .
+    container_name: kaizen-optimizer
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - kaizen-data:/data
+    networks:
+      - amplified-net
+    healthcheck:
+      test: ["CMD", "python", "-c", "import json,os; d=json.load(open('/data/optimizer_status.json')); assert d['status'] in ('ok','degraded')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+
+volumes:
+  kaizen-data:
+
+networks:
+  amplified-net:
+    external: true

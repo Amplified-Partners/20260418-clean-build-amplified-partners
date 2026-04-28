@@ -1,0 +1,35 @@
+# =============================================================
+# MARKETING ENGINE — Docker Compose (Workload Layer)
+# =============================================================
+services:
+  marketing-engine:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: amplified-marketing-engine
+    restart: unless-stopped
+    networks:
+      amplified-net:
+        aliases:
+          - marketing-engine
+    volumes:
+      - marketing-outputs:/app/outputs
+      - ./config:/app/config:ro
+    environment:
+      - LITELLM_MASTER_KEY=${LITELLM_MASTER_KEY}
+      - LANGFUSE_API_KEY=${LANGFUSE_API_KEY}
+      - LANGFUSE_SECRET_KEY=${LANGFUSE_SECRET_KEY}
+      - DATABASE_URL=postgresql://amplified:${PG_PASSWORD}@postgres:5432/marketing
+      - LITELLM_BASE_URL=http://litellm:4000
+      - BREVO_API_KEY=REDACTED
+    labels:
+      - "com.amplified.service=marketing-engine"
+      - "com.amplified.tier=workload"
+
+volumes:
+  marketing-outputs:
+    driver: local
+
+networks:
+  amplified-net:
+    external: true
