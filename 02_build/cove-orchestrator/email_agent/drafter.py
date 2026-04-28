@@ -10,7 +10,7 @@ from typing import Any
 
 import httpx
 
-from .config import DRAFT_MODEL, LITELLM_URL
+from .config import DRAFT_MODEL, LITELLM_URL, BREVO_API_KEY, BREVO_SENDER_EMAIL, BREVO_SENDER_NAME
 from .fetcher import FetchedEmail
 
 logger = logging.getLogger("email_agent.drafter")
@@ -148,3 +148,71 @@ async def generate_draft(
             tone="error",
             model="none",
         )
+
+async def dispatch_marketing_drip(
+    target_email: str, 
+    target_name: str, 
+    day_marker: int, 
+    vertical: str = "general"
+) -> dict:
+    """
+    Sends a targeted marketing drip via Brevo v3 based on the schedule:
+    Day 0: Welcome (AI disclosure)
+    Day 3: Educational (VARK-matched)
+    Day 7: Proof (Vertical-specific metrics)
+    """
+    url = "https://api.brevo.com/v3/smtp/email"
+    headers = {
+        "accept": "application/json",
+        "api-key": BREVO_API_KEY,
+        "content-type": "application/json"
+    }
+
+    # DRIP SKELETON (Day 0, 3, 7)
+    if day_marker == 0:
+        subject = f"Welcome to Amplified Partners, {target_name}"
+        html_content = f"""
+        <p>Hi {target_name},</p>
+        <p>This is an automated welcome email from our AI pipeline.</p>
+        <p>We believe in absolute transparency: we run the logic, you hold the database. Our Sidecar architecture is designed to sit alongside your existing IT, pull the data it needs into working memory, and forget it immediately.</p>
+        <p>Over the next week, we'll send you two more updates on how this works in practice.</p>
+        <p>Best,<br>Ewan</p>
+        """
+    elif day_marker == 3:
+        subject = "The 80/20 of the Video Engine"
+        html_content = f"""
+        <p>Hi {target_name},</p>
+        <p>Here is one thing you should know about content generation: 80% is scaffold, 20% is your unique data.</p>
+        <p>We use Remotion to parametrically render video. It takes your vertical ({vertical}) and inserts your pain points into a proven structure. Watch the example below.</p>
+        <p>[VIDEO PLACEHOLDER]</p>
+        <p>Best,<br>Ewan</p>
+        """
+    elif day_marker == 7:
+        subject = f"Proof from the {vertical} sector"
+        html_content = f"""
+        <p>Hi {target_name},</p>
+        <p>In {vertical}, the Death Spiral Rubric catches anomalies 6-18 months before failure.</p>
+        <p>For example, trades quote-no-response conversion is 50-60% lower if not followed up within 4 hours. By automating the follow-up, our partners recover from 12% to 22% conversion.</p>
+        <p>Reply 'PUDDING' to this email or on WhatsApp if you want to see the numbers applied to your business.</p>
+        <p>Best,<br>Ewan</p>
+        """
+    else:
+        raise ValueError(f"Drip day {day_marker} not implemented.")
+
+    payload = {
+        "sender": {"name": BREVO_SENDER_NAME, "email": BREVO_SENDER_EMAIL},
+        "to": [{"email": target_email, "name": target_name}],
+        "subject": subject,
+        "htmlContent": html_content
+    }
+
+    async with httpx.AsyncClient() as client:
+        try:
+            resp = await client.post(url, headers=headers, json=payload, timeout=10.0)
+            resp.raise_for_status()
+            logger.info(f"Drip Day {day_marker} sent via Brevo to {target_email}.")
+            return {"status": "success", "message_id": resp.json().get("messageId")}
+        except Exception as exc:
+            logger.error(f"Brevo API error for Day {day_marker}: {exc}")
+            return {"status": "error", "error": str(exc)}
+

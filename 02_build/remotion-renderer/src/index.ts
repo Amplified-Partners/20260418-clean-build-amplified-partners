@@ -1,11 +1,20 @@
 import { registerRoot } from 'remotion';
 import { FrictionFix } from './FrictionFix';
 import { RadicalAttribution } from './RadicalAttribution';
+import { SidecarComposition } from './SidecarComposition';
 import { Composition } from 'remotion';
 
 const RemotionRoot: React.FC = () => {
   return (
     <>
+      <Composition
+        id="SidecarB2B"
+        component={SidecarComposition}
+        durationInFrames={300}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
       <Composition
         id="FrictionFix"
         component={FrictionFix}

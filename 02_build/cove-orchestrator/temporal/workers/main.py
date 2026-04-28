@@ -13,6 +13,7 @@ from temporalio.client import Client
 from temporalio.worker import Worker
 
 from temporal.workflows.build_workflow import ProjectBuildWorkflow
+from temporal.workflows.sidecar_workflow import SidecarPickToLightWorkflow
 from temporal.activities.agent_activities import (
     run_agent,
     request_approval,
@@ -20,9 +21,20 @@ from temporal.activities.agent_activities import (
     update_task_status,
     log_agent_run,
 )
+from temporal.activities.sidecar_activities import (
+    emit_sidecar_signal,
+    execute_downstream_action,
+    log_sidecar_receipt,
+)
+from temporal.workflows.dogfood_workflow import CouncilWorkflow
+from temporal.activities.dogfood_activities import (
+    consult_perplexity,
+    consult_antigravity,
+    consult_claude,
+)
 
 TEMPORAL_ADDRESS = os.getenv("TEMPORAL_ADDRESS", "localhost:7233")
-TASK_QUEUE = "cove-build-queue"
+TASK_QUEUE = "cove-task-queue"
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [worker] %(message)s")
 log = logging.getLogger("cove_worker")
@@ -36,13 +48,23 @@ async def main():
     worker = Worker(
         client,
         task_queue=TASK_QUEUE,
-        workflows=[ProjectBuildWorkflow],
+        workflows=[
+            ProjectBuildWorkflow,
+            SidecarPickToLightWorkflow,
+            CouncilWorkflow
+        ],
         activities=[
             run_agent,
             request_approval,
             check_approval_status,
             update_task_status,
+            consult_perplexity,
+            consult_antigravity,
+            consult_claude,
             log_agent_run,
+            emit_sidecar_signal,
+            execute_downstream_action,
+            log_sidecar_receipt,
         ],
     )
     await worker.run()

@@ -84,6 +84,11 @@ GMAIL_ADDRESS = os.environ.get("GMAIL_ADDRESS", "")
 GMAIL_APP_PASSWORD = os.environ.get("GMAIL_APP_PASSWORD", "")
 GMAIL_DISPLAY_NAME = os.environ.get("GMAIL_DISPLAY_NAME", "Ewan Bramley")
 
+# Brevo v3 Marketing Engine (Marketing Pipeline)
+BREVO_API_KEY = os.environ.get("BREVO_API_KEY", "")
+BREVO_SENDER_EMAIL = os.environ.get("BREVO_SENDER_EMAIL", "ai@bykerbusinesshelp.ai")
+BREVO_SENDER_NAME = os.environ.get("BREVO_SENDER_NAME", "Ewan at Amplified Partners")
+
 # How many emails to fetch per sync
 FETCH_BATCH_SIZE = int(os.environ.get("EMAIL_FETCH_BATCH_SIZE", "50"))
 

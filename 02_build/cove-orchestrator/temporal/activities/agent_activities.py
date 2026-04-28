@@ -20,7 +20,7 @@ logger = logging.getLogger("cove.activities")
 # Activity: Run Agent (Claude Agent SDK)
 # ============================================================
 
-from cove_orchestrator.agents.configs.agent_registry import get_agent, MODEL_TIER_MAP
+from agents.configs.agent_registry import get_agent, MODEL_TIER_MAP
 
 @dataclass
 class RunAgentInput:
