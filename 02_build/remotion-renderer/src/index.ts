@@ -2,6 +2,7 @@ import { registerRoot } from 'remotion';
 import { FrictionFix } from './FrictionFix';
 import { RadicalAttribution } from './RadicalAttribution';
 import { SidecarComposition } from './SidecarComposition';
+import { ViralHook } from './ViralHook';
 import { Composition } from 'remotion';
 
 const RemotionRoot: React.FC = () => {
@@ -44,6 +45,20 @@ const RemotionRoot: React.FC = () => {
           varkStyle: 'visual' as const,
           growthStage: 'grow' as const,
           brandColor: '#20B2AA',
+        }}
+      />
+      <Composition
+        id="ViralHook"
+        component={ViralHook}
+        durationInFrames={450}  // 15 seconds at 30fps
+        fps={30}
+        width={1080}
+        height={1920}           // 9:16 aspect ratio
+        defaultProps={{
+          hookText: 'You are losing 20% of your leads.',
+          scriptText: 'Trades conversion drops 60% if not followed up in 4 hours. Our logic fixes that.',
+          ctaText: 'Reply PUDDING to see the math.',
+          brandColor: '#4f46e5',
         }}
       />
     </>
