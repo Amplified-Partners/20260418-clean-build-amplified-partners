@@ -1,0 +1,18 @@
+[project]
+name = "amplified-knowledge-mcp"
+version = "0.1.0"
+description = "Tiered MCP server for Amplified Partners knowledge systems (FalkorDB + Qdrant)"
+requires-python = ">=3.11"
+dependencies = [
+    "mcp[cli]>=1.0.0",
+    "redis>=5.0.0",
+    "qdrant-client>=1.9.0",
+    "sentence-transformers>=3.0.0",
+    "httpx>=0.27.0",
+    "pydantic>=2.0.0",
+]
+
+[project.scripts]
+amplified-knowledge-mcp = "amplified_knowledge_mcp.server:main"
+
+# Signed-by: Devon | 2026-04-29 | devin-60ae27b157c3459d90abd0c80734513b
