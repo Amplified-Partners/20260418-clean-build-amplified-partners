@@ -102,19 +102,11 @@ def get_document(document_title: str) -> str:
     audit.log_operation("get_document", "business_knowledge", document_title)
 
     cypher = (
-        "MATCH (d:Document) "
-        "WHERE toLower(d.title) CONTAINS toLower($title) "
-        "RETURN d LIMIT 5"
-    )
-    # FalkorDB doesn't support $params in GRAPH.QUERY the same way;
-    # use string interpolation with sanitised input.
-    safe_title = document_title.replace("'", "\\'")
-    cypher = (
         f"MATCH (d:Document) "
-        f"WHERE toLower(d.title) CONTAINS toLower('{safe_title}') "
+        f"WHERE toLower(d.title) CONTAINS toLower('{_esc(document_title)}') "
         f"RETURN d LIMIT 5"
     )
-    result = falkordb_client.graph_query("business_knowledge", cypher)
+    result = _safe_query("business_knowledge", cypher)
     return json.dumps(result, default=str)
 
 
@@ -128,16 +120,15 @@ def list_entities(category: str = "") -> str:
     audit.log_operation("list_entities", "business_knowledge", category)
 
     if category:
-        safe_cat = category.replace("'", "\\'")
         cypher = (
             f"MATCH (e:Entity)-[:BELONGS_TO]->(c:Category) "
-            f"WHERE toLower(c.name) CONTAINS toLower('{safe_cat}') "
+            f"WHERE toLower(c.name) CONTAINS toLower('{_esc(category)}') "
             f"RETURN e.name, labels(e) LIMIT 50"
         )
     else:
         cypher = "MATCH (e:Entity) RETURN e.name, labels(e) LIMIT 50"
 
-    result = falkordb_client.graph_query("business_knowledge", cypher)
+    result = _safe_query("business_knowledge", cypher)
     return json.dumps(result, default=str)
 
 
@@ -154,16 +145,16 @@ def search_principles(keyword: str) -> str:
     audit.log_operation("search_principles", "business_knowledge+qdrant", keyword)
 
     # Graph search
-    safe_kw = keyword.replace("'", "\\'")
+    esc_kw = _esc(keyword)
     cypher = (
         f"MATCH (d:Document) "
-        f"WHERE (toLower(d.title) CONTAINS toLower('{safe_kw}') "
+        f"WHERE (toLower(d.title) CONTAINS toLower('{esc_kw}') "
         f"OR toLower(d.category) CONTAINS 'principle') "
-        f"AND (toLower(d.title) CONTAINS toLower('{safe_kw}') "
-        f"OR toLower(d.preview) CONTAINS toLower('{safe_kw}')) "
+        f"AND (toLower(d.title) CONTAINS toLower('{esc_kw}') "
+        f"OR toLower(d.preview) CONTAINS toLower('{esc_kw}')) "
         f"RETURN d.title, d.category, d.preview, d.date LIMIT 10"
     )
-    graph_results = falkordb_client.graph_query("business_knowledge", cypher)
+    graph_results = _safe_query("business_knowledge", cypher)
 
     # Semantic search
     vector = embedder.embed_text(f"principle: {keyword}")
@@ -191,15 +182,14 @@ def get_chronology(topic: str) -> str:
     """
     audit.log_operation("get_chronology", "business_knowledge", topic)
 
-    safe_topic = topic.replace("'", "\\'")
     cypher = (
         f"MATCH (d:Document) "
-        f"WHERE toLower(d.title) CONTAINS toLower('{safe_topic}') "
-        f"OR toLower(d.preview) CONTAINS toLower('{safe_topic}') "
+        f"WHERE toLower(d.title) CONTAINS toLower('{_esc(topic)}') "
+        f"OR toLower(d.preview) CONTAINS toLower('{_esc(topic)}') "
         f"RETURN d.title, d.date, d.category, d.preview "
         f"ORDER BY d.date ASC LIMIT 30"
     )
-    result = falkordb_client.graph_query("business_knowledge", cypher)
+    result = _safe_query("business_knowledge", cypher)
     return json.dumps(result, default=str)
 
 
@@ -259,25 +249,25 @@ if config.TIER in (config.Tier.READWRITE, config.Tier.ADMIN):
         audit.log_operation("ingest_document", "business_knowledge+qdrant", title)
 
         now = datetime.now(timezone.utc).isoformat()
-        safe_title = title.replace("'", "\\'")
-        safe_category = category.replace("'", "\\'")
-        safe_source = source.replace("'", "\\'")
-        preview = content[:200].replace("'", "\\'")
+        esc_title = _esc(title)
+        esc_category = _esc(category)
+        esc_source = _esc(source)
+        preview = _esc(content[:200])
         word_count = len(content.split())
 
         # Create Document node in FalkorDB
         cypher = (
             f"CREATE (d:Document {{"
-            f"title: '{safe_title}', "
-            f"category: '{safe_category}', "
-            f"source: '{safe_source}', "
+            f"title: '{esc_title}', "
+            f"category: '{esc_category}', "
+            f"source: '{esc_source}', "
             f"date: '{now}', "
             f"word_count: {word_count}, "
             f"preview: '{preview}', "
             f"ingested_at: '{now}'"
             f"}}) RETURN d"
         )
-        graph_result = falkordb_client.graph_query("business_knowledge", cypher)
+        graph_result = _safe_query("business_knowledge", cypher)
 
         # Chunk and embed into Qdrant
         chunks = _chunk_text(content, chunk_size=500, overlap=50)
@@ -327,15 +317,13 @@ if config.TIER in (config.Tier.READWRITE, config.Tier.ADMIN):
 
         audit.log_operation("update_status", "business_knowledge", f"{document_title} -> {status}")
 
-        safe_title = document_title.replace("'", "\\'")
-        safe_status = status.replace("'", "\\'")
         cypher = (
             f"MATCH (d:Document) "
-            f"WHERE toLower(d.title) CONTAINS toLower('{safe_title}') "
-            f"SET d.status = '{safe_status}' "
+            f"WHERE toLower(d.title) CONTAINS toLower('{_esc(document_title)}') "
+            f"SET d.status = '{_esc(status)}' "
             f"RETURN d.title, d.status"
         )
-        result = falkordb_client.graph_query("business_knowledge", cypher)
+        result = _safe_query("business_knowledge", cypher)
         return json.dumps(result, default=str)
 
     @mcp.tool()
@@ -351,17 +339,15 @@ if config.TIER in (config.Tier.READWRITE, config.Tier.ADMIN):
         """
         audit.log_operation("tag_entity", "business_knowledge", f"{document_title} -> {entity_name}")
 
-        safe_title = document_title.replace("'", "\\'")
-        safe_entity = entity_name.replace("'", "\\'")
         cypher = (
             f"MATCH (d:Document) "
-            f"WHERE toLower(d.title) CONTAINS toLower('{safe_title}') "
+            f"WHERE toLower(d.title) CONTAINS toLower('{_esc(document_title)}') "
             f"WITH d LIMIT 1 "
-            f"MERGE (e:Entity {{name: '{safe_entity}'}}) "
+            f"MERGE (e:Entity {{name: '{_esc(entity_name)}'}}) "
             f"MERGE (d)-[:MENTIONS]->(e) "
             f"RETURN d.title, e.name"
         )
-        result = falkordb_client.graph_query("business_knowledge", cypher)
+        result = _safe_query("business_knowledge", cypher)
         return json.dumps(result, default=str)
 
     @mcp.tool()
@@ -377,15 +363,13 @@ if config.TIER in (config.Tier.READWRITE, config.Tier.ADMIN):
         audit.log_operation("flag_stale", "business_knowledge", f"{document_title}: {reason}")
 
         now = datetime.now(timezone.utc).isoformat()
-        safe_title = document_title.replace("'", "\\'")
-        safe_reason = reason.replace("'", "\\'")
         cypher = (
             f"MATCH (d:Document) "
-            f"WHERE toLower(d.title) CONTAINS toLower('{safe_title}') "
-            f"SET d.flagged = '{safe_reason}', d.flagged_at = '{now}' "
+            f"WHERE toLower(d.title) CONTAINS toLower('{_esc(document_title)}') "
+            f"SET d.flagged = '{_esc(reason)}', d.flagged_at = '{now}' "
             f"RETURN d.title, d.flagged, d.flagged_at"
         )
-        result = falkordb_client.graph_query("business_knowledge", cypher)
+        result = _safe_query("business_knowledge", cypher)
         return json.dumps(result, default=str)
 
 
@@ -406,17 +390,15 @@ if config.TIER == config.Tier.ADMIN:
         audit.log_operation("archive_document", "business_knowledge", f"{document_title}: {reason}")
 
         now = datetime.now(timezone.utc).isoformat()
-        safe_title = document_title.replace("'", "\\'")
-        safe_reason = reason.replace("'", "\\'")
         cypher = (
             f"MATCH (d:Document) "
-            f"WHERE toLower(d.title) CONTAINS toLower('{safe_title}') "
+            f"WHERE toLower(d.title) CONTAINS toLower('{_esc(document_title)}') "
             f"SET d.status = 'superseded', "
-            f"d.archived_reason = '{safe_reason}', "
+            f"d.archived_reason = '{_esc(reason)}', "
             f"d.archived_at = '{now}' "
             f"RETURN d.title, d.status, d.archived_reason, d.archived_at"
         )
-        result = falkordb_client.graph_query("business_knowledge", cypher)
+        result = _safe_query("business_knowledge", cypher)
         return json.dumps(result, default=str)
 
     @mcp.tool()
@@ -429,15 +411,14 @@ if config.TIER == config.Tier.ADMIN:
         audit.log_operation("promote_document", "business_knowledge", document_title)
 
         now = datetime.now(timezone.utc).isoformat()
-        safe_title = document_title.replace("'", "\\'")
         cypher = (
             f"MATCH (d:Document) "
-            f"WHERE toLower(d.title) CONTAINS toLower('{safe_title}') "
+            f"WHERE toLower(d.title) CONTAINS toLower('{_esc(document_title)}') "
             f"AND d.status = 'candidate' "
             f"SET d.status = 'canonical', d.promoted_at = '{now}' "
             f"RETURN d.title, d.status, d.promoted_at"
         )
-        result = falkordb_client.graph_query("business_knowledge", cypher)
+        result = _safe_query("business_knowledge", cypher)
         return json.dumps(result, default=str)
 
     @mcp.tool()
@@ -456,6 +437,28 @@ if config.TIER == config.Tier.ADMIN:
 # ===================================================================
 # Helpers
 # ===================================================================
+
+
+def _esc(value: str) -> str:
+    """Escape a string for safe interpolation into a Cypher string literal.
+
+    Escapes backslashes first, then single quotes — order matters to prevent
+    injection via backslash-quote sequences.
+    """
+    return value.replace("\\", "\\\\").replace("'", "\\'")
+
+
+def _safe_query(graph: str, cypher: str) -> dict:
+    """Validate a constructed Cypher query against the current tier, then execute.
+
+    Defense-in-depth: even server-constructed queries are validated so that
+    any future escaping bug is caught before reaching FalkorDB.
+    """
+    error = security.validate_cypher(cypher, config.TIER)
+    if error:
+        audit.log_operation("_safe_query:REJECTED", graph, error)
+        return {"error": error}
+    return falkordb_client.graph_query(graph, cypher)
 
 
 def _chunk_text(text: str, chunk_size: int = 500, overlap: int = 50) -> list[str]:

@@ -90,8 +90,9 @@ All via environment variables:
 
 ## Security
 
-- **Tier 1**: All Cypher is validated — CREATE, SET, DELETE, MERGE, REMOVE rejected
-- **Tier 2**: Destructive operations (DELETE, DROP, DETACH) rejected
+- **All tiers**: Every Cypher query (user-supplied or server-constructed) is validated against the current tier before execution. Input strings are escaped (backslashes then quotes) via `_esc()` to prevent injection.
+- **Tier 1**: Write keywords (CREATE, SET, DELETE, MERGE, REMOVE) rejected in all queries
+- **Tier 2**: Destructive keywords (DELETE, DROP, DETACH) rejected; writes allowed
 - **Tier 3**: Full access except raw data destruction
 - All operations are audit-logged with agent, timestamp, session, and operation details
 
