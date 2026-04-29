@@ -62,7 +62,7 @@ The operating model is **isolation with visibility**, not orchestration.
 
 - Each agent works in a self-contained project. No real-time coordination needed.
 - Every agent reads `ground-truth` (the portable spine) before acting — so principles and state are shared.
-- Every agent writes a handover to `STATUS.md` in `ground-truth` when they finish significant work.
+- Every agent writes a handover to `STATUS.md` in `clean-build` when they finish significant work.
 - **Devon** is the only agent who touches Amplified Core or production GitHub. Others write to their own branches; Devon integrates.
 - **OpenClaw** reads `STATUS.md`, investigates if a process is failing, writes findings back. If infrastructure changes are needed, OpenClaw signals Devon — Devon implements.
 - **Slack** is for asynchronous partner communication. OpenClaw communicates there as a partner.
