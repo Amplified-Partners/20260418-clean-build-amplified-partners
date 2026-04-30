@@ -79,7 +79,7 @@ Governance and methodology:
 
 | Perplexity proposal | Amplified reality | Verdict |
 |--------------------|--------------------|---------|
-| Hetzner Beast with Docker, Ollama, vLLM, Qdrant, PostgreSQL, Redis, MinIO, Prometheus, Grafana | **Already running.** Core has FalkorDB, Qdrant, LiteLLM, PostgreSQL, backups. Missing: Redis (not needed yet), MinIO (not needed yet), Prometheus/Grafana (config exists in `02_build/config/`). | Exists. Fill monitoring gap when pipeline is heavier. |
+| Hetzner Beast with Docker, Ollama, vLLM, Qdrant, PostgreSQL, Redis, MinIO, Prometheus, Grafana | **Already running.** Core has FalkorDB, Qdrant, LiteLLM, PostgreSQL, backups. Missing: Redis (not needed yet), MinIO (not needed yet), Grafana (not yet configured). Prometheus config exists in `02_build/config/`. | Exists. Fill monitoring gap when pipeline is heavier. |
 | LangGraph state machine for orchestration | **Not yet implemented.** Current pipeline is sequential cron (research → generate → queue → evaluate → learn). LangGraph would add: conditional routing, parallel branches, human-in-the-loop breakpoints, state checkpointing. | **Genuine upgrade.** Worth building when pipeline complexity justifies it. |
 | RAG grounding / "zero hallucination" | **Already running.** Qdrant (57K embeddings) + FalkorDB (9K nodes) feed the research agent. Content grounded against vault. | Exists. Perplexity overclaims "zero hallucination." Our deterministic sandwich is more honest. |
 | OCEAN personality profiling from social media | **Not implemented. Should not be.** Scraping social media for psychographic profiling violates GDPR/DPA 2018 and contradicts our Data Protection Architecture (Amplified never holds personal data). | **Reject as described.** See §Privacy-safe alternative below. |
@@ -422,7 +422,7 @@ Only proceed if pipeline complexity justifies it (≥3 conditional branches):
 
 ## Economics
 
-Current (from `content/generator.py`):
+Current (from CRM repo `app/marketing_machine/content/generator.py`):
 
 | Item | Cost |
 |------|------|
