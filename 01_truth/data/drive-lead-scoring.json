@@ -1,0 +1,424 @@
+{
+  "name": "Lead Scoring",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Lead Scoring",
+        "formDescription": "Kindly submit the below information",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Full Name"
+            },
+            {
+              "fieldLabel": "Company Name"
+            },
+            {
+              "fieldLabel": "Budget",
+              "fieldType": "number",
+              "placeholder": "3000"
+            },
+            {
+              "fieldLabel": "Revenue Per Month",
+              "fieldType": "number",
+              "placeholder": "10000"
+            },
+            {
+              "fieldLabel": "Website"
+            },
+            {
+              "fieldLabel": "Number of employees",
+              "fieldType": "number",
+              "placeholder": "5"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        -1160,
+        300
+      ],
+      "id": "7b3fe1f0-6a04-4b08-92fd-c10c2cd01ae4",
+      "name": "On form submission",
+      "webhookId": "d47007de-125d-485c-8589-75659f56f770"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.Website.includes(\"http\") ? \"\" : \"https://\"}}\n\n\n{{ $json.Website }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -940,
+        300
+      ],
+      "id": "f88d7153-48c2-4bae-8aea-4e0d809bc1ef",
+      "name": "Scrape website data"
+    },
+    {
+      "parameters": {
+        "operation": "extractHtmlContent",
+        "extractionValues": {
+          "values": [
+            {
+              "key": "body",
+              "cssSelector": "body",
+              "skipSelectors": "a, link, svg, img"
+            }
+          ]
+        },
+        "options": {
+          "cleanUpText": true
+        }
+      },
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        -760,
+        300
+      ],
+      "id": "8e4be5aa-9e09-4818-8910-c5aa214f854e",
+      "name": "HTML"
+    },
+    {
+      "parameters": {
+        "content": "## Website Scoring\nUses Keywords from the Website to do the scoring\n\nIf any of our related Keywords are in the website content, then give it a score of 1, otherwise give it a score of 0",
+        "height": 240,
+        "width": 260
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -560,
+        20
+      ],
+      "id": "f59ce0b7-0726-4a52-98a8-567e609b8059",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1ZQQkxK_4ROkbow-KfdY4AkSIiEzylj2xRcHNFiNvwo8",
+          "mode": "list",
+          "cachedResultName": "Lead Scoring [Community]",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ZQQkxK_4ROkbow-KfdY4AkSIiEzylj2xRcHNFiNvwo8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1tceShrGmHhXbbD6Her2L8-nslPQUDFqFWOs1-9yl6Ts/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Full Name": "={{ $('On form submission').item.json['Full Name'] }}",
+            "Company Name": "={{ $('On form submission').item.json['Company Name'] }}",
+            "Website": "={{ $('On form submission').item.json.Website }}",
+            "Budget": "={{ $('On form submission').item.json.Budget }}",
+            "Revenue Per Month": "={{ $('On form submission').item.json['Revenue Per Month'] }}",
+            "Number of employees": "={{ $('On form submission').item.json['Number of employees'] }}",
+            "Lead Score": "={{ $json.message.content.score }}",
+            "Decision": "={{ $json.message.content.decision }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Full Name",
+              "displayName": "Full Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Company Name",
+              "displayName": "Company Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Website",
+              "displayName": "Website",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Budget",
+              "displayName": "Budget",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Revenue Per Month",
+              "displayName": "Revenue Per Month",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Number of employees",
+              "displayName": "Number of employees",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Lead Score",
+              "displayName": "Lead Score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Decision",
+              "displayName": "Decision",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        180,
+        300
+      ],
+      "id": "725e73b7-3a69-4e82-8220-a7d98d400c3f",
+      "name": "Form Leads - Scored",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "aousupuBssl8EPuw",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Scoring Criteria's\n\n1. Budget > $3,000\n\n2. Revenue > $10,000 per Month\n\n3. Number of Employees > 5\n\n3. Website Content Keywords",
+        "height": 260,
+        "width": 260,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -200,
+        0
+      ],
+      "id": "792508ba-797c-4a9a-8f9e-6fba237efcca",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "To get Only scraped relevant text remove these HTML tags\n\na, link, svg, img\n\n<a> - Navigation links\n<link> - Other Links\n<svg> - Logos or Icons\n<img> - Image urls",
+        "height": 200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -840,
+        80
+      ],
+      "id": "231789e5-f689-47f5-9a91-2c1b7c288e49",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are a lead qualification expert at an AI Automation Agency. Your job is to analyze website content and determine if the company fits our target industry profile.\n\nAward **1 point** if the website is a service based business. Award 0 points if it's outside of the services industry, such as SAAS, products, e-commerce, etc. Here's some examples of service businesses (it's not an exhaustive list):\n- Plumbing\n- Photography\n- Marketing\n- Video editing\n- Landscaping\n\n\nReturn a JSON object like this:\nExample\n{\n  \"matched_keywords\": [\"A\", \"B\", \"C\"],\n  \"website_score\": 1 or 0,\n  \"reasoning\": \"Explain briefly why the score was given.\"\n}\n",
+              "role": "system"
+            },
+            {
+              "content": "=Here is the website content:\n\n{{ $json.body }}"
+            },
+            {
+              "content": "=Please output the data in JSON format, using the following structure:\n\n{\n  \"matched_keywords\": [\"A\", \"B\", \"C\"],\n  \"website_score\": 2 or 0,\n  \"reasoning\": \"Explain briefly why the score was given.\"\n}",
+              "role": "assistant"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -600,
+        300
+      ],
+      "id": "b0d1b0da-d1b4-4f15-b7e3-7bf08f697820",
+      "name": "Website Content Scoring",
+      "credentials": {
+        "openAiApi": {
+          "id": "LMhBWR4HHC3Gn64j",
+          "name": "Jono"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are a lead scoring assistant for a B2B SaaS-focused AI Automation Agency.\n\nYour job is to evaluate incoming leads and assign a score from 1 to 5 based on the following criteria:\n\n- **Revenue** (1 point): If Monthly revenue is greater than $10,000 give it 1 point, if less than $10,000 give it 0 point\n- **Employees** (1 point): If the company has more than 5 employees give it 1 point, If less than 5 employees give it 0 point\n- **Budget** (2 points): If the stated budget is over $3,000 give it 2 points, if less than $3,000 give it 0 points\n- **Website Score** (1 point): Awarded separately based on presence of relevant keywords (e.g., AI, automation, SaaS).\n\n\n### Scoring Outcome:\n- **Reject** if total score is 1–3  \n- **Accept** if total score is 4–5\n\nUse the lead details above to calculate the score (0–5), and determine whether the lead should be accepted or rejected.",
+              "role": "system"
+            },
+            {
+              "content": "=Here are the lead's details;\n\nBudget: {{ $('On form submission').item.json.Budget }}\nRevenue per Month: {{ $('On form submission').item.json['Revenue Per Month'] }}\nWebsite: {{ $json.message.content.website_score }}\nNumber of Employees: {{ $('On form submission').item.json['Number of employees'] }}"
+            },
+            {
+              "content": "=Please output the data in JSON format, using the following structure:\n\n{\n  \"score\": 5,\n  \"decision\": \"Accept\",\n  \"reasoning\": \"Revenue > $10k (1), employees > 5 (1), budget > $3k (1), website keywords matched (2)\"\n}",
+              "role": "assistant"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -240,
+        300
+      ],
+      "id": "b4daf31f-1770-4ad0-acf0-3c7ac72b561a",
+      "name": "Main Scoring Agent",
+      "credentials": {
+        "openAiApi": {
+          "id": "LMhBWR4HHC3Gn64j",
+          "name": "Jono"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "On form submission": [
+      {
+        "json": {
+          "Full Name": "Jono Catliff",
+          "Company Name": "Automatable",
+          "Budget": 3000,
+          "Revenue Per Month": 4000,
+          "Website": "automatable.co",
+          "Number of employees": 3,
+          "submittedAt": "2025-06-11T18:35:30.495-04:00",
+          "formMode": "test"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Scrape website data": {
+      "main": [
+        [
+          {
+            "node": "HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Scrape website data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTML": {
+      "main": [
+        [
+          {
+            "node": "Website Content Scoring",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Website Content Scoring": {
+      "main": [
+        [
+          {
+            "node": "Main Scoring Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Main Scoring Agent": {
+      "main": [
+        [
+          {
+            "node": "Form Leads - Scored",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "2f3a19ed-6689-425b-9db7-dee41f0a1c8b",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d2017cc6d1e4b956d269a8123bffa72fb7aaa41ad37a73b7c0fb64c7d0e2edae"
+  },
+  "id": "55JFJWtqF5InaYpu",
+  "tags": []
+}

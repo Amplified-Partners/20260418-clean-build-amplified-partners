@@ -1,0 +1,30 @@
+# Amplified Partners - Voice Agent
+# Deploy to Beast (beast.amplifiedpartners.ai)
+# Accessible at voice.beast.amplifiedpartners.ai via Traefik
+
+services:
+  voice-agent:
+    build:
+      context: .
+      dockerfile: Dockerfile.voice
+    container_name: amplified-voice-agent
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - FALKORDB_HOST=falkordb
+      - FALKORDB_PORT=6379
+    ports:
+      - "8080:8080"
+    networks:
+      - amplified
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.voice.rule=Host(`voice.beast.amplifiedpartners.ai`)"
+      - "traefik.http.routers.voice.entrypoints=websecure"
+      - "traefik.http.routers.voice.tls.certresolver=letsencrypt"
+      - "traefik.http.services.voice.loadbalancer.server.port=8080"
+
+networks:
+  amplified:
+    external: true
