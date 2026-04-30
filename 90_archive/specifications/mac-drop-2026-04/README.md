@@ -13,7 +13,7 @@ created_by: Devon (Devin session aa4d863ad679468692e75a40b8825358)
 
 ## What This Contains
 
-15 major specifications extracted from the Mac drop. These represent months of architectural thinking that was previously only on Ewan's Mac — not in the vault, not in GitHub, not discoverable by any agent.
+30 major specifications extracted from the Mac drop. These represent months of architectural thinking that was previously only on Ewan's Mac — not in the vault, not in GitHub, not discoverable by any agent. Ingested in two phases: Phase 1 (15 files, constitutional + architectural), Phase 2 (15 files, operational + methodology + named systems).
 
 ### Constitutional Documents & Conventions (The Seven Pillars)
 
@@ -41,6 +41,26 @@ These form an interlocking system. They reference each other and are designed to
 | `AMPLIFIED-SEARCH-ORCHESTRATION-METHODOLOGY.md` | 770 | AMAS — 5-engine adaptive search |
 | `PUDDING-VALUE-MATHEMATICAL-MODEL-v1.md` | 656 | Mathematical model for pudding run value |
 | `pudding-taxonomy-synthesis.md` | 1,374 | Complete pudding reference — all mixes, all scores |
+
+### Phase 2 — Operational Specifications & Named Systems
+
+| File | Lines | What It Describes |
+|------|-------|-------------------|
+| `AMPLIFIED-PUDDING-DISCOVERY-SYSTEM.md` | 1,050 | APDS — full engineering spec for automated LBD. 5-stage pipeline, FalkorDB schema, body language detection. |
+| `amplified_methodology_framework.md` | 1,404 | AMF — 9-stage unified operating manual. Synthesises AMPS, Build Quality, RIC, PUDDING, Gap Analysis. |
+| `amplified_master_architecture.md` | 2,073 | Master architecture & source of truth. Eight Laws. PII tokenisation. Complete system map. |
+| `beast-architecture-specification.md` | 798 | Beast rebuild spec. Neo4j 5.26+ replacing FalkorDB. Complete hardware/software stack. |
+| `kaizen-business-specification.md` | 1,557 | Kaizen Department spec. PDCA cycles, three value streams (internal, agent skill, sellable product). |
+| `kaizen-cove-build-plan.md` | 1,443 | Cove build plan. 5 phases, 10 weeks, 24 Linear issues (COV-290 to COV-313). |
+| `VISUAL-POLISH-SYSTEM-COMPLETE-BUILD-GUIDE.md` | 4,527 | Design tokens, scoring rubric, Python engine, test suite. Complete build guide. |
+| `extraction-department-spec.md` | 1,028 | Extraction Department. 4 core functions: Ingest, Extract, Synthesise, Route. |
+| `rapid_intelligence_cycle.md` | 866 | RIC — PUDDING-speed knowledge updates. Nightly research → test → ship cycle. |
+| `watchman-expansion-strategy.md` | 708 | Local LLM cost reduction strategy. 35+ processes for migration to on-premise. |
+| `CURATOR-GATE-SPEC-v1-pandoc.md` | 503 | CURATOR-GATE-SPEC — deterministic validation pipeline. 5 sequential gates for vault admission. |
+| `00-INSIGHT-CATALOGUE.md` | 2,916 | Insight Catalogue. 136 entries across 5 verticals. £30k avg value per entry. |
+| `P7-positive-capture-loop-master-reference.md` | 523 | P7 — Positive Capture Loop. Celebration engine for agent and team morale. |
+| `P8-transparency-inoculation-master-reference.md` | 603 | P8 — Transparency Inoculation. "Creepy line" + daily disclosure framework. |
+| `P10-kill-switch-master-reference.md` | 510 | P10 — Kill Switch. Binary shutdown architecture for safety. |
 
 ## How to Use
 

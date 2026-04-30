@@ -1,7 +1,7 @@
 ---
 title: Governed workspace manifest (authoritative inventory)
 date: 2026-04-29
-version: 38
+version: 39
 status: draft
 ---
 
@@ -139,8 +139,29 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
     - `AMPLIFIED-SEARCH-ORCHESTRATION-METHODOLOGY.md` `[NON-AUTHORITATIVE]` (770 lines — AMAS, 5-engine adaptive search)
     - `PUDDING-VALUE-MATHEMATICAL-MODEL-v1.md` `[NON-AUTHORITATIVE]` (656 lines — mathematical model for pudding run value)
     - `pudding-taxonomy-synthesis.md` `[NON-AUTHORITATIVE]` (1,374 lines — complete pudding reference)
+    - `AMPLIFIED-PUDDING-DISCOVERY-SYSTEM.md` `[NON-AUTHORITATIVE]` (1,050 lines — APDS engineering spec: 5-stage automated LBD pipeline, FalkorDB schema, body language detection)
+    - `amplified_methodology_framework.md` `[NON-AUTHORITATIVE]` (1,404 lines — AMF: 9-stage unified operating manual)
+    - `amplified_master_architecture.md` `[NON-AUTHORITATIVE]` (2,073 lines — master architecture, Eight Laws, PII tokenisation)
+    - `beast-architecture-specification.md` `[NON-AUTHORITATIVE]` (798 lines — Beast rebuild spec, Neo4j 5.26+ replacing FalkorDB)
+    - `kaizen-business-specification.md` `[NON-AUTHORITATIVE]` (1,557 lines — Kaizen Department, PDCA cycles, three value streams)
+    - `kaizen-cove-build-plan.md` `[NON-AUTHORITATIVE]` (1,443 lines — Cove build plan, 5 phases, 24 Linear issues)
+    - `VISUAL-POLISH-SYSTEM-COMPLETE-BUILD-GUIDE.md` `[NON-AUTHORITATIVE]` (4,527 lines — design tokens, scoring rubric, Python engine)
+    - `extraction-department-spec.md` `[NON-AUTHORITATIVE]` (1,028 lines — Extraction Dept: Ingest, Extract, Synthesise, Route)
+    - `rapid_intelligence_cycle.md` `[NON-AUTHORITATIVE]` (866 lines — RIC: nightly research → test → ship)
+    - `watchman-expansion-strategy.md` `[NON-AUTHORITATIVE]` (708 lines — local LLM cost reduction, 35+ process migration)
+    - `CURATOR-GATE-SPEC-v1-pandoc.md` `[NON-AUTHORITATIVE]` (503 lines — deterministic validation pipeline, 5 sequential gates)
+    - `00-INSIGHT-CATALOGUE.md` `[NON-AUTHORITATIVE]` (2,916 lines — 136 insight entries across 5 verticals)
+    - `P7-positive-capture-loop-master-reference.md` `[NON-AUTHORITATIVE]` (523 lines — celebration engine)
+    - `P8-transparency-inoculation-master-reference.md` `[NON-AUTHORITATIVE]` (603 lines — "creepy line" + daily disclosure)
+    - `P10-kill-switch-master-reference.md` `[NON-AUTHORITATIVE]` (510 lines — binary shutdown architecture)
 
 ## Changelog
+
+### v39 — 2026-04-29
+
+- Added 15 more specifications to `90_archive/specifications/mac-drop-2026-04/` (Phase 2 ingestion): APDS engineering spec, AMF methodology framework, master architecture, Beast rebuild spec, Kaizen Department spec, Kaizen Cove build plan, Visual Polish System build guide, Extraction Department spec, RIC, Watchman expansion strategy, Curator Gate spec, Insight Catalogue, P7/P8/P10 safety/celebration systems. All `[NON-AUTHORITATIVE]`. Total archive now 30 files (33,153 lines).
+
+Signed-by: Devon (Devin session `aa4d863ad679468692e75a40b8825358`) — 2026-04-29
 
 ### v38 — 2026-04-29
 

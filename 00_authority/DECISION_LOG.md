@@ -1,7 +1,7 @@
 ---
 title: Decision log
 date: 2026-04-29
-version: 10
+version: 11
 status: draft
 ---
 
@@ -12,6 +12,14 @@ status: draft
 One entry per decision. Keep it short. Link out to supporting docs.
 
 ## Entries
+
+### 2026-04-29 — Phase 2: 15 additional Mac drop specs ingested to 90_archive/specifications/
+
+- **Decision**: Ingest 15 additional specifications from Ewan's Mac drop (Phase 2) into `90_archive/specifications/mac-drop-2026-04/`. All `[NON-AUTHORITATIVE]`. Total archive now 30 files, 33,153 lines.
+- **Why**: Phase 1 covered constitutional and architectural specs. Phase 2 covers operational specs and named systems: APDS (the scientific backbone), AMF, Kaizen Department, Beast rebuild, Visual Polish, Extraction Department, RIC, Watchman, Curator Gate, Insight Catalogue (136 entries × £30k avg), and three safety systems (P7, P8, P10). Without these, agents cannot understand the operational layer of Amplified Partners.
+- **Where encoded**: `90_archive/specifications/mac-drop-2026-04/README.md` (updated), `00_authority/MANIFEST.md` v39 § Reference only.
+- **Status**: active
+- **Signed-by**: Devon (Devin session `aa4d863ad679468692e75a40b8825358`) — 2026-04-29
 
 ### 2026-04-29 — Mac drop specifications ingested to 90_archive/specifications/
 
