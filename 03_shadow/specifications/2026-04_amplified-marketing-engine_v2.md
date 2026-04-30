@@ -394,7 +394,7 @@ Value tracking → karma, engagement, DMs → feeds back to Kaizen
 4. **Respect subreddit rules.** Some subs ban self-promotion entirely. The monitor must flag these.
 
 **Implementation (reuse existing code):**
-- Extend `nightscout/fetchers.py` (952 lines, 27 sources already defined) with Reddit API — NightScout is the ready-made pattern for any harvest extension
+- Extend `nightscout/fetchers.py` (27 sources already defined) with Reddit API — NightScout is the ready-made pattern for any harvest extension
 - Reuse `amplified-knowledge-mcp` for RAG grounding (do not write directly to FalkorDB/Qdrant)
 - Reuse `synthetic_evaluator.py` for draft quality scoring
 - Add Reddit-specific dimensions to evaluator (subreddit fit, helpfulness, non-promotional tone)
