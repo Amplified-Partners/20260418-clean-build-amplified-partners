@@ -332,7 +332,7 @@ The intelligence is in understanding trades and archetypes deeply (50+ business 
 
 **Why:** Video is the highest-engagement format on every platform. Programmatic generation means: same template, different data, hundreds of variations at near-zero marginal cost.
 
-**Constraint: Beast is CPU-only.** No GPU. The AX162-R was chosen with video load in mind (96 threads, 251GB RAM), but render times will be slower than GPU-equivalent. Benchmark render queue depth and concurrency vs Ollama inference load before committing to scale.
+**Constraint: Beast is CPU-only.** No GPU. The AX162-R was chosen with video load in mind (96 threads, 256GB RAM), but render times will be slower than GPU-equivalent. Benchmark render queue depth and concurrency vs Ollama inference load before committing to scale.
 
 **Architecture:**
 
