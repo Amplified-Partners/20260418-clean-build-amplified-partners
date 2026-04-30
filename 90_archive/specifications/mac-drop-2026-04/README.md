@@ -58,7 +58,7 @@ To promote any document from reference to candidate/authority:
 
 ## Full Inventory
 
-The complete Mac drop inventory (all 521 files) is documented in `MAC-DROP-COMPLETE-INVENTORY.md` (delivered to Ewan, not committed to repo — too large and contains duplicate analysis).
+The complete Mac drop inventory (all 521 files) was delivered to Ewan as a separate document (not committed to this repo — too large and contains duplicate analysis).
 
 ---
 
