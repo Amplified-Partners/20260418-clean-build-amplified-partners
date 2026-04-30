@@ -277,7 +277,7 @@ The intelligence is in understanding trades and archetypes deeply (50+ business 
 **Process:**
 - Synthetic evaluators score 1–10 on: relevance, honesty, clarity, actionability, attribution. **8 personas built** (Bob, Lisa, Marcus, Sarah, Technical Tom, Skeptical Sam, Budget Brian, Growth Gina); **3 currently running** (Bob/Lisa/Marcus).
 - Automated checks: source citations present, no claims without backing, tone matches channel, length within bounds.
-- Quality routing: ≥7/10 → auto-queue for human review. 5–6/10 → revision queue. <5/10 → reject with feedback to Kaizen.
+- Quality routing: ≥7/10 → auto-queue for human review. 6/10 → revision queue. <6/10 → reject with feedback to Kaizen.
 
 **Gate:** No content reaches human review without passing both synthetic evaluation and automated checks.
 
