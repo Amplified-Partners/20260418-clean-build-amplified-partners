@@ -75,7 +75,7 @@ Signed-by: Devon | 2026-04-29 | devin-aa4d863ad679468692e75a40b8825358
 ### v2 — 2026-04-30
 
 - Infrastructure state section replaced with pointer to `02_build/INFRASTRUCTURE.md` (canonical, complete inventory of all 40 containers).
-- Scheduled jobs and API auth sections removed from STATUS.md — now live in the infrastructure manifest.
+- Scheduled jobs section removed from STATUS.md — now lives in the infrastructure manifest. API auth section removed (summary retained in marketing engine entry in infrastructure manifest; full tier detail was in STATUS.md v1 only).
 - ch-pipeline paused by Ewan; voice-pipeline noted as stopped.
 
 Signed-by: Devon | 2026-04-30 | devin-66aa3ce48c7e407f8ad9bf066541b604

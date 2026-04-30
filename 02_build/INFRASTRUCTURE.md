@@ -177,7 +177,7 @@ Source: `/root/cove-repo/infrastructure/`
 | Voice Pipeline | `/root/services/voice-pipeline/docker-compose.yml` | voice-pipeline |
 | xAI Phone Agent | `/opt/xai-phone-agent/docker-compose.yml` | xai-phone-agent |
 | Nexus Dashboard | `/opt/nexus/dashboard/docker-compose.yml` | nexus-dashboard |
-| Base infra | `/opt/amplified/docker-compose.yml` | postgres, redis, falkordb, qdrant, clickhouse, minio, portainer, code-server |
+| Base infra | `/opt/amplified/docker-compose.yml` | postgres, redis, falkordb, qdrant, clickhouse, minio, portainer, amplified-code-server |
 
 ---
 
