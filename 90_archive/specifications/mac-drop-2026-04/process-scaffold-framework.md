@@ -1,3 +1,7 @@
+Status: [NON-AUTHORITATIVE]
+Sanitisation: done — no client data, credentials, or PII found in source specifications
+Source: Ewan's Mac drop ("New Folder With Items 2.zip", 521 files, 125MB), ingested 2026-04-29
+
 # The Process Scaffold — Layer 4 of the Business Brain
 
 *A deep research report on how every business process, in every vertical, is taken down to runnable granularity — and labelled for deterministic execution, human judgement, or agentic reasoning.*

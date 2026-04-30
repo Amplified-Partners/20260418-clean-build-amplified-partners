@@ -1,3 +1,7 @@
+Status: [NON-AUTHORITATIVE]
+Sanitisation: done — no client data, credentials, or PII found in source specifications
+Source: Ewan's Mac drop ("New Folder With Items 2.zip", 521 files, 125MB), ingested 2026-04-29
+
 # PUDDING 2026 — Validation Methodology v2.1
 ## Mandatory. Enforced. Benchmarked. Checked at Every Stage. No Exceptions.
 
