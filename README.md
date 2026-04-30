@@ -9,7 +9,7 @@ infrastructure / shadow / archive per [`00_authority/NORTH_STAR.md`](00_authorit
 ## Start here (agents)
 
 **Canonical read order and autonomy bounds:** open **[`AGENTS.md`](AGENTS.md)** and
-read **§ Agent session (clean-build) — first 60 seconds** first. Other pointers
+read **§ Agent session — first 60 seconds** first. Other pointers
 below are secondary; they do not replace that section.
 
 Then (same spine, more depth):

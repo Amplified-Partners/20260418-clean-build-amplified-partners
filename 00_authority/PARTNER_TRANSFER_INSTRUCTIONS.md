@@ -1,7 +1,7 @@
 ---
 title: Partner transfer instructions (Amplified Partners workspace)
-date: 2026-04-17
-version: 9
+date: 2026-04-23
+version: 10
 status: draft
 ---
 
@@ -51,7 +51,7 @@ clean build:
 
 Start by reading these files (in order):
 
-1. **`AGENTS.md` (repo root)** — **§ Agent session (clean-build) — first 60 seconds**
+1. **`AGENTS.md` (repo root)** — **§ Agent session — first 60 seconds**
    (canonical read order, bounded autonomy, mistakes-as-signal). **Do not skip.**
 2. `00_authority/NORTH_STAR.md` (agent-first operating contract + file budget)
 3. `00_authority/MANIFEST.md` (authority index)
@@ -231,3 +231,9 @@ Signed-by: Keystone (AI) — 2026-04-17
   starts with root **`AGENTS.md`** § first 60 seconds, then existing authority stack.
 
 Signed-by: Keystone (AI) — 2026-04-17
+
+### v10 — 2026-04-23
+
+- Bibliography fix: updated reference to root `AGENTS.md` canonical entry section name after rename from "Agent session (clean-build) — first 60 seconds" to "Agent session — first 60 seconds" (post-merge-tightening PR).
+
+Signed-by: Devon (Devin session `4cc8b0d727684f94a8f055853099d8e6`) — 2026-04-23

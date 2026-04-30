@@ -1,7 +1,7 @@
 ---
 title: Amplified Partners — CleanRoom Build (authority)
-date: 2026-04-17
-version: 7
+date: 2026-04-23
+version: 8
 status: draft
 ---
 
@@ -17,9 +17,7 @@ This is an **agent-oriented clean-room build environment**: a workspace designed
 
 ## How to use it (entrypoint)
 
-- **Agents (only required path):** repo root **`AGENTS.md`** → **§ Agent session
-  (clean-build) — first 60 seconds** — canonical read order, autonomy bounds,
-  mistakes-as-signal. Do not skip.
+- **Agents (only required path):** repo root **`AGENTS.md`** → **§ Agent session — first 60 seconds** — canonical read order, autonomy bounds, mistakes-as-signal. Do not skip.
 - **No parallel human entry path:** there is no maintained “for humans” doc tree.
   Rare human audit uses **manifest + folder names + `YYYY-MM-DD_` filenames**
   only.
@@ -42,6 +40,12 @@ The one authority rule lives in `MANIFEST.md`: if a file is not listed, it is no
   orientation” entry path; findability = paths + manifest only.
 
 Signed-by: Keystone (AI) — 2026-04-17
+
+### v8 — 2026-04-23
+
+- Bibliography fix: updated reference to root `AGENTS.md` canonical entry section name after rename from "Agent session (clean-build) — first 60 seconds" to "Agent session — first 60 seconds" (post-merge-tightening PR).
+
+Signed-by: Devon (Devin session `4cc8b0d727684f94a8f055853099d8e6`) — 2026-04-23
 
 ### v6 — 2026-04-17
 

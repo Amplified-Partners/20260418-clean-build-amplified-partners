@@ -1,7 +1,7 @@
 ---
 title: North Star (agent-first)
-date: 2026-04-17
-version: 11
+date: 2026-04-23
+version: 12
 status: draft
 ---
 
@@ -18,7 +18,7 @@ operator); not default reading material for the operator.
 
 An **agent-oriented clean room** that produces **clarity** by enforcing a small authority set, strict provenance, and deterministic-first truth artifacts.
 
-**Canonical entry for agents:** root **`AGENTS.md`** → **§ Agent session (clean-build) — first 60 seconds** (read order, autonomy bounds, mistakes-as-signal). This file deepens the same contract — it does not replace that entry path.
+**Canonical entry for agents:** root **`AGENTS.md`** → **§ Agent session — first 60 seconds** (read order, autonomy bounds, mistakes-as-signal). This file deepens the same contract — it does not replace that entry path.
 
 ## Primary audience (absolute)
 

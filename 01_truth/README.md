@@ -5,7 +5,7 @@ Purpose: **Truth-shaped candidates** — material intended to become determinist
 (processes, schemas, interfaces). Nothing here overrides `00_authority/` until
 promoted in `00_authority/MANIFEST.md`.
 
-**Before you start:** root **`AGENTS.md`** → **§ Agent session (clean-build) — first 60 seconds** is the canonical entry for read order and autonomy bounds.
+**Before you start:** root **`AGENTS.md`** → **§ Agent session — first 60 seconds** is the canonical entry for read order and autonomy bounds.
 
 ## Where to put work
 

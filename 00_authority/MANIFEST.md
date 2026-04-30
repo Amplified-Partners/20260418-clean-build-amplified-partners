@@ -1,7 +1,7 @@
 ---
 title: Governed workspace manifest (authoritative inventory)
-date: 2026-04-26
-version: 36
+date: 2026-04-29
+version: 37
 status: draft
 ---
 
@@ -63,6 +63,7 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
 
 - `AGENTS.md`
 - `00_authority/AGENTS.md`
+- `00_authority/TAXONOMY.md` (entity definitions, agent roles, locked terminology — company structure, operating model)
 - `00_authority/README.md`
 - `00_authority/MANIFEST.md`
 - `00_authority/NORTH_STAR.md`
@@ -76,6 +77,7 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
 - `00_authority/PROMOTION_GATE.md`
 - `00_authority/BUILD_LOOP.md`
 - `00_authority/DECISION_LOG.md`
+- `STATUS.md` (operations status board — async handshake between Devon and OpenClaw; versioned handoffs, no chat)
 - `.cursor/rules/stateless-handover-kaizen.mdc` `[LOGIC TO BE CONFIRMED]` (mechanical enforcement of existing handover policy; not a separate policy spine)
 - `.cursor/hooks.json` `[LOGIC TO BE CONFIRMED]` (**No hooks** — `"hooks": {}`. **TESTING NEED:** reinstatement gate → `.cursor/HOOKS_TESTING_NEED.md`; history → `03_shadow/2026-04-16_stop-hook_followup-checklist-loop_bug-report.md` § Final resolution)
 - `.cursor/hooks/stateless-handover-stop.py` `[LOGIC TO BE CONFIRMED]` (**Dormant / testing only** — **not invoked** while `hooks` is empty; do not treat as enforcement)
@@ -127,12 +129,30 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
 
 ## Changelog
 
-### v36 — 2026-04-26
+### v37 — 2026-04-29
+
+- Added `STATUS.md` to **Authoritative now**: two-way async operations board between Devon (infrastructure) and OpenClaw (coordination). GitHub as single source of truth for cross-agent status. Versioned handoffs, no chat.
+
+Signed-by: Devon (Devin session `aa4d863ad679468692e75a40b8825358`) — 2026-04-29
+
+### v36 — 2026-04-29
+
+- Added `00_authority/TAXONOMY.md` to **Authoritative now**: canonical entity definitions (company structure, agent roster, locked terminology, operating model). Covers the Amplified Partners entity hierarchy, Devon/OpenClaw/Cursor roles, and terminology that was previously only in session chat.
+- Frontmatter `date` advanced to 2026-04-29.
+
+Signed-by: Devon (Devin session unknown — committed on main before this PR) | 2026-04-29
+
+### v36-pre (archive beautiful-and-golden) — 2026-04-26
 
 - Indexed new `90_archive/beautiful-and-golden/` entries (3 files: `ARCHITECTURE.md`, `PUBLIC_README.md`, `SUSTAINABILITY.md`) under "Reference only". Archived from sibling repo before tombstoning.
-- Frontmatter `date` advanced to 2026-04-26.
 
 Signed-by: Devon (Devin session `devin-ab66d8a5c2b64927b65a4ab87acc47ee`) — 2026-04-26
+
+### v36-pre (bibliography fix) — 2026-04-23
+
+- Bibliography fix follow-up to v35: root `AGENTS.md` section heading renamed from "Agent session (clean-build) — first 60 seconds" to "Agent session — first 60 seconds" created 5 dead cross-references. Updated all live references: `README.md`, `01_truth/README.md`, `00_authority/README.md` (bumped to v8), `00_authority/NORTH_STAR.md` (bumped to v12), `00_authority/PARTNER_TRANSFER_INSTRUCTIONS.md` (bumped to v10). `00_authority/DECISION_LOG.md` entry at line 65 is a historical record of the 2026-04-17 decision as-named-then; left intact per additive-edits rule.
+
+Signed-by: Devon (Devin session `4cc8b0d727684f94a8f055853099d8e6`) — 2026-04-23
 
 ### v35 — 2026-04-23
 
