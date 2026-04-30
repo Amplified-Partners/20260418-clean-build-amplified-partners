@@ -100,7 +100,7 @@ This is `03_shadow/` material — not authoritative. Intended for Ewan's review 
 - **Stage 5 — Distribution:** `agents/publishing_agent.py` (256 lines), `platform_adapters.py` (431 lines). **Built adapters:** LinkedIn (OAuth), Substack, Twitter/X, Email (Brevo), Blog. Platform-optimal UK timing.
 - **Stage 6 — Kaizen:** `kaizen.py` (367 lines) + `kaizen-optimizer` container. Cove Kaizen workflow: `kaizen_workflow.py` + activities (1,320 lines) on Temporal — production, self-improving, auto-applying. Layer 0 locked, max 3 auto-applies/cycle.
 
-### Code inventory on Beast (~17,229 lines directly reusable)
+### Code inventory on Beast
 
 | Codebase | Lines | What it provides |
 |----------|-------|-----------------|
@@ -137,7 +137,7 @@ This is `03_shadow/` material — not authoritative. Intended for Ewan's review 
 
 | Artifact | What it provides |
 |----------|-----------------|
-| **Layer 0 Amplified Laws** (`agents/prompts/layer0_laws.py`) | 8 physically locked laws: radical honesty, transparency, attribution, win-win, white hat, help-not-hurt, add-not-reduce, give-value-away. **Kaizen cannot modify these.** |
+| **Layer 0 Amplified Laws** (`agents/prompts/layer0_laws.py`, authoritative: `00_authority/EIGHT_LAWS.md`) | 8 physically locked laws: (1) Don't Hurt Anyone, (2) HR Is Absolute, (3) No Telling People Off, (4) Radical Honesty, (5) Radical Transparency, (6) Ideas Meritocracy, (7) Radical Attribution, (8) Win-Win or Don't Play. **Kaizen cannot modify these.** |
 | **APDS** (knowledge note) | 5-stage autonomous discovery: Harvest → Extract → Label → Match → Score. FalkorDB schema. Container architecture. |
 | **Pudding Technique** (knowledge note) | Swanson LBD adapted for business. Neutral taxonomy at ingestion, lens at query time. Mathematical validation (p < 0.001). |
 | **Three-Brain Isolation** (`01_truth/processes/`) | Amplified Brain / Per-Client Brain / Federated Brain. Privacy by architecture. |
@@ -179,7 +179,7 @@ This is `03_shadow/` material — not authoritative. Intended for Ewan's review 
 
 5. **Blinkers without ceilings.** Agents operate with full autonomy inside defined constraints. The constraints are the blinkers. There is no ceiling on ingenuity within them.
 
-6. **Layer 0 Amplified Laws** (`agents/prompts/layer0_laws.py`) — physically locked. Kaizen cannot modify them. 8 laws: radical honesty, transparency, attribution, win-win, white hat, help-not-hurt, add-not-reduce, give-value-away.
+6. **Layer 0 Amplified Laws** (`agents/prompts/layer0_laws.py`, authoritative: `00_authority/EIGHT_LAWS.md`) — physically locked. Kaizen cannot modify them. 8 laws: (1) Don't Hurt Anyone, (2) HR Is Absolute, (3) No Telling People Off, (4) Radical Honesty, (5) Radical Transparency, (6) Ideas Meritocracy, (7) Radical Attribution, (8) Win-Win or Don't Play.
 
 ### System boundary model
 
@@ -593,7 +593,7 @@ Projected additions:
 
 ## Build posture for Devon
 
-- **Reuse aggressively.** ~17,229 lines of directly reusable code already on Beast across NightScout, Cove, Knowledge MCP, Marketing Engine, pudding-testing, cost tools, vault scripts. Estimated new code: ~5,800 lines.
+- **Reuse aggressively.** Directly reusable code on Beast: marketing-engine (4,477), knowledge-mcp (1,016), pudding-testing (2,826), token proxy + cost report (1,266), vault-to-qdrant (418), agent-service-toolkit (7,743) = ~17.7K lines. Additionally, cove-orchestrator (20,218 lines including nightscout/952) in Ewan's personal repo. Estimated new code: ~5,800 lines.
 - **All knowledge ops** via `amplified-knowledge-mcp` — never write directly to FalkorDB or Qdrant.
 - **All LLM calls** via LiteLLM — use tier names (local/standard/premium), never raw model names.
 - **All web research** via SearXNG first.
