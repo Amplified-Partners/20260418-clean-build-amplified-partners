@@ -1,7 +1,7 @@
 ---
 title: "Amplified Marketing Engine — Full-Stack Spec"
 date: 2026-04-30
-version: 1
+version: 2
 status: candidate
 process_family_id: PF-marketing-engine
 parents:
@@ -10,6 +10,7 @@ parents:
   - 01_truth/processes/2026-04_three-brain-data-isolation_privacy-architecture_v1.md
 sources:
   - "Perplexity Deep Research thread (2026-04-30, Ewan prompt): https://www.perplexity.ai/search/4cc30084-cd13-4e28-9b77-3f46ed86a4c1#29"
+  - "Ewan reconciled spec (2026-04-30): amplified_machine_spec_for_devon.md — ground truth from Beast SSH + code inventory"
   - "STATUS.md (2026-04-29, Devon): Marketing Engine v0.4.0 running on Amplified Core"
   - "CRM repo: app/marketing_machine/ (avatars, content generator, transparent prompts)"
   - "APDS knowledge note (Ewan + Claude, March 2026): 5-stage Harvest→Extract→Label→Match→Score"
@@ -31,21 +32,91 @@ This is `03_shadow/` material — not authoritative. Intended for Ewan's review 
 
 ## What already exists (ground truth)
 
-Before designing anything new, here is what is **running** on Amplified Core (`135.181.161.131`) as of 2026-04-29:
+> **Reconciled 2026-04-30** from Ewan's spec (Beast SSH inspection + code inventory). Previous version used repo-only data and was incomplete. Where this document and what's running on Beast disagree, **what's running on Beast wins.**
 
-| System | Status | What it does |
-|--------|--------|-------------|
-| **Marketing Engine v0.4.0** | Running (port 8000) | Content pipeline: research → generate → queue → evaluate → learn |
-| **FalkorDB** | Running | 9,000 nodes across 4 graphs. Knowledge graph for vault content. |
-| **Qdrant** | Running | 57,434 embeddings (384-dim). Vector search for RAG grounding. |
-| **LiteLLM** | Running | Proxy for local + remote LLMs. Currently llama3.1-8b local. |
-| **PostgreSQL** | Running | DB: marketing. State persistence, audit logs. |
-| **Synthetic Evaluators** | Running | Bob, Lisa, Marcus avatar panel. Score every piece of content 1–10. |
-| **Content Pipeline Cron** | Scheduled 4am UTC | Generate → evaluate → queue for review. Fully autonomous. |
-| **Backup Cron** | Scheduled 3am UTC | FalkorDB + Qdrant snapshots. |
-| **API Auth** | 3-tier | Admin / Pipeline / Readonly keys. All endpoints secured. |
+### Hardware
 
-CRM codebase (`Amplified-Partners/crm`) contains:
+**Beast = Hetzner AX146-R** (not AX162-R as previously stated)
+- AMD EPYC 9454P, 48-core / 96-thread
+- 251 GB RAM (12 GB used, 238 GB available)
+- 1.8 TB storage (169 GB used, 1.5 TB available)
+- 10 Gbit pipe, Falkenstein, Germany (EU/GDPR jurisdiction)
+- **No GPU.** Ollama runs on CPU. Video rendering and inference share the same compute pool.
+- Hostname: `amplified-core` · IP: `135.181.161.131`
+
+### What's running (38 containers, 36 healthy)
+
+**Do not rebuild any of these — extend or call them.**
+
+#### Core infrastructure
+
+| Container | Purpose | Status |
+|-----------|---------|--------|
+| `falkordb` | Graph DB. 4 graphs: `business_knowledge` (4,973 nodes), `amplified` (3,868 nodes), `amplified_brain` (empty), `amplified_graph` (empty). ~9,000 nodes total. | Up |
+| `qdrant` | Vector DB. 57,434 embeddings (384-dim). RAG grounding for content. | Up |
+| `litellm` | Model router (local → standard → premium tiers). Port 4000. | Up |
+| `postgres` | DB `marketing` — content pipeline state, audit logs. | Up |
+| `redis` | Cache. | Up |
+| `minio` | Object storage. Port 9000. | Up |
+| `searxng` | **243+ source search engine.** Primary harvest engine. Port 8080. | Up |
+| `traefik` | Reverse proxy `*.beast.amplifiedpartners.ai`. Ports 80/443. | Up |
+| `ollama` | Local LLM. **Models loaded:** llama3.1:70b (42GB), llama3.1:8b (4.9GB), qwen3-coder:30b (18GB), nomic-embed-text (274MB). Port 11434. | Up |
+
+#### Cove orchestration (Temporal stack)
+
+`cove-temporal`, `cove-temporal-ui`, `cove-api`, `cove-postgres` (port 5433), `cove-translator` (8092), `cove-worker` + 4 worker pool (alpha/bravo/charlie/delta), `docker-temporal-1`. **All up.**
+
+#### Application layer
+
+| Container | Purpose |
+|-----------|---------|
+| `amplified-marketing-engine` | **Marketing Engine v0.4.0** — port 8000, 3-tier API auth (admin/pipeline/readonly). Full pipeline: research → generate → queue → evaluate → learn. |
+| `amplified-knowledge-mcp` | **MCP server for FalkorDB + Qdrant** — the canonical knowledge interface. Tools: `query_graph`, `search_vectors`, `ingest_knowledge`, `update_entity`, `tag_entity`, `archive_entity`, `get_audit_log`. **All knowledge ops route through here — do not write directly to FalkorDB or Qdrant.** |
+| `enforcer` | 10-min health checks. Currently flagging `ch-pipeline`, `voice-pipeline`, `minio-init`. |
+| `kaizen-optimizer` | Standalone Kaizen loop, running. |
+| `openclaw-agents` | Agent runtime, port 8100. |
+| `langfuse` | Token + cost tracing. |
+| `finance-engine`, `nexus-dashboard`, `clickhouse`, `xai-phone-agent`, `amplified-voice-agent`, `amplified-code-server` | Other production services. |
+
+#### Schedulers running
+
+- **Content pipeline cron** — 4am UTC. Generate → evaluate → queue.
+- **Backup cron** — 3am UTC. FalkorDB + Qdrant snapshots.
+
+#### Schedulers NOT yet running (Phase 0 fix list)
+
+- Internal Kaizen cron (weekly)
+- External Kaizen cron (monthly)
+- Email learning reports to Ewan
+
+### The live marketing pipeline
+
+**Pipeline:** `research → generate → queue → evaluate → learn`. Sequential cron, port 8000, 3-tier auth.
+
+- **Stage 1 — Research:** `agents/research_agent.py` (461 lines). Source: SearXNG (243+ sources). Grounding: Qdrant + FalkorDB via `amplified-knowledge-mcp`.
+- **Stage 2 — Content generation:** `agents/content_agent.py` (369 lines). Atomiser: `agents/content_atomizer.py` (317 lines) — pillar content → 5 platform variants. Routes through LiteLLM → llama3.1:8b currently.
+- **Stage 3 — Synthetic evaluation:** `synthetic_evaluator.py` (546 lines). **8 personas built:** Bob, Lisa, Marcus, Sarah, Technical Tom, Skeptical Sam, Budget Brian, Growth Gina. **Currently running 3** (Bob/Lisa/Marcus). 5 dimensions, 1–10 scale.
+- **Stage 4 — Human review:** Mandatory. Ewan sign-off via Command Centre + API. Telegram gate for publish approval.
+- **Stage 5 — Distribution:** `agents/publishing_agent.py` (256 lines), `platform_adapters.py` (431 lines). **Built adapters:** LinkedIn (OAuth), Substack, Twitter/X, Email (Brevo), Blog. Platform-optimal UK timing.
+- **Stage 6 — Kaizen:** `kaizen.py` (367 lines) + `kaizen-optimizer` container. Cove Kaizen workflow: `kaizen_workflow.py` + activities (1,320 lines) on Temporal — production, self-improving, auto-applying. Layer 0 locked, max 3 auto-applies/cycle.
+
+### Code inventory on Beast (~17,229 lines directly reusable)
+
+| Codebase | Lines | What it provides |
+|----------|-------|-----------------|
+| `cove-orchestrator` | 20,218 | Temporal workflows, Kaizen, Chaos, Self-heal, Quality gates. Repo: `github.com/ewan-dot/amplified-partners.git` (Ewan's personal account, NOT the org). |
+| `nightscout/` | 952 | RSS + SearXNG fetchers, 4-dimension Ollama scorer, tiered routing, Postgres storage, Telegram briefing. **27 sources defined.** Pattern for any harvest extension. |
+| `marketing-engine/` | 4,477 | Detailed above. |
+| `amplified-knowledge-mcp` | 1,016 | FalkorDB + Qdrant with 3-tier access, audit log, embedder via Ollama nomic-embed-text. |
+| `pudding-testing/` | 2,826 | `/opt/amplified/pudding-testing/` — `abc_discovery.py`, `labeller.py`, `pairwise.py`, `discovery_test.py`. Vault was sparse at first test (2026-03-15); now has 4,755 markdown files. |
+| `real/token_proxy.py` | 988 | Intercepts LLM calls, tracks costs, enforces budgets. |
+| `daily_cost_report.py` | 278 | Telegram daily cost reports. |
+| `agent-service-toolkit/` | 7,743 | LangGraph agent framework fork (JoshuaC215). **Use this when LangGraph migration triggers.** |
+| `vault-to-qdrant.py` | 418 | Monitors `.md` changes, chunks, embeds, upserts. Pattern for any new ingestion. |
+
+**Vault:** `/opt/amplified/vault/` — 4,755 files across 25 directories.
+
+### CRM codebase (`Amplified-Partners/crm`)
 
 | Component | What it does |
 |-----------|-------------|
@@ -54,7 +125,7 @@ CRM codebase (`Amplified-Partners/crm`) contains:
 | `app/marketing_machine/agents/transparent_prompts.py` | Honest messaging — Amplified speaking as itself, not pretending to be tradespeople. |
 | `app/marketing_machine/content/generator.py` | Claude Sonnet content generation with prompt caching. 160 pieces/day target. ~£100–150/month with caching. |
 
-`clean-build` codebase contains:
+### `clean-build` codebase
 
 | Component | What it does |
 |-----------|-------------|
@@ -62,10 +133,11 @@ CRM codebase (`Amplified-Partners/crm`) contains:
 | `02_build/command-centre/` | React frontend (Vite + TypeScript). Search, agents panel, writing panel, R&D panel. |
 | `02_build/cove-orchestrator/` | Email agent + MCP servers (filesystem, email, Langfuse). |
 
-Governance and methodology:
+### Governance and methodology
 
 | Artifact | What it provides |
 |----------|-----------------|
+| **Layer 0 Amplified Laws** (`agents/prompts/layer0_laws.py`) | 8 physically locked laws: radical honesty, transparency, attribution, win-win, white hat, help-not-hurt, add-not-reduce, give-value-away. **Kaizen cannot modify these.** |
 | **APDS** (knowledge note) | 5-stage autonomous discovery: Harvest → Extract → Label → Match → Score. FalkorDB schema. Container architecture. |
 | **Pudding Technique** (knowledge note) | Swanson LBD adapted for business. Neutral taxonomy at ingestion, lens at query time. Mathematical validation (p < 0.001). |
 | **Three-Brain Isolation** (`01_truth/processes/`) | Amplified Brain / Per-Client Brain / Federated Brain. Privacy by architecture. |
@@ -79,12 +151,12 @@ Governance and methodology:
 
 | Perplexity proposal | Amplified reality | Verdict |
 |--------------------|--------------------|---------|
-| Hetzner Beast with Docker, Ollama, vLLM, Qdrant, PostgreSQL, Redis, MinIO, Prometheus, Grafana | **Already running.** Core has FalkorDB, Qdrant, LiteLLM, PostgreSQL, backups. Missing: Redis (not needed yet), MinIO (not needed yet), Grafana (not yet configured). Prometheus config exists in `02_build/config/`. | Exists. Fill monitoring gap when pipeline is heavier. |
+| Hetzner Beast with Docker, Ollama, vLLM, Qdrant, PostgreSQL, Redis, MinIO, Prometheus, Grafana | **Already running.** 38 containers, 36 healthy. Core has FalkorDB, Qdrant, LiteLLM, PostgreSQL, Redis, MinIO, SearXNG, Traefik, Ollama (70b + 8b + qwen3-coder + nomic-embed), Cove Temporal stack, knowledge-mcp, backups. Missing: Grafana (not yet configured). Prometheus config exists in `02_build/config/`. | Exists. Fill monitoring gap when pipeline is heavier. |
 | LangGraph state machine for orchestration | **Not yet implemented.** Current pipeline is sequential cron (research → generate → queue → evaluate → learn). LangGraph would add: conditional routing, parallel branches, human-in-the-loop breakpoints, state checkpointing. | **Genuine upgrade.** Worth building when pipeline complexity justifies it. |
 | RAG grounding / "zero hallucination" | **Already running.** Qdrant (57K embeddings) + FalkorDB (9K nodes) feed the research agent. Content grounded against vault. | Exists. Perplexity overclaims "zero hallucination." Our deterministic sandwich is more honest. |
 | OCEAN personality profiling from social media | **Not implemented. Should not be.** Scraping social media for psychographic profiling violates GDPR/DPA 2018 and contradicts our Data Protection Architecture (Amplified never holds personal data). | **Reject as described.** See §Privacy-safe alternative below. |
 | VARK learning style detection | **Not implemented.** Interesting for content adaptation but the ANN-based approach Perplexity describes requires individual-level data we don't hold. | **Reject individual profiling. Adapt the concept** — see §Content adaptation below. |
-| Remotion programmatic video | **Not in current stack.** React-based, 34.4K GitHub stars, MCP integration as of Jan 2026. GPU rendering on Beast is feasible. | **Genuine addition.** Worth prototyping. |
+| Remotion programmatic video | **Not in current stack.** React-based, 34.4K GitHub stars, MCP integration as of Jan 2026. Beast is CPU-only — benchmark render times before committing to scale. | **Genuine addition.** Worth prototyping. |
 | AI email engine with predictive send-time | **Partially exists.** Cove orchestrator has email agent (`02_build/cove-orchestrator/email_agent/`). Not yet doing AI-generated marketing emails at scale. | **Extend existing.** Don't rebuild. |
 | Reddit value engine | **Not in current stack.** Philosophy aligns perfectly with Amplified (90% value, 10% mention, human-in-the-loop). | **Genuine addition.** Worth building. |
 | Multi-agent 4-tier hierarchy | **Partially exists.** Agent roster (TAXONOMY.md) defines Devon, OpenClaw, Cursor, AG, Perplexity, Qwen. Marketing engine has synthetic evaluators. Not yet a formal orchestration hierarchy for content. | **Adapt, don't duplicate.** LangGraph subgraphs per agent role. |
@@ -107,6 +179,8 @@ Governance and methodology:
 
 5. **Blinkers without ceilings.** Agents operate with full autonomy inside defined constraints. The constraints are the blinkers. There is no ceiling on ingenuity within them.
 
+6. **Layer 0 Amplified Laws** (`agents/prompts/layer0_laws.py`) — physically locked. Kaizen cannot modify them. 8 laws: radical honesty, transparency, attribution, win-win, white hat, help-not-hurt, add-not-reduce, give-value-away.
+
 ### System boundary model
 
 ```
@@ -121,18 +195,22 @@ Governance and methodology:
            │ (validated, attributed data only)
            ▼
 ┌─────────────────────────────────────────────────────────┐
-│  AMPLIFIED CORE (Hetzner AX162-R, 135.181.161.131)     │
-│  ┌─────────────┐  ┌───────────┐  ┌──────────────────┐  │
-│  │  FalkorDB   │  │  Qdrant   │  │  PostgreSQL      │  │
-│  │  (9K nodes) │  │ (57K emb) │  │  (marketing db)  │  │
-│  └─────────────┘  └───────────┘  └──────────────────┘  │
-│  ┌─────────────┐  ┌───────────┐  ┌──────────────────┐  │
-│  │  LiteLLM    │  │  Remotion │  │  Marketing       │  │
-│  │  (proxy)    │  │  (render) │  │  Engine v0.4.0+  │  │
-│  └─────────────┘  └───────────┘  └──────────────────┘  │
+│  AMPLIFIED CORE (Hetzner AX146-R, 135.181.161.131)     │
+│  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐  │
+│  │ FalkorDB │ │  Qdrant  │ │ Postgres │ │  Redis   │  │
+│  │ (9K nds) │ │ (57K em) │ │(mktg db) │ │ (cache)  │  │
+│  └──────────┘ └──────────┘ └──────────┘ └──────────┘  │
+│  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐  │
+│  │ LiteLLM  │ │  Ollama  │ │  MinIO   │ │ SearXNG  │  │
+│  │ (router) │ │(70b+8b+) │ │ (object) │ │(243+src) │  │
+│  └──────────┘ └──────────┘ └──────────┘ └──────────┘  │
+│  ┌──────────────────────┐ ┌────────────────────────┐   │
+│  │ knowledge-mcp        │ │ Marketing Engine v0.4+ │   │
+│  │ (canonical KG iface) │ │ + Cove Temporal stack   │   │
+│  └──────────────────────┘ └────────────────────────┘   │
 │  ┌─────────────────────────────────────────────────────┐│
 │  │  LangGraph Orchestrator (when justified)            ││
-│  │  Content pipeline · Evaluation · Kaizen · Publish   ││
+│  │  Remotion video render (CPU, when prototyped)       ││
 │  └─────────────────────────────────────────────────────┘│
 └─────────────────────────────────────────────────────────┘
            │ (approved, attributed content only)
@@ -155,7 +233,7 @@ The current sequential pipeline (cron, 4am UTC) evolves into a staged, gated pip
 **Inputs:** Standing lenses (from Pudding Technique), trending topics, engagement feedback from previous cycles, Reddit/community signals.
 
 **Process:**
-- APDS Harvest pulls from: Perplexity searches, RSS feeds, Reddit monitoring, trade press, academic sources.
+- APDS Harvest pulls from: **SearXNG (243+ sources, already running on Beast port 8080)**, Perplexity searches, RSS feeds, Reddit monitoring, trade press, academic sources. All research via SearXNG first.
 - APDS Extract + Label: entities tagged with PUDDING 2026 taxonomy (`WHAT.HOW.SCALE.TIME.PATTERN`).
 - APDS Match + Score: cross-domain bridge discovery. Emergence score `E = (B × D × N) / R`.
 - Output: research briefs with attributed sources and confidence bands (PROVEN / VALID / HYPOTHESIS).
@@ -197,7 +275,7 @@ The intelligence is in understanding trades and archetypes deeply (50+ business 
 **Inputs:** Generated content from Stage 2.
 
 **Process:**
-- Synthetic evaluators (Bob, Lisa, Marcus) score 1–10 on: relevance, honesty, clarity, actionability, attribution.
+- Synthetic evaluators score 1–10 on: relevance, honesty, clarity, actionability, attribution. **8 personas built** (Bob, Lisa, Marcus, Sarah, Technical Tom, Skeptical Sam, Budget Brian, Growth Gina); **3 currently running** (Bob/Lisa/Marcus).
 - Automated checks: source citations present, no claims without backing, tone matches channel, length within bounds.
 - Quality routing: ≥7/10 → auto-queue for human review. 5–6/10 → revision queue. <5/10 → reject with feedback to Kaizen.
 
@@ -223,8 +301,9 @@ The intelligence is in understanding trades and archetypes deeply (50+ business 
 **Inputs:** Approved content with publish schedules.
 
 **Process:**
-- Multi-platform publishing: LinkedIn, Facebook, Reddit, GMB, email, TikTok (when video pipeline is live).
-- Platform API integration: scheduling, formatting, media upload.
+- Multi-platform publishing via **built adapters** (already exist): LinkedIn (OAuth), Substack, Twitter/X, Email (Brevo), Blog. TikTok when video pipeline is live.
+- Publishers: `agents/publishing_agent.py` (256 lines), `platform_adapters.py` (431 lines). Platform-optimal UK timing.
+- **Telegram gate:** Ewan approves everything before publish.
 - Reddit posts are **never automated**. The Reddit Value Engine (see §Reddit below) uses human-in-the-loop posting.
 
 **Gate:** Content published only at scheduled times. Rate limiting per platform. No duplicate posting.
@@ -234,9 +313,12 @@ The intelligence is in understanding trades and archetypes deeply (50+ business 
 **Inputs:** Engagement metrics from published content. Synthetic evaluation scores. Human edit patterns.
 
 **Process:**
-- Internal Kaizen (existing, not yet scheduled): analyse feedback patterns → update learned preferences → content agent reads on next generation.
+- **Internal Kaizen (running):** `kaizen.py` (367 lines) + `kaizen-optimizer` container + Cove Kaizen workflow (`kaizen_workflow.py` + activities, 1,320 lines) on Temporal. Self-improving, auto-applying with Layer 0 locked and max 3 auto-applies per cycle. Retrospective → insights → suggestions → auto-apply.
+- **Internal Kaizen cron:** Not yet scheduled (Phase 0 fix).
 - External Kaizen `[LOGIC TO BE CONFIRMED]`: engagement metrics (likes, comments, shares, DMs, Reddit karma) feed back into research briefs and avatar refinements.
 - APDS standing lenses run against new engagement data: "Does this engagement pattern match a known Pudding recipe?"
+
+**Reuse for external loop:** `kaizen_workflow.py` Temporal pattern, `kaizen_apply_activities.py` auto-apply pattern, `langfuse` for engagement event tracing.
 
 **What's new vs current:** External engagement metrics feedback loop. APDS integration for pattern discovery in engagement data.
 
@@ -248,7 +330,9 @@ The intelligence is in understanding trades and archetypes deeply (50+ business 
 
 **What:** [Remotion](https://github.com/remotion-dev/remotion) (34.4K GitHub stars) creates MP4 videos programmatically using React. As of January 2026, Remotion Agent Skills allow AI-to-video generation via MCP.
 
-**Why:** Video is the highest-engagement format on every platform. Programmatic generation means: same template, different data, hundreds of variations at near-zero marginal cost. GPU rendering on the Beast is feasible.
+**Why:** Video is the highest-engagement format on every platform. Programmatic generation means: same template, different data, hundreds of variations at near-zero marginal cost.
+
+**Constraint: Beast is CPU-only.** No GPU. The AX146-R was chosen with video load in mind (96 threads, 251GB RAM), but render times will be slower than GPU-equivalent. Benchmark render queue depth and concurrency vs Ollama inference load before committing to scale.
 
 **Architecture:**
 
@@ -261,7 +345,7 @@ Asset Node → source images + generate voiceover (ElevenLabs or local TTS)
     ↓
 Composition Node → Remotion React composition from branded templates
     ↓
-Render Node → server-side MP4 render on Beast GPU
+Render Node → server-side MP4 render on Beast CPU (96 threads)
     ↓
 Evaluation Node → synthetic evaluator panel scores the video
     ↓
@@ -274,9 +358,10 @@ Distribute → TikTok, Instagram, YouTube, LinkedIn
 - Node.js + React environment on Beast (for Remotion)
 - Branded templates (design work — `[DECISION REQUIRED]` on brand assets)
 - Voiceover: ElevenLabs API or local TTS model on Beast
-- GPU capacity allocation (rendering vs inference — need to benchmark)
+- CPU capacity planning — rendering vs Ollama inference share the same compute pool. Benchmark before scaling.
+- Synthetic evaluator extension — video-specific dimensions (visual coherence, pacing, voiceover quality)
 
-**Risk:** Remotion adds significant complexity. **Recommendation:** prototype with one avatar (Bob the plumber), one template, one channel (LinkedIn) before scaling.
+**Risk:** Remotion adds significant complexity. **Recommendation:** prototype with one avatar (Bob the plumber), one template, one channel (LinkedIn) before scaling. If evaluators score ≥7/10 and engagement beats text-only, expand. Otherwise revisit per `USE_IT_OR_CUT_IT.md`.
 
 ### Reddit Value Engine `[LOGIC TO BE CONFIRMED]`
 
@@ -308,10 +393,18 @@ Value tracking → karma, engagement, DMs → feeds back to Kaizen
 3. **Cite sources.** Radical attribution applies on Reddit too.
 4. **Respect subreddit rules.** Some subs ban self-promotion entirely. The monitor must flag these.
 
+**Implementation (reuse existing code):**
+- Extend `nightscout/fetchers.py` (952 lines, 27 sources already defined) with Reddit API — NightScout is the ready-made pattern for any harvest extension
+- Reuse `amplified-knowledge-mcp` for RAG grounding (do not write directly to FalkorDB/Qdrant)
+- Reuse `synthetic_evaluator.py` for draft quality scoring
+- Add Reddit-specific dimensions to evaluator (subreddit fit, helpfulness, non-promotional tone)
+- New intent classifier — small LLM via LiteLLM cheap tier
+
 **Dependencies:**
 - Reddit API access (free tier sufficient for monitoring; posting is manual anyway)
 - Subreddit list curation (start with 10, expand based on engagement data)
 - Human reviewer capacity (initially Ewan; later delegated per Trust Ramp)
+- `[DECISION REQUIRED]` Reddit account strategy: company / personal / multiple per vertical?
 
 ### LangGraph Orchestration `[LOGIC TO BE CONFIRMED]`
 
@@ -329,6 +422,8 @@ Value tracking → karma, engagement, DMs → feeds back to Kaizen
 - Reddit engine comes online (different cadence and approval flow)
 - Email sequences come online (multi-step stateful flows)
 - **Trigger:** when the cron pipeline requires ≥3 conditional branches, migrate to LangGraph.
+
+**Implementation:** Use `agent-service-toolkit/` (7,743 lines, already on Beast) — LangGraph agent framework fork (JoshuaC215). This is the starting point, not a from-scratch build.
 
 **Risk:** Premature abstraction. LangGraph adds infrastructure complexity. Per `USE_IT_OR_CUT_IT.md`: if we build it and don't use the branching, cut it.
 
@@ -372,16 +467,19 @@ No new components. Fix known gaps from STATUS.md:
 - [ ] Schedule External Kaizen cron (monthly)
 - [ ] Fix radical attribution in generated content (all three avatars flagged this)
 - [ ] Tune GMB content quality (currently 4.0/10 — needs platform-specific prompts)
-- [ ] `[DECISION REQUIRED]` Better model access: llama3.1-8b is the current bottleneck. Options: (a) larger local model on Beast GPU, (b) API keys for Claude/GPT for content generation (already using Claude in CRM codebase), (c) hybrid — local for research, API for generation.
+- [ ] Email learning reports to Ewan (weekly digest of Kaizen output)
+- [ ] `[DECISION REQUIRED]` Model upgrade: llama3.1:8b is the current content quality bottleneck. **llama3.1:70b is already loaded on Beast** (42GB). Options: (a) switch pipeline to 70b locally, (b) Claude API for generation (CRM already uses it, ~£100–150/mo), (c) hybrid — local for research, API for generation.
 
 ### Phase 1: Reddit Value Engine (weeks 3–6)
 
 Lowest complexity, highest alignment with brand values:
 
-- [ ] Set up Reddit API monitoring for 10 target subreddits
+- [ ] Extend `nightscout/fetchers.py` with Reddit API (free tier, read-only monitoring)
+- [ ] Set up subreddit listener for 10 target subreddits
 - [ ] Wire APDS Harvest to ingest Reddit threads as a source
-- [ ] Build intent classifier (high-intent question detection)
-- [ ] RAG-grounded draft response generator (Qdrant + FalkorDB → attributed answer)
+- [ ] Build intent classifier (small LLM via LiteLLM cheap tier)
+- [ ] RAG-grounded draft response generator via `amplified-knowledge-mcp` → attributed answer
+- [ ] Reuse `synthetic_evaluator.py` + add Reddit-specific scoring dimensions
 - [ ] Human review interface in Command Centre
 - [ ] Value tracking dashboard (karma, engagement, DM conversions)
 
@@ -398,7 +496,7 @@ Close the loop between published content and content generation:
 
 Single avatar, single template, single channel:
 
-- [ ] Install Remotion on Beast. Benchmark GPU rendering vs inference load.
+- [ ] Install Remotion on Beast. **Benchmark CPU rendering vs Ollama inference load** (shared compute pool, no GPU).
 - [ ] Design one branded video template (Bob the plumber, LinkedIn)
 - [ ] Script generation node (Claude → structured video script)
 - [ ] Voiceover: evaluate ElevenLabs API vs local TTS
@@ -434,21 +532,21 @@ Current (from CRM repo `app/marketing_machine/content/generator.py`):
 
 | Item | Cost |
 |------|------|
-| Claude Sonnet content generation | ~£100–150/month with prompt caching |
-| Infrastructure (Hetzner AX162-R) | Already provisioned |
-| FalkorDB + Qdrant + PostgreSQL | Running on Core, no additional cost |
+| Claude Sonnet content generation (CRM, with caching) | ~£100–150/month |
+| Hetzner AX146-R | Already provisioned |
+| FalkorDB + Qdrant + PostgreSQL + Redis + MinIO + Cove + LiteLLM | All on Beast, no marginal cost |
 
 Projected additions:
 
 | Item | Estimated cost | Notes |
 |------|---------------|-------|
-| Remotion rendering | £0 (self-hosted on Beast GPU) | Compute cost already covered. Remotion is open source. |
+| Remotion rendering | £0 (self-hosted, CPU) | Open-source, CPU on Beast. |
 | ElevenLabs voiceover | ~£5–22/month (Starter–Creator) | `[LOGIC TO BE CONFIRMED]` — local TTS may be sufficient |
 | Reddit API | £0 (free tier) | Read-only monitoring. Posting is manual. |
 | Platform API integrations | £0–50/month | Depends on tier. Most have free tiers sufficient for our volume. |
 | Better LLM access | £50–200/month | `[DECISION REQUIRED]` — depends on model choice |
 
-**Total projected:** £155–420/month for a full-stack, multi-channel, value-first marketing system generating 160+ pieces of content/day with video, Reddit engagement, and closed-loop learning.
+**Total projected:** £155–422/month for a full-stack, multi-channel, value-first marketing system generating 160+ pieces of content/day with video, Reddit engagement, and closed-loop learning.
 
 ---
 
@@ -461,27 +559,48 @@ Projected additions:
 | Engagement rate | Platform APIs | Weekly |
 | Reddit karma + engagement | Reddit API | Weekly |
 | Video engagement vs text | Platform APIs | Weekly |
-| Content cost per piece | Claude API billing | Monthly |
+| Content cost per piece | LiteLLM via Langfuse | Monthly |
 | Pipeline reliability | Success/failure logs | Per run |
 | Kaizen preference drift | Internal Kaizen output | Weekly |
 | APDS emergence discoveries | APDS scorer output | Weekly |
 | Source citation rate | Automated content check | Per piece |
 
+**Vanity metrics ignored:** impressions, follower count, "reach", likes.
+
 ---
 
 ## Open questions (`[DECISION REQUIRED]`)
 
-1. **Model quality:** llama3.1-8b vs Claude API vs hybrid. Content quality is directly gated by model quality. The CRM codebase already uses Claude Sonnet for generation — should the Beast pipeline do the same?
+1. **Model quality:** llama3.1:8b vs llama3.1:70b (already loaded) vs Claude API vs hybrid. Content quality is directly gated by model quality. The CRM codebase already uses Claude Sonnet for generation — should the Beast pipeline do the same?
 
 2. **Video brand assets:** Remotion needs branded templates. Who designs them? What's the visual identity?
 
 3. **Delegation threshold:** When content volume exceeds Ewan's review capacity, what are the delegation rules? Trust Ramp provides a framework but specific thresholds are `[DECISION REQUIRED]`.
 
-4. **Covered AI vs Cove:** Per TAXONOMY.md, these are separate products. How does the Marketing Engine relate to each?
+4. **Covered AI vs Cove relationship:** Distinct products per TAXONOMY.md. How does Marketing Engine relate to each?
 
-5. **Email marketing scope:** The Cove email agent exists. Should marketing emails run through Cove, or through a separate pipeline? Separation of concerns vs infrastructure consolidation.
+5. **Email marketing routing:** Through existing Cove email agent or separate pipeline? Separation of concerns vs consolidation.
 
 6. **Reddit account strategy:** Company account? Personal account? Multiple accounts per trade vertical?
+
+7. **Xero / QuickBooks integrations:** Disabled (Python 3.13 compatibility). Fix or drop?
+
+8. **Voice bridge:** Disabled (Deepgram SDK compatibility). Fix or migrate to Retell-only?
+
+9. **Redis for conversation state:** Currently in-memory dict. Production blocker for voice.
+
+---
+
+## Build posture for Devon
+
+- **Reuse aggressively.** ~17,229 lines of directly reusable code already on Beast across NightScout, Cove, Knowledge MCP, Marketing Engine, pudding-testing, cost tools, vault scripts. Estimated new code: ~5,800 lines.
+- **All knowledge ops** via `amplified-knowledge-mcp` — never write directly to FalkorDB or Qdrant.
+- **All LLM calls** via LiteLLM — use tier names (local/standard/premium), never raw model names.
+- **All web research** via SearXNG first.
+- **All Layer 0 laws** physically locked. Kaizen cannot modify them.
+- **All published content** requires human approval. No exceptions until delegation thresholds are defined.
+- **Cove-orchestrator** lives in `github.com/ewan-dot/amplified-partners.git` (Ewan's personal account, NOT the Amplified-Partners org). Note this for PRs.
+- If anything in this spec contradicts what's running on Beast right now, **what's running on Beast wins.** Ask before deviating.
 
 ---
 
