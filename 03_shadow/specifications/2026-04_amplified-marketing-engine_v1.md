@@ -173,14 +173,22 @@ The current sequential pipeline (cron, 4am UTC) evolves into a staged, gated pip
 - Video content `[LOGIC TO BE CONFIRMED]`: Remotion pipeline (see §Remotion below).
 - Email content: extend existing Cove email agent for marketing sequences. Value-first: educate → demonstrate → soft offer.
 
-**Content adaptation** (privacy-safe alternative to VARK/OCEAN):
-Instead of profiling individuals, adapt content at the **segment level**:
+**Content adaptation — put it in their language, don't profile who's listening:**
+
+The goal is simple: a plumber should hear plumber words. An electrician should hear electrician words. A solo operator worried about cash flow should hear someone who understands cash flow anxiety — not corporate marketing speak. We adapt the voice to the audience, not surveil the listener.
+
+This is **segment-level adaptation**, not individual profiling:
 - **By trade**: plumbers get plumbing pain points, electricians get electrical pain points (already implemented in `avatars.py`).
 - **By archetype**: Bob (solo, pragmatic), Sheila (professional, quality-driven), Dave (scaling, team coordination), Russell (established, strategic) — already implemented.
 - **By channel**: platform-specific tone adaptation (LinkedIn = professional, Facebook = conversational, Reddit = helpful peer, GMB = local and direct).
 - **By format preference**: same content, multiple formats (text post, short video, infographic, thread). Let the audience self-select. No surveillance required.
 
-This gives us personalisation without profiling. The intelligence is in the segment model, not in individual tracking.
+**What we never do:**
+- Build individual profiles. We don't need to know who's reading — we need to know what trade they're in and what stage they're at.
+- Store anything about the individual. If a platform tells us someone is a plumber in Newcastle, we match them to the plumber segment and discard the individual signal. Transient matching only.
+- Scrape social media for personal data. The Data Protection Architecture is structural — Amplified never holds personal data. This applies to marketing as much as it applies to client delivery.
+
+The intelligence is in understanding trades and archetypes deeply (50+ business types, 4 archetypes with distinct pain points, tones, and channels). That's our knowledge, not theirs. We translate what we know into language they recognise. That's respectful communication, not surveillance.
 
 **Gate:** Every piece of content passes synthetic evaluation (Bob/Lisa/Marcus panel, score ≥ 6/10 per existing system). Content must cite at least one source (radical attribution). Content must pass the transparent prompt check — Amplified speaks as itself.
 
