@@ -36,7 +36,7 @@ This is `03_shadow/` material — not authoritative. Intended for Ewan's review 
 
 ### Hardware
 
-**Beast = Hetzner AX146-R** (not AX162-R as previously stated)
+**Beast = Hetzner AX162-R**
 - AMD EPYC 9454P, 48-core / 96-thread
 - 251 GB RAM (12 GB used, 238 GB available)
 - 1.8 TB storage (169 GB used, 1.5 TB available)
@@ -195,7 +195,7 @@ This is `03_shadow/` material — not authoritative. Intended for Ewan's review 
            │ (validated, attributed data only)
            ▼
 ┌─────────────────────────────────────────────────────────┐
-│  AMPLIFIED CORE (Hetzner AX146-R, 135.181.161.131)     │
+│  AMPLIFIED CORE (Hetzner AX162-R, 135.181.161.131)     │
 │  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐  │
 │  │ FalkorDB │ │  Qdrant  │ │ Postgres │ │  Redis   │  │
 │  │ (9K nds) │ │ (57K em) │ │(mktg db) │ │ (cache)  │  │
@@ -332,7 +332,7 @@ The intelligence is in understanding trades and archetypes deeply (50+ business 
 
 **Why:** Video is the highest-engagement format on every platform. Programmatic generation means: same template, different data, hundreds of variations at near-zero marginal cost.
 
-**Constraint: Beast is CPU-only.** No GPU. The AX146-R was chosen with video load in mind (96 threads, 251GB RAM), but render times will be slower than GPU-equivalent. Benchmark render queue depth and concurrency vs Ollama inference load before committing to scale.
+**Constraint: Beast is CPU-only.** No GPU. The AX162-R was chosen with video load in mind (96 threads, 251GB RAM), but render times will be slower than GPU-equivalent. Benchmark render queue depth and concurrency vs Ollama inference load before committing to scale.
 
 **Architecture:**
 
@@ -533,7 +533,7 @@ Current (from CRM repo `app/marketing_machine/content/generator.py`):
 | Item | Cost |
 |------|------|
 | Claude Sonnet content generation (CRM, with caching) | ~£100–150/month |
-| Hetzner AX146-R | Already provisioned |
+| Hetzner AX162-R | Already provisioned |
 | FalkorDB + Qdrant + PostgreSQL + Redis + MinIO + Cove + LiteLLM | All on Beast, no marginal cost |
 
 Projected additions:
