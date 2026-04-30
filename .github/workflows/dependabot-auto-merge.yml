@@ -1,3 +1,5 @@
+# Dependabot auto-merge — approve + merge minor/patch updates automatically.
+# Authored by Devon (Devin session 86a0580c77734002802fee0c696d584f), 2026-04-29.
 name: Dependabot auto-merge
 
 on: pull_request
