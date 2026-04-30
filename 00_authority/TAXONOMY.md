@@ -62,7 +62,7 @@ The operating model is **isolation with visibility**, not orchestration.
 
 - Each agent works in a self-contained project. No real-time coordination needed.
 - Every agent reads `ground-truth` (the portable spine) before acting — so principles and state are shared.
-- Every agent writes a handover to `STATUS.md` in `ground-truth` when they finish significant work.
+- Every agent writes a handover to `STATUS.md` in `clean-build` when they finish significant work.
 - **Devon** is the only agent who touches Amplified Core or production GitHub. Others write to their own branches; Devon integrates.
 - **OpenClaw** reads `STATUS.md`, investigates if a process is failing, writes findings back. If infrastructure changes are needed, OpenClaw signals Devon — Devon implements.
 - **Slack** is for asynchronous partner communication. OpenClaw communicates there as a partner.
@@ -95,7 +95,7 @@ The principle: one person does one thing. Clean boundaries. No stepping on each 
 ## What is not decided yet (as of 2026-04-29)
 
 - `[DECISION REQUIRED]` — Legal registration of Amplified Partners Ltd. Required before Google My Business can be set up under the brand.
-- `[DECISION REQUIRED]` — The confirmed product name for Amplified Personal (content captured in `PERSONAL-VAULT.md`; name deferred by Ewan).
+- `[DECISION REQUIRED]` — The confirmed product name for Amplified Personal (content captured in `ground-truth/PERSONAL-VAULT.md` `[SOURCE REQUIRED — not in this repo]`; name deferred by Ewan).
 - `[LOGIC TO BE CONFIRMED]` — Legal sub-entity structure for each department/product (currently all functions of one entity).
 
 ---
