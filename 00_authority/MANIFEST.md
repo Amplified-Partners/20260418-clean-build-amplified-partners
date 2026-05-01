@@ -1,6 +1,6 @@
 ---
 title: Governed workspace manifest (authoritative inventory)
-date: 2026-04-29
+date: 2026-05-01
 version: 40
 status: draft
 ---
