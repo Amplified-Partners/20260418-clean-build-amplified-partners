@@ -1,7 +1,7 @@
 ---
 title: Governed workspace manifest (authoritative inventory)
 date: 2026-04-30
-version: 38
+version: 40
 status: draft
 ---
 
@@ -126,14 +126,58 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
     - `90_archive/beautiful-and-golden/ARCHITECTURE.md` `[NON-AUTHORITATIVE]`
     - `90_archive/beautiful-and-golden/PUBLIC_README.md` `[NON-AUTHORITATIVE]`
     - `90_archive/beautiful-and-golden/SUSTAINABILITY.md` `[NON-AUTHORITATIVE]`
+  - `90_archive/specifications/mac-drop-2026-04/` `[NON-AUTHORITATIVE]` (15 major specifications from Ewan's Mac drop — constitutional documents, architectural specs, methodology references. Source: "New Folder With Items 2.zip", 521 files, 125MB.)
+    - `README.md` `[NON-AUTHORITATIVE]` (directory index — ingestion context, file inventory, promotion path)
+    - `ATTRIBUTION-AND-CURATION-v1.md` `[NON-AUTHORITATIVE]` (965 lines — data provenance law + 5 Curator agents; status in source: "Constitutional — Active")
+    - `VALIDATION-METHODOLOGY-v2.md` `[NON-AUTHORITATIVE]` (1,370 lines — 7 gates, 11 rubrics, 10 Enforcers, 12 lenses; status in source: "Draft — ready for implementation")
+    - `CODE-TAXONOMY-AND-KAIZEN-v1.md` `[NON-AUTHORITATIVE]` (1,069 lines — error registry + code taxonomy + Kaizen department; status in source: "Constitutional — Active")
+    - `SCORING-UNIFICATION-HYPOTHESIS-v2.md` `[NON-AUTHORITATIVE]` (878 lines — codes as unified scoring layer; status in source: "Hypothesis — Under Investigation")
+    - `DOPPELGANGER-TESTING-AND-AGENT-VERSIONING-v1.md` `[NON-AUTHORITATIVE]` (684 lines — CI/CD for agent cognition; status in source: "Specification — ready for testing")
+    - `FILE-NAMING-CONVENTION-v1.md` `[NON-AUTHORITATIVE]` (706 lines — universal file naming convention)
+    - `DUAL-CODE-ORGANISATION-v1.md` `[NON-AUTHORITATIVE]` (826 lines — pattern taxonomy + conformance scoring)
+    - `vault-extraction-pipeline-design.md` `[NON-AUTHORITATIVE]` (922 lines — Convergence → HoundDog → DocBench → PUDDING → 8 output streams)
+    - `amplified-agents-master.md` `[NON-AUTHORITATIVE]` (921 lines — agent architecture, 7 failure patterns, therapy suite)
+    - `business-brain-framework.md` `[NON-AUTHORITATIVE]` (334 lines — 6-layer Business Brain stack, DAD sandwich)
+    - `process-scaffold-framework.md` `[NON-AUTHORITATIVE]` (603 lines — APQC + BPMN + ISO 9001, Layer 4)
+    - `amplified-integration-layer.md` `[NON-AUTHORITATIVE]` (468 lines — AI Sidecar, client IT integration)
+    - `AMPLIFIED-SEARCH-ORCHESTRATION-METHODOLOGY.md` `[NON-AUTHORITATIVE]` (770 lines — AMAS, 5-engine adaptive search)
+    - `PUDDING-VALUE-MATHEMATICAL-MODEL-v1.md` `[NON-AUTHORITATIVE]` (656 lines — mathematical model for pudding run value)
+    - `pudding-taxonomy-synthesis.md` `[NON-AUTHORITATIVE]` (1,374 lines — complete pudding reference)
+    - `AMPLIFIED-PUDDING-DISCOVERY-SYSTEM.md` `[NON-AUTHORITATIVE]` (1,050 lines — APDS engineering spec: 5-stage automated LBD pipeline, FalkorDB schema, body language detection)
+    - `amplified_methodology_framework.md` `[NON-AUTHORITATIVE]` (1,404 lines — AMF: 9-stage unified operating manual)
+    - `amplified_master_architecture.md` `[NON-AUTHORITATIVE]` (2,073 lines — master architecture, Eight Laws, PII tokenisation)
+    - `beast-architecture-specification.md` `[NON-AUTHORITATIVE]` (798 lines — Beast rebuild spec, Neo4j 5.26+ replacing FalkorDB)
+    - `kaizen-business-specification.md` `[NON-AUTHORITATIVE]` (1,557 lines — Kaizen Department, PDCA cycles, three value streams)
+    - `kaizen-cove-build-plan.md` `[NON-AUTHORITATIVE]` (1,443 lines — Cove build plan, 5 phases, 24 Linear issues)
+    - `VISUAL-POLISH-SYSTEM-COMPLETE-BUILD-GUIDE.md` `[NON-AUTHORITATIVE]` (4,527 lines — design tokens, scoring rubric, Python engine)
+    - `extraction-department-spec.md` `[NON-AUTHORITATIVE]` (1,028 lines — Extraction Dept: Ingest, Extract, Synthesise, Route)
+    - `rapid_intelligence_cycle.md` `[NON-AUTHORITATIVE]` (866 lines — RIC: nightly research → test → ship)
+    - `watchman-expansion-strategy.md` `[NON-AUTHORITATIVE]` (708 lines — local LLM cost reduction, 35+ process migration)
+    - `CURATOR-GATE-SPEC-v1-pandoc.md` `[NON-AUTHORITATIVE]` (503 lines — deterministic validation pipeline, 5 sequential gates)
+    - `00-INSIGHT-CATALOGUE.md` `[NON-AUTHORITATIVE]` (2,916 lines — 136 insight entries across 5 verticals)
+    - `P7-positive-capture-loop-master-reference.md` `[NON-AUTHORITATIVE]` (523 lines — celebration engine)
+    - `P8-transparency-inoculation-master-reference.md` `[NON-AUTHORITATIVE]` (603 lines — "creepy line" + daily disclosure)
+    - `P10-kill-switch-master-reference.md` `[NON-AUTHORITATIVE]` (510 lines — binary shutdown architecture)
 
 ## Changelog
 
-### v38 — 2026-04-30
+### v40 — 2026-04-30
 
-- Version numbering housekeeping: two `v36-pre` changelog entries (archive beautiful-and-golden, bibliography fix) were absorbed during merge resolution without incrementing the frontmatter version. Bumped 37 → 38 to account for these edits per `AGENTS.md` § "PR reviewers — what to flag" item 3. No content changes — numbering-only fix.
+- Version numbering housekeeping: two `v36-pre` changelog entries (archive beautiful-and-golden, bibliography fix) were absorbed during merge resolution without incrementing the frontmatter version. Bumped to v40 to account for these edits per `AGENTS.md` § "PR reviewers — what to flag" item 3. No content changes — numbering-only fix.
 
 Signed-by: Devon (Devin session `devin-ab66d8a5c2b64927b65a4ab87acc47ee`) — 2026-04-30
+
+### v39 — 2026-04-29
+
+- Added 15 more specifications to `90_archive/specifications/mac-drop-2026-04/` (Phase 2 ingestion): APDS engineering spec, AMF methodology framework, master architecture, Beast rebuild spec, Kaizen Department spec, Kaizen Cove build plan, Visual Polish System build guide, Extraction Department spec, RIC, Watchman expansion strategy, Curator Gate spec, Insight Catalogue, P7/P8/P10 safety/celebration systems. All `[NON-AUTHORITATIVE]`. Total archive now 30 files (33,153 lines).
+
+Signed-by: Devon (Devin session `aa4d863ad679468692e75a40b8825358`) — 2026-04-29
+
+### v38 — 2026-04-29
+
+- Added `90_archive/specifications/mac-drop-2026-04/` to **Reference only**: 15 major specifications from Ewan's Mac drop ("New Folder With Items 2.zip", 521 files, 125MB). Includes 5 constitutional documents (Attribution, Validation, Code-Taxonomy, Scoring-Unification, Doppelganger-Testing), 2 constitutional conventions (File-Naming, Dual-Code-Organisation), and 8 architectural specifications (vault extraction pipeline, agent architecture, business brain, process scaffold, integration layer, search orchestration, pudding value model, pudding taxonomy synthesis). All indexed as `[NON-AUTHORITATIVE]` pending promotion review.
+
+Signed-by: Devon (Devin session `aa4d863ad679468692e75a40b8825358`) — 2026-04-29
 
 ### v37 — 2026-04-29
 
