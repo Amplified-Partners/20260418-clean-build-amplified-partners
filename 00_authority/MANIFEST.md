@@ -1,7 +1,7 @@
 ---
 title: Governed workspace manifest (authoritative inventory)
 date: 2026-04-30
-version: 40
+version: 42
 status: draft
 ---
 
@@ -161,9 +161,9 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
 
 ## Changelog
 
-### v40 — 2026-04-30
+### v42 — 2026-04-30
 
-- Version numbering housekeeping: two `v36-pre` changelog entries (archive beautiful-and-golden, bibliography fix) were absorbed during merge resolution without incrementing the frontmatter version. Bumped to v40 to account for these edits per `AGENTS.md` § "PR reviewers — what to flag" item 3. No content changes — numbering-only fix.
+- Version numbering housekeeping: two `v36-pre` changelog entries (archive beautiful-and-golden, bibliography fix) were absorbed during merge resolution without incrementing the frontmatter version. Counting all 41 changelog entries (v2–v39 + two v36-pre) plus implicit v1, the correct version was 41; this fix entry itself adds one more, giving v42. Per `AGENTS.md` § "PR reviewers — what to flag" item 3.
 
 Signed-by: Devon (Devin session `devin-ab66d8a5c2b64927b65a4ab87acc47ee`) — 2026-04-30
 
