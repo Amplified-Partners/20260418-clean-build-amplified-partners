@@ -163,7 +163,7 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
 
 ### v42 — 2026-04-30
 
-- Version numbering housekeeping: two `v36-pre` changelog entries (archive beautiful-and-golden, bibliography fix) were absorbed during merge resolution without incrementing the frontmatter version. Counting all 41 changelog entries (v2–v39 + two v36-pre) plus implicit v1, the correct version was 41; this fix entry itself adds one more, giving v42. Per `AGENTS.md` § "PR reviewers — what to flag" item 3.
+- Version numbering housekeeping: two `v36-pre` changelog entries (archive beautiful-and-golden, bibliography fix) were absorbed during merge resolution without incrementing the frontmatter version. Counting all 40 changelog entries (v2–v39 + two v36-pre) plus implicit v1, the correct version was 41; this fix entry itself adds one more, giving v42. Per `AGENTS.md` § "PR reviewers — what to flag" item 3.
 
 Signed-by: Devon (Devin session `devin-ab66d8a5c2b64927b65a4ab87acc47ee`) — 2026-04-30
 
