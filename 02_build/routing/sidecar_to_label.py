@@ -166,7 +166,8 @@ def label_vault_doc(
     published_at = None
     if date_str:
         try:
-            published_at = datetime.fromisoformat(date_str).replace(tzinfo=timezone.utc)
+            parsed = datetime.fromisoformat(date_str)
+            published_at = parsed if parsed.tzinfo else parsed.replace(tzinfo=timezone.utc)
         except ValueError:
             pass
 

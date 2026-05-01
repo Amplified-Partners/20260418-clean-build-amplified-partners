@@ -96,7 +96,7 @@ def _build_paths() -> None:
         # Spec & schema references
         "apds_spec": cb / "90_archive" / "specifications" / "mac-drop-2026-04" / "AMPLIFIED-PUDDING-DISCOVERY-SYSTEM.md",
         "pudding_schema": cb / "01_truth" / "schemas" / "2026-03_pudding-discovery-system_v1.md",
-        "systems_register": cb / "01_truth" / "SYSTEMS-AND-API-REGISTER.md",
+        "systems_register": cb / "01_truth" / "SYSTEMS-AND-API-REGISTER.md",  # Created in PR #22; available after merge
 
         # Build artefacts
         "scripts_dir": cb / "02_build" / "scripts",
