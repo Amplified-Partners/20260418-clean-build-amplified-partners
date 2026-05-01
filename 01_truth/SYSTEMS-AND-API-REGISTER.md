@@ -27,7 +27,7 @@ signed_by: "Devon, 2026-05-01, devin-f32d587cc3e54f959c5309d93f72bc97"
 | MCP Servers (Cove Orchestrator) | 8 | ~2,160 |
 | MCP Servers (CRM) | 5 | 2,256 |
 | NightScout Intelligence Pipeline | 7 | ~895 |
-| Telephony & Voice (all locations) | 6 modules | ~3,900 |
+| Telephony & Voice (all locations) | 6 modules (8 files) | ~4,100 |
 | Content Engine | 6 | ~1,120 |
 | Safety & Monitoring | 4 | ~1,080 |
 | Knowledge & Ingestion | 7 | ~1,500 |

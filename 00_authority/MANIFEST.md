@@ -164,7 +164,7 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
 
 ### v40 — 2026-05-01
 
-- Added `01_truth/SYSTEMS-AND-API-REGISTER.md` to **Candidate authority**: comprehensive register of all pre-built systems, APIs (124 CRM endpoints, 24 Command Centre endpoints, 19 Marketing Engine endpoints), 13 MCP servers, telephony/voice inventory (7 providers, 6 modules), NightScout pipeline, content engine, safety layer, and cross-repo location index. `[LOGIC TO BE CONFIRMED]` pending Ewan review.
+- Added `01_truth/SYSTEMS-AND-API-REGISTER.md` to **Candidate authority**: comprehensive register of all pre-built systems, APIs (124 CRM endpoints, 24 Command Centre endpoints, 19 Marketing Engine endpoints), 13 MCP servers, telephony/voice inventory (7 providers, 6 modules across 8 files), NightScout pipeline, content engine, safety layer, and cross-repo location index. `[LOGIC TO BE CONFIRMED]` pending Ewan review.
 
 Signed-by: Devon (Devin session `f32d587cc3e54f959c5309d93f72bc97`) — 2026-05-01
 
