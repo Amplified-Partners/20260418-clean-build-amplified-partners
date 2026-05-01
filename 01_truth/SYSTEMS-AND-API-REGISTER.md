@@ -5,7 +5,7 @@ version: 1
 created: 2026-05-01
 last_validated: 2026-05-01
 type: register
-status: active
+status: candidate
 signed_by: "Devon, 2026-05-01, devin-f32d587cc3e54f959c5309d93f72bc97"
 ---
 
@@ -31,7 +31,6 @@ signed_by: "Devon, 2026-05-01, devin-f32d587cc3e54f959c5309d93f72bc97"
 | Content Engine | 6 | ~1,120 |
 | Safety & Monitoring | 4 | ~1,080 |
 | Knowledge & Ingestion | 7 | ~1,500 |
-| Orchestration & Routing | 5 | ~1,400 |
 
 ---
 
@@ -40,7 +39,7 @@ signed_by: "Devon, 2026-05-01, devin-f32d587cc3e54f959c5309d93f72bc97"
 **Repo:** `Amplified-Partners/crm`
 **Location:** `app/api/routes/`
 **Framework:** FastAPI + SQLAlchemy + Alembic
-**Total:** 16 route modules, 129 endpoints, 5,964 lines
+**Total:** 16 route modules, 124 endpoints, 5,964 lines
 
 ### 1a. Telephony & Voice (CRM)
 
