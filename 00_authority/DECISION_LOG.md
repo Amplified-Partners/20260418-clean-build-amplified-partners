@@ -17,7 +17,7 @@ One entry per decision. Keep it short. Link out to supporting docs.
 
 - **Decision**: Create `.github/copilot-instructions.md` — a Copilot agent instruction file summarising the authority hierarchy, key rules, and naming conventions so GitHub Copilot suggestions align with the governed workspace.
 - **Why**: Part of org-wide Copilot optimisation. Without project-specific instructions, Copilot suggests generic code that ignores the signature requirement, authority tiers, and naming conventions. The file is a summary pointing at canonical sources, not a new authority surface.
-- **Where encoded**: `.github/copilot-instructions.md`
+- **Where encoded**: `.github/copilot-instructions.md`, `00_authority/MANIFEST.md` v45 § Reference only.
 - **Status**: active
 - **Signed-by**: Devon | 2026-05-01 | session 873af571838a40d29455d1579d2e7d75
 
