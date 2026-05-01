@@ -164,6 +164,12 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
 
 ## Changelog
 
+### v45 — 2026-05-01
+
+- Added `.github/copilot-instructions.md` to **Reference only** as `[NON-AUTHORITATIVE]`: Copilot agent instructions summary pointing at canonical sources (`00_authority/`, `01_truth/`, `02_build/`, `03_shadow/`). Not an independent authority surface.
+
+Signed-by: Devon | 2026-05-01 | session 873af571838a40d29455d1579d2e7d75
+
 ### v44 — 2026-05-01
 
 - Added `02_build/INFRASTRUCTURE.md` to **Authoritative now**: canonical infrastructure manifest for the Core server. Full inventory of all 40 containers, scheduled jobs, compose file locations, network topology, and server specs. Replaces the partial infrastructure table that was in `STATUS.md`.
