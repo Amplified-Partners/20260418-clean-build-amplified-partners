@@ -1,7 +1,7 @@
 ---
 title: Governed workspace manifest (authoritative inventory)
 date: 2026-05-01
-version: 43
+version: 44
 status: draft
 ---
 
@@ -78,6 +78,7 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
 - `00_authority/BUILD_LOOP.md`
 - `00_authority/DECISION_LOG.md`
 - `STATUS.md` (operations status board — async handshake between Devon and OpenClaw; versioned handoffs, no chat)
+- `02_build/INFRASTRUCTURE.md` (canonical infrastructure manifest — single source of truth for all 40 containers, services, scheduled jobs, and server specs on Amplified Core)
 - `.cursor/rules/stateless-handover-kaizen.mdc` `[LOGIC TO BE CONFIRMED]` (mechanical enforcement of existing handover policy; not a separate policy spine)
 - `.cursor/hooks.json` `[LOGIC TO BE CONFIRMED]` (**No hooks** — `"hooks": {}`. **TESTING NEED:** reinstatement gate → `.cursor/HOOKS_TESTING_NEED.md`; history → `03_shadow/2026-04-16_stop-hook_followup-checklist-loop_bug-report.md` § Final resolution)
 - `.cursor/hooks/stateless-handover-stop.py` `[LOGIC TO BE CONFIRMED]` (**Dormant / testing only** — **not invoked** while `hooks` is empty; do not treat as enforcement)
@@ -162,9 +163,16 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
 
 ## Changelog
 
+### v44 — 2026-05-01
+
+- Added `02_build/INFRASTRUCTURE.md` to **Authoritative now**: canonical infrastructure manifest for the Core server. Full inventory of all 40 containers, scheduled jobs, compose file locations, network topology, and server specs. Replaces the partial infrastructure table that was in `STATUS.md`.
+- `STATUS.md` infrastructure section now points to `02_build/INFRASTRUCTURE.md` instead of maintaining a separate partial list.
+
+Signed-by: Devon | 2026-05-01 | devin-66aa3ce48c7e407f8ad9bf066541b604
+
 ### v43 — 2026-05-01
 
-- Version numbering housekeeping: two `v36-pre` changelog entries (archive beautiful-and-golden, bibliography fix) were absorbed during merge resolution without incrementing the frontmatter version. Counting all 41 changelog entries (v2–v40 + two v36-pre) plus implicit v1, the correct version was 42; this fix entry itself adds one more, giving v43. Per `AGENTS.md` § "PR reviewers — what to flag" item 3.
+- Version numbering housekeeping: two `v36-pre` changelog entries (archive beautiful-and-golden, bibliography fix) were absorbed during merge resolution without incrementing the frontmatter version. Counting all 41 changelog entries (v2–v40 + two v36-pre) plus implicit v1, the correct version was 42; this fix entry itself adds one more, giving v43. Per `AGENTS.md` § “PR reviewers — what to flag” item 3.
 
 Signed-by: Devon (Devin session `devin-ab66d8a5c2b64927b65a4ab87acc47ee`) — 2026-05-01
 
@@ -173,7 +181,6 @@ Signed-by: Devon (Devin session `devin-ab66d8a5c2b64927b65a4ab87acc47ee`) — 20
 - Added `01_truth/SYSTEMS-AND-API-REGISTER.md` to **Candidate authority**: comprehensive register of all pre-built systems, APIs (124 CRM endpoints, 24 Command Centre endpoints, 19 Marketing Engine endpoints), 13 MCP servers, telephony/voice inventory (7 providers, 6 modules across 8 files), NightScout pipeline, content engine, safety layer, and cross-repo location index. `[LOGIC TO BE CONFIRMED]` pending Ewan review.
 
 Signed-by: Devon (Devin session `f32d587cc3e54f959c5309d93f72bc97`) — 2026-05-01
-
 ### v39 — 2026-04-29
 
 - Added 15 more specifications to `90_archive/specifications/mac-drop-2026-04/` (Phase 2 ingestion): APDS engineering spec, AMF methodology framework, master architecture, Beast rebuild spec, Kaizen Department spec, Kaizen Cove build plan, Visual Polish System build guide, Extraction Department spec, RIC, Watchman expansion strategy, Curator Gate spec, Insight Catalogue, P7/P8/P10 safety/celebration systems. All `[NON-AUTHORITATIVE]`. Total archive now 30 files (33,153 lines).

@@ -1,7 +1,7 @@
 ---
 title: Operations Status Board (Devon ↔ OpenClaw)
-date: 2026-04-29
-version: 1
+date: 2026-04-30
+version: 2
 status: authoritative
 ---
 
@@ -24,36 +24,15 @@ Two-way async handshake between Devon (infrastructure) and OpenClaw (coordinatio
 
 ## Current Infrastructure State
 
-| System | Status | Last Updated | Notes |
-|--------|--------|-------------|-------|
-| **Amplified Core** (135.181.161.131) | Running | 2026-04-29 | Hetzner AX162-R |
-| **Marketing Engine** (port 8000) | Running | 2026-04-29 | v0.4.0, API auth enabled |
-| **FalkorDB** | Running | 2026-04-29 | 9,000 nodes across 4 graphs |
-| **Qdrant** | Running | 2026-04-29 | 57,434 embeddings (384-dim) |
-| **LiteLLM** | Running | 2026-04-29 | Proxy for local + remote LLMs |
-| **Postgres** | Running | 2026-04-29 | DB: marketing |
-| **Backups** | Scheduled | 2026-04-29 | Daily 3am UTC (FalkorDB + Qdrant) |
-| **Pipeline cron** | Scheduled | 2026-04-29 | Daily 4am UTC (6am CEST) |
+**Full inventory → [`02_build/INFRASTRUCTURE.md`](02_build/INFRASTRUCTURE.md)** — single source of truth for all 40 containers, scheduled jobs, compose file locations, and server specs.
 
-## Scheduled Jobs
-
-| Job | Schedule | Key | What it does |
-|-----|----------|-----|-------------|
-| Content pipeline | 0 4 * * * | PIPELINE key | Generate → evaluate → queue for review |
-| FalkorDB backup | 0 3 * * * | — | Snapshot to /opt/amplified/backups/falkordb/ |
-| Qdrant backup | 0 3 * * * | — | Snapshot to /opt/amplified/backups/qdrant/ |
-| Internal Kaizen | Not yet scheduled | — | Analyse feedback patterns → learned preferences |
-| External Kaizen | Not yet scheduled | — | Analyse engagement metrics |
-
-## API Authentication
-
-Three tiers. Keys stored in marketing engine .env on Amplified Core.
-
-| Tier | Scope | Purpose |
-|------|-------|---------|
-| Admin | Full access | Ewan — review, approve, configure |
-| Pipeline | Pipeline + evaluate + kaizen | Cron jobs, automated processes |
-| Readonly | GET endpoints only | MCP server, monitoring, OpenClaw reads |
+Quick summary (2026-04-30):
+- **40 containers** total on Amplified Core (135.181.161.131)
+- **37 running**, **1 paused intentionally** (ch-pipeline), **2 stopped** (minio-init one-time, voice-pipeline exited 6 weeks)
+- **ch-pipeline paused** by Ewan (2026-04-30) — Companies House data preserved, not ready for production
+- **voice-pipeline stopped** — exited 6 weeks ago
+- Kaizen cron jobs now scheduled (Internal: weekly Sunday 5am, External: monthly 1st 5am)
+- Weekly learning report email to Ewan now scheduled (Monday 8am UTC)
 
 ---
 
@@ -92,6 +71,14 @@ Signed-by: Devon | 2026-04-29 | devin-aa4d863ad679468692e75a40b8825358
 ## Changelog
 
 *Entries move here when the board above gets long. Keep the active section clean.*
+
+### v2 — 2026-04-30
+
+- Infrastructure state section replaced with pointer to `02_build/INFRASTRUCTURE.md` (canonical, complete inventory of all 40 containers).
+- Scheduled jobs section removed from STATUS.md — now lives in the infrastructure manifest. API auth section removed (summary retained in marketing engine entry in infrastructure manifest; full tier detail was in STATUS.md v1 only).
+- ch-pipeline paused by Ewan; voice-pipeline noted as stopped.
+
+Signed-by: Devon | 2026-04-30 | devin-66aa3ce48c7e407f8ad9bf066541b604
 
 ### v1 — 2026-04-29
 
