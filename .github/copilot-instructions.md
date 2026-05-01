@@ -9,7 +9,7 @@ This is the governed workspace for Amplified Partners AI agents. It follows Comp
 4. `03_shadow/` — experiments, wrap-ups, Kaizen probes (never authoritative by default)
 
 ## Key rules
-- Every committed artefact must be signed (agent name + ISO date + session ID)
+- Every committed artefact must be signed (agent name + ISO date + session/instance ID if one exists)
 - Opinions must be labelled with confidence (0–100%). See `00_authority/OPINION_CONFIDENCE.md`
 - Authority file edits require a version bump in YAML frontmatter + changelog entry
 - Decisions go in `00_authority/DECISION_LOG.md`
