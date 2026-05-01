@@ -3,7 +3,7 @@ title: Infrastructure manifest — Amplified Partners Core Server
 date: 2026-04-30
 version: 1
 status: authoritative now
-signed-by: Devon | devin-66aa3ce48c7e407f8ad9bf066541b604
+signed-by: Devon | 2026-04-30 | devin-66aa3ce48c7e407f8ad9bf066541b604
 ---
 
 <!-- markdownlint-disable-file MD013 -->

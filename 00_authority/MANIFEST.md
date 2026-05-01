@@ -168,7 +168,7 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
 - Added `02_build/INFRASTRUCTURE.md` to **Authoritative now**: canonical infrastructure manifest for the Core server. Full inventory of all 40 containers, scheduled jobs, compose file locations, network topology, and server specs. Replaces the partial infrastructure table that was in `STATUS.md`.
 - `STATUS.md` infrastructure section now points to `02_build/INFRASTRUCTURE.md` instead of maintaining a separate partial list.
 
-Signed-by: Devon | 2026-04-30 | devin-66aa3ce48c7e407f8ad9bf066541b604
+Signed-by: Devon | 2026-05-01 | devin-66aa3ce48c7e407f8ad9bf066541b604
 
 ### v40 — 2026-05-01
 
