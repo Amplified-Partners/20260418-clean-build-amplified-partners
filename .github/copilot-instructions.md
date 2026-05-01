@@ -7,6 +7,7 @@ This is the governed workspace for Amplified Partners AI agents. It follows Comp
 2. `01_truth/` — truth-shaped candidates (processes, schemas, interfaces)
 3. `02_build/` — build artefacts
 4. `03_shadow/` — experiments, wrap-ups, Kaizen probes (never authoritative by default)
+5. `90_archive/` — reference and provenance (not current authority; do not treat as live policy)
 
 ## Key rules
 - Every committed artefact must be signed (agent name + ISO date + session/instance ID if one exists)
@@ -16,7 +17,7 @@ This is the governed workspace for Amplified Partners AI agents. It follows Comp
 - Handovers must be stateless: facts, open-risks, tokens, optional analysis
 
 ## Naming
-- Filing: `NN_tier/TYPE/YYYY-MM-DD_kebab-slug_vN.md`
+- Filing: `NN_tier/TYPE/YYYY-MM_kebab-slug_vN.md`
 - Imperative voice, must/may only (no "should consider")
 - One concept per file, cross-link rather than merge
 
