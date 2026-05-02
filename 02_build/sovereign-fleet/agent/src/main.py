@@ -149,13 +149,14 @@ async def execute_action(req: ActionRequest) -> ActionResponse:
     policies before execution proceeds.
     """
     tier = ACTION_TIERS.get(req.action, 0)
+    resolved_resource = str(Path(req.resource).resolve())
 
     if settings.ibac_enabled:
         authz = policy_engine.evaluate(
             AuthzRequest(
                 principal=entity.name,
                 action=req.action.value,
-                resource=req.resource,
+                resource=resolved_resource,
                 context=req.context,
             )
         )
@@ -206,7 +207,7 @@ async def chat(req: ChatRequest) -> ChatResponse:
         system_prompt=req.system_prompt or f"You are {entity.name}, role: {entity.role}.",
         messages=req.messages,
         temperature=req.temperature if req.temperature is not None else entity.temperature,
-        max_tokens=req.max_tokens or entity.max_tokens,
+        max_tokens=req.max_tokens if req.max_tokens is not None else entity.max_tokens,
     )
     return ChatResponse(
         content=resp.content,
