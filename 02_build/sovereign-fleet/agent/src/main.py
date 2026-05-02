@@ -258,6 +258,12 @@ ALLOWED_SHELL_COMMANDS = {
     "pytest", "ruff", "black", "mypy",
 }
 
+# Paths that must never be accessed by shell commands (mirrors Cedar forbid rules).
+FORBIDDEN_PATHS = {
+    Path("/workspace/.env").resolve(),
+    Path("/etc/openclaw/policies/prod.cedar").resolve(),
+}
+
 
 def _validate_shell_command(command: str) -> list[str]:
     """Parse and validate a shell command against the allowlist.
@@ -377,6 +383,20 @@ async def _execute_shell(payload: dict[str, Any]) -> dict[str, Any]:
         raise HTTPException(status_code=400, detail="command required in payload")
 
     parts = _validate_shell_command(command)
+
+    for arg in parts[1:]:
+        try:
+            resolved_arg = Path(arg).resolve()
+        except (OSError, ValueError):
+            continue
+        if resolved_arg in FORBIDDEN_PATHS or any(
+            resolved_arg == fp or str(resolved_arg).startswith(str(fp))
+            for fp in FORBIDDEN_PATHS
+        ):
+            raise HTTPException(
+                status_code=403,
+                detail=f"Command references forbidden path: {arg}",
+            )
 
     proc = await asyncio.create_subprocess_exec(
         *parts,
