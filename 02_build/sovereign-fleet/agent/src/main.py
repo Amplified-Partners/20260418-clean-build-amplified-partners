@@ -401,7 +401,14 @@ async def _execute_shell(payload: dict[str, Any]) -> dict[str, Any]:
 
     for arg in parts[1:]:
         try:
-            resolved_arg = Path(arg).resolve()
+            # Resolve relative to WORKSPACE_ROOT (the subprocess cwd),
+            # not the Python process cwd, so the check sees the same
+            # path the subprocess will actually access.
+            arg_path = Path(arg)
+            if arg_path.is_absolute():
+                resolved_arg = arg_path.resolve()
+            else:
+                resolved_arg = (WORKSPACE_ROOT / arg_path).resolve()
         except (OSError, ValueError):
             continue
         if resolved_arg in FORBIDDEN_PATHS or any(

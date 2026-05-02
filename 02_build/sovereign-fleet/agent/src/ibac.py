@@ -155,9 +155,11 @@ class PolicyEngine:
                 resources = rule.resource_scope.split("|")
                 if not any(req.resource == r for r in resources):
                     return False
-            elif not req.resource.startswith(rule.resource_scope):
-                if req.resource != rule.resource_scope:
-                    return False
+            elif not (
+                req.resource == rule.resource_scope
+                or req.resource.startswith(rule.resource_scope + "/")
+            ):
+                return False
 
         # Context conditions
         for key, required_val in rule.conditions.items():
