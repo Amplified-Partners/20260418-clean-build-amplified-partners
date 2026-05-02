@@ -428,7 +428,7 @@ async def _execute_shell(payload: dict[str, Any]) -> dict[str, Any]:
         for basename in FORBIDDEN_BASENAMES:
             flag = f"--exclude={basename}" if binary == "grep" else f"--glob=!{basename}"
             exclude_args.append(flag)
-        parts = [parts[0]] + exclude_args + parts[1:]
+        parts = parts + exclude_args
 
     proc = await asyncio.create_subprocess_exec(
         *parts,
