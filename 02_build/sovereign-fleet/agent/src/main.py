@@ -151,13 +151,17 @@ async def execute_action(req: ActionRequest) -> ActionResponse:
     tier = ACTION_TIERS.get(req.action, 0)
     resolved_resource = str(Path(req.resource).resolve())
 
+    # Strip reserved context keys — approval state must come from
+    # the server-side intent-token subsystem, not the HTTP caller.
+    safe_context = {k: v for k, v in req.context.items() if k not in RESERVED_CONTEXT_KEYS}
+
     if settings.ibac_enabled:
         authz = policy_engine.evaluate(
             AuthzRequest(
                 principal=entity.name,
                 action=req.action.value,
                 resource=resolved_resource,
-                context=req.context,
+                context=safe_context,
             )
         )
 
@@ -252,16 +256,27 @@ def _sandbox_path(path: str) -> Path:
 
 
 # Shell command allowlist — only these binaries may be executed.
-# Scripting runtimes (python, node, etc.) are excluded because they can
-# execute arbitrary code that bypasses the FORBIDDEN_PATHS file check.
+# Scripting runtimes (python, node, etc.) and tools with sub-exec
+# capability (find -exec) are excluded.
 ALLOWED_SHELL_COMMANDS = {
-    "git", "grep", "rg", "find", "ls", "cat", "head", "tail", "wc",
+    "git", "grep", "rg", "ls", "cat", "head", "tail", "wc",
 }
 
 # Paths that must never be accessed by shell commands (mirrors Cedar forbid rules).
 FORBIDDEN_PATHS = {
     Path("/workspace/.env").resolve(),
     Path("/etc/openclaw/policies/prod.cedar").resolve(),
+}
+
+# Basenames of forbidden files — injected as --exclude into recursive commands.
+FORBIDDEN_BASENAMES = {p.name for p in FORBIDDEN_PATHS}
+
+# Context keys that must never be supplied by the caller. These are
+# server-side claims set only by the approval/intent-token subsystem.
+RESERVED_CONTEXT_KEYS = {
+    "approved_by_analyst",
+    "approved_by_arbiter",
+    "intent_token_valid",
 }
 
 
@@ -397,6 +412,16 @@ async def _execute_shell(payload: dict[str, Any]) -> dict[str, Any]:
                 status_code=403,
                 detail=f"Command references forbidden path: {arg}",
             )
+
+    # Inject --exclude for forbidden basenames into grep/rg to prevent
+    # recursive directory reads from leaking forbidden file contents.
+    binary = Path(parts[0]).name
+    if binary in ("grep", "rg"):
+        exclude_args: list[str] = []
+        for basename in FORBIDDEN_BASENAMES:
+            flag = f"--exclude={basename}" if binary == "grep" else f"--glob=!{basename}"
+            exclude_args.append(flag)
+        parts = [parts[0]] + exclude_args + parts[1:]
 
     proc = await asyncio.create_subprocess_exec(
         *parts,
