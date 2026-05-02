@@ -252,10 +252,10 @@ def _sandbox_path(path: str) -> Path:
 
 
 # Shell command allowlist — only these binaries may be executed.
+# Scripting runtimes (python, node, etc.) are excluded because they can
+# execute arbitrary code that bypasses the FORBIDDEN_PATHS file check.
 ALLOWED_SHELL_COMMANDS = {
     "git", "grep", "rg", "find", "ls", "cat", "head", "tail", "wc",
-    "make", "python", "python3", "pip", "npm", "node", "docker",
-    "pytest", "ruff", "black", "mypy",
 }
 
 # Paths that must never be accessed by shell commands (mirrors Cedar forbid rules).

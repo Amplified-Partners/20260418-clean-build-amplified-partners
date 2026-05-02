@@ -153,7 +153,7 @@ class PolicyEngine:
         if rule.resource_scope != "*":
             if "|" in rule.resource_scope:
                 resources = rule.resource_scope.split("|")
-                if not any(req.resource == r or req.resource.startswith(r) for r in resources):
+                if not any(req.resource == r for r in resources):
                     return False
             elif not req.resource.startswith(rule.resource_scope):
                 if req.resource != rule.resource_scope:
