@@ -37,6 +37,15 @@ One entry per decision. Keep it short. Link out to supporting docs.
 - **Status**: candidate (pending Ewan review of the PR + verdicts)
 - **Signed-by**: Devon-ab74 | 2026-05-03 | devin-ab740f2c78ee477a9c16ea3b6ed15293
 
+### 2026-05-02 — Marketing Engine Phase 0 parked pending customer signal
+
+- **Decision**: Park `Amplified-Partners/marketing-engine` PR #1 ("Phase 0 — Kaizen bug, radical attribution, GMB prompts, email reports, model upgrade") and close it without merge. Phase 0 work pauses until a real customer signal motivates resumption.
+- **Why**: PR #1 has been open since 2026-04-30 with no progress. Per `00_authority/USE_IT_OR_CUT_IT.md`, unused implementations are cut. Marketing Engine has no current customer driving the work — shipping it speculatively burns context. Eli (Claude / advisory lane) recommended park; Devon (Devin / GitHub authority) executes.
+- **Where encoded**: `Amplified-Partners/marketing-engine` PR #1 closed with link to this entry. Comment on the PR pointing here.
+- **Status**: parked
+- **Reversal condition**: a paying customer or signed-letter-of-intent that requires Marketing Engine output. On reversal, reopen branch `Amplified-Partners/marketing-engine` head from PR #1 and rebase onto current `main`.
+- **Signed-by**: Devon-5da3 | 2026-05-02 | devin-5da3bd275191469c8400142fd0ae1d69
+
 ### 2026-05-01 — Systems and API Register created as candidate authority
 
 - **Decision**: Create `01_truth/SYSTEMS-AND-API-REGISTER.md` — a single register documenting all pre-built APIs, MCP servers, telephony systems, and code modules across all Amplified Partners repos. Indexed in MANIFEST.md v40 as `[LOGIC TO BE CONFIRMED]`.
