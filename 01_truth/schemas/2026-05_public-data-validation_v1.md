@@ -10,7 +10,7 @@ related:
 signed-by: Devon-4234 | 2026-05-03 | session devin-4234e1c8afbe42f2aff84a29ce139809
 changelog:
   - 2026-05-03 — Devon-4234: initial draft (AMP-65 hospitality sweep).
-  - 2026-05-03 — Devon-4234: cache-key clarified (SHAKE-128, full params, not redacted).
+  - 2026-05-03 — Devon-4234: cache-key clarified — SHA-256 over non-auth sorted params; auth params stripped (key/apikey/token/etc.) since they are credentials, not request parameters.
 ---
 
 # Public-Data Validation — Schema (v1)
@@ -127,12 +127,15 @@ catalogue rendering and recipe routing.
 
 - Every HTTP fetch that produces evidence is cached on disk under
   `02_build/validators/.cache/`.
-- The cache key is `shake_128(method | url | sorted query_params).hexdigest(16)`
-  — a 32-char SHAKE-128 (SHA-3 family) digest. The full params dict is hashed
-  verbatim so distinct API-key values (e.g. Met Office DataPoint, where the
-  key is a query parameter named `key`) produce distinct cache entries.
-  The hash is an opaque filename, not security-sensitive — never used for
-  password storage.
+- The cache key is `sha256(method | url | sorted non_auth_query_params)` —
+  a hex digest used purely as an opaque, deterministic filename for the
+  on-disk cache (never for password storage). Auth params (`key`, `apikey`,
+  `api_key`, `token`, `access_token`, `secret`, `secret_key`, `password`,
+  `auth`) are stripped before hashing because they are credentials, not
+  request parameters: rotating a valid Met Office DataPoint key returns the
+  same response payload, so cache entries are correctly shared across key
+  rotations. Stripping also keeps secret values out of any hash function
+  (`py/weak-sensitive-data-hashing`).
 - Cached entries store: response status, headers, body bytes, original UTC
   fetch time, and a `from_cache` flag in the deserialised `CachedResponse`.
 - Re-runs use the cache by default. `--no-cache` forces re-fetch.

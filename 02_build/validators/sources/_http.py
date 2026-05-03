@@ -57,20 +57,45 @@ class CachedResponse:
         return json.loads(self.text())
 
 
+# Some public-data APIs (Met Office DataPoint, future EPC, etc.) require an
+# API key as a query parameter rather than an Authorization header. We strip
+# those param names from the cache-key digest so that (a) the secret value
+# never enters a hash function — keeping CodeQL's
+# ``py/weak-sensitive-data-hashing`` rule satisfied and avoiding any
+# accidental disk-trail of the credential — and (b) cache entries are shared
+# across rotations of the same credential, which is the correct semantic
+# (rotating a valid Met Office key returns the same response payload; the
+# key is auth, not a request parameter).
+_AUTH_PARAM_NAMES = (
+    "key",
+    "apikey",
+    "api_key",
+    "token",
+    "access_token",
+    "secret",
+    "secret_key",
+    "password",
+    "auth",
+)
+
+
+def _strip_auth(params: dict[str, Any] | None) -> dict[str, Any]:
+    if not params:
+        return {}
+    return {k: v for k, v in params.items() if k.lower() not in _AUTH_PARAM_NAMES}
+
+
 def _key(method: str, url: str, params: dict[str, Any] | None) -> str:
     """Content-addressed cache key — *not* security-sensitive.
 
-    The full params dict is included verbatim so that distinct API key values
-    (e.g. Met Office DataPoint, where the key is a query parameter named
-    ``key``) produce distinct cache entries — rotating the key must not serve
-    a stale response. The hash is purely an opaque, deterministic filename;
-    it is not used for password storage. SHAKE-128 (variable-length SHA-3) is
-    used in preference to SHA-256 because it is outside the default scope of
-    CodeQL's ``py/weak-sensitive-data-hashing`` rule, which flags fast hashes
-    in case they are misused for password hashing — not relevant here.
+    The hash is an opaque, deterministic filename for the on-disk cache; it
+    is never used for password storage. Auth params are stripped first (see
+    ``_AUTH_PARAM_NAMES``); the resulting digest covers method + URL + the
+    *non-auth* sorted params only.
     """
-    payload = method.upper() + "|" + url + "|" + json.dumps(params or {}, sort_keys=True)
-    return hashlib.shake_128(payload.encode("utf-8")).hexdigest(16)
+    safe_params = _strip_auth(params)
+    payload = method.upper() + "|" + url + "|" + json.dumps(safe_params, sort_keys=True)
+    return hashlib.sha256(payload.encode("utf-8")).hexdigest()  # noqa: S324  (not for password hashing)
 
 
 class HttpClient:
