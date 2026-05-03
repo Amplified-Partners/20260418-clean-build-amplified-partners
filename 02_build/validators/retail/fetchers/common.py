@@ -26,6 +26,15 @@ from typing import Any
 from urllib.parse import urlencode
 
 import requests
+from requests.exceptions import ChunkedEncodingError, ConnectionError as ReqConnectionError, Timeout
+
+# Genuinely transient network failures — the only ones it makes sense to retry.
+# Notably excludes requests.HTTPError (raised by raise_for_status() for 4xx/5xx):
+# 5xx in our retry set (429/500/502/503/504) is handled inline above the
+# raise_for_status() call; 4xx is deterministic and must NOT be retried
+# (otherwise a 401/403/404 burns DEFAULT_RETRIES * DEFAULT_BACKOFF^attempt
+# seconds for nothing). Spotted by Devin Review on 625d0bd.
+_TRANSIENT = (ReqConnectionError, Timeout, ChunkedEncodingError)
 
 CACHE_ROOT = Path(__file__).resolve().parent.parent / "cache"
 CACHE_ROOT.mkdir(parents=True, exist_ok=True)
@@ -216,11 +225,13 @@ def fetch_json(
                 headers=meta["headers"],
                 cached=False,
             )
-        except Exception as e:
+        except _TRANSIENT as e:
             last_err = e
             if attempt < retries:
                 time.sleep(DEFAULT_BACKOFF**attempt)
             continue
+        # All other exceptions — most importantly requests.HTTPError raised by
+        # resp.raise_for_status() for deterministic 4xx — propagate immediately.
     raise RuntimeError(f"fetch_json failed for {url}: {last_err}")
 
 
@@ -293,11 +304,14 @@ def fetch_text(
                 headers=meta["headers"],
                 cached=False,
             )
-        except Exception as e:
+        except _TRANSIENT as e:
             last_err = e
             if attempt < retries:
                 time.sleep(DEFAULT_BACKOFF**attempt)
             continue
+        # See note in fetch_json: HTTPError from raise_for_status() must NOT
+        # be retried (deterministic 4xx — e.g. a private-data 401 — will never
+        # succeed on retry and would just waste DEFAULT_BACKOFF^attempt seconds).
     raise RuntimeError(f"fetch_text failed for {url}: {last_err}")
 
 

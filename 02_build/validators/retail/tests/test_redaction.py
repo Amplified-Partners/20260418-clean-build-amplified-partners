@@ -94,5 +94,74 @@ class RedactionTest(unittest.TestCase):
         self.assertEqual(ev["params"]["key"], "[REDACTED]")
 
 
+class RetryBehaviourTest(unittest.TestCase):
+    """fetch_json/fetch_text must not retry on deterministic 4xx responses.
+
+    Covers the Devin Review finding on commit 625d0bd: a broad ``except
+    Exception`` was catching ``requests.HTTPError`` from
+    ``raise_for_status()`` for non-transient 4xx codes (401, 403, 404, ...)
+    and retrying them DEFAULT_RETRIES times with backoff sleeps for nothing.
+    Only genuinely transient network exceptions
+    (``ConnectionError``/``Timeout``/``ChunkedEncodingError``) should
+    trigger the retry loop.
+    """
+
+    def test_fetch_json_does_not_retry_404(self):
+        from requests import HTTPError
+
+        class _Resp404:
+            status_code = 404
+            text = "not found"
+            headers: dict = {}
+
+            def raise_for_status(self):
+                raise HTTPError("404 Not Found")
+
+            def json(self):
+                return {}
+
+        call_count = {"n": 0}
+
+        def fake_get(*_a, **_k):
+            call_count["n"] += 1
+            return _Resp404()
+
+        # Bypass cache + sleep so the test is fast and deterministic.
+        with patch.object(common.requests, "get", side_effect=fake_get):
+            with patch.object(common, "_cache_paths") as cp:
+                from pathlib import Path
+                import tempfile
+                tmp = Path(tempfile.mkdtemp())
+                cp.return_value = (tmp / "b.json", tmp / "m.json")
+                with patch.object(common.time, "sleep") as sleep_mock:
+                    with self.assertRaises(HTTPError):
+                        common.fetch_json("t", "https://example.test/missing", use_cache=False)
+                    sleep_mock.assert_not_called()
+
+        self.assertEqual(call_count["n"], 1, "404 must not be retried")
+
+    def test_fetch_json_retries_on_connection_error(self):
+        from requests.exceptions import ConnectionError as ReqConnectionError
+
+        call_count = {"n": 0}
+
+        def fake_get(*_a, **_k):
+            call_count["n"] += 1
+            raise ReqConnectionError("simulated network drop")
+
+        with patch.object(common.requests, "get", side_effect=fake_get):
+            with patch.object(common, "_cache_paths") as cp:
+                from pathlib import Path
+                import tempfile
+                tmp = Path(tempfile.mkdtemp())
+                cp.return_value = (tmp / "b.json", tmp / "m.json")
+                with patch.object(common.time, "sleep"):
+                    with self.assertRaises(RuntimeError):
+                        common.fetch_json("t", "https://example.test/down", use_cache=False)
+
+        # DEFAULT_RETRIES = 3, so we expect 3 attempts.
+        self.assertEqual(call_count["n"], common.DEFAULT_RETRIES)
+
+
 if __name__ == "__main__":
     unittest.main()
