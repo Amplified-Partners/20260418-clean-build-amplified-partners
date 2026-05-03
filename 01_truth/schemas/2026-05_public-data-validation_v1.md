@@ -11,6 +11,7 @@ signed-by: Devon-4234 | 2026-05-03 | session devin-4234e1c8afbe42f2aff84a29ce139
 changelog:
   - 2026-05-03 — Devon-4234: initial draft (AMP-65 hospitality sweep).
   - 2026-05-03 — Devon-4234: cache-key clarified — SHA-256 over sorted ``params``; credentials travel separately as ``auth_params`` and never enter the cache key, the meta file, or log lines.
+  - 2026-05-03 — Devon-4234: §1 fold corrected to reference the actual v2 band names (`{PROVEN, PARTIALLY_SUPPORTED, REFUTED, INCONCLUSIVE}`); §3 `evidence[i].url` clarified as the original request URL with non-auth params merged (auth stripped, redirects followed but pre-redirect URL recorded); §2 correlation row updated to document the Fisher-z p-value gate the code now enforces.
 ---
 
 # Public-Data Validation — Schema (v1)
@@ -38,10 +39,12 @@ client-facing diagnostics) can rely on a stable surface.
 | `PENDING-API-KEY` | Validation requires a registered key (Met Office DataPoint, Companies House, EPC) that is not yet provisioned. Verdict deferred — not a failure. |
 
 The three bands are a **fold** of the four-band scheme in
-`2026-03_validation-methodology_v2.md`: the legacy `INFERRED` band is collapsed
-into `PLAUSIBLE` because, for the validators pipeline, "consistent but
-underpowered" and "consistent but partly client-side" are the same operational
-signal — they both mean *do not promote to a billable claim without client data*.
+`2026-03_validation-methodology_v2.md` (`{PROVEN, PARTIALLY_SUPPORTED, REFUTED,
+INCONCLUSIVE}`): `INCONCLUSIVE` and `PARTIALLY_SUPPORTED` are both collapsed
+into `PLAUSIBLE`, and `REFUTED` becomes `DISPROVEN`, because, for the
+validators pipeline, "consistent but underpowered" and "consistent but partly
+client-side" are the same operational signal — they both mean *do not promote
+to a billable claim without client data*.
 
 ## 2. Test classes
 
@@ -52,7 +55,7 @@ picks one (or composes several via the existence runner).
 |-------|---------------|--------------------|
 | `existence` | Run a list of probes; `PROVEN` if all pass, `PLAUSIBLE` if at least one passes, `DISPROVEN` if zero pass. | n/a |
 | `base_rate` | Compare measured rate `m` from a public source to a claimed rate `c`. `PROVEN` if `\|m − c\| / c ≤ 0.20` (default tolerance) and direction matches; `DISPROVEN` if outside tolerance and direction matters; `PLAUSIBLE` if measured is `None`. | tolerance=0.20 |
-| `correlation` | Pearson r over paired numeric series, expected sign supplied by recipe. `\|r\| ≥ 0.6` → `PROVEN`; `0.3 ≤ \|r\| < 0.6` → `PLAUSIBLE`; `\|r\| < 0.3` → `DISPROVEN`; `n < 8` → `PLAUSIBLE`. | n_min=8, r_high=0.6, r_low=0.3 |
+| `correlation` | Pearson r over paired numeric series, expected sign supplied by recipe. `\|r\| ≥ 0.6` AND two-sided Fisher z-transform p-value `< ALPHA` (default 0.01) AND sign match → `PROVEN`; `\|r\| ≥ 0.6` with p ≥ ALPHA → `PLAUSIBLE` (large effect, sample underpowered); `0.3 ≤ \|r\| < 0.6` → `PLAUSIBLE`; `\|r\| < 0.3` → `DISPROVEN`; `n < 8` → `PLAUSIBLE`. | n_min=8, r_high=0.6, r_low=0.3, alpha=0.01 |
 | `distribution` | Compute `z = (observed_quantile − claim) / sigma`. `z ≥ 1.0` → `PROVEN`; `−1 < z < 1` → `PLAUSIBLE`; `z ≤ −1` → `DISPROVEN`; `n < 5` → `PLAUSIBLE`. | n_min=5, z_high=1.0, z_low=−1.0 |
 
 Thresholds are knobs, not invariants. A validator may override them for an
@@ -104,7 +107,7 @@ insight at `03_shadow/validators/<vertical>/<INS-NNN>.json`):
 | `rationale` | string | yes | Plain English. State which leg (public / client) is being validated and what the verdict means. |
 | `evidence` | array | yes | One entry per upstream HTTP fetch. Empty when (a) the band is `PENDING-API-KEY`, or (b) the insight has no public-data leg — i.e. the recipe is fully client-side (POS / rota / reservations). In hospitality this applies to e.g. INS-045, INS-046, INS-054, INS-058: each is `PLAUSIBLE` because the public side cannot fetch anything; the rationale field carries the explanation. |
 | `evidence[i].source` | string | yes | Slug, dotted: `fsa.fhrs`, `ons.cpih_food`, `met_office.datapoint`. |
-| `evidence[i].url` | string | yes | Final URL hit (after redirects). |
+| `evidence[i].url` | string | yes | Original request URL with non-auth `params` merged in. Auth credentials (e.g. Met Office DataPoint `key=`) are stripped before persistence. Redirects are followed on the wire (`follow_redirects=True`) but the pre-redirect URL is what the bundle records, so credentials cannot leak via `resp.url` and the on-disk URL stays content-addressable. |
 | `evidence[i].accessed_at` | ISO-8601 | yes | UTC. |
 | `evidence[i].http_status` | int | yes | Response status (cached responses preserve original status). |
 | `evidence[i].response_sha256` | hex string | yes | Of the raw response body bytes; lets reviewers cross-check the cached payload at `02_build/validators/.cache/`. |
