@@ -75,8 +75,11 @@ status: candidate-authority
   unaffected; Linear tickets simply do not get updated. Operator action: add
   the secret.
 - **Linear ticket id typo** — `linear-sync` warns "could not resolve" and
-  exits 0. Operator action: edit the PR title/body, the workflow re-runs on
-  edit.
+  exits 0. The workflow triggers are `[opened, reopened, ready_for_review,
+  closed]`; an `edited` event is intentionally not a trigger to avoid
+  duplicate ticket comments on every body edit. Operator action: correct
+  the ticket id in the PR title/body, then close-and-reopen the PR (or, if
+  the PR is still in draft, mark it ready-for-review once corrected).
 - **Devin (`devin-ai-integration[bot]`) cannot self-merge** — by design.
   Ewan / Antigravity merges. Operator action: none required.
 - **Dependabot PR fails branch-name check** — workflow skips dependabot
