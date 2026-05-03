@@ -1,7 +1,77 @@
 [
   {
+    "insight": "INS-079",
+    "band": "PROVEN",
+    "test": "existence"
+  },
+  {
+    "insight": "INS-080",
+    "band": "PLAUSIBLE",
+    "test": "existence"
+  },
+  {
+    "insight": "INS-081",
+    "band": "PLAUSIBLE",
+    "test": "existence"
+  },
+  {
+    "insight": "INS-082",
+    "band": "PLAUSIBLE",
+    "test": "existence"
+  },
+  {
+    "insight": "INS-083",
+    "band": "PROVEN",
+    "test": "existence"
+  },
+  {
+    "insight": "INS-084",
+    "band": "PLAUSIBLE",
+    "test": "existence"
+  },
+  {
     "insight": "INS-085",
     "band": "PLAUSIBLE",
+    "test": "existence"
+  },
+  {
+    "insight": "INS-086",
+    "band": "PLAUSIBLE",
+    "test": "existence"
+  },
+  {
+    "insight": "INS-087",
+    "band": "PROVEN",
+    "test": "existence"
+  },
+  {
+    "insight": "INS-088",
+    "band": "PLAUSIBLE",
+    "test": "existence"
+  },
+  {
+    "insight": "INS-089",
+    "band": "PROVEN",
+    "test": "existence"
+  },
+  {
+    "insight": "INS-090",
+    "band": "PLAUSIBLE",
+    "test": "existence"
+  },
+  {
+    "insight": "INS-091",
+    "band": "PROVEN",
+    "test": "existence"
+  },
+  {
+    "insight": "INS-092",
+    "band": "PLAUSIBLE",
+    "test": "existence"
+  },
+  {
+    "insight": "INS-093",
+    "band": "PROVEN",
     "test": "existence"
   },
   {
