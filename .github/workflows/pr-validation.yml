@@ -29,12 +29,17 @@ jobs:
           PR_BODY: ${{ github.event.pull_request.body }}
         run: |
           set -euo pipefail
-          combined="${PR_TITLE}"$'\n'"${PR_BODY:-}"
+          # Strip HTML comments (<!-- ... -->) from the body before matching so
+          # AMP-XXX placeholders inside the PR template's example comments do
+          # not satisfy the check. python -c with a regex handles multi-line
+          # comments correctly.
+          body_stripped=$(printf '%s' "${PR_BODY:-}" | python3 -c 'import re,sys; sys.stdout.write(re.sub(r"<!--.*?-->", "", sys.stdin.read(), flags=re.DOTALL))')
+          combined="${PR_TITLE}"$'\n'"${body_stripped}"
           if printf '%s' "$combined" | grep -Eqi 'AMP-[0-9]+'; then
             ticket=$(printf '%s' "$combined" | grep -Eoi 'AMP-[0-9]+' | head -1 | tr '[:lower:]' '[:upper:]')
             echo "Found Linear ticket reference: $ticket"
           else
-            echo "::error::PR must reference a Linear ticket (AMP-XXX) in the title or body."
+            echo "::error::PR must reference a Linear ticket (AMP-NNN) in the title or body (HTML comments are ignored)."
             echo "::error::Example title: 'feat(amp-70): add branch protection workflow'"
             exit 1
           fi

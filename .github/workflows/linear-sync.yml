@@ -38,7 +38,12 @@ jobs:
           HEAD_REF: ${{ github.event.pull_request.head.ref }}
         run: |
           set -euo pipefail
-          combined="${PR_TITLE}"$'\n'"${PR_BODY:-}"$'\n'"${HEAD_REF}"
+          # Strip HTML comments from the body so PR-template example
+          # placeholders (AMP-NNN inside <!-- ... -->) do not get mistaken
+          # for the real ticket reference. Match priority is title, then
+          # stripped body, then head ref.
+          body_stripped=$(printf '%s' "${PR_BODY:-}" | python3 -c 'import re,sys; sys.stdout.write(re.sub(r"<!--.*?-->", "", sys.stdin.read(), flags=re.DOTALL))')
+          combined="${PR_TITLE}"$'\n'"${body_stripped}"$'\n'"${HEAD_REF}"
           ticket=$(printf '%s' "$combined" | grep -Eoi 'AMP-[0-9]+' | head -1 | tr '[:lower:]' '[:upper:]' || true)
           if [ -n "$ticket" ]; then
             echo "ticket=$ticket" >> "$GITHUB_OUTPUT"
@@ -58,6 +63,7 @@ jobs:
           PR_TITLE: ${{ github.event.pull_request.title }}
           PR_AUTHOR: ${{ github.event.pull_request.user.login }}
           PR_ACTION: ${{ github.event.action }}
+          PR_DRAFT: ${{ github.event.pull_request.draft }}
           PR_MERGED: ${{ github.event.pull_request.merged }}
           MERGE_SHA: ${{ github.event.pull_request.merge_commit_sha }}
           REPO: ${{ github.repository }}
@@ -71,11 +77,23 @@ jobs:
           fi
 
           # Determine event type and comment body.
+          # Draft PRs do not signal readiness for review, so we skip the
+          # comment + state move on `opened`/`reopened` while draft.
+          # `ready_for_review` always signals readiness, so we never skip
+          # there even if `pull_request.draft` somehow reads as true.
           comment_body=""
           should_move_to_review="false"
           case "$PR_ACTION" in
-            opened|reopened|ready_for_review)
+            opened|reopened)
+              if [ "$PR_DRAFT" = "true" ]; then
+                echo "Draft PR; skipping Linear sync until marked ready for review."
+                exit 0
+              fi
               comment_body="**PR opened** by @${PR_AUTHOR} in \`${REPO}\`: [#${PR_NUMBER} — ${PR_TITLE}](${PR_URL})"
+              should_move_to_review="true"
+              ;;
+            ready_for_review)
+              comment_body="**PR ready for review** by @${PR_AUTHOR} in \`${REPO}\`: [#${PR_NUMBER} — ${PR_TITLE}](${PR_URL})"
               should_move_to_review="true"
               ;;
             closed)

@@ -8,8 +8,8 @@ Updated by Devon-4330 | 2026-05-03 | session devin-4330c661a80b4770aa8f62980c213
 
 ## Linear ticket
 
-<!-- Required. PR title or this section must reference an AMP-XXX ticket. -->
-<!-- Example: AMP-123 — short description, or https://linear.app/amplifiedpartners/issue/AMP-123 -->
+<!-- Required. PR title or this section must reference an AMP-NNN ticket (where NNN is the actual ticket number). -->
+<!-- Replace the placeholder below with the real ticket number. -->
 
 AMP-
 
