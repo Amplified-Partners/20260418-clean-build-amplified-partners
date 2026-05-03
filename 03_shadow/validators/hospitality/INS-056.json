@@ -1,0 +1,26 @@
+{
+  "insight_id": "INS-056",
+  "title": "Staff Tenure Median Below 90 Days \u2014 Hospitality Death Spiral",
+  "vertical": "hospitality",
+  "band": "PLAUSIBLE",
+  "test_class": "existence",
+  "rationale": "Nomis labour-market catalogue reachable; CIPD voluntary turnover benchmarks public. Recipe-level threshold (90 days) is measured from client rota data.",
+  "evidence": [
+    {
+      "source": "nomis",
+      "url": "https://www.nomisweb.co.uk/api/v01/dataset/def.sdmx.json",
+      "accessed_at": "2026-05-03T20:49:32.211620+00:00",
+      "http_status": 200,
+      "response_sha256": "77c10d7efe0734c195bb70f6518ead873dd7943ccba67547139eab67dd1afd5d",
+      "query_params": {},
+      "summary": "Dataset catalogue"
+    }
+  ],
+  "metrics": {
+    "http_status": 200
+  },
+  "run_at": "2026-05-03T20:49:47.090706+00:00",
+  "code_sha": "c8863e8",
+  "agent": "Devon-4234",
+  "notes": ""
+}

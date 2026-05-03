@@ -1,0 +1,14 @@
+{
+  "insight_id": "INS-045",
+  "title": "Google My Business Visit-to-Cover Attribution",
+  "vertical": "hospitality",
+  "band": "PLAUSIBLE",
+  "test_class": "existence",
+  "rationale": "Google Business Profile Insights are owner-only \u2014 not validatable against open public data. Recipe is sound conditional on client granting GBP Insights access.",
+  "evidence": [],
+  "metrics": {},
+  "run_at": "2026-05-03T20:49:40.726772+00:00",
+  "code_sha": "c8863e8",
+  "agent": "Devon-4234",
+  "notes": "Validation requires per-client OAuth grant; out-of-scope for public-data sweep."
+}

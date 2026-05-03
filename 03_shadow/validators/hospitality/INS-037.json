@@ -1,0 +1,26 @@
+{
+  "insight_id": "INS-037",
+  "title": "Energy Spike Detection and Load Management (Hospitality)",
+  "vertical": "hospitality",
+  "band": "PLAUSIBLE",
+  "test_class": "existence",
+  "rationale": "NESO data portal accessible. Energy spike detection itself relies on client smart-meter / utility readings; public leg is benchmark only.",
+  "evidence": [
+    {
+      "source": "neso.data_portal",
+      "url": "https://www.neso.energy/data-portal",
+      "accessed_at": "2026-05-03T20:49:26.327463+00:00",
+      "http_status": 200,
+      "response_sha256": "de2a1a0c8af4dc814ebf1f3298a2b1cc1da664c696b0dd145ae1b3d18296a262",
+      "query_params": {},
+      "summary": "Landing page"
+    }
+  ],
+  "metrics": {
+    "http_status": 200
+  },
+  "run_at": "2026-05-03T20:49:26.329029+00:00",
+  "code_sha": "c8863e8",
+  "agent": "Devon-4234",
+  "notes": ""
+}

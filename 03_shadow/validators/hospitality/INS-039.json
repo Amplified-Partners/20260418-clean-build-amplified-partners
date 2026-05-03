@@ -1,0 +1,36 @@
+{
+  "insight_id": "INS-039",
+  "title": "Sickness-Driven Understaffing Prediction (Hospitality)",
+  "vertical": "hospitality",
+  "band": "PLAUSIBLE",
+  "test_class": "existence",
+  "rationale": "1/2 probes returned usable data; remaining probes returned empty or coarser-than-claimed results. | UKHSA dashboard flu headlines API status 404. | UKHSA surveillance landing reachable (status 200).",
+  "evidence": [
+    {
+      "source": "ukhsa.dashboard",
+      "url": "https://ukhsa-dashboard.data.gov.uk/api/topics/Influenza/headlines",
+      "accessed_at": "2026-05-03T20:49:33.056609+00:00",
+      "http_status": 404,
+      "response_sha256": "0ac5cdc511f097dab143b2e3b2e44227501b63cd9bd6859e428947f06e88030a",
+      "query_params": {},
+      "summary": "Flu headlines"
+    },
+    {
+      "source": "ukhsa.gov_uk",
+      "url": "https://www.gov.uk/government/statistics/national-flu-and-covid-19-surveillance-reports-2024-to-2025-season",
+      "accessed_at": "2026-05-03T20:49:33.297511+00:00",
+      "http_status": 200,
+      "response_sha256": "a0a0a545644c4e271cafeebf5bb204a35ef6ab16baf358f06144ac94ac2d61c3",
+      "query_params": {},
+      "summary": "Surveillance landing"
+    }
+  ],
+  "metrics": {
+    "probes_total": 2,
+    "probes_passed": 1
+  },
+  "run_at": "2026-05-03T20:49:33.298859+00:00",
+  "code_sha": "c8863e8",
+  "agent": "Devon-4234",
+  "notes": ""
+}

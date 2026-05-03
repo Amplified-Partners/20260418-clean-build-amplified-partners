@@ -1,0 +1,36 @@
+{
+  "insight_id": "INS-041",
+  "title": "Allergen Risk Scoring",
+  "vertical": "hospitality",
+  "band": "PLAUSIBLE",
+  "test_class": "existence",
+  "rationale": "1/2 probes returned usable data; remaining probes returned empty or coarser-than-claimed results. | FSA Food Alerts RSS reachable (status 404). | FHRS BusinessTypes catalogue (15 entries).",
+  "evidence": [
+    {
+      "source": "fsa.alerts_rss",
+      "url": "https://www.food.gov.uk/news-alerts/rss/alerts",
+      "accessed_at": "2026-05-03T20:49:34.496478+00:00",
+      "http_status": 404,
+      "response_sha256": "b2afc22062d555aa74222e53d4b48245f27fb42a6a9e252ce8fedee1cc0ec2b9",
+      "query_params": {},
+      "summary": "Food Alerts RSS"
+    },
+    {
+      "source": "fsa.fhrs",
+      "url": "https://api.ratings.food.gov.uk/BusinessTypes",
+      "accessed_at": "2026-05-03T20:49:25.696500+00:00",
+      "http_status": 200,
+      "response_sha256": "d252212f2b3bafe0786e36cec7324095f022ba390aef6fea6fcf3639a0befd3d",
+      "query_params": {},
+      "summary": "15 business types"
+    }
+  ],
+  "metrics": {
+    "probes_total": 2,
+    "probes_passed": 1
+  },
+  "run_at": "2026-05-03T20:49:34.497292+00:00",
+  "code_sha": "c8863e8",
+  "agent": "Devon-4234",
+  "notes": ""
+}

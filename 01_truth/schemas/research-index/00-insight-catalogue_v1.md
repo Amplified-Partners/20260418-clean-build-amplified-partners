@@ -732,6 +732,7 @@ signed_by: "Devon, 2026-04-25, devin-992682c244cf444f91e0a516498afbfd"
 **PUDDING BRIDGE:** The same gradient-boosting architecture that DeepMind used to predict protein folding is available to a Geordie pub to predict how many portions of chips to order. The infrastructure is identical; the data is different; the method is the same
 **SOURCE DOC:** 05
 **STATUS:** CONFIRMED-EXTERNAL
+**VALIDATION:** PENDING-API-KEY (test_class=existence, run 2026-05-03; see 03_shadow/validators/hospitality/INS-033.json)
 
 ---
 
@@ -751,6 +752,7 @@ signed_by: "Devon, 2026-04-25, devin-992682c244cf444f91e0a516498afbfd"
 **PUDDING BRIDGE:** The FSA FHRS API is a freely available competitive intelligence tool that shows the hygiene score of every competitor within 1km, updated daily. Most operators do not know their competitors' scores
 **SOURCE DOC:** 05
 **STATUS:** CONFIRMED-EXTERNAL
+**VALIDATION:** PROVEN (test_class=existence, run 2026-05-03; see 03_shadow/validators/hospitality/INS-034.json)
 
 ---
 
@@ -770,6 +772,7 @@ signed_by: "Devon, 2026-04-25, devin-992682c244cf444f91e0a516498afbfd"
 **PUDDING BRIDGE:** Revenue management in hotels solved the no-show problem via deposits and dynamic pricing in the 1970s. The restaurant industry is 40 years behind the same discovery. The same data architecture — booking lead time × demographic × weather × event calendar — predicts restaurant no-shows with the same accuracy as hotel no-shows
 **SOURCE DOC:** 05
 **STATUS:** CONFIRMED-EXTERNAL
+**VALIDATION:** PENDING-API-KEY (test_class=existence, run 2026-05-03; see 03_shadow/validators/hospitality/INS-035.json)
 
 ---
 
@@ -789,6 +792,7 @@ signed_by: "Devon, 2026-04-25, devin-992682c244cf444f91e0a516498afbfd"
 **PUDDING BRIDGE:** BCG's 1970 portfolio matrix (stars, cash cows, question marks, dogs) applied to weapons procurement for the US defence department is the same framework that tells a Newcastle gastropub which dishes to retire. The mathematics of portfolio optimisation is invariant to the asset class
 **SOURCE DOC:** 05
 **STATUS:** CONFIRMED-EXTERNAL
+**VALIDATION:** PLAUSIBLE (test_class=existence, run 2026-05-03; see 03_shadow/validators/hospitality/INS-036.json)
 
 ---
 
@@ -808,6 +812,7 @@ signed_by: "Devon, 2026-04-25, devin-992682c244cf444f91e0a516498afbfd"
 **PUDDING BRIDGE:** The same smart-meter API that National Grid uses to manage demand-side response (paying factories to switch off equipment at peak grid stress) is the API behind your commercial electricity meter. Your venue can use it to diagnose wasteful patterns in your own energy use without any additional hardware
 **SOURCE DOC:** 05
 **STATUS:** CONFIRMED-EXTERNAL
+**VALIDATION:** PLAUSIBLE (test_class=existence, run 2026-05-03; see 03_shadow/validators/hospitality/INS-037.json)
 
 ---
 
@@ -827,6 +832,7 @@ signed_by: "Devon, 2026-04-25, devin-992682c244cf444f91e0a516498afbfd"
 **PUDDING BRIDGE:** Netflix's talent retention system (measuring employee engagement through output quality and project acceptance rate) → hospitality staff early warning. The engagement signals are rota-native: a chef who stops accepting extra shifts has mentally left before they hand in their notice
 **SOURCE DOC:** 05
 **STATUS:** CONFIRMED-EXTERNAL
+**VALIDATION:** PROVEN (test_class=existence, run 2026-05-03; see 03_shadow/validators/hospitality/INS-038.json)
 
 ---
 
@@ -846,6 +852,7 @@ signed_by: "Devon, 2026-04-25, devin-992682c244cf444f91e0a516498afbfd"
 **PUDDING BRIDGE:** The NHS publishes regional norovirus and flu activity data weekly. The same data that tells a hospital to prepare additional beds tells a restaurant to arrange standby waitstaff. The causal chain: community illness spike → kitchen/front-of-house illness 5–10 days later → understaffed Saturday service
 **SOURCE DOC:** 05
 **STATUS:** HYPOTHESIS
+**VALIDATION:** PLAUSIBLE (test_class=existence, run 2026-05-03; see 03_shadow/validators/hospitality/INS-039.json)
 
 ---
 
@@ -865,6 +872,7 @@ signed_by: "Devon, 2026-04-25, devin-992682c244cf444f91e0a516498afbfd"
 **PUDDING BRIDGE:** Benford's Law was developed to catch financial fraud in corporate accounts (Frank Benford, 1938) → used by HMRC to audit tax returns → applies equally to a pub till. The frequency distribution of naturally occurring numbers has a predictable shape; manipulated data breaks that shape
 **SOURCE DOC:** 05
 **STATUS:** CONFIRMED-EXTERNAL
+**VALIDATION:** PLAUSIBLE (test_class=existence, run 2026-05-03; see 03_shadow/validators/hospitality/INS-040.json)
 
 ---
 
@@ -884,6 +892,7 @@ signed_by: "Devon, 2026-04-25, devin-992682c244cf444f91e0a516498afbfd"
 **PUDDING BRIDGE:** NASA's FMEA process (developed to prevent single-point failures in spacecraft) → nuclear power plant safety management → Natasha's Law allergen compliance. The same logic of identifying failure modes, scoring their probability and consequence, and implementing safeguards applies from spacecraft to a sandwich preparation counter
 **SOURCE DOC:** 05
 **STATUS:** PROVEN
+**VALIDATION:** PLAUSIBLE (test_class=existence, run 2026-05-03; see 03_shadow/validators/hospitality/INS-041.json)
 
 ---
 
@@ -903,6 +912,7 @@ signed_by: "Devon, 2026-04-25, devin-992682c244cf444f91e0a516498afbfd"
 **PUDDING BRIDGE:** The IDOX licensing register is also a competitive intelligence tool — it shows which competitors have received objections, noise complaints, or are facing licence reviews. A competitor's licence review is a potential market share window
 **SOURCE DOC:** 05
 **STATUS:** PROVEN
+**VALIDATION:** PLAUSIBLE (test_class=existence, run 2026-05-03; see 03_shadow/validators/hospitality/INS-042.json)
 
 ---
 
@@ -922,6 +932,7 @@ signed_by: "Devon, 2026-04-25, devin-992682c244cf444f91e0a516498afbfd"
 **PUDDING BRIDGE:** The same VOA database that determines your business rates bill shows every comparable property within 200 metres with their rateable values. Rating surveyors charge £2,000–£5,000 to make the comparison you can do yourself in 30 minutes with a spreadsheet
 **SOURCE DOC:** 05
 **STATUS:** PROVEN
+**VALIDATION:** PLAUSIBLE (test_class=existence, run 2026-05-03; see 03_shadow/validators/hospitality/INS-043.json)
 
 ---
 
@@ -941,6 +952,7 @@ signed_by: "Devon, 2026-04-25, devin-992682c244cf444f91e0a516498afbfd"
 **PUDDING BRIDGE:** The delivery aggregator business model (high commission, lock-in via exclusivity clauses, data on your own customers that you cannot access) is structurally similar to Amazon Marketplace for retailers — a platform that provides demand at the cost of margin and customer data. The recipe to escape is the same in both cases: build a direct channel before your margin disappears entirely
 **SOURCE DOC:** 05
 **STATUS:** PROVEN
+**VALIDATION:** PLAUSIBLE (test_class=existence, run 2026-05-03; see 03_shadow/validators/hospitality/INS-044.json)
 
 ---
 
@@ -960,6 +972,7 @@ signed_by: "Devon, 2026-04-25, devin-992682c244cf444f91e0a516498afbfd"
 **PUDDING BRIDGE:** Google's direction request data is the highest-intent commercial signal in hospitality — a customer who has asked for directions to your restaurant is more likely to arrive than a customer who has clicked an ad. The funnel from direction request to cover is measurable and has never been analysed by most operators
 **SOURCE DOC:** 05
 **STATUS:** CONFIRMED-EXTERNAL
+**VALIDATION:** PLAUSIBLE (test_class=existence, run 2026-05-03; see 03_shadow/validators/hospitality/INS-045.json)
 
 ---
 
@@ -979,6 +992,7 @@ signed_by: "Devon, 2026-04-25, devin-992682c244cf444f91e0a516498afbfd"
 **PUDDING BRIDGE:** TripAdvisor's ranking algorithm explicitly weights response rate and response quality. A venue that responds to reviews consistently outranks a venue with a marginally higher static rating but no response habit. The algorithm rewards the behaviour, not the outcome
 **SOURCE DOC:** 05
 **STATUS:** CONFIRMED-EXTERNAL
+**VALIDATION:** PLAUSIBLE (test_class=existence, run 2026-05-03; see 03_shadow/validators/hospitality/INS-046.json)
 
 ---
 
@@ -998,6 +1012,7 @@ signed_by: "Devon, 2026-04-25, devin-992682c244cf444f91e0a516498afbfd"
 **PUDDING BRIDGE:** The same event calendar that tells the Newcastle Marriott to price hotel rooms at 3× their normal rate on Bigg Market weekends tells you to stock an extra keg of the away team's local ale. The data is public; the uplift is real; almost no independent operators systematically plan for it
 **SOURCE DOC:** 05
 **STATUS:** CONFIRMED-EXTERNAL
+**VALIDATION:** PLAUSIBLE (test_class=existence, run 2026-05-03; see 03_shadow/validators/hospitality/INS-047.json)
 
 ---
 
@@ -1017,6 +1032,7 @@ signed_by: "Devon, 2026-04-25, devin-992682c244cf444f91e0a516498afbfd"
 **PUDDING BRIDGE:** The academic calendar is the most predictable demand cycle in the hospitality sector — every date is published 18 months in advance. A venue near Newcastle University that has not built its annual plan around this calendar is ignoring the most reliable forward signal available
 **SOURCE DOC:** 05
 **STATUS:** PROVEN
+**VALIDATION:** PLAUSIBLE (test_class=existence, run 2026-05-03; see 03_shadow/validators/hospitality/INS-048.json)
 
 ---
 
@@ -1036,6 +1052,7 @@ signed_by: "Devon, 2026-04-25, devin-992682c244cf444f91e0a516498afbfd"
 **PUDDING BRIDGE:** The Nexus Metro Real-Time API is the same data that Uber uses to surge pricing during service disruptions. A pub near Jesmond Metro can use the same API to decide whether to put on an extra member of bar staff or to proactively offer Deliveroo capacity when the line goes down
 **SOURCE DOC:** 05
 **STATUS:** HYPOTHESIS
+**VALIDATION:** PLAUSIBLE (test_class=existence, run 2026-05-03; see 03_shadow/validators/hospitality/INS-049.json)
 
 ---
 
@@ -1055,6 +1072,7 @@ signed_by: "Devon, 2026-04-25, devin-992682c244cf444f91e0a516498afbfd"
 **PUDDING BRIDGE:** DEFRA's DAQI API is primarily used by NHS health apps to warn asthma patients about air quality. The same hourly data predicts whether your beer garden will be full or empty tomorrow afternoon
 **SOURCE DOC:** 05
 **STATUS:** HYPOTHESIS
+**VALIDATION:** PROVEN (test_class=existence, run 2026-05-03; see 03_shadow/validators/hospitality/INS-050.json)
 
 ---
 
@@ -1074,6 +1092,7 @@ signed_by: "Devon, 2026-04-25, devin-992682c244cf444f91e0a516498afbfd"
 **PUDDING BRIDGE:** The ONS BICS survey is essentially the same leading indicator framework that Goldman Sachs uses to adjust its GDP forecasts quarterly — but published free, with a 2-week lag, and directly applicable to a 40-cover restaurant deciding whether to launch a prix fixe menu next month
 **SOURCE DOC:** 05
 **STATUS:** CONFIRMED-EXTERNAL
+**VALIDATION:** PROVEN (test_class=existence, run 2026-05-03; see 03_shadow/validators/hospitality/INS-051.json)
 
 ---
 
@@ -1093,6 +1112,7 @@ signed_by: "Devon, 2026-04-25, devin-992682c244cf444f91e0a516498afbfd"
 **PUDDING BRIDGE:** The deposit model solved the ghost-booking problem in theatre ticketing, airline seating, and hotel reservations before restaurants adopted it. The economics are identical: a committed customer who has skin in the game shows up. A customer who has clicked "book" for free treats the booking as optional
 **SOURCE DOC:** 05
 **STATUS:** CONFIRMED-EXTERNAL
+**VALIDATION:** PLAUSIBLE (test_class=existence, run 2026-05-03; see 03_shadow/validators/hospitality/INS-052.json)
 
 ---
 
@@ -1112,6 +1132,7 @@ signed_by: "Devon, 2026-04-25, devin-992682c244cf444f91e0a516498afbfd"
 **PUDDING BRIDGE:** The Employment Tribunal decisions database on GOV.UK shows the exact value of claims upheld under the Tipping Act in other venues. It is the clearest possible precedent data for why this compliance audit should be done this week rather than next quarter
 **SOURCE DOC:** 05
 **STATUS:** PROVEN
+**VALIDATION:** PROVEN (test_class=existence, run 2026-05-03; see 03_shadow/validators/hospitality/INS-053.json)
 
 ---
 
@@ -1131,6 +1152,7 @@ signed_by: "Devon, 2026-04-25, devin-992682c244cf444f91e0a516498afbfd"
 **PUDDING BRIDGE:** Revenue management was invented in the hotel industry. Every major hotel chain has been doing this since the 1980s. The exact same methodology — book-pace × event calendar × competitor rate cluster — is available to a 10-room B&B in Jesmond using OTA public pricing data and a spreadsheet
 **SOURCE DOC:** 05
 **STATUS:** CONFIRMED-EXTERNAL
+**VALIDATION:** PLAUSIBLE (test_class=existence, run 2026-05-03; see 03_shadow/validators/hospitality/INS-054.json)
 
 ---
 
@@ -1154,6 +1176,7 @@ signed_by: "Devon, 2026-04-25, devin-992682c244cf444f91e0a516498afbfd"
 **PUDDING BRIDGE:** The format floor is the financial equivalent of a dam: the moment it is breached, the waters above (revenue) have nowhere to go except through the hole (losses). The stock-take is the only measurement device that detects the breach before the dam fails
 **SOURCE DOC:** 05
 **STATUS:** CONFIRMED-EXTERNAL
+**VALIDATION:** PENDING-API-KEY (test_class=existence, run 2026-05-03; see 03_shadow/validators/hospitality/INS-055.json)
 
 ---
 
@@ -1173,6 +1196,7 @@ signed_by: "Devon, 2026-04-25, devin-992682c244cf444f91e0a516498afbfd"
 **PUDDING BRIDGE:** The 90-day tenure cliff is documented across service industries globally. A venue below this threshold is not managing turnover — it is managing a crisis. The data is in the HR system; the pattern has never been calculated
 **SOURCE DOC:** 05
 **STATUS:** CONFIRMED-EXTERNAL
+**VALIDATION:** PLAUSIBLE (test_class=existence, run 2026-05-03; see 03_shadow/validators/hospitality/INS-056.json)
 
 ---
 
@@ -1192,6 +1216,7 @@ signed_by: "Devon, 2026-04-25, devin-992682c244cf444f91e0a516498afbfd"
 **PUDDING BRIDGE:** A venue that allows its aggregator dependency to grow past 30% has handed its customer relationship to a third party. The same dynamic destroyed independent music stores when they allowed Amazon Marketplace to become their primary channel. The delivery aggregator is a distribution partner, not a business model
 **SOURCE DOC:** 05
 **STATUS:** CONFIRMED-EXTERNAL
+**VALIDATION:** PLAUSIBLE (test_class=existence, run 2026-05-03; see 03_shadow/validators/hospitality/INS-057.json)
 
 ---
 
@@ -1211,6 +1236,7 @@ signed_by: "Devon, 2026-04-25, devin-992682c244cf444f91e0a516498afbfd"
 **PUDDING BRIDGE:** The six-week drift in review language is the hospitality equivalent of a cockpit instrument warning light — it fires before the engine fails, not after. The engine failure is the rating drop; the warning light is the topic drift in customer language
 **SOURCE DOC:** 05
 **STATUS:** CONFIRMED-EXTERNAL
+**VALIDATION:** PLAUSIBLE (test_class=existence, run 2026-05-03; see 03_shadow/validators/hospitality/INS-058.json)
 
 ---
 
@@ -1230,6 +1256,7 @@ signed_by: "Devon, 2026-04-25, devin-992682c244cf444f91e0a516498afbfd"
 **PUDDING BRIDGE:** HMRC's preferential creditor status (reinstated 2020) means that in a liquidation, HMRC is paid before the bank's floating charge — a structural change that makes HMRC arrears more dangerous than pre-2020. The order of creditor priority is the bankruptcy map that tells you which debts to pay first
 **SOURCE DOC:** 05
 **STATUS:** PROVEN
+**VALIDATION:** PLAUSIBLE (test_class=existence, run 2026-05-03; see 03_shadow/validators/hospitality/INS-059.json)
 
 ---
 

@@ -1,0 +1,36 @@
+{
+  "insight_id": "INS-043",
+  "title": "Business Rates Revaluation Impact Modelling",
+  "vertical": "hospitality",
+  "band": "PLAUSIBLE",
+  "test_class": "existence",
+  "rationale": "1/2 probes returned usable data; remaining probes returned empty or coarser-than-claimed results. | VOA find-business-rates page reachable (status 200). | VOA bulk-download index page reachable (status 404).",
+  "evidence": [
+    {
+      "source": "voa.search",
+      "url": "https://www.tax.service.gov.uk/business-rates-find/search",
+      "accessed_at": "2026-05-03T20:49:37.609842+00:00",
+      "http_status": 200,
+      "response_sha256": "796404b314eb9fd6c641bda10cafa28eea5afdb175a23c9f3f1fcc14c54ddd8c",
+      "query_params": {},
+      "summary": "Search landing"
+    },
+    {
+      "source": "voa.bulk",
+      "url": "https://voaratinglists.blob.core.windows.net/html/rlidx.htm",
+      "accessed_at": "2026-05-03T20:49:38.422109+00:00",
+      "http_status": 404,
+      "response_sha256": "8190056d1dedb2fedb7b847339491918a94c0940e68aec220656d96094d47931",
+      "query_params": {},
+      "summary": "Bulk index"
+    }
+  ],
+  "metrics": {
+    "probes_total": 2,
+    "probes_passed": 1
+  },
+  "run_at": "2026-05-03T20:49:38.422469+00:00",
+  "code_sha": "c8863e8",
+  "agent": "Devon-4234",
+  "notes": ""
+}

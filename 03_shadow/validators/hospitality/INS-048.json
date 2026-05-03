@@ -1,0 +1,36 @@
+{
+  "insight_id": "INS-048",
+  "title": "Student Term-Time / Holiday Flex Modelling (Hospitality)",
+  "vertical": "hospitality",
+  "band": "PLAUSIBLE",
+  "test_class": "existence",
+  "rationale": "1/2 probes returned usable data; remaining probes returned empty or coarser-than-claimed results. | Newcastle University term dates page status 404. | ONS population estimates packages found: 5.",
+  "evidence": [
+    {
+      "source": "ncl.ac.uk",
+      "url": "https://www.ncl.ac.uk/students/progress/student-resources/dates/",
+      "accessed_at": "2026-05-03T20:49:42.712288+00:00",
+      "http_status": 404,
+      "response_sha256": "4bddee1fd4e42290e5a999707bc4f59a59a9c19608aa52c2cb496af9a7c5ecb7",
+      "query_params": {},
+      "summary": "Term dates"
+    },
+    {
+      "source": "data_gov_uk.ons_pop",
+      "url": "https://ckan.publishing.service.gov.uk/api/3/action/package_search?q=ONS+population+estimates&rows=5",
+      "accessed_at": "2026-05-03T20:49:43.837842+00:00",
+      "http_status": 200,
+      "response_sha256": "a7d838a142cd72420997ac9f936a2a7c6ac19ef0737f90d772262fe1fae545db",
+      "query_params": {},
+      "summary": "5 packages"
+    }
+  ],
+  "metrics": {
+    "probes_total": 2,
+    "probes_passed": 1
+  },
+  "run_at": "2026-05-03T20:49:43.838557+00:00",
+  "code_sha": "c8863e8",
+  "agent": "Devon-4234",
+  "notes": ""
+}

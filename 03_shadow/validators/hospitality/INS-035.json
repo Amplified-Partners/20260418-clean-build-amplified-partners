@@ -1,0 +1,14 @@
+{
+  "insight_id": "INS-035",
+  "title": "No-Show Prediction and Deposit Policy Calibration (Hospitality)",
+  "vertical": "hospitality",
+  "band": "PENDING-API-KEY",
+  "test_class": "existence",
+  "rationale": "Validation of this insight requires the MET_OFFICE_API_KEY API key. Public leg requires a Met Office DataPoint forecast. Set the env var and rerun.",
+  "evidence": [],
+  "metrics": {},
+  "run_at": "2026-05-03T20:49:25.697583+00:00",
+  "code_sha": "c8863e8",
+  "agent": "Devon-4234",
+  "notes": "See README \u2014 request the key, store as an org-scoped secret, rerun the validator."
+}
