@@ -136,9 +136,14 @@ def run_INS_080() -> Verdict:
         else None
     )
     bundle = EvidenceBundle(items=[accounts_evidence, gazette_evidence])
+    notices_phrase = (
+        f"{notices_count} corporate-insolvency notices"
+        if isinstance(notices_count, int)
+        else "corporate-insolvency notices (count unavailable in this response)"
+    )
     finding = (
-        f"Companies House accounts data product reachable; Gazette returned "
-        f"{notices_count} corporate-insolvency notices in the queried slice."
+        "Companies House accounts data product reachable; "
+        f"Gazette returned {notices_phrase} in the queried slice."
     )
     notes = [
         "Per-firm Altman Z'' screening at scale requires the Companies House "

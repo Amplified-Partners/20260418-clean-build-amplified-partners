@@ -2,7 +2,7 @@
   "band": "PLAUSIBLE",
   "evidence": [
     {
-      "accessed_at": "2026-05-03T20:53:47+00:00",
+      "accessed_at": "2026-05-03T21:02:25+00:00",
       "content_sha256": "8ab6705c45b1208bc899b5f715b138362dd63d0d7226c43849b08022f29d21e5",
       "raw_path": "~/.cache/amp-validators/21e2fb941e6003f8c3eb14f4ce074bdfd46cdfd4332d4a511d72a34f94a02e94.bin",
       "source": "Companies House bulk data products",
@@ -17,8 +17,8 @@
     "Methodology (referral-graph analysis) is supported by published social-network-analysis literature cited in catalogue entry.",
     "LinkedIn data only available via paid Sales Navigator / scraping; neither qualifies as open public data."
   ],
-  "run_at": "2026-05-03T20:53:47+00:00",
-  "signed_by": "Devon-ab74 (devin-ab740f2c78ee477a9c16ea3b6ed15293) - 2026-05-03",
+  "run_at": "2026-05-03T21:02:25+00:00",
+  "signed_by": "Devon-ab74 | 2026-05-03 | devin-ab740f2c78ee477a9c16ea3b6ed15293",
   "statistic": {
     "public_legs_blocked": 1,
     "public_legs_validated": 1

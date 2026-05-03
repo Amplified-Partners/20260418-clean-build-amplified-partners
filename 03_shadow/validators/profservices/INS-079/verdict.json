@@ -2,16 +2,16 @@
   "band": "PROVEN",
   "evidence": [
     {
-      "accessed_at": "2026-05-03T20:53:47+00:00",
-      "content_sha256": "1a76655bb9ce173a2a555be3a1fb05718306c571ac36c9b24569f95fa1278126",
+      "accessed_at": "2026-05-03T21:02:22+00:00",
+      "content_sha256": "8507faac096bee3476835ae02e9f4658d8009f44db066156d3923d60fb02a848",
       "raw_path": "~/.cache/amp-validators/3678920a25f012185f103c32abdd38b0343cbee0cd63929fdcd7c0c184b1f1db.bin",
       "source": "ONS Business Demography (latest release)",
       "summary": "ONS Business Demography statistical release",
       "url": "https://www.ons.gov.uk/businessindustryandtrade/business/activitysizeandlocation/bulletins/businessdemography/latest"
     },
     {
-      "accessed_at": "2026-05-03T20:53:47+00:00",
-      "content_sha256": "d480fd24ceea49ed6cdb6764aaa72d34bf38ffafcf97e3a66f56840a524346aa",
+      "accessed_at": "2026-05-03T21:02:23+00:00",
+      "content_sha256": "4e8d515751bad08516c0f7701ac9da3043c04910387c94d77fb2cce005db08ad",
       "raw_path": "~/.cache/amp-validators/6b7b4406e8b43d6029790db636bce2a324ec1207ef81c26f9a59a8ac60d91c3e.bin",
       "source": "DBT Business Population Estimates 2024",
       "summary": "DBT Business Population Estimates 2024 publication page",
@@ -22,11 +22,13 @@
   "insight_id": "INS-079",
   "method": "Confirm ONS Business Demography + DBT Business Population Estimates publish sector-level firm formation/dissolution data.",
   "notes": [],
-  "run_at": "2026-05-03T20:53:47+00:00",
-  "signed_by": "Devon-ab74 (devin-ab740f2c78ee477a9c16ea3b6ed15293) - 2026-05-03",
+  "run_at": "2026-05-03T21:02:23+00:00",
+  "signed_by": "Devon-ab74 | 2026-05-03 | devin-ab740f2c78ee477a9c16ea3b6ed15293",
   "statistic": {
     "checks_failed": 0,
-    "checks_passed": 2
+    "checks_passed": 2,
+    "tokens_checked": 3,
+    "tokens_missing": 0
   },
   "test_class": "existence",
   "vertical": "profservices"

@@ -19,16 +19,19 @@ Signed-by: Devon-ab74 | 2026-05-03 | devin-ab740f2c78ee477a9c16ea3b6ed15293
 from __future__ import annotations
 
 import json
+import os
 import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 # Make the 02_build directory importable so `validators` resolves regardless
 # of the test runner's cwd.
 _THIS_DIR = Path(__file__).resolve().parent
 sys.path.insert(0, str(_THIS_DIR.parent))
 
+from validators import cli as validators_cli  # noqa: E402
 from validators.cache import _cache_key  # noqa: E402
 from validators.core import (  # noqa: E402
     EvidenceBundle,
@@ -36,6 +39,7 @@ from validators.core import (  # noqa: E402
     TestClass,
     Verdict,
     VerdictBand,
+    _default_signed_by,
     catalogue_line,
     write_verdict,
 )
@@ -297,6 +301,91 @@ class RunnerCoverageTest(unittest.TestCase):
     def test_all_sixteen_profservices_runners_registered(self) -> None:
         expected = {f"INS-{n:03d}" for n in range(79, 95)}
         self.assertEqual(set(RUNNERS), expected)
+
+
+class SignedByDefaultTest(unittest.TestCase):
+    def test_reads_from_env_when_set(self) -> None:
+        with mock.patch.dict(os.environ, {"AMP_SIGNED_BY": "Tester | 2099-01-01"}):
+            self.assertEqual(_default_signed_by(), "Tester | 2099-01-01")
+
+    def test_unsigned_placeholder_when_env_missing(self) -> None:
+        with mock.patch.dict(os.environ, {}, clear=True):
+            self.assertIn("unsigned", _default_signed_by())
+
+
+class CatalogueLineFormatTest(unittest.TestCase):
+    def test_evidence_path_is_backticked(self) -> None:
+        bundle = EvidenceBundle()
+        bundle.add(_evidence())
+        verdict = Verdict(
+            insight_id="INS-079",
+            vertical=VERTICAL,
+            band=VerdictBand.PROVEN,
+            test_class=TestClass.EXISTENCE,
+            method="m",
+            finding="f",
+            statistic={},
+            evidence=bundle,
+            notes=[],
+        )
+        line = catalogue_line(verdict, "03_shadow/validators/profservices/INS-079/verdict.json")
+        self.assertIn("`03_shadow/validators/profservices/INS-079/verdict.json`", line)
+
+
+class ExistenceStatisticConsistencyTest(unittest.TestCase):
+    def test_disproven_statistics_count_checks_not_tokens(self) -> None:
+        # One check with 3 must_contain tokens, all of which are missing.
+        # Old buggy code would compute checks_passed = 1 - 3 = -2.
+        body = b"empty"
+        verdict = existence_test(
+            insight_id="INS-TEST",
+            vertical=VERTICAL,
+            method="synthetic",
+            body=body,
+            evidence_item=_evidence(),
+            checks=[
+                ExistenceCheck("triple-token check", ("alpha", "beta", "gamma")),
+            ],
+        )
+        self.assertEqual(verdict.band, VerdictBand.DISPROVEN)
+        self.assertEqual(verdict.statistic["checks_passed"], 0)
+        self.assertEqual(verdict.statistic["checks_failed"], 1)
+        self.assertEqual(verdict.statistic["tokens_checked"], 3)
+        self.assertEqual(verdict.statistic["tokens_missing"], 3)
+        self.assertGreaterEqual(verdict.statistic["checks_passed"], 0)
+
+
+class CliInsightArgTest(unittest.TestCase):
+    """Regression test for argparse repeated `--insight` flag handling."""
+
+    def test_repeated_insight_flag_extends(self) -> None:
+        parser = validators_cli.build_parser()
+        ns = parser.parse_args(
+            [
+                "run",
+                "--vertical",
+                "profservices",
+                "--insight",
+                "INS-079",
+                "--insight",
+                "INS-093",
+            ]
+        )
+        self.assertEqual(ns.insight, ["INS-079", "INS-093"])
+
+    def test_multi_value_insight_flag(self) -> None:
+        parser = validators_cli.build_parser()
+        ns = parser.parse_args(
+            [
+                "run",
+                "--vertical",
+                "profservices",
+                "--insight",
+                "INS-079",
+                "INS-093",
+            ]
+        )
+        self.assertEqual(ns.insight, ["INS-079", "INS-093"])
 
 
 if __name__ == "__main__":

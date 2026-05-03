@@ -2,8 +2,8 @@
   "band": "PROVEN",
   "evidence": [
     {
-      "accessed_at": "2026-05-03T20:53:47+00:00",
-      "content_sha256": "5bc930873e9d95eff247dee0f0410f37dd5412ed29410f5820715d30db0f8b7f",
+      "accessed_at": "2026-05-03T21:02:27+00:00",
+      "content_sha256": "0d06bc6e02df230a5b57b1fd7e26880aac292f43c7d63f5508689eb53359c364",
       "raw_path": "~/.cache/amp-validators/d1d3bf0b9654d2b212dbad0127d1602ccfffb1d15c16ef719b9be3f07e9e0955.bin",
       "source": "ONS Services Producer Price Indices",
       "summary": "ONS Services PPI latest bulletin (legal/accountancy series)",
@@ -14,11 +14,13 @@
   "insight_id": "INS-087",
   "method": "Confirm ONS SPPI bulletin publishes a legal/accountancy services price index (open-data benchmark for fee elasticity).",
   "notes": [],
-  "run_at": "2026-05-03T20:53:47+00:00",
-  "signed_by": "Devon-ab74 (devin-ab740f2c78ee477a9c16ea3b6ed15293) - 2026-05-03",
+  "run_at": "2026-05-03T21:02:27+00:00",
+  "signed_by": "Devon-ab74 | 2026-05-03 | devin-ab740f2c78ee477a9c16ea3b6ed15293",
   "statistic": {
     "checks_failed": 0,
-    "checks_passed": 1
+    "checks_passed": 1,
+    "tokens_checked": 2,
+    "tokens_missing": 0
   },
   "test_class": "existence",
   "vertical": "profservices"

@@ -2,8 +2,8 @@
   "band": "PLAUSIBLE",
   "evidence": [
     {
-      "accessed_at": "2026-05-03T20:53:47+00:00",
-      "content_sha256": "4fb03974bf8f2b7266c5f2ca66613ce35df1f93dbdacb31c56dabe685313ae80",
+      "accessed_at": "2026-05-03T21:02:31+00:00",
+      "content_sha256": "3cc51fe1dda66c51213f34c0238fea1b9f11fff180a5e8e51ff63c830f9d826e",
       "raw_path": "~/.cache/amp-validators/1394fffd26e5488a6451af1a088213bb8cfe99f4a8056b21c1c9e6e44ebdd1bb.bin",
       "source": "Legal Services Board (gov.uk)",
       "summary": "LSB gov.uk landing page (publications + regulatory news)",
@@ -16,8 +16,8 @@
   "notes": [
     "Recipe needs an internal engagement-letter corpus + matched write-off ledger. Public data confirms the rules, not the regression coefficients."
   ],
-  "run_at": "2026-05-03T20:53:47+00:00",
-  "signed_by": "Devon-ab74 (devin-ab740f2c78ee477a9c16ea3b6ed15293) - 2026-05-03",
+  "run_at": "2026-05-03T21:02:31+00:00",
+  "signed_by": "Devon-ab74 | 2026-05-03 | devin-ab740f2c78ee477a9c16ea3b6ed15293",
   "statistic": {
     "client_data_required": true,
     "public_legs_validated": 1

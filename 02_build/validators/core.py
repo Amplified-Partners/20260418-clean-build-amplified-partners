@@ -10,11 +10,28 @@ Signed-by: Devon-ab74 (devin-ab740f2c78ee477a9c16ea3b6ed15293) - 2026-05-03
 from __future__ import annotations
 
 import json
+import os
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
 from enum import Enum
 from pathlib import Path
 from typing import Any
+
+
+def _default_signed_by() -> str:
+    """Resolve the agent attribution at verdict-creation time.
+
+    Reads ``AMP_SIGNED_BY`` from the environment so future agents (running
+    on Beast cron, in a different Devin session, etc.) attribute their
+    verdicts to themselves rather than baking in the original implementer.
+    Falls back to a clearly-marked placeholder if the env var is unset so
+    missing attribution is visible at review time rather than silently
+    inheriting a stale signature.
+    """
+    sig = os.environ.get("AMP_SIGNED_BY")
+    if sig:
+        return sig
+    return "unsigned (set AMP_SIGNED_BY=<agent> | <date> | <session>)"
 
 
 class VerdictBand(str, Enum):
@@ -72,9 +89,7 @@ class Verdict:
     run_at: str = field(
         default_factory=lambda: datetime.now(tz=timezone.utc).isoformat(timespec="seconds")
     )
-    signed_by: str = (
-        "Devon-ab74 (devin-ab740f2c78ee477a9c16ea3b6ed15293) - 2026-05-03"
-    )
+    signed_by: str = field(default_factory=_default_signed_by)
 
     def to_dict(self) -> dict[str, Any]:
         d = asdict(self)
@@ -119,5 +134,5 @@ def catalogue_line(verdict: Verdict, evidence_relpath: str) -> str:
     accessed = verdict.run_at.split("T", 1)[0]
     return (
         f"**VALIDATION:** {verdict.band.value} | {verdict.test_class.value} "
-        f"| accessed {accessed} | evidence: {evidence_relpath}"
+        f"| accessed {accessed} | evidence: `{evidence_relpath}`"
     )

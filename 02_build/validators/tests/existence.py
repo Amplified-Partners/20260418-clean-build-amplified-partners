@@ -44,17 +44,23 @@ def existence_test(
     the claim was wrong about what it contained).
     """
     text = body.decode("utf-8", errors="replace") if isinstance(body, bytes) else body
-    missing: list[str] = []
+    failed_check_descriptions: list[str] = []
+    missing_tokens: list[str] = []
     for check in checks:
+        check_failed = False
         for needle in check.must_contain:
             if needle not in text:
-                missing.append(f"{check.description}: '{needle}'")
+                missing_tokens.append(f"{check.description}: '{needle}'")
+                check_failed = True
+        if check_failed:
+            failed_check_descriptions.append(check.description)
 
     bundle = EvidenceBundle(items=[evidence_item, *(extra_evidence or [])])
+    total_tokens = sum(len(c.must_contain) for c in checks)
 
-    if not missing:
+    if not missing_tokens:
         finding = (
-            f"All {sum(len(c.must_contain) for c in checks)} required tokens "
+            f"All {total_tokens} required tokens "
             "present in the public source response."
         )
         if not any(c.must_contain for c in checks):
@@ -66,7 +72,12 @@ def existence_test(
             test_class=TestClass.EXISTENCE,
             method=method,
             finding=finding,
-            statistic={"checks_passed": len(checks), "checks_failed": 0},
+            statistic={
+                "checks_passed": len(checks),
+                "checks_failed": 0,
+                "tokens_checked": total_tokens,
+                "tokens_missing": 0,
+            },
             evidence=bundle,
         )
 
@@ -76,11 +87,13 @@ def existence_test(
         band=VerdictBand.DISPROVEN,
         test_class=TestClass.EXISTENCE,
         method=method,
-        finding=f"{len(missing)} required tokens missing: {missing[:5]}",
+        finding=f"{len(missing_tokens)} required tokens missing: {missing_tokens[:5]}",
         statistic={
-            "checks_passed": len(checks) - len(missing),
-            "checks_failed": len(missing),
-            "missing": missing,
+            "checks_passed": len(checks) - len(failed_check_descriptions),
+            "checks_failed": len(failed_check_descriptions),
+            "tokens_checked": total_tokens,
+            "tokens_missing": len(missing_tokens),
+            "missing": missing_tokens,
         },
         evidence=bundle,
     )

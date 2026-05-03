@@ -133,9 +133,14 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument("--vertical", required=True, help="profservices, trades, ...")
     run.add_argument(
         "--insight",
-        nargs="*",
+        action="extend",
+        nargs="+",
         default=None,
-        help="Optional list of INS-NNN to run; default = all in the vertical.",
+        help=(
+            "INS-NNN to run; repeatable and accepts multiple values per flag. "
+            "Examples: '--insight INS-079 INS-093' or "
+            "'--insight INS-079 --insight INS-093'. Default = all in the vertical."
+        ),
     )
     run.set_defaults(func=cmd_run)
 
