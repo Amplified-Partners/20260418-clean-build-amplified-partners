@@ -21,7 +21,7 @@
           "accessed_utc": "2026-05-03T21:40:07Z",
           "status": 200,
           "sha256": "2fa5478f1b55b43a990d294b08f4786ce66ac038b57b1ef66cde4837f6706b62",
-          "cached": false,
+          "cached": true,
           "sample": {
             "items": [
               {
@@ -56,7 +56,7 @@
           "accessed_utc": "2026-05-03T21:40:07Z",
           "status": 200,
           "sha256": "f4639f30028c17b9df0a548d9ffbafa507f2d993c868d7c18328820631b54ea8",
-          "cached": false,
+          "cached": true,
           "sample": {
             "items": [
               {
@@ -91,7 +91,7 @@
           "accessed_utc": "2026-05-03T21:40:07Z",
           "status": 200,
           "sha256": "22dbb731837454a7fa743170e54fba9e3450b4ba3cce66f0a233276ad703e1e3",
-          "cached": false,
+          "cached": true,
           "sample": {
             "items": [
               {
@@ -128,8 +128,8 @@
     "Client leg = loyalty-program incremental LTV requires control-group analysis on internal data; remains PLAUSIBLE in production but confirmable per-client."
   ],
   "confidence": 90,
-  "run_at_utc": "2026-05-03T21:40:07Z",
-  "git_sha": "28e71c408e8e9cd8996eb7a91fd63811a214a3ed",
+  "run_at_utc": "2026-05-03T21:54:36Z",
+  "git_sha": "1abab8c8082cb76a1ccd5557f71a33ae870e0fe8",
   "session_id": "devin-9a6bd256bd7c4a90a083a471fa94a810",
   "signed_by": "Devon-9a6b"
 }

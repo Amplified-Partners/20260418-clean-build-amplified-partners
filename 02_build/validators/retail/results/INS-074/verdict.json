@@ -59,8 +59,8 @@
     "Client leg (own Google Ads data) confirms efficiency at deploy time."
   ],
   "confidence": 80,
-  "run_at_utc": "2026-05-03T21:40:07Z",
-  "git_sha": "28e71c408e8e9cd8996eb7a91fd63811a214a3ed",
+  "run_at_utc": "2026-05-03T21:54:36Z",
+  "git_sha": "1abab8c8082cb76a1ccd5557f71a33ae870e0fe8",
   "session_id": "devin-9a6bd256bd7c4a90a083a471fa94a810",
   "signed_by": "Devon-9a6b"
 }

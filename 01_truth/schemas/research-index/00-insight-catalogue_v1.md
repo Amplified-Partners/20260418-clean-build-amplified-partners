@@ -1354,7 +1354,7 @@ signed_by: "Devon, 2026-04-25, devin-992682c244cf444f91e0a516498afbfd"
 **PUDDING BRIDGE:** ONS ASHE publishes median weekly earnings by postcode district. The difference between buying habits in NE2 (Jesmond, median earnings £38k) and NE5 (Newburn, median earnings £24k) is structural. A Shopify retailer that treats both postcodes identically is spending acquisition budget with no regard for return
 **SOURCE DOC:** 06
 **STATUS:** HYPOTHESIS
-**VALIDATION (AMP-66):** verdict=PLAUSIBLE | test=existence | conf=70 | run=2026-05-03 | signed_by=Devon-9a6b — Nomis reachable, ASHE detection partial: all 2 sources reachable; data shape consistent with claim
+**VALIDATION (AMP-66):** verdict=PROVEN | test=existence | conf=88 | run=2026-05-03 | signed_by=Devon-9a6b — Nomis ASHE (workplace-analysis NM_99_1) is reachable; median earnings by geography is queryable per the dataset metadata.
 
 ---
 

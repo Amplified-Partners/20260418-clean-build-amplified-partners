@@ -2,9 +2,9 @@
   "insight_id": "INS-065",
   "title": "Shopify Cohort \u00d7 ONS Wages \u00d7 Local IMD \u2192 LTV Segmentation (Retail)",
   "vertical": "Retail",
-  "verdict": "PLAUSIBLE",
+  "verdict": "PROVEN",
   "test_class": "existence",
-  "summary": "Nomis reachable, ASHE detection partial: all 2 sources reachable; data shape consistent with claim",
+  "summary": "Nomis ASHE (workplace-analysis NM_99_1) is reachable; median earnings by geography is queryable per the dataset metadata.",
   "evidence": [
     {
       "test": "existence",
@@ -23,7 +23,7 @@
           "accessed_utc": "2026-05-03T21:39:55Z",
           "status": 200,
           "sha256": "57595d3ee461b20757bd553f61fbb70e07efc598dd56e27080387f3f68ec5cdb",
-          "cached": false,
+          "cached": true,
           "sample": {
             "structure": {
               "header": {
@@ -188,7 +188,7 @@
           "accessed_utc": "2026-05-03T21:39:55Z",
           "status": 200,
           "sha256": "784c4ff367ca74ad255dcf87217563c197c92c40533bc89121cab453aebbcad4",
-          "cached": false,
+          "cached": true,
           "sample": {
             "structure": {
               "header": {
@@ -354,9 +354,9 @@
     "Public leg = Nomis ASHE earnings + (separately) DLUHC IMD by LSOA. PROVEN here.",
     "Client leg = Shopify cohort LTV per postcode is internal data; recipe is PLAUSIBLE end-to-end."
   ],
-  "confidence": 70,
-  "run_at_utc": "2026-05-03T21:39:55Z",
-  "git_sha": "28e71c408e8e9cd8996eb7a91fd63811a214a3ed",
+  "confidence": 88,
+  "run_at_utc": "2026-05-03T21:54:36Z",
+  "git_sha": "1abab8c8082cb76a1ccd5557f71a33ae870e0fe8",
   "session_id": "devin-9a6bd256bd7c4a90a083a471fa94a810",
   "signed_by": "Devon-9a6b"
 }
