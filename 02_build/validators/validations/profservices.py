@@ -15,6 +15,7 @@ Signed-by: Devon-ab74 (devin-ab740f2c78ee477a9c16ea3b6ed15293) - 2026-05-03
 
 from __future__ import annotations
 
+import urllib.error
 from collections.abc import Callable
 
 from ..cache import FetchBlockedError
@@ -548,10 +549,16 @@ def run_INS_094() -> Verdict:
     bulk_body, bulk_evidence = companies_house.bulk_index()
     # Nomis ASHE: occupation × industry × region. SDMX-JSON definition is
     # the cheapest existence check.
+    # Catch both the synthetic FetchBlockedError (raised by sources that
+    # explicitly gate themselves on a credential) and urllib's URLError
+    # (raised on real network failures). Without URLError, a transient
+    # Nomis outage propagates to the CLI's outer handler and the entire
+    # INS-094 verdict becomes BLOCKED — we'd lose the fact that the
+    # Companies House bulk-index leg succeeded.
     try:
         ashe_payload, ashe_evidence = ons.nomis_dataset_definition("NM_30_1")
         ashe_status = "reachable"
-    except FetchBlockedError as exc:  # pragma: no cover
+    except (FetchBlockedError, urllib.error.URLError) as exc:
         ashe_evidence = None
         ashe_payload = None
         ashe_status = f"blocked: {exc}"

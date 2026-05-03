@@ -1,7 +1,7 @@
 ---
 title: Governed workspace manifest (authoritative inventory)
-date: 2026-05-01
-version: 45
+date: 2026-05-03
+version: 46
 status: draft
 ---
 
@@ -109,6 +109,8 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
   - `01_truth/schemas/2026-05_public-data-validation_v1.md` `[LOGIC TO BE CONFIRMED]` (public-data verdict schema: 3-band PROVEN/PLAUSIBLE/DISPROVEN + BLOCKED gap-marker; additive `VALIDATION:` field on catalogue; reference impl at `02_build/validators/`)
 - `01_truth/interfaces/` `[LOGIC TO BE CONFIRMED]` (API contracts to be populated)
   - `01_truth/interfaces/README.md` `[LOGIC TO BE CONFIRMED]` (folder purpose stub)
+- `01_truth/research/` `[LOGIC TO BE CONFIRMED]` (truth-tier research evidence; promotion target for shadow research)
+  - `01_truth/research/validations/README.md` `[LOGIC TO BE CONFIRMED]` (promotion target for `03_shadow/validators/` verdicts once human-reviewed)
 - `01_truth/SYSTEMS-AND-API-REGISTER.md` `[LOGIC TO BE CONFIRMED]` (single register of all APIs, MCP servers, telephony systems, code modules, and their locations across all Amplified Partners repos)
 - `02_build/README.md` `[LOGIC TO BE CONFIRMED]` (runnable artefacts routing stub)
 - `03_shadow/README.md` `[LOGIC TO BE CONFIRMED]` (experiment routing stub)
@@ -163,6 +165,12 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
     - `P10-kill-switch-master-reference.md` `[NON-AUTHORITATIVE]` (510 lines — binary shutdown architecture)
 
 ## Changelog
+
+### v46 — 2026-05-03
+
+- Added `01_truth/research/` and `01_truth/research/validations/README.md` to **Candidate authority**: stub for the truth-tier promotion target where `03_shadow/validators/` verdicts land after human review. Frontmatter `date` advanced to 2026-05-03 to match this entry.
+
+Signed-by: Devon-ab74 | 2026-05-03 | devin-ab740f2c78ee477a9c16ea3b6ed15293
 
 ### v45 — 2026-05-03
 
