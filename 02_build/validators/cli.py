@@ -39,6 +39,20 @@ def _resolve_output_root(repo_root: Path, override: str | None) -> Path:
     return repo_root / "03_shadow" / "validators"
 
 
+def _display_path(path: Path, repo_root: Path) -> Path:
+    """Show ``path`` relative to ``repo_root`` when possible, else absolute.
+
+    ``Path.relative_to`` raises ``ValueError`` when ``path`` lives outside
+    ``repo_root``. That happens whenever ``--output-root`` points outside
+    the repo (e.g. ``/tmp/verdicts``); we still want to log the location
+    rather than crash after a successful write.
+    """
+    try:
+        return path.relative_to(repo_root)
+    except ValueError:
+        return path
+
+
 def _load_runners(vertical: str) -> dict[str, Callable[[], Verdict]]:
     module = importlib.import_module(f"validators.validations.{vertical}")
     runners = getattr(module, "RUNNERS", None)
@@ -87,7 +101,7 @@ def cmd_run(args: argparse.Namespace) -> int:
             summary.append({"insight": insight_id, "band": "ERROR", "test": "n/a"})
             continue
         path = write_verdict(verdict, output_root)
-        rel = path.relative_to(repo_root)
+        rel = _display_path(path, repo_root)
         print(f"{verdict.insight_id}: {verdict.band.value} ({verdict.test_class.value}) -> {rel}")
         summary.append(
             {
@@ -100,7 +114,7 @@ def cmd_run(args: argparse.Namespace) -> int:
     rollup_path = output_root / args.vertical / "rollup.json"
     rollup_path.parent.mkdir(parents=True, exist_ok=True)
     rollup_path.write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
-    print(f"\nrollup -> {rollup_path.relative_to(repo_root)}")
+    print(f"\nrollup -> {_display_path(rollup_path, repo_root)}")
     return 0
 
 

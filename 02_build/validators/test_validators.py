@@ -18,6 +18,7 @@ Signed-by: Devon-ab74 | 2026-05-03 | devin-ab740f2c78ee477a9c16ea3b6ed15293
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import sys
@@ -353,6 +354,54 @@ class ExistenceStatisticConsistencyTest(unittest.TestCase):
         self.assertEqual(verdict.statistic["tokens_checked"], 3)
         self.assertEqual(verdict.statistic["tokens_missing"], 3)
         self.assertGreaterEqual(verdict.statistic["checks_passed"], 0)
+
+
+class CacheKeyURLWithExistingQueryTest(unittest.TestCase):
+    """Regression test for the `?`/`&` separator bug in `_cache_key`.
+
+    With the buggy code, calling ``_cache_key("https://x?a=1", {"b": "2"})``
+    produced a hash of the malformed URL ``https://x?a=1?b=2`` — different
+    from the actually-fetched URL ``https://x?a=1&b=2``. The fixed code
+    must produce the same hash as the well-formed canonical URL.
+    """
+
+    def test_well_formed_canonical_when_url_has_query(self) -> None:
+        keyed = _cache_key("https://x.example/path?a=1", {"b": "2"})
+        well_formed = hashlib.sha256(
+            "https://x.example/path?a=1&b=2".encode("utf-8")
+        ).hexdigest()
+        self.assertEqual(keyed, well_formed)
+
+    def test_no_query_uses_question_mark(self) -> None:
+        keyed = _cache_key("https://x.example/path", {"b": "2"})
+        well_formed = hashlib.sha256(
+            "https://x.example/path?b=2".encode("utf-8")
+        ).hexdigest()
+        self.assertEqual(keyed, well_formed)
+
+
+class CliDisplayPathTest(unittest.TestCase):
+    def test_returns_relative_when_path_is_under_repo_root(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = Path(tmp).resolve()
+            inside = repo / "03_shadow" / "x.json"
+            inside.parent.mkdir(parents=True)
+            inside.write_text("{}")
+            self.assertEqual(
+                validators_cli._display_path(inside, repo),
+                Path("03_shadow/x.json"),
+            )
+
+    def test_returns_absolute_when_path_is_outside_repo_root(self) -> None:
+        with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as out_tmp:
+            repo = Path(repo_tmp).resolve()
+            outside = Path(out_tmp).resolve() / "verdicts" / "x.json"
+            outside.parent.mkdir(parents=True)
+            outside.write_text("{}")
+            # Must NOT raise ValueError; must return the absolute path so
+            # the caller's print statement still works.
+            displayed = validators_cli._display_path(outside, repo)
+            self.assertEqual(displayed, outside)
 
 
 class CliInsightArgTest(unittest.TestCase):

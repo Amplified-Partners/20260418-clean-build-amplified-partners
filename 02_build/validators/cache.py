@@ -58,7 +58,8 @@ def _cache_root() -> Path:
 def _cache_key(url: str, params: dict[str, str] | None) -> str:
     canonical = url
     if params:
-        canonical = url + "?" + urllib.parse.urlencode(sorted(params.items()))
+        sep = "&" if "?" in url else "?"
+        canonical = url + sep + urllib.parse.urlencode(sorted(params.items()))
     return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
 
 
