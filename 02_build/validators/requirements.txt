@@ -1,0 +1,8 @@
+# Public-data validators — Python dependencies
+# Authored by Devon (Devin session 4234e1c8afbe42f2aff84a29ce139809), 2026-05-03.
+
+httpx>=0.27.0
+pyyaml>=6.0.0
+
+# dev / test
+pytest>=8.0.0

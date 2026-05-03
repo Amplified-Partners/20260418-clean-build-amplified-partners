@@ -1,0 +1,26 @@
+{
+  "insight_id": "INS-053",
+  "title": "Corkage and Tip Pool Compliance Audit",
+  "vertical": "hospitality",
+  "band": "PROVEN",
+  "test_class": "existence",
+  "rationale": "Tipping Act 2023 statutory code of practice published on GOV.UK. This recipe is a compliance audit against statute \u2014 fully validatable from public sources.",
+  "evidence": [
+    {
+      "source": "gov_uk.tipping_code",
+      "url": "https://www.gov.uk/government/publications/distributing-tips-fairly-statutory-code-of-practice",
+      "accessed_at": "2026-05-03T22:02:03.566058+00:00",
+      "http_status": 200,
+      "response_sha256": "629c0541d939aa3d8e15336ad1b5c3e1b7bb840686595d11a256aff0ff1256ef",
+      "query_params": {},
+      "summary": "Statutory code"
+    }
+  ],
+  "metrics": {
+    "http_status": 200
+  },
+  "run_at": "2026-05-03T22:02:03.566698+00:00",
+  "code_sha": "b91bca9",
+  "agent": "Devon-4234",
+  "notes": ""
+}

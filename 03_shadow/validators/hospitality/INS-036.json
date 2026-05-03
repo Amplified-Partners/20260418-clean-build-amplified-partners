@@ -1,0 +1,28 @@
+{
+  "insight_id": "INS-036",
+  "title": "Menu Engineering \u2014 Stars, Plowhorses, Puzzles, Dogs",
+  "vertical": "hospitality",
+  "band": "PLAUSIBLE",
+  "test_class": "existence",
+  "rationale": "ONS CPIH food index (l55o / mm23) returned 447 monthly + 37 annual observations. Menu engineering itself runs on client PLU sales \u2014 public CPIH series provides cost-side benchmarking.",
+  "evidence": [
+    {
+      "source": "ons.cpih_food",
+      "url": "https://www.ons.gov.uk/economy/inflationandpriceindices/timeseries/l55o/mm23/data",
+      "accessed_at": "2026-05-03T22:01:34.409799+00:00",
+      "http_status": 200,
+      "response_sha256": "c580136859baf4a0cb836a20a2e8346f10c586cc1633728925c7d7aa4722eeeb",
+      "query_params": {},
+      "summary": "447m / 37y obs"
+    }
+  ],
+  "metrics": {
+    "http_status": 200,
+    "monthly_obs": 447,
+    "annual_obs": 37
+  },
+  "run_at": "2026-05-03T22:01:34.411697+00:00",
+  "code_sha": "b91bca9",
+  "agent": "Devon-4234",
+  "notes": ""
+}

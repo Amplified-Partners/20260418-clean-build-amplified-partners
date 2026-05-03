@@ -1,0 +1,27 @@
+{
+  "insight_id": "INS-047",
+  "title": "Local Event Revenue Uplift Modelling",
+  "vertical": "hospitality",
+  "band": "PLAUSIBLE",
+  "test_class": "existence",
+  "rationale": "data.gov.uk 'newcastle events' returned 3 packages (council event calendar coverage). Uplift modelling itself fuses event calendar with client cover data.",
+  "evidence": [
+    {
+      "source": "data_gov_uk",
+      "url": "https://data.gov.uk/api/3/action/package_search?q=newcastle+events&rows=10",
+      "accessed_at": "2026-05-03T22:01:57.217735+00:00",
+      "http_status": 200,
+      "response_sha256": "54bfb52a2b5e43fd55386f371953d2020f67a728eb3d1e0e675b723527e0f08c",
+      "query_params": {},
+      "summary": "3 packages"
+    }
+  ],
+  "metrics": {
+    "packages": 3,
+    "http_status": 200
+  },
+  "run_at": "2026-05-03T22:01:57.218414+00:00",
+  "code_sha": "b91bca9",
+  "agent": "Devon-4234",
+  "notes": ""
+}

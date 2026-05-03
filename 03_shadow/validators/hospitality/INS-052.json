@@ -1,0 +1,26 @@
+{
+  "insight_id": "INS-052",
+  "title": "Deposit / No-Show Policy ROI Calculator",
+  "vertical": "hospitality",
+  "band": "PLAUSIBLE",
+  "test_class": "existence",
+  "rationale": "GOV.UK consumer rights page reachable \u2014 covers Consumer Contracts Regulations 2013 deposit retention framing. Public leg of the recipe confirmed; ROI calculator runs on per-client booking data.",
+  "evidence": [
+    {
+      "source": "gov_uk.consumer_rights",
+      "url": "https://www.gov.uk/consumer-protection-rights",
+      "accessed_at": "2026-05-03T22:02:03.176771+00:00",
+      "http_status": 200,
+      "response_sha256": "a6ed3a6ed6da8a51c2364064fd6f11391bda7b51635c737017d516f8fd0659e0",
+      "query_params": {},
+      "summary": "Consumer protection rights"
+    }
+  ],
+  "metrics": {
+    "http_status": 200
+  },
+  "run_at": "2026-05-03T22:02:03.177293+00:00",
+  "code_sha": "b91bca9",
+  "agent": "Devon-4234",
+  "notes": ""
+}

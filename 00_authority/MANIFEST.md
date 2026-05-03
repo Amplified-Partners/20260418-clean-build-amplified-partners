@@ -1,7 +1,7 @@
 ---
 title: Governed workspace manifest (authoritative inventory)
-date: 2026-05-01
-version: 44
+date: 2026-05-03
+version: 45
 status: draft
 ---
 
@@ -106,6 +106,7 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
   - `01_truth/processes/2026-04_stateless-handover_neutrality-clause_v1.md` `[LOGIC TO BE CONFIRMED]` (candidate addendum to the job-wrapup SOP; neutrality rule for stateless handovers; authoritative `00_authority/OPINION_CONFIDENCE.md` references this file)
 - `01_truth/schemas/` `[LOGIC TO BE CONFIRMED]` (schema contracts to be populated)
   - `01_truth/schemas/README.md` `[LOGIC TO BE CONFIRMED]` (folder purpose stub)
+  - `01_truth/schemas/2026-05_public-data-validation_v1.md` `[LOGIC TO BE CONFIRMED]` (verdict bands + test classes + bundle JSON shape for the `02_build/validators/` pipeline; AMP-65)
 - `01_truth/interfaces/` `[LOGIC TO BE CONFIRMED]` (API contracts to be populated)
   - `01_truth/interfaces/README.md` `[LOGIC TO BE CONFIRMED]` (folder purpose stub)
 - `01_truth/SYSTEMS-AND-API-REGISTER.md` `[LOGIC TO BE CONFIRMED]` (single register of all APIs, MCP servers, telephony systems, code modules, and their locations across all Amplified Partners repos)
@@ -162,6 +163,12 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
     - `P10-kill-switch-master-reference.md` `[NON-AUTHORITATIVE]` (510 lines — binary shutdown architecture)
 
 ## Changelog
+
+### v45 — 2026-05-03
+
+- Indexed `01_truth/schemas/2026-05_public-data-validation_v1.md` under **Candidate authority** as `[LOGIC TO BE CONFIRMED]`: schema reference for the `02_build/validators/` pipeline (verdict bands, four test classes, verdict-bundle JSON shape, caching contract). Created during AMP-65 hospitality vertical sweep.
+
+Signed-by: Devon-4234 | 2026-05-03 | session devin-4234e1c8afbe42f2aff84a29ce139809
 
 ### v44 — 2026-05-01
 

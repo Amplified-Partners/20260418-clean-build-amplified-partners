@@ -1,0 +1,36 @@
+{
+  "insight_id": "INS-034",
+  "title": "Food Hygiene Score vs Review Sentiment vs Competitor Mapping",
+  "vertical": "hospitality",
+  "band": "PROVEN",
+  "test_class": "existence",
+  "rationale": "All probes returned usable data at the granularity claimed. | FHRS search Newcastle returned 20 establishments with ratings. | FHRS BusinessTypes catalogue returned 15 entries; includes restaurant/pub categories.",
+  "evidence": [
+    {
+      "source": "fsa.fhrs",
+      "url": "https://api.ratings.food.gov.uk/Establishments?pageSize=20&pageNumber=1&address=Newcastle",
+      "accessed_at": "2026-05-03T22:01:32.988938+00:00",
+      "http_status": 200,
+      "response_sha256": "ad28e587a5250afc2cc83328dbc9303370b7948a9fa1bc6f92a2a3e2bc7e52a0",
+      "query_params": {},
+      "summary": "20 establishments returned"
+    },
+    {
+      "source": "fsa.fhrs",
+      "url": "https://api.ratings.food.gov.uk/BusinessTypes",
+      "accessed_at": "2026-05-03T22:01:33.342263+00:00",
+      "http_status": 200,
+      "response_sha256": "d0587e534e41137790db76e87b6ecb66951f2bbd2f11df441c2abfc8ca790a10",
+      "query_params": {},
+      "summary": "15 business types"
+    }
+  ],
+  "metrics": {
+    "probes_total": 2,
+    "probes_passed": 2
+  },
+  "run_at": "2026-05-03T22:01:33.342818+00:00",
+  "code_sha": "b91bca9",
+  "agent": "Devon-4234",
+  "notes": ""
+}

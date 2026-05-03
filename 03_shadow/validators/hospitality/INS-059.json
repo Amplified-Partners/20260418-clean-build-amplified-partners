@@ -1,0 +1,36 @@
+{
+  "insight_id": "INS-059",
+  "title": "HMRC VAT / PAYE Arrears \u2014 Hospitality Immediate Signal",
+  "vertical": "hospitality",
+  "band": "PLAUSIBLE",
+  "test_class": "existence",
+  "rationale": "1/2 probes returned usable data; remaining probes returned empty or coarser-than-claimed results. | Insolvency Service stats landing reachable (200). | Gazette insolvency notices index reachable (403).",
+  "evidence": [
+    {
+      "source": "gov_uk.insolvency",
+      "url": "https://www.gov.uk/government/collections/insolvency-service-official-statistics",
+      "accessed_at": "2026-05-03T22:01:48.231844+00:00",
+      "http_status": 200,
+      "response_sha256": "4141c58afbd44c762acdcf57d7fb57e2b95a5d5cb976be277d9fdebb4a014142",
+      "query_params": {},
+      "summary": "Stats landing"
+    },
+    {
+      "source": "gazette.insolvency",
+      "url": "https://www.thegazette.co.uk/all-notices/notice?categorycode=24",
+      "accessed_at": "2026-05-03T22:02:05.554690+00:00",
+      "http_status": 403,
+      "response_sha256": "73826de30dff09150562a058b9a2c3035f401661421ce6fdd07deae66ff65aaf",
+      "query_params": {},
+      "summary": "Gazette index"
+    }
+  ],
+  "metrics": {
+    "probes_total": 2,
+    "probes_passed": 1
+  },
+  "run_at": "2026-05-03T22:02:05.555118+00:00",
+  "code_sha": "b91bca9",
+  "agent": "Devon-4234",
+  "notes": ""
+}

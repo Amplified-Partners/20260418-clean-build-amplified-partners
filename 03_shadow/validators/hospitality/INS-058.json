@@ -1,0 +1,14 @@
+{
+  "insight_id": "INS-058",
+  "title": "Review Sentiment Drift on Service Themes \u2014 Hospitality Death Spiral",
+  "vertical": "hospitality",
+  "band": "PLAUSIBLE",
+  "test_class": "existence",
+  "rationale": "Catalogue marks PUBLIC DATA as 'None required (pure internal signal)'. By the convention of this validator, recipes whose public leg is empty cannot be PROVEN by public data alone \u2014 they remain PLAUSIBLE pending client-side validation.",
+  "evidence": [],
+  "metrics": {},
+  "run_at": "2026-05-03T22:02:05.279081+00:00",
+  "code_sha": "b91bca9",
+  "agent": "Devon-4234",
+  "notes": "Public-data validator does not apply; client-data only."
+}

@@ -1,0 +1,26 @@
+{
+  "insight_id": "INS-057",
+  "title": "Delivery Aggregator Revenue Above 25% \u2014 Hospitality Death Spiral",
+  "vertical": "hospitality",
+  "band": "PLAUSIBLE",
+  "test_class": "existence",
+  "rationale": "UKHospitality references reachable; the 25% trigger is a client-internal metric (delivery sales / total sales).",
+  "evidence": [
+    {
+      "source": "ukhospitality",
+      "url": "https://www.ukhospitality.org.uk/",
+      "accessed_at": "2026-05-03T22:01:56.375763+00:00",
+      "http_status": 200,
+      "response_sha256": "6cf6b4ffb6984b96dd2828a93c1d40e1bfcbdbb88dd2bd39d549213d57da362c",
+      "query_params": {},
+      "summary": "Landing"
+    }
+  ],
+  "metrics": {
+    "http_status": 200
+  },
+  "run_at": "2026-05-03T22:02:05.278642+00:00",
+  "code_sha": "b91bca9",
+  "agent": "Devon-4234",
+  "notes": ""
+}

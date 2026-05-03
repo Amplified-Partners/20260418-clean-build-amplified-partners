@@ -1,7 +1,7 @@
 ---
 title: Decision log
-date: 2026-05-01
-version: 13
+date: 2026-05-03
+version: 14
 status: draft
 ---
 
@@ -12,6 +12,14 @@ status: draft
 One entry per decision. Keep it short. Link out to supporting docs.
 
 ## Entries
+
+### 2026-05-03 — Public-data validation framework introduced (AMP-65)
+
+- **Decision**: Add a public-data validators pipeline at `02_build/validators/` that proves catalogued insights against real UK open data, plus a schema reference at `01_truth/schemas/2026-05_public-data-validation_v1.md` capturing the three-band verdict scheme (`PROVEN` / `PLAUSIBLE` / `DISPROVEN`) plus the `PENDING-API-KEY` gate. Verdict bundles for each insight live under `03_shadow/validators/<vertical>/<INS-NNN>.json`. Hospitality vertical sweep (INS-033..INS-059) executed; catalogue entries gain a `**VALIDATION:**` line alongside the existing `**STATUS:**`.
+- **Why**: The catalogue at `01_truth/schemas/research-index/00-insight-catalogue_v1.md` listed all hospitality insights as `STATUS: HYPOTHESIS` with no audited link to public data. AMP-65 asked for a deterministic, reproducible sweep that establishes which recipes have a confirmable public leg and which need client data, so we never offer a billable claim that cannot be validated. Three bands reflect the operational reality of recipes that fuse public + client signals.
+- **Where encoded**: `02_build/validators/` v1 (caching HTTP client, four test classes, 13 source fetchers, CLI orchestrator, 27 hospitality validators, 25 unit tests); `01_truth/schemas/2026-05_public-data-validation_v1.md` v1.0.0; `03_shadow/validators/hospitality/INS-033.json` … `INS-059.json`; `01_truth/schemas/research-index/00-insight-catalogue_v1.md` (additive `VALIDATION:` lines for the 27 hospitality entries); `00_authority/MANIFEST.md` v45 § Candidate authority.
+- **Status**: candidate (pending Ewan review); verdict bundles remain in `03_shadow/` until promoted; the schema doc is reference, not authority.
+- **Signed-by**: Devon-4234 | 2026-05-03 | session devin-4234e1c8afbe42f2aff84a29ce139809
 
 ### 2026-05-01 — Systems and API Register created as candidate authority
 
