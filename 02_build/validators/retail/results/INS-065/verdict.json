@@ -20,15 +20,15 @@
           "params": {
             "search": "ashe"
           },
-          "accessed_utc": "2026-05-03T20:48:53Z",
+          "accessed_utc": "2026-05-03T20:58:09Z",
           "status": 200,
-          "sha256": "2fd6729ebc03270528fcbe7734521b819b6f57b0f4d853f3e55e6b6743efea15",
-          "cached": true,
+          "sha256": "45c7190eee63f92a8d10b5a14accd0f8ce56280e317a2e943365737cb1d9c021",
+          "cached": false,
           "sample": {
             "structure": {
               "header": {
                 "id": "none",
-                "prepared": "2026-05-03T21:48:51Z",
+                "prepared": "2026-05-03T21:58:08Z",
                 "sender": {
                   "contact": {
                     "email": "support@nomisweb.co.uk",
@@ -185,15 +185,15 @@
           "source": "nomis",
           "url": "https://www.nomisweb.co.uk/api/v01/dataset/NM_99_1.def.sdmx.json",
           "params": {},
-          "accessed_utc": "2026-05-03T20:48:53Z",
+          "accessed_utc": "2026-05-03T20:58:10Z",
           "status": 200,
-          "sha256": "2248c21ae980387c464f8514c4ce8938996b14fba6ddfcdd41984ac97c3fa164",
-          "cached": true,
+          "sha256": "6ffbf36da44fa57469ffd165c97c6da518c3734ecd05e8e1b710d11d2f315328",
+          "cached": false,
           "sample": {
             "structure": {
               "header": {
                 "id": "NM_99_1",
-                "prepared": "2026-05-03T21:48:54Z",
+                "prepared": "2026-05-03T21:58:10Z",
                 "sender": {
                   "contact": {
                     "email": "earnings@ons.gov.uk",
@@ -355,8 +355,8 @@
     "Client leg = Shopify cohort LTV per postcode is internal data; recipe is PLAUSIBLE end-to-end."
   ],
   "confidence": 70,
-  "run_at_utc": "2026-05-03T20:53:31Z",
-  "git_sha": "c8863e80f7c626376a3b804a5405bb2e9c9d5f7a",
+  "run_at_utc": "2026-05-03T20:58:10Z",
+  "git_sha": "51e0047fc3200ddb5c63902e3c14234d10372072",
   "session_id": "devin-9a6bd256bd7c4a90a083a471fa94a810",
   "signed_by": "Devon-9a6b"
 }

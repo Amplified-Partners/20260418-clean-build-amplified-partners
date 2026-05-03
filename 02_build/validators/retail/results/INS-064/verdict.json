@@ -18,10 +18,10 @@
           "source": "insolvency_stats",
           "url": "https://www.gov.uk/api/content/government/collections/company-insolvency-statistics-releases",
           "params": {},
-          "accessed_utc": "2026-05-03T20:48:50Z",
+          "accessed_utc": "2026-05-03T20:58:06Z",
           "status": 200,
           "sha256": "97ff849c789957936d97dde19188cccc16ed3479851cd66492c62c110963d1c1",
-          "cached": true,
+          "cached": false,
           "sample": {
             "analytics_identifier": null,
             "base_path": "/government/collections/company-insolvency-statistics-releases"
@@ -46,8 +46,8 @@
     "The Gazette RSS feed is an alternative for individual notices \u2014 its anti-bot defence rejected our default User-Agent during scoping; capturing as a follow-up rather than blocker."
   ],
   "confidence": 65,
-  "run_at_utc": "2026-05-03T20:53:31Z",
-  "git_sha": "c8863e80f7c626376a3b804a5405bb2e9c9d5f7a",
+  "run_at_utc": "2026-05-03T20:58:06Z",
+  "git_sha": "51e0047fc3200ddb5c63902e3c14234d10372072",
   "session_id": "devin-9a6bd256bd7c4a90a083a471fa94a810",
   "signed_by": "Devon-9a6b"
 }

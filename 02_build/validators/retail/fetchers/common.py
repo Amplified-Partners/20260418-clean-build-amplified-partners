@@ -28,6 +28,14 @@ DEFAULT_TIMEOUT = 30
 DEFAULT_RETRIES = 3
 DEFAULT_BACKOFF = 1.5
 
+# Param names that may carry credentials. The values are still used to build the
+# request and to derive the cache key, but they are redacted before being
+# persisted to disk in meta files or returned in evidence bundles.
+SECRET_PARAM_NAMES = frozenset({
+    "key", "api_key", "apikey", "token", "access_token", "auth",
+    "authorization", "password", "secret", "private_key",
+})
+
 
 def _cache_paths(source: str, key: str) -> tuple[Path, Path]:
     base = CACHE_ROOT / source
@@ -38,6 +46,18 @@ def _cache_paths(source: str, key: str) -> tuple[Path, Path]:
 def _key(url: str, params: dict | None) -> str:
     raw = url + "?" + urlencode(sorted((params or {}).items()), doseq=True)
     return hashlib.sha256(raw.encode("utf-8")).hexdigest()[:16]
+
+
+def _redact(params: dict[str, Any] | None) -> dict[str, Any]:
+    """Return a copy of params with secret-bearing values replaced by '[REDACTED]'.
+
+    Used before any disk-persistence or evidence-bundle emission so secrets in
+    query strings (e.g. Met Office DataPoint ?key=) never land in committed
+    artefacts. The cache key is still derived from the unredacted params.
+    """
+    if not params:
+        return {}
+    return {k: ("[REDACTED]" if k.lower() in SECRET_PARAM_NAMES else v) for k, v in params.items()}
 
 
 @dataclass
@@ -100,7 +120,7 @@ def fetch_json(
         return Fetched(
             source=source,
             url=url,
-            params=params or {},
+            params=_redact(params),
             accessed_utc=meta["accessed_utc"],
             status=meta["status"],
             sha256=meta["sha256"],
@@ -126,7 +146,7 @@ def fetch_json(
                 return Fetched(
                     source=source,
                     url=url,
-                    params=params or {},
+                    params=_redact(params),
                     accessed_utc=accessed,
                     status=resp.status_code,
                     sha256="",
@@ -144,9 +164,10 @@ def fetch_json(
                 body = {"_raw_text": body_text[:5000]}
 
             accessed = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+            redacted = _redact(params)
             meta = {
                 "url": url,
-                "params": params or {},
+                "params": redacted,
                 "accessed_utc": accessed,
                 "status": resp.status_code,
                 "sha256": sha,
@@ -157,7 +178,7 @@ def fetch_json(
             return Fetched(
                 source=source,
                 url=url,
-                params=params or {},
+                params=redacted,
                 accessed_utc=accessed,
                 status=resp.status_code,
                 sha256=sha,
@@ -194,7 +215,7 @@ def fetch_text(
         return Fetched(
             source=source,
             url=url,
-            params=params or {},
+            params=_redact(params),
             accessed_utc=meta["accessed_utc"],
             status=meta["status"],
             sha256=meta["sha256"],
@@ -219,9 +240,10 @@ def fetch_text(
             body_text = resp.text
             sha = hashlib.sha256(body_text.encode("utf-8")).hexdigest()
             accessed = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+            redacted = _redact(params)
             meta = {
                 "url": url,
-                "params": params or {},
+                "params": redacted,
                 "accessed_utc": accessed,
                 "status": resp.status_code,
                 "sha256": sha,
@@ -232,7 +254,7 @@ def fetch_text(
             return Fetched(
                 source=source,
                 url=url,
-                params=params or {},
+                params=redacted,
                 accessed_utc=accessed,
                 status=resp.status_code,
                 sha256=sha,
