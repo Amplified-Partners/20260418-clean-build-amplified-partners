@@ -1,3 +1,5 @@
+# Authored by Devon-a9a7 | 2026-05-03 | AMP-46 Ollama port-mapping fix mirror
+# Source-of-truth: this file. Mirror in Amplified-Partners/clean-build at 02_build/compose/ollama/docker-compose.yml.
 services:
   ollama:
     image: ollama/ollama:latest

@@ -1,11 +1,12 @@
 ---
 title: Infrastructure manifest — Amplified Partners Core Server
 date: 2026-05-03
-version: 2
+version: 3
 status: authoritative now
 signed-by:
   - Devon | 2026-04-30 | devin-66aa3ce48c7e407f8ad9bf066541b604
   - Devon-6ca5 | 2026-05-03 | devin-6ca57553eefe4806b613070325964703
+  - Devon-a9a7 | 2026-05-03 | devin-a9a78d0c72d9491aa3a70b18cb741936
 ---
 
 <!-- markdownlint-disable-file MD013 -->
@@ -61,7 +62,7 @@ These are shared infrastructure that other services depend on.
 
 | Container | Image | Status | Purpose |
 |-----------|-------|--------|---------|
-| **ollama** | `ollama/ollama:latest` | Running | Local LLM inference server. Hosts llama3.1-8b and other models. Internal port 11434. |
+| **ollama** | `ollama/ollama:latest` | Running | Local LLM inference server. Hosts llama3.1-8b/70b, qwen3-coder-30b, nomic-embed-text. Internal port 11434 on `amplified-net`. Host-loopback bind `127.0.0.1:11434` (added 2026-05-03 per AMP-46 — for Beast-side scripts). Public HTTPS via Traefik at `ollama.beast.amplifiedpartners.ai`. |
 | **litellm** | `ghcr.io/berriai/litellm:main-latest` | Running | LLM proxy — unified API for local (Ollama) and remote (OpenAI, Anthropic) models. Internal port 4000. Routes by `simple-shuffle` with failover chains; **does not** classify by cost. |
 | **token-proxy** | `amplified/token-proxy:latest` (built locally from `Amplified-Partners/cost-tools`) | Running (healthy) | Anthropic-only reverse proxy. Sonnet→Haiku model-layer routing on extractive/classification prompts; prompt caching; semantic similarity cache (Qdrant `llm_cache`, 0.95, 24h TTL); native context compaction; daily $100 budget circuit-breaker; per-agent cost log. Container port 8088 (host-bound to `127.0.0.1:8088` for diagnostics; agents reach it via DNS name `token-proxy:8088` on `amplified-net`). Compose file: `/opt/amplified/apps/cost-tools/docker-compose.yml`. RUNBOOK: `cost-tools/RUNBOOK.md`. Linear: AMP-28. |
 | **langfuse** | `langfuse/langfuse:latest` | Running | LLM observability — traces, costs, prompt versioning. |
@@ -185,7 +186,7 @@ Source: `/root/cove-repo/infrastructure/`
 | Enforcer | `/opt/amplified/apps/enforcer/docker-compose.yml` | enforcer |
 | LiteLLM | `/opt/amplified/apps/litellm/docker-compose.yml` | litellm |
 | Langfuse | `/opt/amplified/apps/langfuse/docker-compose.yml` | langfuse, minio-init |
-| Ollama | `/opt/amplified/apps/ollama/docker-compose.yml` | ollama |
+| Ollama | `/opt/amplified/apps/ollama/docker-compose.yml` (mirror: `02_build/compose/ollama/docker-compose.yml`) | ollama |
 | SearXNG | `/opt/amplified/apps/searxng/docker-compose.yml` | searxng |
 | OpenClaw Agents | `/opt/amplified/apps/openclaw-agents/docker-compose.yml` | openclaw-agents |
 | Knowledge MCP | `/opt/amplified/apps/amplified-knowledge-mcp/docker-compose.yml` | amplified-knowledge-mcp |
@@ -202,6 +203,19 @@ Source: `/root/cove-repo/infrastructure/`
 ---
 
 ## Changelog
+
+### v3 — 2026-05-03
+
+Ollama row updated to reflect AMP-46 fix:
+
+- Added host-loopback bind `127.0.0.1:11434` (so Beast-side scripts can reach Ollama at the canonical loopback address instead of churning bridge IPs).
+- Made the existing public Traefik route (`ollama.beast.amplifiedpartners.ai`) explicit — was previously omitted from this manifest.
+- Listed the full set of currently-loaded models (llama3.1-8b/70b, qwen3-coder-30b, nomic-embed-text) instead of just llama3.1-8b.
+- Added pointer to the in-repo compose mirror at `02_build/compose/ollama/docker-compose.yml`.
+
+Verified end-to-end: host loopback, in-net Docker DNS, and Traefik public route all return 200.
+
+Signed-by: Devon-a9a7 | 2026-05-03 | devin-a9a78d0c72d9491aa3a70b18cb741936
 
 ### v2 — 2026-05-03
 
