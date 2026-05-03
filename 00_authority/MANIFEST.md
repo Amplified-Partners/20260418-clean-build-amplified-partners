@@ -111,6 +111,7 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
   - `01_truth/interfaces/README.md` `[LOGIC TO BE CONFIRMED]` (folder purpose stub)
 - `01_truth/SYSTEMS-AND-API-REGISTER.md` `[LOGIC TO BE CONFIRMED]` (single register of all APIs, MCP servers, telephony systems, code modules, and their locations across all Amplified Partners repos)
 - `02_build/README.md` `[LOGIC TO BE CONFIRMED]` (runnable artefacts routing stub)
+- `02_build/validators/README.md` `[LOGIC TO BE CONFIRMED]` (public-data validators pipeline routing stub — verdict bands, four test classes, layout, CLI; AMP-65)
 - `03_shadow/README.md` `[LOGIC TO BE CONFIRMED]` (experiment routing stub)
 - `03_shadow/job-wrapups/README.md` `[NON-AUTHORITATIVE]` (wrap-ups/escalation notes location; learning only)
 
@@ -167,6 +168,7 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
 ### v45 — 2026-05-03
 
 - Indexed `01_truth/schemas/2026-05_public-data-validation_v1.md` under **Candidate authority** as `[LOGIC TO BE CONFIRMED]`: schema reference for the `02_build/validators/` pipeline (verdict bands, four test classes, verdict-bundle JSON shape, caching contract). Created during AMP-65 hospitality vertical sweep.
+- Indexed `02_build/validators/README.md` under **Candidate authority** as `[LOGIC TO BE CONFIRMED]`: routing stub for the `02_build/validators/` pipeline (verdict bands, test classes, layout, CLI). Analogous to the existing `02_build/README.md` entry; same `02_build/` indexed class.
 
 Signed-by: Devon-4234 | 2026-05-03 | session devin-4234e1c8afbe42f2aff84a29ce139809
 
