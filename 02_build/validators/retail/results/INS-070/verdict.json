@@ -43,8 +43,8 @@
     "Per-supplier leg = Companies House API key needed; downgrades verdict to PLAUSIBLE without key."
   ],
   "confidence": 70,
-  "run_at_utc": "2026-05-03T22:29:18Z",
-  "git_sha": "93a5f041de1df89faccba7ea4f2df3b3e5ddfc4b",
+  "run_at_utc": "2026-05-03T22:57:41Z",
+  "git_sha": "0db308ab54ad19848c5c9996461a5ed6140855cf",
   "session_id": "devin-9a6bd256bd7c4a90a083a471fa94a810",
   "signed_by": "Devon-9a6b"
 }

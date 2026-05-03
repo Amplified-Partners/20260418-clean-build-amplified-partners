@@ -1,7 +1,7 @@
 ---
 title: Governed workspace manifest (authoritative inventory)
 date: 2026-05-03
-version: 49
+version: 50
 status: draft
 ---
 
@@ -107,7 +107,7 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
 - `01_truth/schemas/` `[LOGIC TO BE CONFIRMED]` (schema contracts to be populated)
   - `01_truth/schemas/README.md` `[LOGIC TO BE CONFIRMED]` (folder purpose stub)
   - `01_truth/schemas/2026-05_public-data-validation_v1.md` `[LOGIC TO BE CONFIRMED]` (public-data verdict schema: PROVEN / PLAUSIBLE / DISPROVEN core bands + BLOCKED gap-marker + DEFERRED policy band; four reusable test classes; additive `VALIDATION:` field on catalogue; reference impls at `02_build/validators/` shared and `02_build/validators/retail/` self-contained; AMP-67 + AMP-66 joint)
-  - `01_truth/schemas/research-index/06a-vertical-retail-validation-rollup_v1.md` `[LOGIC TO BE CONFIRMED]` (retail vertical validation rollup: 8 PROVEN / 10 PLAUSIBLE / 1 DEFERRED across 19 retail insights against real UK public data; companion to `06-vertical-retail-profservices_v1.md` and to validators in `02_build/validators/retail/`; AMP-66)
+  - `01_truth/schemas/research-index/06a-vertical-retail-validation-rollup_v1.md` `[LOGIC TO BE CONFIRMED]` (retail vertical validation rollup: 9 PROVEN / 9 PLAUSIBLE / 1 DEFERRED across 19 retail insights against real UK public data; companion to `06-vertical-retail-profservices_v1.md` and to validators in `02_build/validators/retail/`; AMP-66)
 - `01_truth/interfaces/` `[LOGIC TO BE CONFIRMED]` (API contracts to be populated)
   - `01_truth/interfaces/README.md` `[LOGIC TO BE CONFIRMED]` (folder purpose stub)
 - `01_truth/research/` `[LOGIC TO BE CONFIRMED]` (truth-tier research evidence; promotion target for shadow research)
@@ -169,10 +169,19 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
 
 ## Changelog
 
+### v50 — 2026-05-03
+
+- Headline rollup count for `06a-vertical-retail-validation-rollup_v1.md` updated to **9 PROVEN / 9 PLAUSIBLE / 1 DEFERRED** (was 8 / 10 / 1).
+- Reason: Devin Review found that `RETAIL_AREAS` in the Police.uk fetcher silently included Glasgow + Edinburgh, but Police.uk only covers England + Wales (Police Scotland is separate). Two structural zeros were corrupting the INS-067 distribution test. Split into canonical `RETAIL_AREAS` (master list) + `RETAIL_AREAS_POLICE_UK` (E+W subset for Police.uk-specific tests). INS-067 upgrades to PROVEN (z=1.13 ≥ 1.0).
+- Also addressed earlier Devin Review findings on the same PR (cumulative): truncated string-body samples in `Fetched.evidence()` so verdict JSONs no longer carry full HTML pages (668 KB → 192 KB across 19 verdicts); added `DEFERRED` to the shared `02_build/validators/core.VerdictBand` enum and `__init__.py` docstring (was schema-only); added `BLOCKED` to retail `VERDICT_BANDS` and routed runtime exceptions to BLOCKED instead of DEFERRED so the policy-refusal count stays clean.
+- No new files added or removed; all changes are local to `02_build/validators/retail/` + the shared `02_build/validators/__init__.py` + this MANIFEST + the rollup + DECISION_LOG.
+
+Signed-by: Devon-9a6b | 2026-05-03 | devin-9a6bd256bd7c4a90a083a471fa94a810
+
 ### v49 — 2026-05-03
 
 - Added under **Candidate authority** (AMP-66 sister of AMP-67 v45):
-  - `01_truth/schemas/research-index/06a-vertical-retail-validation-rollup_v1.md` — retail vertical validation rollup, headline 8 PROVEN / 10 PLAUSIBLE / 1 DEFERRED across 19 retail insights (INS-060..INS-078).
+  - `01_truth/schemas/research-index/06a-vertical-retail-validation-rollup_v1.md` — retail vertical validation rollup, headline 9 PROVEN / 9 PLAUSIBLE / 1 DEFERRED across 19 retail insights (INS-060..INS-078).
 - Extended the schema doc `01_truth/schemas/2026-05_public-data-validation_v1.md` (introduced in v45 by AMP-67) with the **DEFERRED** policy band, distinct from BLOCKED: BLOCKED = "we'd run if creds existed", DEFERRED = "we refuse to run on ToS/legal grounds". First DEFERRED entry is INS-077 (retail competitor pricing scraping). Added the AMP-66 retail self-contained reference implementation at `02_build/validators/retail/` and documented the secret-redaction discipline (CodeQL `py/clear-text-storage-sensitive-data` clean) introduced by the AMP-66 cache layer. No removal of AMP-67 content.
 - Catalogue `01_truth/schemas/research-index/00-insight-catalogue_v1.md` updated additively with `**VALIDATION (AMP-66):**` lines on each retail entry.
 - Per `AGENTS.md` § "PR reviewers — what to flag" rule 7 (new file in indexed class must appear in MANIFEST).

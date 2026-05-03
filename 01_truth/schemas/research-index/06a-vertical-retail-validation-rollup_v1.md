@@ -1,7 +1,7 @@
 ---
 title: "Vertical Retail — public-data validation rollup (AMP-66)"
 id: "vertical-retail-validation-rollup-v1"
-version: 3
+version: 4
 created: 2026-05-03
 last_validated: 2026-05-03
 type: document
@@ -28,8 +28,8 @@ profile — unchanged), `2026-05_public-data-validation_v1.md` (verdict scheme),
 
 | Verdict     | Count | Notes                                                                  |
 |-------------|-------|------------------------------------------------------------------------|
-| `PROVEN`    | 8     | Public data fully reachable at claimed granularity                      |
-| `PLAUSIBLE` | 10    | Underpowered, key-gated, or internal-only-with-research-support         |
+| `PROVEN`    | 9     | Public data fully reachable at claimed granularity                      |
+| `PLAUSIBLE` | 9     | Underpowered, key-gated, or internal-only-with-research-support         |
 | `DISPROVEN` | 0     |                                                                        |
 | `DEFERRED`  | 1     | INS-077 — ToS-bound competitor scraping; held outside automated runs    |
 | **Total**   | **19**|                                                                        |
@@ -50,7 +50,7 @@ source response.
 | INS-064   | Competitor Death-Spiral Detection via Companies House + Gazette                                     | PLAUSIBLE   | existence                 | 65         |
 | INS-065   | Shopify Cohort × ONS Wages × Local IMD → LTV Segmentation                                           | PROVEN      | existence                 | 88         |
 | INS-066   | Google Trends Local × Ad Spend Efficiency                                                           | PLAUSIBLE   | existence                 | 65         |
-| INS-067   | Shrinkage Detection × Police.uk Crime × CCTV Event Logs                                             | PLAUSIBLE   | existence + distribution  | 70         |
+| INS-067   | Shrinkage Detection × Police.uk Crime × CCTV Event Logs                                             | PROVEN      | existence + distribution  | 88         |
 | INS-068   | Marketplace Fee Leakage × FBA Storage Ageing × Demand Signals                                       | PLAUSIBLE   | existence                 | 75         |
 | INS-069   | Category Cannibalisation × Cross-Sell Graph Analysis                                                | PROVEN      | existence                 | 80         |
 | INS-070   | Supplier Concentration Risk × Piotroski Score Proxies                                               | PLAUSIBLE   | existence                 | 70         |
@@ -69,7 +69,7 @@ All sources below returned 2xx during this validation run; raw responses are
 cached under `02_build/validators/retail/cache/` with SHA-256 hashes
 recorded in each verdict.
 
-- **Police.uk crimes-street API** (`https://data.police.uk/api`) — 12 retail anchor postcodes, March 2026 shoplifting incidents, street-level granularity.
+- **Police.uk crimes-street API** (`https://data.police.uk/api`) — 10 England+Wales retail anchor postcodes, March 2026 shoplifting incidents, street-level granularity. (Glasgow + Edinburgh excluded — Police Scotland is a separate organisation that does not publish to data.police.uk; the master `RETAIL_AREAS` list still includes them for use with non-Police.uk sources.)
 - **ONS Beta API** (`https://api.beta.ons.gov.uk/v1`) — `cpih01` (CPI/CPIH), `retail-sales-index`, `retail-sales-index-all-businesses`, `uk-spending-on-cards`, family-spending categories.
 - **Nomis** (`https://www.nomisweb.co.uk/api/v01`) — ASHE earnings dataset metadata.
 - **DLUHC IMD 2019** (`https://www.gov.uk/government/statistics/english-indices-of-deprivation-2019`) — LSOA-level deprivation index page reachable.
@@ -129,6 +129,9 @@ commit.
 - v3 (2026-05-03, Devon-9a6b) — Devin Review fix:
   - INS-065: ASHE detection heuristic was assuming Nomis SDMX `name` was a string. The Nomis API actually returns it as a dict (`{"value": "annual survey of hours and earnings - workplace analysis", "lang": "en"}`), so the substring match always failed and the runner fell through to PLAUSIBLE. Fixed to handle dict shape, list-of-dicts shape, AND annotations (`Mnemonic` / `contenttype/sources` carry the canonical `ashe` tag). Verdict upgrades to PROVEN (conf 88).
   - Headline counts updated: 8 PROVEN / 10 PLAUSIBLE / 1 DEFERRED.
+- v4 (2026-05-03, Devon-9a6b) — Devin Review fix:
+  - INS-067: Police.uk anchor list silently included Glasgow (G1) and Edinburgh (EH1). Police.uk only covers the 43 territorial forces in England + Wales — Police Scotland is a separate organisation that does not publish to data.police.uk, so those two anchors always returned `[]`. The two structural zeros pulled the distribution mean from 184.2 down to 153.5 and inflated stdev, dropping z below the 1.0 threshold and producing a spurious PLAUSIBLE. Split `RETAIL_AREAS` into a canonical master list (still includes Scotland for use with non-Police.uk sources) and a `RETAIL_AREAS_POLICE_UK` England+Wales subset; INS-067 now uses the latter. New result: n=10, mean=184.2, σ=158.2, z=1.13 ≥ 1.0 → PROVEN (conf 88). Manchester returns 0 in March 2026 (Greater Manchester Police data lag, not a coverage gap) and is kept — it's real signal, not noise.
+  - Headline counts updated: 9 PROVEN / 9 PLAUSIBLE / 1 DEFERRED.
 
 ---
 

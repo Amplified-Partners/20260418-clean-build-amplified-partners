@@ -1394,7 +1394,7 @@ signed_by: "Devon, 2026-04-25, devin-992682c244cf444f91e0a516498afbfd"
 **PUDDING BRIDGE:** The police.uk API is the same crime data that property valuers use to assess area risk premiums. A retailer who monitors local shoplifting reports has the same early warning capability that Marks & Spencer's loss prevention team has — without the £2m security budget
 **SOURCE DOC:** 06
 **STATUS:** CONFIRMED-EXTERNAL
-**VALIDATION (AMP-66):** verdict=PLAUSIBLE | test=existence+distribution | conf=70 | run=2026-05-03 | signed_by=Devon-9a6b — Police.uk reachable for 12/12 anchors; signal magnitude mean exceeds threshold by only 0.93σ (< 1.0σ); small effect
+**VALIDATION (AMP-66):** verdict=PROVEN | test=existence+distribution | conf=88 | run=2026-05-03 | signed_by=Devon-9a6b — Police.uk shoplifting present at street-level for all 10 England+Wales retail anchors in 2026-03; mean=184.2, σ=158.2 (z=1.13)
 
 ---
 

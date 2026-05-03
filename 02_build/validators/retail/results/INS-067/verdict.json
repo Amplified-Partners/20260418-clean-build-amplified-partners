@@ -2,15 +2,15 @@
   "insight_id": "INS-067",
   "title": "Shrinkage Detection \u00d7 Police.uk Crime \u00d7 CCTV Event Logs (Retail)",
   "vertical": "Retail",
-  "verdict": "PLAUSIBLE",
+  "verdict": "PROVEN",
   "test_class": "existence+distribution",
-  "summary": "Police.uk reachable for 12/12 anchors; signal magnitude mean exceeds threshold by only 0.93\u03c3 (< 1.0\u03c3); small effect",
+  "summary": "Police.uk shoplifting present at street-level for all 10 England+Wales retail anchors in 2026-03; mean=184.2, \u03c3=158.2 (z=1.13)",
   "evidence": [
     {
       "test": "existence",
-      "claim": "Police.uk shoplifting available at street level across 12 UK retail anchors",
-      "n_sources": 12,
-      "n_reachable": 12,
+      "claim": "Police.uk shoplifting available at street level across 10 England+Wales retail anchors",
+      "n_sources": 10,
+      "n_reachable": 10,
       "n_skipped_keyless": 0,
       "n_failed": 0,
       "sources": [
@@ -329,22 +329,6 @@
           "source": "police_uk",
           "url": "https://data.police.uk/api/crimes-street/shoplifting",
           "params": {
-            "lat": 55.8617,
-            "lng": -4.253,
-            "date": "2026-03"
-          },
-          "accessed_utc": "2026-05-03T21:39:59Z",
-          "status": 200,
-          "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-          "cached": true,
-          "sample": [],
-          "anchor": "G1_glasgow_buchanan_st",
-          "n_shoplifting": 0
-        },
-        {
-          "source": "police_uk",
-          "url": "https://data.police.uk/api/crimes-street/shoplifting",
-          "params": {
             "lat": 51.4576,
             "lng": -2.5867,
             "date": "2026-03"
@@ -458,22 +442,6 @@
           ],
           "anchor": "LS1_leeds_briggate",
           "n_shoplifting": 279
-        },
-        {
-          "source": "police_uk",
-          "url": "https://data.police.uk/api/crimes-street/shoplifting",
-          "params": {
-            "lat": 55.9525,
-            "lng": -3.188,
-            "date": "2026-03"
-          },
-          "accessed_utc": "2026-05-03T21:40:02Z",
-          "status": 200,
-          "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-          "cached": true,
-          "sample": [],
-          "anchor": "EH1_edinburgh_princes_st",
-          "n_shoplifting": 0
         },
         {
           "source": "police_uk",
@@ -594,29 +562,30 @@
           "n_shoplifting": 174
         }
       ],
-      "reason": "all 12 sources reachable; data shape consistent with claim"
+      "reason": "all 10 sources reachable; data shape consistent with claim"
     },
     {
       "test": "distribution",
       "claim": "monthly shoplifting count exceeds 5 incidents in retail anchor areas",
-      "n": 12,
-      "mean": 153.5,
-      "stdev": 159.928369,
+      "n": 10,
+      "mean": 184.2,
+      "stdev": 158.232614,
       "threshold": 5.0,
       "direction": "above",
-      "z": 0.9285,
+      "z": 1.1325,
       "z_min": 1.0,
-      "reason": "mean exceeds threshold by only 0.93\u03c3 (< 1.0\u03c3); small effect"
+      "reason": "mean exceeds threshold by 1.13\u03c3 \u2265 1.0\u03c3"
     }
   ],
   "notes": [
     "month sampled: 2026-03",
-    "anchors: NE1_eldon_square, NE2_jesmond_acorn_rd, NE3_gosforth_high_st, M3_manchester_arndale, B5_birmingham_bullring, L1_liverpool_one, G1_glasgow_buchanan_st, BS1_bristol_cabot_circus, LS1_leeds_briggate, EH1_edinburgh_princes_st, W1_oxford_st_london, SE1_borough_market_london",
+    "anchors (England+Wales only): NE1_eldon_square, NE2_jesmond_acorn_rd, NE3_gosforth_high_st, M3_manchester_arndale, B5_birmingham_bullring, L1_liverpool_one, BS1_bristol_cabot_circus, LS1_leeds_briggate, W1_oxford_st_london, SE1_borough_market_london",
+    "Glasgow + Edinburgh excluded from Police.uk distribution test \u2014 Police Scotland is not on data.police.uk.",
     "Population shrink rate (1.68%) is industry research, not Police.uk; the validatable leg here is crime-data availability + variance \u2014 sufficient for the 'spike-detection' leading-indicator claim."
   ],
-  "confidence": 70,
-  "run_at_utc": "2026-05-03T22:29:18Z",
-  "git_sha": "93a5f041de1df89faccba7ea4f2df3b3e5ddfc4b",
+  "confidence": 88,
+  "run_at_utc": "2026-05-03T22:57:41Z",
+  "git_sha": "0db308ab54ad19848c5c9996461a5ed6140855cf",
   "session_id": "devin-9a6bd256bd7c4a90a083a471fa94a810",
   "signed_by": "Devon-9a6b"
 }

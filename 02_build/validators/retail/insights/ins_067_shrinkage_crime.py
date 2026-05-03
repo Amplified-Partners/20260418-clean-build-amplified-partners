@@ -17,7 +17,7 @@ We run two checks:
 """
 from __future__ import annotations
 
-from ..fetchers.police_uk import availability, crimes_at_location, RETAIL_AREAS
+from ..fetchers.police_uk import availability, crimes_at_location, RETAIL_AREAS_POLICE_UK
 from ..tests.distribution import distribution_test
 from ..tests.existence import existence_check
 from ..verdict import Verdict
@@ -37,14 +37,20 @@ def run() -> Verdict:
     month = _latest_month()
     fetched = []
     counts: list[float] = []
-    for name, (lat, lng) in RETAIL_AREAS.items():
+    # Use the England+Wales subset only — Police.uk does not cover Scotland,
+    # so Glasgow and Edinburgh would always return [] and corrupt the
+    # distribution-test mean by injecting spurious zeros (Devin Review
+    # finding 0db308a). The master RETAIL_AREAS list remains canonical
+    # for use with non-Police.uk anchors (e.g. ONS, future Police Scotland).
+    anchors = RETAIL_AREAS_POLICE_UK
+    for name, (lat, lng) in anchors.items():
         f = crimes_at_location("shoplifting", lat, lng, date=month)
         n = len(f.body) if isinstance(f.body, list) else 0
         fetched.append({**f.evidence(sample_rows=2), "anchor": name, "n_shoplifting": n})
         counts.append(float(n))
 
     ev_verdict, ev_bundle = existence_check(
-        claim=f"Police.uk shoplifting available at street level across {len(RETAIL_AREAS)} UK retail anchors",
+        claim=f"Police.uk shoplifting available at street level across {len(anchors)} England+Wales retail anchors",
         fetched_list=[e for e in fetched],
     )
     dist_verdict, dist_bundle = distribution_test(
@@ -57,7 +63,7 @@ def run() -> Verdict:
     # Combine: existence must succeed; distribution proves the leading-indicator leg has signal magnitude.
     if ev_verdict == "PROVEN" and dist_verdict == "PROVEN":
         v, conf, summary = "PROVEN", 88, (
-            f"Police.uk shoplifting present at street-level for all {len(RETAIL_AREAS)} retail anchors "
+            f"Police.uk shoplifting present at street-level for all {len(anchors)} England+Wales retail anchors "
             f"in {month}; mean={dist_bundle['mean']:.1f}, σ={dist_bundle['stdev']:.1f} (z={dist_bundle['z']:.2f})"
         )
     elif ev_verdict in ("PROVEN", "PLAUSIBLE"):
@@ -70,7 +76,8 @@ def run() -> Verdict:
 
     notes = [
         f"month sampled: {month}",
-        f"anchors: {', '.join(RETAIL_AREAS.keys())}",
+        f"anchors (England+Wales only): {', '.join(anchors.keys())}",
+        "Glasgow + Edinburgh excluded from Police.uk distribution test — Police Scotland is not on data.police.uk.",
         "Population shrink rate (1.68%) is industry research, not Police.uk; the validatable leg here is "
         "crime-data availability + variance — sufficient for the 'spike-detection' leading-indicator claim.",
     ]
