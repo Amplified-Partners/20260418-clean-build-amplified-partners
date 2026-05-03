@@ -1,0 +1,31 @@
+{
+  "insight_id": "INS-022",
+  "verdict": "PLAUSIBLE",
+  "test_class": "existence",
+  "evidence": {
+    "sources": [
+      {
+        "name": "voa",
+        "url": "https://www.gov.uk/government/statistics/non-domestic-rating-stock-of-properties-2024",
+        "accessed_at": "2026-05-03T21:24:02+00:00",
+        "query_params": {},
+        "response_hash": "59f0149bf55db40da9daaca2"
+      },
+      {
+        "name": "companies_house",
+        "url": "https://api.company-information.service.gov.uk",
+        "accessed_at": "2026-05-03T21:24:02+00:00",
+        "query_params": {
+          "status": "skipped"
+        },
+        "response_hash": "auth-required"
+      }
+    ],
+    "metric": "rows=1, granularity=match, license=open; voa_present=True; ch_present=False",
+    "notes": "VOA leg PROVEN; Companies House leg SKIPPED (set COMPANIES_HOUSE_API_KEY). Recipe demoted to PLAUSIBLE pending key-required B leg.",
+    "raw_pointer": "03_shadow/validators/INS-022"
+  },
+  "verdict_at": "2026-05-03",
+  "code_sha": "8ab65e9f94f8",
+  "reason": ""
+}

@@ -1,7 +1,7 @@
 ---
 title: Governed workspace manifest (authoritative inventory)
-date: 2026-05-01
-version: 44
+date: 2026-05-03
+version: 45
 status: draft
 ---
 
@@ -106,6 +106,7 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
   - `01_truth/processes/2026-04_stateless-handover_neutrality-clause_v1.md` `[LOGIC TO BE CONFIRMED]` (candidate addendum to the job-wrapup SOP; neutrality rule for stateless handovers; authoritative `00_authority/OPINION_CONFIDENCE.md` references this file)
 - `01_truth/schemas/` `[LOGIC TO BE CONFIRMED]` (schema contracts to be populated)
   - `01_truth/schemas/README.md` `[LOGIC TO BE CONFIRMED]` (folder purpose stub)
+  - `01_truth/schemas/2026-05_public-data-validation_v1.md` `[LOGIC TO BE CONFIRMED]` (three-band verdict scheme — PROVEN / PLAUSIBLE / DISPROVEN — for validating insight-catalogue claims against UK public data; ABC-bridge convention; evidence shape; consumed by `02_build/validators/`. SKIPPED is a process state for missing auth, not a verdict band.)
 - `01_truth/interfaces/` `[LOGIC TO BE CONFIRMED]` (API contracts to be populated)
   - `01_truth/interfaces/README.md` `[LOGIC TO BE CONFIRMED]` (folder purpose stub)
 - `01_truth/SYSTEMS-AND-API-REGISTER.md` `[LOGIC TO BE CONFIRMED]` (single register of all APIs, MCP servers, telephony systems, code modules, and their locations across all Amplified Partners repos)
@@ -162,6 +163,12 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
     - `P10-kill-switch-master-reference.md` `[NON-AUTHORITATIVE]` (510 lines — binary shutdown architecture)
 
 ## Changelog
+
+### v45 — 2026-05-03
+
+- Added `01_truth/schemas/2026-05_public-data-validation_v1.md` to **Candidate authority** § `01_truth/schemas/`. Defines the three-band verdict scheme (PROVEN / PLAUSIBLE / DISPROVEN) and ABC-bridge convention used by `02_build/validators/` to validate insight-catalogue entries against UK public data. (Runners may also emit `SKIPPED` as a process state when auth is missing.) Decision logged in `00_authority/DECISION_LOG.md` (entry 2026-05-03). `[LOGIC TO BE CONFIRMED]` pending Ewan review.
+
+Signed-by: Devon-6264 | 2026-05-03 | devin-6264b0ba42c6453b86b166bebc3d868a
 
 ### v44 — 2026-05-01
 

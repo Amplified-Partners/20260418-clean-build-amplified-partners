@@ -1,0 +1,8 @@
+# Validators dependencies
+# Authored by Devon-6264, 2026-05-03 (session devin-6264b0ba42c6453b86b166bebc3d868a)
+
+httpx>=0.27.0
+pandas>=2.2.0
+scipy>=1.13.0
+python-dateutil>=2.9.0
+PyYAML>=6.0

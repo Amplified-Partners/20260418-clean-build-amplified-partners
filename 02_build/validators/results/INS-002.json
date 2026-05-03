@@ -1,0 +1,14 @@
+{
+  "insight_id": "INS-002",
+  "verdict": "SKIPPED",
+  "test_class": "existence",
+  "evidence": {
+    "sources": [],
+    "metric": "BoE IADB CSV emit not yet wired: ParserError",
+    "notes": "BoE IADB (`_iadb-fromshowcolumns.asp`) returns HTML by default; CSV requires a session round-trip not implemented. ONS PPI (`mm22`/`mm23` releases) is the authoritative alternative \u2014 wiring tracked as a follow-up. Recipe public leg therefore SKIPPED.",
+    "raw_pointer": ""
+  },
+  "verdict_at": "2026-05-03",
+  "code_sha": "8ab65e9f94f8",
+  "reason": "boe_iadb_csv_not_wired"
+}

@@ -1,0 +1,14 @@
+{
+  "insight_id": "INS-018",
+  "verdict": "SKIPPED",
+  "test_class": "base_rate",
+  "evidence": {
+    "sources": [],
+    "metric": "",
+    "notes": "EPC_API_KEY and EPC_API_EMAIL not set. Register at https://epc.opendatacommunities.org/ \u2014 then re-run.",
+    "raw_pointer": ""
+  },
+  "verdict_at": "2026-05-03",
+  "code_sha": "8ab65e9f94f8",
+  "reason": "EPC_API_KEY and EPC_API_EMAIL not set. Register at https://epc.opendatacommunities.org/ \u2014 then re-run."
+}

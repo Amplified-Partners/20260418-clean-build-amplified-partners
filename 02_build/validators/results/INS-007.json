@@ -1,0 +1,33 @@
+{
+  "insight_id": "INS-007",
+  "verdict": "PLAUSIBLE",
+  "test_class": "existence",
+  "evidence": {
+    "sources": [
+      {
+        "name": "planning_data",
+        "url": "https://www.planning.data.gov.uk/dataset.json",
+        "accessed_at": "2026-05-03T21:24:01+00:00",
+        "query_params": {},
+        "response_hash": "b80786827f02d981d9ffd5c8"
+      },
+      {
+        "name": "planning_data",
+        "url": "https://www.planning.data.gov.uk/entity.json?dataset=planning-application&limit=10&geometry_reference=newcastle-upon-tyne",
+        "accessed_at": "2026-05-03T21:24:01+00:00",
+        "query_params": {
+          "dataset": "planning-application",
+          "limit": 10,
+          "geometry_reference": "newcastle-upon-tyne"
+        },
+        "response_hash": "0b1a0c0b2238f6ecc064f553"
+      }
+    ],
+    "metric": "rows=1, granularity=match, license=open; dataset_present=True; sample_rows=0",
+    "notes": "Planning.data.gov.uk publishes the planning-application dataset under OGL; geometry_reference filtering supports LA-scoped queries. ABC bridge: client-side conversion rate (70% planning\u2192trade-instruction) is untested from public data. Public leg PROVEN demoted to PLAUSIBLE per convention.",
+    "raw_pointer": "03_shadow/validators/INS-007"
+  },
+  "verdict_at": "2026-05-03",
+  "code_sha": "8ab65e9f94f8",
+  "reason": ""
+}

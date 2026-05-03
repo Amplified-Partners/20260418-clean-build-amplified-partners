@@ -1,7 +1,7 @@
 ---
 title: Decision log
-date: 2026-05-01
-version: 13
+date: 2026-05-03
+version: 14
 status: draft
 ---
 
@@ -12,6 +12,14 @@ status: draft
 One entry per decision. Keep it short. Link out to supporting docs.
 
 ## Entries
+
+### 2026-05-03 — Public-data validation pipeline + three-band verdict scheme
+
+- **Decision**: Stand up `02_build/validators/` as the canonical pipeline that validates insight-catalogue entries against UK public data, and adopt a three-band verdict scheme (PROVEN / PLAUSIBLE / DISPROVEN) defined in `01_truth/schemas/2026-05_public-data-validation_v1.md`. (Runners may also emit `SKIPPED` as a process state when an auth-required leg has no key — distinct from a verdict band.) Verdicts are written back into `01_truth/schemas/research-index/00-insight-catalogue_v1.md` as additive `**VALIDATION:**` lines that sit under (and never modify) `**STATUS:**`. Trades vertical pilot (AMP-64) wires 6 priority insights — INS-001/002/006/007/018/022 — and produces 3 PLAUSIBLE + 3 SKIPPED verdicts.
+- **Why**: Architect directed (parent ticket [AMP-59](https://linear.app/amplifiedpartners/issue/AMP-59)) — the catalogue contains 136 research-backed claims marked `STATUS: HYPOTHESIS`; until each is tested against real public data we cannot quote them in client-facing material. The ABC-bridge convention reflects honest scope limits: when only the public leg is testable, the recipe lands at PLAUSIBLE rather than overselling as PROVEN.
+- **Where encoded**: `01_truth/schemas/2026-05_public-data-validation_v1.md` v1 (scheme + evidence shape), `02_build/validators/` (Python package: 4 reusable test classes, 6 source fetchers with content-addressed caching, per-insight runners, CLI), `01_truth/schemas/research-index/00-insight-catalogue_v1.md` (3 VALIDATION lines added for INS-006/007/022; co-signer line in frontmatter), `00_authority/MANIFEST.md` v45 § Candidate authority.
+- **Status**: candidate — pilot complete, pending Ewan review of verdicts before scaling to remaining trades insights and other verticals.
+- **Signed-by**: Devon-6264 | 2026-05-03 | devin-6264b0ba42c6453b86b166bebc3d868a
 
 ### 2026-05-01 — Systems and API Register created as candidate authority
 

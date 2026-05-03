@@ -3,12 +3,13 @@ title: "Insight Catalogue"
 id: "insight-catalogue"
 version: 1
 created: 2026-04-25
-last_validated: 2026-04-25
+last_validated: 2026-05-03
 type: document
 topic_type: reference
 status: imported
 source_file: "00-INSIGHT-CATALOGUE.md"
 signed_by: "Devon, 2026-04-25, devin-992682c244cf444f91e0a516498afbfd"
+co_signed_by: "Devon-6264, 2026-05-03, devin-6264b0ba42c6453b86b166bebc3d868a (added VALIDATION: lines for trades pilot, see 01_truth/schemas/2026-05_public-data-validation_v1.md)"
 ---
 
 # Universal Insight Catalogue
@@ -207,6 +208,7 @@ signed_by: "Devon, 2026-04-25, devin-992682c244cf444f91e0a516498afbfd"
 **PUDDING BRIDGE:** Estate agent prospecting (agents know movers need tradespeople) → mortgage broker referral networks → Land Registry open data → your CRM "new mover" campaign. The same data that estate agents sell to removal companies is public and free
 **SOURCE DOC:** 04
 **STATUS:** HYPOTHESIS
+**VALIDATION:** PLAUSIBLE | test_class=distribution | metric="mean=82.0000, sd=29.6912, claim_threshold=12.0000, sigma_distance=+2.36, n=23, direction=>=; total_residential_sales=1886; window=2024-05-03_to_2026-05-03; postcode_areas=NE1,NE2,NE3" | evidence=03_shadow/validators/INS-006/ | run=2026-05-03
 
 ---
 
@@ -226,6 +228,7 @@ signed_by: "Devon, 2026-04-25, devin-992682c244cf444f91e0a516498afbfd"
 **PUDDING BRIDGE:** Commercial intelligence firms (Barbour ABI) sell planning application lead data for £5,000–£20,000/yr. This recipe replicates that service for free using the public Planning Data API
 **SOURCE DOC:** 04
 **STATUS:** HYPOTHESIS
+**VALIDATION:** PLAUSIBLE | test_class=existence | metric="rows=1, granularity=match, license=open; dataset_present=True; sample_rows=0" | evidence=03_shadow/validators/INS-007/ | run=2026-05-03
 
 ---
 
@@ -511,6 +514,7 @@ signed_by: "Devon, 2026-04-25, devin-992682c244cf444f91e0a516498afbfd"
 **PUDDING BRIDGE:** Barbour ABI and Glenigan sell commercial property intelligence to national contractors for £10,000–£50,000/yr. The VOA business rates register contains 70% of the same information for free, updated quarterly
 **SOURCE DOC:** 04
 **STATUS:** HYPOTHESIS
+**VALIDATION:** PLAUSIBLE | test_class=existence | metric="rows=1, granularity=match, license=open; voa_present=True; ch_present=False" | evidence=03_shadow/validators/INS-022/ | run=2026-05-03
 
 ---
 

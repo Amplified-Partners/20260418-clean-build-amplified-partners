@@ -1,0 +1,36 @@
+{
+  "insight_id": "INS-006",
+  "verdict": "PLAUSIBLE",
+  "test_class": "distribution",
+  "evidence": {
+    "sources": [
+      {
+        "name": "land_registry",
+        "url": "http://prod1.publicdata.landregistry.gov.uk.s3-website-eu-west-1.amazonaws.com/pp-2024.csv",
+        "accessed_at": "2026-05-03T21:23:53+00:00",
+        "query_params": {},
+        "response_hash": "1f8ba2a3ce0bdbad4ac7d39a"
+      },
+      {
+        "name": "land_registry",
+        "url": "http://prod1.publicdata.landregistry.gov.uk.s3-website-eu-west-1.amazonaws.com/pp-2025.csv",
+        "accessed_at": "2026-05-03T21:23:56+00:00",
+        "query_params": {},
+        "response_hash": "0ccf5b61abbb78c24096de2e"
+      },
+      {
+        "name": "land_registry",
+        "url": "http://prod1.publicdata.landregistry.gov.uk.s3-website-eu-west-1.amazonaws.com/pp-2026.csv",
+        "accessed_at": "2026-05-03T21:23:58+00:00",
+        "query_params": {},
+        "response_hash": "e4306860803f9f224d1f21d3"
+      }
+    ],
+    "metric": "mean=82.0000, sd=29.6912, claim_threshold=12.0000, sigma_distance=+2.36, n=23, direction=>=; total_residential_sales=1886; window=2024-05-03_to_2026-05-03; postcode_areas=NE1,NE2,NE3",
+    "notes": "Public leg (Land Registry sales count) PROVEN; full recipe demoted to PLAUSIBLE because client-side conversion rate (60-70% refurb propensity) is not testable from public data. Conversion-rate claim has FRAMEWORK LINEAGE support (CLV modelling, propensity-to-buy).",
+    "raw_pointer": "03_shadow/validators/INS-006"
+  },
+  "verdict_at": "2026-05-03",
+  "code_sha": "8ab65e9f94f8",
+  "reason": ""
+}
