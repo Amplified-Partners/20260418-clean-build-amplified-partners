@@ -152,6 +152,55 @@ class BaseRateTestClass(unittest.TestCase):
         )
         self.assertEqual(verdict.band, VerdictBand.DISPROVEN)
 
+    def test_median_for_even_length_list_averages_two_middle(self) -> None:
+        """Regression: even-length lists must average the two middle values.
+
+        With four values [9.0, 9.5, 10.5, 11.0] the true median is 10.0.
+        The pre-fix code returned `numbers_sorted[len // 2]` = 10.5
+        (upper-middle), which would mis-band a claim like high=10.2 as
+        PROVEN when the correct verdict is DISPROVEN.
+        """
+        body = b"9.0%, 9.5%, 10.5%, 11.0%."
+        claim = BaseRateClaim(
+            description="median falls inside 9-10.2",
+            pattern=r"(\d+\.\d+)%",
+            low=9.0,
+            high=10.2,
+            units="percent",
+        )
+        verdict = base_rate_test(
+            insight_id="INS-TEST",
+            vertical=VERTICAL,
+            method="synthetic",
+            body=body,
+            evidence_item=_evidence(),
+            claim=claim,
+        )
+        # True median of [9.0, 9.5, 10.5, 11.0] is 10.0 → in [9.0, 10.2]
+        # so PROVEN. Pre-fix would have picked 10.5 → DISPROVEN.
+        self.assertEqual(verdict.statistic["median"], 10.0)
+        self.assertEqual(verdict.band, VerdictBand.PROVEN)
+
+    def test_median_for_odd_length_list_picks_middle(self) -> None:
+        body = b"5.0%, 7.0%, 11.0%."
+        claim = BaseRateClaim(
+            description="middle value 7%",
+            pattern=r"(\d+\.\d+)%",
+            low=6.0,
+            high=8.0,
+            units="percent",
+        )
+        verdict = base_rate_test(
+            insight_id="INS-TEST",
+            vertical=VERTICAL,
+            method="synthetic",
+            body=body,
+            evidence_item=_evidence(),
+            claim=claim,
+        )
+        self.assertEqual(verdict.statistic["median"], 7.0)
+        self.assertEqual(verdict.band, VerdictBand.PROVEN)
+
 
 class CorrelationTestClass(unittest.TestCase):
     def test_pearson_perfect_positive(self) -> None:

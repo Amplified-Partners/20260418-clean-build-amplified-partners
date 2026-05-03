@@ -72,7 +72,11 @@ def base_rate_test(
         )
 
     numbers_sorted = sorted(numbers)
-    median = numbers_sorted[len(numbers_sorted) // 2]
+    mid = len(numbers_sorted) // 2
+    if len(numbers_sorted) % 2 == 0:
+        median = (numbers_sorted[mid - 1] + numbers_sorted[mid]) / 2
+    else:
+        median = numbers_sorted[mid]
     in_range = claim.low <= median <= claim.high
     band = VerdictBand.PROVEN if in_range else VerdictBand.DISPROVEN
     finding = (
