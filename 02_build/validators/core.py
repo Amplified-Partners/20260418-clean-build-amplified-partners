@@ -39,6 +39,7 @@ class VerdictBand(str, Enum):
     PLAUSIBLE = "PLAUSIBLE"
     DISPROVEN = "DISPROVEN"
     BLOCKED = "BLOCKED"
+    DEFERRED = "DEFERRED"
 
 
 class TestClass(str, Enum):

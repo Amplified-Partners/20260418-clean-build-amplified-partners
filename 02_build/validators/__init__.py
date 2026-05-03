@@ -11,6 +11,12 @@ against UK public datasets and emits one of:
 - DISPROVEN  — public data contradicts the claim.
 - BLOCKED    — required source is unreachable in this environment (e.g. needs
                an API key not yet provisioned). Recorded so the gap is visible.
+               Resolves to PROVEN/PLAUSIBLE/DISPROVEN once the credential lands.
+- DEFERRED   — validation must NOT be attempted from an automated session for
+               policy reasons (ToS-bound scraping, legal review pending, PII
+               risk). Distinct from BLOCKED: BLOCKED = "we'd run if we could";
+               DEFERRED = "we refuse to run on policy grounds". Resolves to a
+               verdict only after Ewan signs off on the legal posture.
 
 Per AMP-67 / AMP-59. Vertical-agnostic by design so AMP-64/65/66/68 reuse the
 same machinery.

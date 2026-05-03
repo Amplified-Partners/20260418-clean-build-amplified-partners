@@ -89,10 +89,22 @@ class Fetched:
     headers: dict[str, str] = field(default_factory=dict)
     cached: bool = False
 
-    def evidence(self, sample_rows: int = 5) -> dict[str, Any]:
-        """Return the evidence-shape dict (no raw body, just summary + sample)."""
+    def evidence(self, sample_rows: int = 5, sample_chars: int = 500) -> dict[str, Any]:
+        """Return the evidence-shape dict (no raw body, just summary + sample).
+
+        For string bodies (every ``fetch_text`` response — typically HTML or
+        XML) the sample is truncated to ``sample_chars`` characters. Without
+        this, full pages (e.g. a 140 kB Amazon Seller Central sign-in page)
+        would land verbatim in the verdict JSON. ``sample_rows=0`` suppresses
+        the sample for both strings and collections.
+        """
         sample = self.body
-        if isinstance(self.body, list):
+        if isinstance(self.body, str):
+            if sample_rows == 0:
+                sample = ""
+            elif len(self.body) > sample_chars:
+                sample = self.body[:sample_chars] + f"... [truncated; full body sha256={self.sha256}]"
+        elif isinstance(self.body, list):
             sample = self.body[:sample_rows]
         elif isinstance(self.body, dict):
             sample = {k: self.body[k] for k in list(self.body.keys())[:sample_rows]}
