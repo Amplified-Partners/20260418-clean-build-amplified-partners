@@ -1,6 +1,6 @@
 ---
 title: Decision log
-date: 2026-05-01
+date: 2026-05-03
 version: 14
 status: draft
 ---
@@ -15,7 +15,7 @@ One entry per decision. Keep it short. Link out to supporting docs.
 
 ### 2026-05-03 — Public-data validation: three-band scheme + retail vertical reference implementation (AMP-66)
 
-- **Decision**: Adopt a **three-band verdict scheme** (`PROVEN` / `PLAUSIBLE` / `DISPROVEN`, with a separate `DEFERRED` policy band for ToS/legal-gated work) for validating insight-recipe claims against real public data. First applied to the Retail vertical (19 insights, INS-060–078) against UK public sources (Police.uk, ONS Beta API, Nomis, Land Registry CCOD, Insolvency Service stats, GOV.UK content API, Bank of England, etc.). Headline outcome at this commit: 7 PROVEN / 11 PLAUSIBLE / 1 DEFERRED.
+- **Decision**: Adopt a **three-band verdict scheme** (`PROVEN` / `PLAUSIBLE` / `DISPROVEN`, with a separate `DEFERRED` policy band for ToS/legal-gated work) for validating insight-recipe claims against real public data. First applied to the Retail vertical (19 insights, INS-060–078) against UK public sources (Police.uk, ONS Beta API, Nomis, Land Registry CCOD, Insolvency Service stats, GOV.UK content API, Bank of England, etc.). Headline outcome at this commit: 8 PROVEN / 10 PLAUSIBLE / 1 DEFERRED.
 - **Why**: AMP-66 (sister to AMP-59) requires that retail insights be backed by reachable public data at the granularity claimed, not just plausible narrative. The three-band scheme avoids the dishonesty of a binary pass/fail when the public leg is reachable but the recipe also depends on internal data we cannot test from outside; it forces us to name what is actually proven vs what is research-supported but unmeasurable from public sources.
 - **Where encoded**:
   - Schema: `01_truth/schemas/2026-05_public-data-validation_v1.md` (verdict scheme + four reusable test classes: existence, base_rate, correlation, distribution).

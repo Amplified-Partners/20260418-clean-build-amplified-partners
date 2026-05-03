@@ -1,6 +1,6 @@
 ---
 title: Governed workspace manifest (authoritative inventory)
-date: 2026-05-01
+date: 2026-05-03
 version: 45
 status: draft
 ---
@@ -173,6 +173,7 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
   - Implementation lives at `02_build/validators/retail/`. Catalogue
     `01_truth/schemas/research-index/00-insight-catalogue_v1.md` was updated additively with `**VALIDATION (AMP-66):**` lines on each retail entry.
   - Per the `AGENTS.md` § "PR reviewers — what to flag" rule 7 (new file in indexed class must appear in MANIFEST).
+- Frontmatter `date` advanced to 2026-05-03 to reflect this edit (per the v34 / v36 convention; same fix applied to `00_authority/DECISION_LOG.md` v14 in the same commit).
 
 Signed-by: Devon-9a6b | 2026-05-03 | devin-9a6bd256bd7c4a90a083a471fa94a810
 
