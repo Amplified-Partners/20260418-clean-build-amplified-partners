@@ -25,7 +25,6 @@ TRADES_PILOT = [
 
 def runner_for(insight_id: str) -> Callable[[], Verdict]:
     """Return the ``run`` function for ``insight_id`` (e.g. ``INS-006``)."""
-    module_name = "ins_" + insight_id.lower().replace("-", "_").lstrip("ins_").lstrip("_")
     module_name = "ins_" + insight_id.split("-")[1]
     mod = import_module(f"validators.insights.{module_name}")
     runner: Callable[[], Verdict] = mod.run

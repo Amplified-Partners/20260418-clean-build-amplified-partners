@@ -37,7 +37,7 @@ def run() -> Verdict:
         )
 
     data, ref = epc.search_domestic(postcode=TARGET_POSTCODE_AREA, size=100)
-    rows = data.get("rows") if isinstance(data, dict) else []
+    rows = (data.get("rows") or []) if isinstance(data, dict) else []
     n = len(rows)
 
     # Empirical rate of properties with a current rating recorded in the EPC sample
