@@ -6,8 +6,10 @@ Key:  https://developer-specs.company-information.service.gov.uk/
 Insights gated by this key (Hospitality vertical only — most CH-heavy work
 lives in Trades/Universal):
 - INS-055 (GP% Below Format Floor — sector benchmarking via filed accounts)
-- INS-056 (Staff Tenure Median — labour market cross-reference)
-- INS-059 (HMRC VAT/PAYE Arrears — corroboration via late-filing signal)
+
+INS-056 (Staff Tenure Median) routes through `nomis` and INS-059 (HMRC VAT /
+PAYE Arrears) routes through `insolvency_service`; neither is gated by the
+Companies House key.
 
 If ``COMPANIES_HOUSE_API_KEY`` is not set in the environment, the
 ``key_available()`` check returns ``False`` and the validator records

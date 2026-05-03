@@ -6,7 +6,9 @@ Key:  free signup at https://www.metoffice.gov.uk/services/data/datapoint/api
 Insights gated by this key:
 - INS-033 (Weather-Adjusted Covers Forecasting)
 - INS-035 (No-Show Prediction — weather component)
-- INS-050 (Air Quality and Al-Fresco — UV/pollen forecast)
+
+INS-050 (Air Quality and Al-Fresco) routes through `defra_air` instead and is
+not gated by the Met Office key.
 
 If ``MET_OFFICE_API_KEY`` is not set in the environment, the
 ``key_available()`` check returns ``False`` and the validator records
