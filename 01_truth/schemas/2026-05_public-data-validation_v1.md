@@ -68,7 +68,7 @@ This is documented per insight in the `VALIDATION:` field's `notes:` line.
 
 Every verdict MUST record:
 
-- `verdict` — one of `PROVEN | PLAUSIBLE | DISPROVEN`.
+- `verdict` — one of `PROVEN | PLAUSIBLE | DISPROVEN`. (Runners may also emit `SKIPPED` as a process state when auth is missing or a source is not yet wired — `SKIPPED` results are not verdicts and the evidence fields below may be empty.)
 - `test_class` — `existence | base_rate | correlation | distribution`.
 - `sources` — list of `{name, url, accessed_at, query_params, response_hash}`.
 - `metric` — the test statistic (r, p, n, percentage, count).

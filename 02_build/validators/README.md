@@ -28,16 +28,16 @@ python -m validators report --vertical trades
 
 | Source | Auth | Status |
 |--------|------|--------|
-| HM Land Registry — Price Paid Data | none | implemented |
-| ONS Business Demography | none | implemented |
-| Insolvency Service Statistics | none | implemented |
-| Bank of England IADB (PPI) | none | implemented |
-| DLUHC Live Tables (housing supply) | none | implemented |
-| Planning.data.gov.uk | none | implemented |
-| VOA Business Rates Rateable Values | none | implemented |
-| Companies House REST API | API key | scaffolded — set `COMPANIES_HOUSE_API_KEY` |
-| EPC Domestic Register | API key | scaffolded — set `EPC_API_KEY` |
-| Met Office DataPoint | API key | scaffolded — set `MET_OFFICE_DATAPOINT_KEY` |
+| HM Land Registry — Price Paid Data | none | implemented (INS-006) |
+| Planning.data.gov.uk | none | implemented (INS-007) |
+| VOA Business Rates Rateable Values | none | implemented (INS-022, existence check only) |
+| ONS Beta API | none | scaffolded (generic fetcher in `sources/ons.py`, not yet wired to an insight) |
+| Bank of England IADB (PPI) | none | scaffolded (INS-002 wires this; full CSV emit needs the gov.uk session round-trip not yet implemented) |
+| Insolvency Service Statistics | none | not yet wired |
+| DLUHC Live Tables (housing supply) | none | not yet wired |
+| Companies House REST API | API key | scaffolded — set `COMPANIES_HOUSE_API_KEY` (used by INS-022 leg B) |
+| EPC Domestic Register | API key | scaffolded — set `EPC_API_KEY` (INS-018 SKIPPED without it) |
+| Met Office DataPoint | API key | not yet wired (INS-001 SKIPPED pending key + fetcher) |
 | MIDAS Open / CEDA | login | not yet wired |
 
 If an auth-required source is missing its key, the relevant insight's verdict is `SKIPPED` with `reason: AUTH_REQUIRED`. Other insights in the run continue.
@@ -77,7 +77,7 @@ A scheduled Devon session re-runs verdicts approaching expiry.
 
 - Every verdict file is signed (per `00_authority/SIGNATURES.md`).
 - Every test records `code_sha`, `accessed_at`, and `response_hash` for reproducibility.
-- Failures (network, schema drift, rate limit) raise — they do not silently produce a verdict.
+- Failures (network, schema drift, rate limit) produce a `SKIPPED` or source-absent verdict, never a silent false positive or false negative. Inside multi-source insights, individual fetch failures are caught so the surviving sources can still contribute, but the verdict notes which leg failed.
 - The cache is content-addressed; identical query params produce identical cache keys.
 
 ---
