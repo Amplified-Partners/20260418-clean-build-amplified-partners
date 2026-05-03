@@ -1,0 +1,71 @@
+# PR validation — enforces Linear ticket reference + branch name convention.
+#
+# Per AMP-70:
+#   - Every PR must reference a Linear ticket (AMP-XXX) in the title or body.
+#   - Branches must follow `<prefix>/<ticket-id>-<short-desc>` (Cove convention)
+#     or one of the allowed agent/automation prefixes.
+#
+# Authored by Devon-4330 | 2026-05-03 | session devin-4330c661a80b4770aa8f62980c21366a.
+name: PR validation
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened, ready_for_review]
+    branches: [main]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  linear-ticket:
+    name: Linear ticket reference
+    runs-on: ubuntu-latest
+    if: github.actor != 'dependabot[bot]'
+    steps:
+      - name: Check PR title or body contains AMP-XXX
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          set -euo pipefail
+          combined="${PR_TITLE}"$'\n'"${PR_BODY:-}"
+          if printf '%s' "$combined" | grep -Eqi 'AMP-[0-9]+'; then
+            ticket=$(printf '%s' "$combined" | grep -Eoi 'AMP-[0-9]+' | head -1 | tr '[:lower:]' '[:upper:]')
+            echo "Found Linear ticket reference: $ticket"
+          else
+            echo "::error::PR must reference a Linear ticket (AMP-XXX) in the title or body."
+            echo "::error::Example title: 'feat(amp-70): add branch protection workflow'"
+            exit 1
+          fi
+
+  branch-name:
+    name: Branch name convention
+    runs-on: ubuntu-latest
+    if: github.actor != 'dependabot[bot]'
+    steps:
+      - name: Check head branch matches allowed pattern
+        env:
+          HEAD_REF: ${{ github.head_ref }}
+        run: |
+          set -euo pipefail
+          # Allowed prefixes:
+          #   cove/      — Cove worker branches (canonical for AMP-XXX flow)
+          #   devin/     — Devin/Devon session branches
+          #   devon/     — explicit Devon branches
+          #   clawd/     — Claude/Clawd agent
+          #   cassian/   — Cassian agent
+          #   antigravity/ — Antigravity (Arbiter)
+          #   openclaw/  — OpenClaw note-taker
+          #   dependabot/  — automated dep updates
+          #   release/   — release branches
+          #   feature/, fix/, chore/, hotfix/, docs/, refactor/, test/, ci/  — conventional types
+          pattern='^(cove|devin|devon|clawd|cassian|antigravity|openclaw|dependabot|release|feature|fix|chore|hotfix|docs|refactor|test|ci)/.+'
+          if printf '%s' "$HEAD_REF" | grep -Eq "$pattern"; then
+            echo "Branch name '$HEAD_REF' matches allowed pattern."
+          else
+            echo "::error::Branch name '$HEAD_REF' does not match allowed pattern."
+            echo "::error::Use '<prefix>/<ticket-id>-<short-desc>' (e.g. 'cove/AMP-123-fix-thing', 'devin/amp-70-pr-workflow')."
+            echo "::error::Allowed prefixes: cove, devin, devon, clawd, cassian, antigravity, openclaw, dependabot, release, feature, fix, chore, hotfix, docs, refactor, test, ci."
+            exit 1
+          fi

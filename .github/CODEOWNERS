@@ -1,0 +1,15 @@
+# CODEOWNERS — required reviewers for every PR.
+#
+# Per AMP-70 PR workflow:
+#   agent creates PR → second agent reviews → Antigravity (Arbiter) merges.
+#
+# Antigravity does not yet have a GitHub identity. Until it does, the human
+# Architect (@ewan-dot) holds the Arbiter role for merge authority. Once
+# Antigravity has a GitHub user/bot, add it here and remove the temporary
+# `[SOURCE REQUIRED]` marker below.
+#
+# [SOURCE REQUIRED] @antigravity-bot — pending Antigravity GitHub identity.
+#
+# Authored by Devon-4330 | 2026-05-03 | session devin-4330c661a80b4770aa8f62980c21366a.
+
+*       @ewan-dot

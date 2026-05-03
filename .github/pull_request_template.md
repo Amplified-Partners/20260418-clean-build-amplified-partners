@@ -3,7 +3,15 @@ Reviewer: see AGENTS.md § "PR reviewers" for what to flag vs. ignore.
 Author: tick only what applies. Keep answers short.
 
 Authored by Devon (Devin session 4cc8b0d727684f94a8f055853099d8e6), 2026-04-23.
+Updated by Devon-4330 | 2026-05-03 | session devin-4330c661a80b4770aa8f62980c21366a — added Linear ticket section per AMP-70.
 -->
+
+## Linear ticket
+
+<!-- Required. PR title or this section must reference an AMP-XXX ticket. -->
+<!-- Example: AMP-123 — short description, or https://linear.app/amplifiedpartners/issue/AMP-123 -->
+
+AMP-
 
 ## What changed
 
