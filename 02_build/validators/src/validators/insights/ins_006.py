@@ -64,7 +64,13 @@ def run() -> Verdict:
             refs.append(ref)
         except Exception:  # noqa: BLE001 — yearly file may not yet be published
             continue
-    df = pd.concat(frames, ignore_index=True) if frames else pd.DataFrame()
+    # Pre-seed columns so downstream filtering doesn't KeyError on a fully
+    # empty fetch (e.g. when every yearly file 404s due to network outage).
+    df = (
+        pd.concat(frames, ignore_index=True)
+        if frames
+        else pd.DataFrame(columns=["ppd_category_type", "postcode", "date_of_transfer"])
+    )
     df = filter_by_date_range(df, start, end)
     ne_df = filter_by_postcode_prefix(df, SERVED_POSTCODE_AREAS)
 

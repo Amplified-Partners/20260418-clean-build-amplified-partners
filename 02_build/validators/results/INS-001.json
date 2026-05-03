@@ -9,6 +9,6 @@
     "raw_pointer": ""
   },
   "verdict_at": "2026-05-03",
-  "code_sha": "c8863e80f7c6",
+  "code_sha": "8ab65e9f94f8",
   "reason": "MET_OFFICE_DATAPOINT_KEY not set. Register at https://www.metoffice.gov.uk/services/data/datapoint \u2014 free key. Without it the cold-snap public leg cannot be validated."
 }

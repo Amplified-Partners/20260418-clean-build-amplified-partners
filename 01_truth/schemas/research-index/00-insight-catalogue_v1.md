@@ -208,7 +208,7 @@ co_signed_by: "Devon-6264, 2026-05-03, devin-6264b0ba42c6453b86b166bebc3d868a (a
 **PUDDING BRIDGE:** Estate agent prospecting (agents know movers need tradespeople) → mortgage broker referral networks → Land Registry open data → your CRM "new mover" campaign. The same data that estate agents sell to removal companies is public and free
 **SOURCE DOC:** 04
 **STATUS:** HYPOTHESIS
-**VALIDATION:** PLAUSIBLE | test_class=distribution | metric="mean=802.8261, sd=250.1597, claim_threshold=12.0000, sigma_distance=+3.16, n=23, direction=>=; total_residential_sales=18465; window=2024-05-03_to_2026-05-03; postcode_areas=NE1,NE2,NE3" | evidence=03_shadow/validators/INS-006/ | run=2026-05-03
+**VALIDATION:** PLAUSIBLE | test_class=distribution | metric="mean=82.0000, sd=29.6912, claim_threshold=12.0000, sigma_distance=+2.36, n=23, direction=>=; total_residential_sales=1886; window=2024-05-03_to_2026-05-03; postcode_areas=NE1,NE2,NE3" | evidence=03_shadow/validators/INS-006/ | run=2026-05-03
 ---
 
 **ID:** INS-007

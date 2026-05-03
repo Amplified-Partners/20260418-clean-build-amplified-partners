@@ -69,10 +69,15 @@ def fetch_monthly_update() -> tuple[pd.DataFrame, SourceRef]:
 def filter_by_postcode_prefix(
     df: pd.DataFrame, prefixes: Sequence[str]
 ) -> pd.DataFrame:
-    """Keep rows whose postcode starts with any of ``prefixes`` (e.g. ``["NE1", "NE2", "NE3"]``)."""
+    """Keep rows whose outward postcode equals any of ``prefixes``.
+
+    UK postcodes are formatted ``OUTWARD INWARD`` with a single space
+    (e.g. ``"NE1 1AA"``). We anchor the prefix on the space or end-of-string
+    so ``"NE1"`` matches only NE1-postcodes, not NE10..NE19.
+    """
     if df.empty:
         return df
-    pattern = "^(" + "|".join(p.upper().strip() for p in prefixes) + ")"
+    pattern = "^(" + "|".join(p.upper().strip() for p in prefixes) + r")(\s|$)"
     mask = df["postcode"].fillna("").str.upper().str.match(pattern)
     return df.loc[mask].copy()
 
