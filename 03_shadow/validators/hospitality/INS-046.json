@@ -7,8 +7,8 @@
   "rationale": "Public review platforms (Google, Tripadvisor, OpenTable) restrict scraping under ToS. Recipe relies on already-published research benchmarks + per-client review corpus access.",
   "evidence": [],
   "metrics": {},
-  "run_at": "2026-05-03T20:49:40.727116+00:00",
-  "code_sha": "c8863e8",
+  "run_at": "2026-05-03T20:57:21.555910+00:00",
+  "code_sha": "e495cee",
   "agent": "Devon-4234",
   "notes": "Per Google ToS / TripAdvisor ToS \u2014 bulk programmatic harvest is restricted; validation is bounded to per-client auth flows."
 }

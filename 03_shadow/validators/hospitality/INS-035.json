@@ -7,8 +7,8 @@
   "rationale": "Validation of this insight requires the MET_OFFICE_API_KEY API key. Public leg requires a Met Office DataPoint forecast. Set the env var and rerun.",
   "evidence": [],
   "metrics": {},
-  "run_at": "2026-05-03T20:49:25.697583+00:00",
-  "code_sha": "c8863e8",
+  "run_at": "2026-05-03T20:56:55.629578+00:00",
+  "code_sha": "e495cee",
   "agent": "Devon-4234",
   "notes": "See README \u2014 request the key, store as an org-scoped secret, rerun the validator."
 }

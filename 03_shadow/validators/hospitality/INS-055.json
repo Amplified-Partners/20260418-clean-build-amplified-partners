@@ -7,8 +7,8 @@
   "rationale": "Validation of this insight requires the COMPANIES_HOUSE_API_KEY API key. Sector GP benchmarking from filed accounts requires the CH key. Set the env var and rerun.",
   "evidence": [],
   "metrics": {},
-  "run_at": "2026-05-03T20:49:47.087564+00:00",
-  "code_sha": "c8863e8",
+  "run_at": "2026-05-03T20:57:27.859594+00:00",
+  "code_sha": "e495cee",
   "agent": "Devon-4234",
   "notes": "See README \u2014 request the key, store as an org-scoped secret, rerun the validator."
 }

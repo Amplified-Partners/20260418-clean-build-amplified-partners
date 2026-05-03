@@ -9,16 +9,16 @@
     {
       "source": "ons.bics",
       "url": "https://www.ons.gov.uk/businessindustryandtrade/business/businessservices/bulletins/businessinsightsandimpactontheukeconomy/latest",
-      "accessed_at": "2026-05-03T20:49:26.572524+00:00",
+      "accessed_at": "2026-05-03T20:56:58.302499+00:00",
       "http_status": 200,
-      "response_sha256": "58d08d6ee1b105d57eef6e24c66ef6126b5f0fb8bc788427134a9f56e781445a",
+      "response_sha256": "8dfde9b8df2f284b5aae103d121340185f651d3aa07d0c239775e7534d870406",
       "query_params": {},
       "summary": "BICS bulletin"
     },
     {
       "source": "ons.cpi_all",
       "url": "https://www.ons.gov.uk/economy/inflationandpriceindices/timeseries/d7bt/mm23/data",
-      "accessed_at": "2026-05-03T20:49:46.645268+00:00",
+      "accessed_at": "2026-05-03T20:57:27.065135+00:00",
       "http_status": 200,
       "response_sha256": "38c76272e9c134e3e1ffcb466c1f4201289a48a400d8daa33f450332fc53c7ad",
       "query_params": {},
@@ -29,8 +29,8 @@
     "probes_total": 2,
     "probes_passed": 2
   },
-  "run_at": "2026-05-03T20:49:46.646927+00:00",
-  "code_sha": "c8863e8",
+  "run_at": "2026-05-03T20:57:27.067011+00:00",
+  "code_sha": "e495cee",
   "agent": "Devon-4234",
   "notes": ""
 }

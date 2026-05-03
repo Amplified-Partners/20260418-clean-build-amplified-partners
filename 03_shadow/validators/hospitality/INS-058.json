@@ -7,8 +7,8 @@
   "rationale": "Catalogue marks PUBLIC DATA as 'None required (pure internal signal)'. By the convention of this validator, recipes whose public leg is empty cannot be PROVEN by public data alone \u2014 they remain PLAUSIBLE pending client-side validation.",
   "evidence": [],
   "metrics": {},
-  "run_at": "2026-05-03T20:49:48.569222+00:00",
-  "code_sha": "c8863e8",
+  "run_at": "2026-05-03T20:57:29.739247+00:00",
+  "code_sha": "e495cee",
   "agent": "Devon-4234",
   "notes": "Public-data validator does not apply; client-data only."
 }

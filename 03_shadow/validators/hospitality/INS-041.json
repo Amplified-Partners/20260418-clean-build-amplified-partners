@@ -9,7 +9,7 @@
     {
       "source": "fsa.alerts_rss",
       "url": "https://www.food.gov.uk/news-alerts/rss/alerts",
-      "accessed_at": "2026-05-03T20:49:34.496478+00:00",
+      "accessed_at": "2026-05-03T20:57:10.162934+00:00",
       "http_status": 404,
       "response_sha256": "b2afc22062d555aa74222e53d4b48245f27fb42a6a9e252ce8fedee1cc0ec2b9",
       "query_params": {},
@@ -18,9 +18,9 @@
     {
       "source": "fsa.fhrs",
       "url": "https://api.ratings.food.gov.uk/BusinessTypes",
-      "accessed_at": "2026-05-03T20:49:25.696500+00:00",
+      "accessed_at": "2026-05-03T20:56:55.628560+00:00",
       "http_status": 200,
-      "response_sha256": "d252212f2b3bafe0786e36cec7324095f022ba390aef6fea6fcf3639a0befd3d",
+      "response_sha256": "91356ad9d60c91f97d5e783eb8623c75605f451c8e16f10fd210d3ae7abb9f4a",
       "query_params": {},
       "summary": "15 business types"
     }
@@ -29,8 +29,8 @@
     "probes_total": 2,
     "probes_passed": 1
   },
-  "run_at": "2026-05-03T20:49:34.497292+00:00",
-  "code_sha": "c8863e8",
+  "run_at": "2026-05-03T20:57:10.163740+00:00",
+  "code_sha": "e495cee",
   "agent": "Devon-4234",
   "notes": ""
 }

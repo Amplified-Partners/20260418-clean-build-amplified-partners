@@ -9,7 +9,7 @@
     {
       "source": "ons.cpih_food",
       "url": "https://www.ons.gov.uk/economy/inflationandpriceindices/timeseries/l55o/mm23/data",
-      "accessed_at": "2026-05-03T20:49:25.956990+00:00",
+      "accessed_at": "2026-05-03T20:56:56.548215+00:00",
       "http_status": 200,
       "response_sha256": "c580136859baf4a0cb836a20a2e8346f10c586cc1633728925c7d7aa4722eeeb",
       "query_params": {},
@@ -21,8 +21,8 @@
     "monthly_obs": 447,
     "annual_obs": 37
   },
-  "run_at": "2026-05-03T20:49:25.958812+00:00",
-  "code_sha": "c8863e8",
+  "run_at": "2026-05-03T20:56:56.550089+00:00",
+  "code_sha": "e495cee",
   "agent": "Devon-4234",
   "notes": ""
 }

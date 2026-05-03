@@ -7,8 +7,8 @@
   "rationale": "Validation of this insight requires the MET_OFFICE_API_KEY API key. Recipe pulls a 7-day hourly Met Office forecast. Set the env var and rerun.",
   "evidence": [],
   "metrics": {},
-  "run_at": "2026-05-03T20:49:24.515242+00:00",
-  "code_sha": "c8863e8",
+  "run_at": "2026-05-03T20:56:54.417345+00:00",
+  "code_sha": "e495cee",
   "agent": "Devon-4234",
   "notes": "See README \u2014 request the key, store as an org-scoped secret, rerun the validator."
 }

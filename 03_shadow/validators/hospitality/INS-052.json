@@ -9,9 +9,9 @@
     {
       "source": "gov_uk.consumer_rights",
       "url": "https://www.gov.uk/consumer-protection-rights",
-      "accessed_at": "2026-05-03T20:49:46.871069+00:00",
+      "accessed_at": "2026-05-03T20:57:27.470322+00:00",
       "http_status": 200,
-      "response_sha256": "8d747b51a4ed9dc659c674cb1d90d3e2ce528ef7c88805c53792f26134576420",
+      "response_sha256": "cb7f706761ac0ef192ab01277519546939f623ef076a6a198459fd765cd34558",
       "query_params": {},
       "summary": "Consumer protection rights"
     }
@@ -19,8 +19,8 @@
   "metrics": {
     "http_status": 200
   },
-  "run_at": "2026-05-03T20:49:46.871494+00:00",
-  "code_sha": "c8863e8",
+  "run_at": "2026-05-03T20:57:27.470810+00:00",
+  "code_sha": "e495cee",
   "agent": "Devon-4234",
   "notes": ""
 }

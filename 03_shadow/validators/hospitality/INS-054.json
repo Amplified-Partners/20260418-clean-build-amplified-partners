@@ -7,8 +7,8 @@
   "rationale": "Booking.com / Expedia ToS restrict programmatic price scraping. VisitEngland/VisitBritain regional occupancy reports are public but quarterly. PROVEN reserved for an authorised price-feed.",
   "evidence": [],
   "metrics": {},
-  "run_at": "2026-05-03T20:49:47.087077+00:00",
-  "code_sha": "c8863e8",
+  "run_at": "2026-05-03T20:57:27.859110+00:00",
+  "code_sha": "e495cee",
   "agent": "Devon-4234",
   "notes": "Per OTA ToS \u2014 programmatic scraping restricted; validation requires partner data."
 }

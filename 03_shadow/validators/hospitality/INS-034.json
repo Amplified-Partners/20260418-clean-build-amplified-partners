@@ -9,18 +9,18 @@
     {
       "source": "fsa.fhrs",
       "url": "https://api.ratings.food.gov.uk/Establishments?pageSize=20&pageNumber=1&address=Newcastle",
-      "accessed_at": "2026-05-03T20:49:25.341776+00:00",
+      "accessed_at": "2026-05-03T20:56:55.273623+00:00",
       "http_status": 200,
-      "response_sha256": "91c231c8daa9fdcf7ea743b6fdde1b389346d7d68083d917c0c98dfb1e15e684",
+      "response_sha256": "2b0961deead34180ed04e16aa384d761d21d0c95a9dd19c5694de74750311a7e",
       "query_params": {},
       "summary": "20 establishments returned"
     },
     {
       "source": "fsa.fhrs",
       "url": "https://api.ratings.food.gov.uk/BusinessTypes",
-      "accessed_at": "2026-05-03T20:49:25.696500+00:00",
+      "accessed_at": "2026-05-03T20:56:55.628560+00:00",
       "http_status": 200,
-      "response_sha256": "d252212f2b3bafe0786e36cec7324095f022ba390aef6fea6fcf3639a0befd3d",
+      "response_sha256": "91356ad9d60c91f97d5e783eb8623c75605f451c8e16f10fd210d3ae7abb9f4a",
       "query_params": {},
       "summary": "15 business types"
     }
@@ -29,8 +29,8 @@
     "probes_total": 2,
     "probes_passed": 2
   },
-  "run_at": "2026-05-03T20:49:25.697022+00:00",
-  "code_sha": "c8863e8",
+  "run_at": "2026-05-03T20:56:55.629005+00:00",
+  "code_sha": "e495cee",
   "agent": "Devon-4234",
   "notes": ""
 }

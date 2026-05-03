@@ -9,16 +9,16 @@
     {
       "source": "defra.uk_air",
       "url": "https://uk-air.defra.gov.uk/latest/currentlevels",
-      "accessed_at": "2026-05-03T20:49:45.724924+00:00",
+      "accessed_at": "2026-05-03T20:57:26.322670+00:00",
       "http_status": 200,
-      "response_sha256": "f6b2a796dee4f267c97a5693ac077693645cb99fa87dd0c0d7ad575177764e16",
+      "response_sha256": "9227132ca0c9a06c9a7eb4a26ec372d9d52adf9b8f55e7046422915b8fb1388d",
       "query_params": {},
       "summary": "Current levels"
     },
     {
       "source": "defra.uk_air.data",
       "url": "https://uk-air.defra.gov.uk/data/",
-      "accessed_at": "2026-05-03T20:49:46.161716+00:00",
+      "accessed_at": "2026-05-03T20:57:26.795237+00:00",
       "http_status": 200,
       "response_sha256": "9bfd27c1b892a0ef14bcdddec6de16427d568073991df87f6f2771c187b3cd1d",
       "query_params": {},
@@ -29,8 +29,8 @@
     "probes_total": 2,
     "probes_passed": 2
   },
-  "run_at": "2026-05-03T20:49:46.162219+00:00",
-  "code_sha": "c8863e8",
+  "run_at": "2026-05-03T20:57:26.795746+00:00",
+  "code_sha": "e495cee",
   "agent": "Devon-4234",
   "notes": ""
 }

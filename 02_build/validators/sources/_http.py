@@ -57,9 +57,30 @@ class CachedResponse:
         return json.loads(self.text())
 
 
+# Defence-in-depth: any incoming params value whose key looks like a credential
+# is replaced with a placeholder before it ever reaches the cache key or logs.
+# Public datasets never use these names; this is purely to harden the helper
+# against accidental misuse from a future caller.
+_SECRET_KEY_HINTS = ("key", "token", "secret", "password", "auth", "apikey")
+
+
+def _redact_params(params: dict[str, Any] | None) -> dict[str, Any]:
+    if not params:
+        return {}
+    out: dict[str, Any] = {}
+    for k, v in params.items():
+        out[k] = "***" if any(h in k.lower() for h in _SECRET_KEY_HINTS) else v
+    return out
+
+
 def _key(method: str, url: str, params: dict[str, Any] | None) -> str:
-    payload = method.upper() + "|" + url + "|" + json.dumps(params or {}, sort_keys=True)
-    return hashlib.sha256(payload.encode("utf-8")).hexdigest()
+    # Cache-key digest: not security-sensitive (no credentials are routed
+    # through query parameters in this codebase — auth lives in headers; the
+    # ``_redact_params`` step above is a belt-and-braces guard). SHA-256 is
+    # used purely as a content-addressed identifier for the on-disk cache.
+    safe_params = _redact_params(params)
+    payload = method.upper() + "|" + url + "|" + json.dumps(safe_params, sort_keys=True)
+    return hashlib.sha256(payload.encode("utf-8")).hexdigest()  # noqa: S324  (not for password hashing)
 
 
 class HttpClient:
@@ -132,11 +153,22 @@ class HttpClient:
             )
 
         if self.no_network:
-            raise CacheMiss(f"no_network=True and cache miss for {method} {url} params={params}")
+            param_keys = sorted((params or {}).keys())
+            raise CacheMiss(
+                f"no_network=True and cache miss for {method} {url} param_keys={param_keys}"
+            )
 
         # Polite small delay between live calls.
         time.sleep(0.2)
-        logger.info("HTTP %s %s params=%s", method, url, params)
+        # Log only the parameter *keys*, never values — public datasets do not
+        # use credentials in query strings, but we still avoid surfacing user
+        # data into log lines.
+        logger.info(
+            "HTTP %s %s param_keys=%s",
+            method,
+            url,
+            sorted((params or {}).keys()),
+        )
         if hasattr(self._client, "request"):
             resp = self._client.request(method, url, params=params, headers=headers)
         else:

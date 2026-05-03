@@ -9,7 +9,7 @@
     {
       "source": "data_gov_uk",
       "url": "https://ckan.publishing.service.gov.uk/api/3/action/package_search?q=national+rail+disruption&rows=5",
-      "accessed_at": "2026-05-03T20:49:44.827020+00:00",
+      "accessed_at": "2026-05-03T20:57:25.324633+00:00",
       "http_status": 200,
       "response_sha256": "5e33676114797df353d07448f0c107760ed476a035e8b1a8b58b3028bd0466a5",
       "query_params": {},
@@ -20,8 +20,8 @@
     "packages": 5,
     "http_status": 200
   },
-  "run_at": "2026-05-03T20:49:44.827570+00:00",
-  "code_sha": "c8863e8",
+  "run_at": "2026-05-03T20:57:25.325208+00:00",
+  "code_sha": "e495cee",
   "agent": "Devon-4234",
   "notes": "Recipe also depends on client footfall data (camera/POS)."
 }
