@@ -40,7 +40,7 @@ Verdict bundles land in `03_shadow/validators/<vertical>/<INS-NNN>.json`
 |-------|-------------|--------|
 | `existence` | "The data needed at the granularity claimed is actually available." | `PROVEN` if a representative query returns a non-empty result with the expected fields; `PLAUSIBLE` if data exists but at coarser granularity; `DISPROVEN` if the endpoint returns no usable data. |
 | `base_rate` | "X% of UK <segment> firms exhibit Y." | `PROVEN` when measured rate is within 20% of the claimed rate (or supports the directional claim); `PLAUSIBLE` if data confirms the population exists but rate not yet measurable from public alone; `DISPROVEN` if rate contradicts the claim. |
-| `correlation` | "Series A leads / lags / correlates with Series B." | `PROVEN` for `\|r\| ≥ 0.6, p < 0.01`; `PLAUSIBLE` for `0.3 ≤ \|r\| < 0.6`; `DISPROVEN` for `\|r\| < 0.3`. |
+| `correlation` | "Series A leads / lags / correlates with Series B." | `PROVEN` for `\|r\| ≥ 0.6` AND two-sided Fisher z-transform p-value < 0.01; `PLAUSIBLE` for `0.3 ≤ \|r\| < 0.6`, or `\|r\| ≥ 0.6` with p ≥ 0.01 (large effect, sample underpowered); `DISPROVEN` for `\|r\| < 0.3`. |
 | `distribution` | "The distribution of Z over <population> exceeds threshold T." | `PROVEN` when observed quantile/threshold match exceeds claim by ≥ 1σ; `PLAUSIBLE` when within ±1σ; `DISPROVEN` when below. |
 
 ## Reproducibility

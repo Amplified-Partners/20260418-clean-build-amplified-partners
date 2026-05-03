@@ -9,18 +9,18 @@
     {
       "source": "ukhsa.dashboard",
       "url": "https://ukhsa-dashboard.data.gov.uk/api/topics/Influenza/headlines",
-      "accessed_at": "2026-05-03T21:41:19.643815+00:00",
+      "accessed_at": "2026-05-03T22:01:46.390920+00:00",
       "http_status": 404,
-      "response_sha256": "b29798023990b339e316bbf0cd2c85640c47377f43c1b96336a84ef159954a67",
+      "response_sha256": "9899bd8f702c547c511db63036e3ac5e0ff690d6a1007d5ab375bf3a17c554ad",
       "query_params": {},
       "summary": "Flu headlines"
     },
     {
       "source": "ukhsa.gov_uk",
       "url": "https://www.gov.uk/government/statistics/national-flu-and-covid-19-surveillance-reports-2024-to-2025-season",
-      "accessed_at": "2026-05-03T21:41:21.400235+00:00",
+      "accessed_at": "2026-05-03T22:01:47.690495+00:00",
       "http_status": 200,
-      "response_sha256": "27d8f20d3189b60813747409feaef1ef8ad5b52318572044b40f925b780088e0",
+      "response_sha256": "25b805724a1fab795adf6076492db8c9eb3e5def93ad301e1d80d941cf94a2e2",
       "query_params": {},
       "summary": "Surveillance landing"
     }
@@ -29,8 +29,8 @@
     "probes_total": 2,
     "probes_passed": 1
   },
-  "run_at": "2026-05-03T21:41:21.401592+00:00",
-  "code_sha": "5441b71",
+  "run_at": "2026-05-03T22:01:47.692036+00:00",
+  "code_sha": "b91bca9",
   "agent": "Devon-4234",
   "notes": ""
 }

@@ -57,3 +57,17 @@ def test_correlation_sign_mismatch_demoted_to_plausible() -> None:
     band, _, metrics, _ = correlation.run(xs, ys, expected_direction="positive")
     assert band == VerdictBand.PLAUSIBLE
     assert metrics["r"] < -0.95
+
+
+def test_correlation_large_effect_but_underpowered_p_value() -> None:
+    """|r| >= 0.6 with n=8 yields p > 0.01 — large effect but the sample
+    is too small to clear ALPHA=0.01, so band must be PLAUSIBLE not PROVEN.
+    Crafted: r ≈ 0.787, p ≈ 0.017 (just above the 0.01 bar)."""
+    xs = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0]
+    ys = [3.0, 1.0, 4.0, 5.0, 2.0, 8.0, 6.0, 9.0]
+    band, msg, metrics, _ = correlation.run(xs, ys, expected_direction="positive")
+    assert metrics["n"] == 8
+    assert metrics["r"] >= 0.6
+    assert metrics["p_value"] >= correlation.ALPHA
+    assert band == VerdictBand.PLAUSIBLE
+    assert "underpowered" in msg.lower()

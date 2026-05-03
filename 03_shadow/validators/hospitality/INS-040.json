@@ -9,9 +9,9 @@
     {
       "source": "gov_uk.insolvency",
       "url": "https://www.gov.uk/government/collections/insolvency-service-official-statistics",
-      "accessed_at": "2026-05-03T21:41:22.236874+00:00",
+      "accessed_at": "2026-05-03T22:01:48.231844+00:00",
       "http_status": 200,
-      "response_sha256": "93dbe62889e8b1df13e1aa694a99eaf75c2eeccae37a86d6892df8105d078f53",
+      "response_sha256": "4141c58afbd44c762acdcf57d7fb57e2b95a5d5cb976be277d9fdebb4a014142",
       "query_params": {},
       "summary": "Stats landing"
     }
@@ -19,8 +19,8 @@
   "metrics": {
     "http_status": 200
   },
-  "run_at": "2026-05-03T21:41:22.237626+00:00",
-  "code_sha": "5441b71",
+  "run_at": "2026-05-03T22:01:48.232708+00:00",
+  "code_sha": "b91bca9",
   "agent": "Devon-4234",
   "notes": ""
 }
