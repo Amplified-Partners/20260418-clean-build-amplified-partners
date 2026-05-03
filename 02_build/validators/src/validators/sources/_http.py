@@ -44,7 +44,10 @@ def fetch_bytes(
     Returns the raw bytes and a populated ``SourceRef``.
     """
     merged_headers = {**DEFAULT_HEADERS, **(headers or {})}
-    key = cache_key(url, params or {}, headers or {}, auth or "")
+    # Cache key is derived from URL + non-auth params only — auth and request
+    # headers don't alter the response content for our public-data sources, and
+    # excluding them keeps credentials out of cache filenames.
+    key = cache_key(url, params or {})
     path = cache_path(name, key, suffix=suffix)
 
     cached = cache_read(path) if use_cache else None

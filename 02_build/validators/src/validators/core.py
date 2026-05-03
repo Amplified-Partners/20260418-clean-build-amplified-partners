@@ -117,9 +117,15 @@ def skipped(insight_id: str, reason: str, test_class: str = "existence") -> Verd
 
 
 def cache_key(*parts: Any) -> str:
-    """Deterministic content hash from heterogeneous query parts."""
+    """Deterministic content hash from heterogeneous query parts.
+
+    Non-cryptographic: this is content-addressing for HTTP response caching, not
+    password hashing. Callers MUST NOT pass auth headers or API keys — those
+    don't change response *content* for our public-data sources, and including
+    them would risk fingerprinting credentials in cache filenames.
+    """
     payload = json.dumps([_canon(p) for p in parts], sort_keys=True, default=str)
-    return hashlib.sha256(payload.encode()).hexdigest()[:24]
+    return hashlib.sha256(payload.encode(), usedforsecurity=False).hexdigest()[:24]
 
 
 def _canon(value: Any) -> Any:
@@ -147,7 +153,12 @@ def cache_write(path: Path, data: bytes) -> None:
 
 
 def hash_response(data: bytes) -> str:
-    return hashlib.sha256(data).hexdigest()[:24]
+    """Short content fingerprint of a response body.
+
+    Non-cryptographic: used only for verdict reproducibility — re-runs that
+    return identical bytes produce identical fingerprints.
+    """
+    return hashlib.sha256(data, usedforsecurity=False).hexdigest()[:24]
 
 
 # --------------------------------------------------------------------------- #
