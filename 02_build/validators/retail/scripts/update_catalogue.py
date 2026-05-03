@@ -44,7 +44,10 @@ def _format_validation_line(v: dict) -> str:
 
 def main() -> int:
     text = CATALOGUE.read_text()
-    entries = re.split(r"^---\s*$", text, flags=re.MULTILINE)
+    # Use [ \t]* (NOT \s*) so the trailing newline after '---' is preserved
+    # in the chunk that follows it. Otherwise '---'.join(chunks) eats blank
+    # lines and corrupts catalogue formatting.
+    entries = re.split(r"^---[ \t]*$", text, flags=re.MULTILINE)
     out_chunks: list[str] = []
     updated = 0
     skipped = 0
@@ -67,19 +70,21 @@ def main() -> int:
         line = _format_validation_line(verdict)
 
         # Replace any existing VALIDATION line; otherwise append after STATUS line.
+        # Use lambdas for the replacement so the summary text in `line` is
+        # never interpreted as a backreference (e.g. a literal '\1' in the
+        # summary would otherwise be expanded by re.sub).
         if re.search(r"^\*\*VALIDATION \(AMP-66\):\*\*", chunk, re.MULTILINE):
             new_chunk = re.sub(
                 r"^\*\*VALIDATION \(AMP-66\):\*\* .*$",
-                line.replace("\\", r"\\"),
+                lambda _m: line,
                 chunk,
                 count=1,
                 flags=re.MULTILINE,
             )
         else:
-            # Insert the line after STATUS:
             status_pat = re.compile(r"(^\*\*STATUS:\*\* [\w\-]+)", re.MULTILINE)
             if status_pat.search(chunk):
-                new_chunk = status_pat.sub(rf"\1\n{line}", chunk, count=1)
+                new_chunk = status_pat.sub(lambda m: m.group(1) + "\n" + line, chunk, count=1)
             else:
                 new_chunk = chunk.rstrip() + f"\n{line}\n"
 

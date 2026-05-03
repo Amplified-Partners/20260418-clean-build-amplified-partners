@@ -52,7 +52,7 @@ def run() -> Verdict:
         samples=counts,
         threshold=5.0,
         direction="above",
-        z_min=0.5,
+        z_min=1.0,
     )
     # Combine: existence must succeed; distribution proves the leading-indicator leg has signal magnitude.
     if ev_verdict == "PROVEN" and dist_verdict == "PROVEN":

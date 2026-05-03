@@ -1,7 +1,7 @@
 ---
 title: Decision log
 date: 2026-05-01
-version: 13
+version: 14
 status: draft
 ---
 
@@ -12,6 +12,19 @@ status: draft
 One entry per decision. Keep it short. Link out to supporting docs.
 
 ## Entries
+
+### 2026-05-03 — Public-data validation: three-band scheme + retail vertical reference implementation (AMP-66)
+
+- **Decision**: Adopt a **three-band verdict scheme** (`PROVEN` / `PLAUSIBLE` / `DISPROVEN`, with a separate `DEFERRED` policy band for ToS/legal-gated work) for validating insight-recipe claims against real public data. First applied to the Retail vertical (19 insights, INS-060–078) against UK public sources (Police.uk, ONS Beta API, Nomis, Land Registry CCOD, Insolvency Service stats, GOV.UK content API, Bank of England, etc.). Headline outcome at this commit: 7 PROVEN / 11 PLAUSIBLE / 1 DEFERRED.
+- **Why**: AMP-66 (sister to AMP-59) requires that retail insights be backed by reachable public data at the granularity claimed, not just plausible narrative. The three-band scheme avoids the dishonesty of a binary pass/fail when the public leg is reachable but the recipe also depends on internal data we cannot test from outside; it forces us to name what is actually proven vs what is research-supported but unmeasurable from public sources.
+- **Where encoded**:
+  - Schema: `01_truth/schemas/2026-05_public-data-validation_v1.md` (verdict scheme + four reusable test classes: existence, base_rate, correlation, distribution).
+  - Retail rollup: `01_truth/schemas/research-index/06a-vertical-retail-validation-rollup_v1.md` (per-insight verdict table, public sources reached, key-gated downgrades, reproducibility).
+  - Implementation: `02_build/validators/retail/` (fetchers, runners, results, CLI). Self-contained; no shared top-level scaffold yet — left for AMP-64 (trades) to lift.
+  - Catalogue: `01_truth/schemas/research-index/00-insight-catalogue_v1.md` updated additively with `**VALIDATION (AMP-66):**` lines on each retail entry.
+  - Manifest: `00_authority/MANIFEST.md` v45 § Candidate authority indexes the two new schema files.
+- **Status**: candidate (pending Ewan review). Verdicts re-runnable from cache; verdict JSONs include `git_sha`, `run_at_utc`, `signed_by`, and SHA-256 hashes of every source response.
+- **Signed-by**: Devon-9a6b | 2026-05-03 | devin-9a6bd256bd7c4a90a083a471fa94a810
 
 ### 2026-05-01 — Systems and API Register created as candidate authority
 

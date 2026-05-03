@@ -18,7 +18,7 @@
           "source": "police_uk_availability",
           "url": "https://data.police.uk/api/crimes-street-dates",
           "params": {},
-          "accessed_utc": "2026-05-03T21:01:53Z",
+          "accessed_utc": "2026-05-03T21:21:05Z",
           "status": 200,
           "sha256": "ae96da48bacc85524622a484d31f67218308f5b955c2c033180649247c53a823",
           "cached": true,
@@ -65,7 +65,7 @@
           "source": "imd_2019_govuk",
           "url": "https://www.gov.uk/api/content/government/statistics/english-indices-of-deprivation-2019",
           "params": {},
-          "accessed_utc": "2026-05-03T21:02:00Z",
+          "accessed_utc": "2026-05-03T21:21:13Z",
           "status": 200,
           "sha256": "c725b508bfc673b005fa7656afa508063a9ba5ddc3e4efc8e0712bca9bc2d570",
           "cached": false,
@@ -80,8 +80,8 @@
     "Ethical implementation = aggregate signals only, photo-evidence at item level; documented in catalogue."
   ],
   "confidence": 85,
-  "run_at_utc": "2026-05-03T21:02:00Z",
-  "git_sha": "eb48563b8e7430685d2f50b6857c3177374de638",
+  "run_at_utc": "2026-05-03T21:21:13Z",
+  "git_sha": "29016229d1a6b6f250b6e6da10cdcec5a11ad00f",
   "session_id": "devin-9a6bd256bd7c4a90a083a471fa94a810",
   "signed_by": "Devon-9a6b"
 }

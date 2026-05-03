@@ -1,7 +1,7 @@
 ---
 title: Governed workspace manifest (authoritative inventory)
 date: 2026-05-01
-version: 44
+version: 45
 status: draft
 ---
 
@@ -106,6 +106,8 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
   - `01_truth/processes/2026-04_stateless-handover_neutrality-clause_v1.md` `[LOGIC TO BE CONFIRMED]` (candidate addendum to the job-wrapup SOP; neutrality rule for stateless handovers; authoritative `00_authority/OPINION_CONFIDENCE.md` references this file)
 - `01_truth/schemas/` `[LOGIC TO BE CONFIRMED]` (schema contracts to be populated)
   - `01_truth/schemas/README.md` `[LOGIC TO BE CONFIRMED]` (folder purpose stub)
+  - `01_truth/schemas/2026-05_public-data-validation_v1.md` `[LOGIC TO BE CONFIRMED]` (three-band verdict scheme: PROVEN / PLAUSIBLE / DISPROVEN; DEFERRED policy band; four reusable test classes; AMP-66 sister to AMP-59)
+  - `01_truth/schemas/research-index/06a-vertical-retail-validation-rollup_v1.md` `[LOGIC TO BE CONFIRMED]` (retail vertical validation rollup: 7 PROVEN / 11 PLAUSIBLE / 1 DEFERRED across 19 retail insights against real UK public data; companion to `06-vertical-retail-profservices_v1.md` and to validators in `02_build/validators/retail/`; AMP-66)
 - `01_truth/interfaces/` `[LOGIC TO BE CONFIRMED]` (API contracts to be populated)
   - `01_truth/interfaces/README.md` `[LOGIC TO BE CONFIRMED]` (folder purpose stub)
 - `01_truth/SYSTEMS-AND-API-REGISTER.md` `[LOGIC TO BE CONFIRMED]` (single register of all APIs, MCP servers, telephony systems, code modules, and their locations across all Amplified Partners repos)
@@ -162,6 +164,17 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
     - `P10-kill-switch-master-reference.md` `[NON-AUTHORITATIVE]` (510 lines — binary shutdown architecture)
 
 ## Changelog
+
+### v45 — 2026-05-03
+
+- Added two new files under **Candidate authority** in `01_truth/schemas/`:
+  - `01_truth/schemas/2026-05_public-data-validation_v1.md` (AMP-66 verdict scheme).
+  - `01_truth/schemas/research-index/06a-vertical-retail-validation-rollup_v1.md` (retail vertical rollup).
+  - Implementation lives at `02_build/validators/retail/`. Catalogue
+    `01_truth/schemas/research-index/00-insight-catalogue_v1.md` was updated additively with `**VALIDATION (AMP-66):**` lines on each retail entry.
+  - Per the `AGENTS.md` § "PR reviewers — what to flag" rule 7 (new file in indexed class must appear in MANIFEST).
+
+Signed-by: Devon-9a6b | 2026-05-03 | devin-9a6bd256bd7c4a90a083a471fa94a810
 
 ### v44 — 2026-05-01
 

@@ -1,7 +1,7 @@
 ---
 title: "Vertical Retail — public-data validation rollup (AMP-66)"
 id: "vertical-retail-validation-rollup-v1"
-version: 1
+version: 2
 created: 2026-05-03
 last_validated: 2026-05-03
 type: document
@@ -28,8 +28,8 @@ profile — unchanged), `2026-05_public-data-validation_v1.md` (verdict scheme),
 
 | Verdict     | Count | Notes                                                                  |
 |-------------|-------|------------------------------------------------------------------------|
-| `PROVEN`    | 8     | Public data fully reachable at claimed granularity                      |
-| `PLAUSIBLE` | 10    | Underpowered, key-gated, or internal-only-with-research-support         |
+| `PROVEN`    | 7     | Public data fully reachable at claimed granularity                      |
+| `PLAUSIBLE` | 11    | Underpowered, key-gated, or internal-only-with-research-support         |
 | `DISPROVEN` | 0     |                                                                        |
 | `DEFERRED`  | 1     | INS-077 — ToS-bound competitor scraping; held outside automated runs    |
 | **Total**   | **19**|                                                                        |
@@ -50,7 +50,7 @@ source response.
 | INS-064   | Competitor Death-Spiral Detection via Companies House + Gazette                                     | PLAUSIBLE   | existence                 | 65         |
 | INS-065   | Shopify Cohort × ONS Wages × Local IMD → LTV Segmentation                                           | PLAUSIBLE   | existence                 | 70         |
 | INS-066   | Google Trends Local × Ad Spend Efficiency                                                           | PLAUSIBLE   | existence                 | 65         |
-| INS-067   | Shrinkage Detection × Police.uk Crime × CCTV Event Logs                                             | PROVEN      | existence + distribution  | 88         |
+| INS-067   | Shrinkage Detection × Police.uk Crime × CCTV Event Logs                                             | PLAUSIBLE   | existence + distribution  | 70         |
 | INS-068   | Marketplace Fee Leakage × FBA Storage Ageing × Demand Signals                                       | PLAUSIBLE   | existence                 | 75         |
 | INS-069   | Category Cannibalisation × Cross-Sell Graph Analysis                                                | PROVEN      | existence                 | 80         |
 | INS-070   | Supplier Concentration Risk × Piotroski Score Proxies                                               | PLAUSIBLE   | existence                 | 70         |
@@ -122,6 +122,10 @@ commit.
 ## 8. Changelog
 
 - v1 (2026-05-03, Devon-9a6b) — initial rollup; 8 PROVEN / 10 PLAUSIBLE / 1 DEFERRED.
+- v2 (2026-05-03, Devon-9a6b) — Devin Review fixes:
+  - INS-067: distribution-test `z_min` corrected from 0.5 to 1.0 to match the schema default and the runner's own docstring; verdict downgrades to PLAUSIBLE (z=0.93 < 1.0).
+  - INS-069: substring-match heuristic on ONS Beta search results was inflating to PROVEN against unrelated tax/benefits dataset; replaced with a publication-route check against the canonical Family Spending Workbook 1 page (still PROVEN, but on a real signal).
+  - Headline counts updated: 7 PROVEN / 11 PLAUSIBLE / 1 DEFERRED.
 
 ---
 

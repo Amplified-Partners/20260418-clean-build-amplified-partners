@@ -27,11 +27,9 @@ def existence_check(
     """
     reachable = [f for f in fetched_list if f.get("status") and f["status"] < 400]
     skipped = [f for f in fetched_list if isinstance(f.get("sample"), dict) and f["sample"].get("_skipped")]
-    failed = [
-        f
-        for f in fetched_list
-        if not f.get("status") and not (isinstance(f.get("sample"), dict) and f["sample"].get("_skipped"))
-    ]
+    # Anything that is neither reachable (2xx/3xx) nor skipped (no-key short-circuit)
+    # is a failure — covers both 4xx/5xx HTTP errors and transport-level failures.
+    failed = [f for f in fetched_list if f not in reachable and f not in skipped]
 
     n = len(fetched_list)
     n_reachable = len(reachable)

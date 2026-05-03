@@ -2,9 +2,9 @@
   "insight_id": "INS-067",
   "title": "Shrinkage Detection \u00d7 Police.uk Crime \u00d7 CCTV Event Logs (Retail)",
   "vertical": "Retail",
-  "verdict": "PROVEN",
+  "verdict": "PLAUSIBLE",
   "test_class": "existence+distribution",
-  "summary": "Police.uk shoplifting present at street-level for all 12 retail anchors in 2026-03; mean=153.5, \u03c3=159.9 (z=0.93)",
+  "summary": "Police.uk reachable for 12/12 anchors; signal magnitude mean exceeds threshold by only 0.93\u03c3 (< 1.0\u03c3); small effect",
   "evidence": [
     {
       "test": "existence",
@@ -22,7 +22,7 @@
             "lng": -1.6131,
             "date": "2026-03"
           },
-          "accessed_utc": "2026-05-03T21:01:53Z",
+          "accessed_utc": "2026-05-03T21:21:06Z",
           "status": 200,
           "sha256": "08d8b7289f303fe8ba6ac81a900071585ca6bf04fafa0a5b0a3c0f665c1aee12",
           "cached": false,
@@ -81,7 +81,7 @@
             "lng": -1.6092,
             "date": "2026-03"
           },
-          "accessed_utc": "2026-05-03T21:01:54Z",
+          "accessed_utc": "2026-05-03T21:21:06Z",
           "status": 200,
           "sha256": "7f148beb4815225500003c921f23f275b769b52d1e2e378db1fa524702e9da1e",
           "cached": false,
@@ -140,7 +140,7 @@
             "lng": -1.6233,
             "date": "2026-03"
           },
-          "accessed_utc": "2026-05-03T21:01:54Z",
+          "accessed_utc": "2026-05-03T21:21:07Z",
           "status": 200,
           "sha256": "304bcbfae0be9a1764b621a7deac94a59e7b16ab1299ea448ea2ba3a43fb4366",
           "cached": false,
@@ -199,7 +199,7 @@
             "lng": -2.2381,
             "date": "2026-03"
           },
-          "accessed_utc": "2026-05-03T21:01:55Z",
+          "accessed_utc": "2026-05-03T21:21:07Z",
           "status": 200,
           "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
           "cached": false,
@@ -215,7 +215,7 @@
             "lng": -1.8941,
             "date": "2026-03"
           },
-          "accessed_utc": "2026-05-03T21:01:55Z",
+          "accessed_utc": "2026-05-03T21:21:08Z",
           "status": 200,
           "sha256": "e2f272e705b1dba32285ee3d77afe834bc6bcce44a5acdba838fe89c9877108b",
           "cached": false,
@@ -274,7 +274,7 @@
             "lng": -2.987,
             "date": "2026-03"
           },
-          "accessed_utc": "2026-05-03T21:01:56Z",
+          "accessed_utc": "2026-05-03T21:21:08Z",
           "status": 200,
           "sha256": "34af9344311faf741b79f1324a26c6c507e8d652afd5fb87968c54631a7428df",
           "cached": false,
@@ -333,7 +333,7 @@
             "lng": -4.253,
             "date": "2026-03"
           },
-          "accessed_utc": "2026-05-03T21:01:56Z",
+          "accessed_utc": "2026-05-03T21:21:09Z",
           "status": 200,
           "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
           "cached": false,
@@ -349,7 +349,7 @@
             "lng": -2.5867,
             "date": "2026-03"
           },
-          "accessed_utc": "2026-05-03T21:01:57Z",
+          "accessed_utc": "2026-05-03T21:21:09Z",
           "status": 200,
           "sha256": "14f3bcd0736c31054437687f1d34be97d465c802dd64dd0530936439ee5af2b0",
           "cached": false,
@@ -408,7 +408,7 @@
             "lng": -1.543,
             "date": "2026-03"
           },
-          "accessed_utc": "2026-05-03T21:01:57Z",
+          "accessed_utc": "2026-05-03T21:21:09Z",
           "status": 200,
           "sha256": "c87175eefbb9a088af330ab04b2e04d721f02d7ccfd33f3b0ce9d03abca1422c",
           "cached": false,
@@ -467,7 +467,7 @@
             "lng": -3.188,
             "date": "2026-03"
           },
-          "accessed_utc": "2026-05-03T21:01:58Z",
+          "accessed_utc": "2026-05-03T21:21:10Z",
           "status": 200,
           "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
           "cached": false,
@@ -483,7 +483,7 @@
             "lng": -0.1426,
             "date": "2026-03"
           },
-          "accessed_utc": "2026-05-03T21:01:58Z",
+          "accessed_utc": "2026-05-03T21:21:11Z",
           "status": 200,
           "sha256": "a36f7241717f0458b28a7b8ccee5ddeaff01ef9fce2716a034bc2548128b57d7",
           "cached": false,
@@ -542,7 +542,7 @@
             "lng": -0.0905,
             "date": "2026-03"
           },
-          "accessed_utc": "2026-05-03T21:01:59Z",
+          "accessed_utc": "2026-05-03T21:21:11Z",
           "status": 200,
           "sha256": "97b85457a0988370258d4e9e4be881e1937fd55b642abe254bcb2b0b9fc10109",
           "cached": false,
@@ -605,8 +605,8 @@
       "threshold": 5.0,
       "direction": "above",
       "z": 0.9285,
-      "z_min": 0.5,
-      "reason": "mean exceeds threshold by 0.93\u03c3 \u2265 0.5\u03c3"
+      "z_min": 1.0,
+      "reason": "mean exceeds threshold by only 0.93\u03c3 (< 1.0\u03c3); small effect"
     }
   ],
   "notes": [
@@ -614,9 +614,9 @@
     "anchors: NE1_eldon_square, NE2_jesmond_acorn_rd, NE3_gosforth_high_st, M3_manchester_arndale, B5_birmingham_bullring, L1_liverpool_one, G1_glasgow_buchanan_st, BS1_bristol_cabot_circus, LS1_leeds_briggate, EH1_edinburgh_princes_st, W1_oxford_st_london, SE1_borough_market_london",
     "Population shrink rate (1.68%) is industry research, not Police.uk; the validatable leg here is crime-data availability + variance \u2014 sufficient for the 'spike-detection' leading-indicator claim."
   ],
-  "confidence": 88,
-  "run_at_utc": "2026-05-03T21:01:59Z",
-  "git_sha": "eb48563b8e7430685d2f50b6857c3177374de638",
+  "confidence": 70,
+  "run_at_utc": "2026-05-03T21:21:11Z",
+  "git_sha": "29016229d1a6b6f250b6e6da10cdcec5a11ad00f",
   "session_id": "devin-9a6bd256bd7c4a90a083a471fa94a810",
   "signed_by": "Devon-9a6b"
 }

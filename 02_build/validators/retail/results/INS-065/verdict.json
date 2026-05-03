@@ -20,15 +20,15 @@
           "params": {
             "search": "ashe"
           },
-          "accessed_utc": "2026-05-03T21:01:52Z",
+          "accessed_utc": "2026-05-03T21:21:04Z",
           "status": 200,
-          "sha256": "4f42e02c810447bd85ea96f36f193c4e8e13136904cb829ae1bc845e9d206ff9",
+          "sha256": "e481bba3d0e9a9e067bb37f9bc487b3eea71b9c07a4e410f2cc1306289e4aa2b",
           "cached": false,
           "sample": {
             "structure": {
               "header": {
                 "id": "none",
-                "prepared": "2026-05-03T22:01:50Z",
+                "prepared": "2026-05-03T22:21:03Z",
                 "sender": {
                   "contact": {
                     "email": "support@nomisweb.co.uk",
@@ -185,15 +185,15 @@
           "source": "nomis",
           "url": "https://www.nomisweb.co.uk/api/v01/dataset/NM_99_1.def.sdmx.json",
           "params": {},
-          "accessed_utc": "2026-05-03T21:01:52Z",
+          "accessed_utc": "2026-05-03T21:21:05Z",
           "status": 200,
-          "sha256": "178ce540e65d0a157ce621e533bd33a1706a017d37b7a51e9527f3c4c70b4757",
+          "sha256": "58ff74e9bd2d49025149059ce6e95010a733571ca13f778f2aa8d4c5b2d70bdc",
           "cached": false,
           "sample": {
             "structure": {
               "header": {
                 "id": "NM_99_1",
-                "prepared": "2026-05-03T22:01:53Z",
+                "prepared": "2026-05-03T22:21:05Z",
                 "sender": {
                   "contact": {
                     "email": "earnings@ons.gov.uk",
@@ -355,8 +355,8 @@
     "Client leg = Shopify cohort LTV per postcode is internal data; recipe is PLAUSIBLE end-to-end."
   ],
   "confidence": 70,
-  "run_at_utc": "2026-05-03T21:01:52Z",
-  "git_sha": "eb48563b8e7430685d2f50b6857c3177374de638",
+  "run_at_utc": "2026-05-03T21:21:05Z",
+  "git_sha": "29016229d1a6b6f250b6e6da10cdcec5a11ad00f",
   "session_id": "devin-9a6bd256bd7c4a90a083a471fa94a810",
   "signed_by": "Devon-9a6b"
 }
