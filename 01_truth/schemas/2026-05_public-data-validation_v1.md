@@ -1,6 +1,6 @@
 ---
 version: 1.0.0
-status: active
+status: candidate
 authority: "schema reference for the public-data validators pipeline"
 related:
   - 01_truth/schemas/2026-03_validation-methodology_v2.md

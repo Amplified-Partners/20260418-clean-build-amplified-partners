@@ -49,3 +49,20 @@ def test_base_rate_handles_negative_claimed() -> None:
     assert far[0] == VerdictBand.DISPROVEN
     near = base_rate.run(measured=-0.45, claimed=-0.50, direction="approx", tolerance=0.20)
     assert near[0] == VerdictBand.PROVEN
+
+
+def test_base_rate_above_below_handle_negative_claimed() -> None:
+    """For negative ``claimed`` the directional band must use abs(claimed)
+    so a 20% tolerance on -0.50 means [-0.60, -0.40] (not [-0.40, -0.60])."""
+    # "above": measured -0.45 IS above claimed -0.50, within 20% band → PROVEN
+    above_pass = base_rate.run(measured=-0.45, claimed=-0.50, direction="above", tolerance=0.20)
+    assert above_pass[0] == VerdictBand.PROVEN
+    # "above": measured -0.80 is below the band lower bound -0.60 → DISPROVEN
+    above_fail = base_rate.run(measured=-0.80, claimed=-0.50, direction="above", tolerance=0.20)
+    assert above_fail[0] == VerdictBand.DISPROVEN
+    # "below": measured -0.55 is below claimed -0.50 within 20% band → PROVEN
+    below_pass = base_rate.run(measured=-0.55, claimed=-0.50, direction="below", tolerance=0.20)
+    assert below_pass[0] == VerdictBand.PROVEN
+    # "below": measured -0.30 is above the band upper bound -0.40 → DISPROVEN
+    below_fail = base_rate.run(measured=-0.30, claimed=-0.50, direction="below", tolerance=0.20)
+    assert below_fail[0] == VerdictBand.DISPROVEN

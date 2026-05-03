@@ -50,8 +50,13 @@ def run(
             evidence,
         )
 
+    # Use abs(claimed) for the tolerance band so the directional thresholds
+    # behave correctly when ``claimed`` is negative (a 20% tolerance on
+    # claimed=-0.5 means [-0.6, -0.4], not [-0.4, -0.6]).
+    band_width = abs(claimed) * tolerance
+
     if direction == "above":
-        if measured >= claimed * (1 - tolerance):
+        if measured >= claimed - band_width:
             return (
                 VerdictBand.PROVEN,
                 f"Measured {measured:.3f} >= claimed {claimed:.3f} (within {tolerance:.0%}).",
@@ -66,7 +71,7 @@ def run(
         )
 
     if direction == "below":
-        if measured <= claimed * (1 + tolerance):
+        if measured <= claimed + band_width:
             return (
                 VerdictBand.PROVEN,
                 f"Measured {measured:.3f} <= claimed {claimed:.3f} (within {tolerance:.0%}).",
