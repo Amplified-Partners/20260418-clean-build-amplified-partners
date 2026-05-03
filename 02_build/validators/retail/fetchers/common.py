@@ -2,8 +2,15 @@
 """Shared fetcher utilities: HTTP retry, on-disk cache, evidence packaging.
 
 Cache layout (relative to validators/retail/cache/):
-  <source>/<sha256(url + sorted_params)[:16]>.json   payload
-  <source>/<sha256(url + sorted_params)[:16]>.meta   metadata (URL, ts, status, hash)
+  <source>/<cache_slot>.json   payload
+  <source>/<cache_slot>.meta   metadata (URL, ts, status, hash; NO params)
+
+Where ``cache_slot`` = ``sha256(url + urlencode(sorted(redacted_params)))[:16]``
+(redacted = secret-bearing values replaced by ``[REDACTED]``).
+
+No raw query params land on disk in either file. The cache slot is derived
+from redacted params only, so secrets cannot flow into filesystem paths
+either (CodeQL ``py/clear-text-storage-sensitive-data`` clean).
 
 Evidence bundles use a stable JSON shape so the verdict file can embed them.
 """
@@ -172,9 +179,12 @@ def fetch_json(
                 body = {"_raw_text": body_text[:5000]}
 
             accessed = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+            # Persisted meta intentionally does NOT carry params — the cache
+            # slot already encodes them (redacted) and the evidence bundle
+            # carries redacted params separately. Keeping params out of meta
+            # makes the disk write provably independent of secret values.
             meta = {
                 "url": url,
-                "params": redacted,
                 "accessed_utc": accessed,
                 "status": resp.status_code,
                 "sha256": sha,
@@ -248,9 +258,10 @@ def fetch_text(
             body_text = resp.text
             sha = hashlib.sha256(body_text.encode("utf-8")).hexdigest()
             accessed = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+            # Persisted meta intentionally omits params — see fetch_json above
+            # for the rationale.
             meta = {
                 "url": url,
-                "params": redacted,
                 "accessed_utc": accessed,
                 "status": resp.status_code,
                 "sha256": sha,

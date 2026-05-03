@@ -18,7 +18,7 @@
           "source": "insolvency_collection",
           "url": "https://www.gov.uk/api/content/government/collections/company-insolvency-statistics-releases",
           "params": {},
-          "accessed_utc": "2026-05-03T21:21:01Z",
+          "accessed_utc": "2026-05-03T21:39:53Z",
           "status": 200,
           "sha256": "97ff849c789957936d97dde19188cccc16ed3479851cd66492c62c110963d1c1",
           "cached": true,
@@ -43,8 +43,8 @@
     "Per-supplier leg = Companies House API key needed; downgrades verdict to PLAUSIBLE without key."
   ],
   "confidence": 70,
-  "run_at_utc": "2026-05-03T21:21:12Z",
-  "git_sha": "29016229d1a6b6f250b6e6da10cdcec5a11ad00f",
+  "run_at_utc": "2026-05-03T21:40:06Z",
+  "git_sha": "28e71c408e8e9cd8996eb7a91fd63811a214a3ed",
   "session_id": "devin-9a6bd256bd7c4a90a083a471fa94a810",
   "signed_by": "Devon-9a6b"
 }

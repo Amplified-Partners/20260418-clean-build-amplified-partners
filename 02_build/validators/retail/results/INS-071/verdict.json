@@ -18,7 +18,7 @@
           "source": "desnz_sub_national_energy",
           "url": "https://www.gov.uk/api/content/government/collections/sub-national-electricity-consumption-data",
           "params": {},
-          "accessed_utc": "2026-05-03T21:21:13Z",
+          "accessed_utc": "2026-05-03T21:40:06Z",
           "status": 200,
           "sha256": "066f2fbc5a2422c2ff939873ac74474553541f11a283c18159a935196913f4e7",
           "cached": false,
@@ -34,8 +34,8 @@
     "Promoting to PROVEN-with-numbers needs Ofgem non-domestic tariff comparison data; bulk download captured as follow-up."
   ],
   "confidence": 85,
-  "run_at_utc": "2026-05-03T21:21:13Z",
-  "git_sha": "29016229d1a6b6f250b6e6da10cdcec5a11ad00f",
+  "run_at_utc": "2026-05-03T21:40:06Z",
+  "git_sha": "28e71c408e8e9cd8996eb7a91fd63811a214a3ed",
   "session_id": "devin-9a6bd256bd7c4a90a083a471fa94a810",
   "signed_by": "Devon-9a6b"
 }

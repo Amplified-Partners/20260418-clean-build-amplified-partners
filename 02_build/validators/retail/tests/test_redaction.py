@@ -68,9 +68,16 @@ class RedactionTest(unittest.TestCase):
                         params={"key": "SECRET_VALUE", "lat": 51.5},
                     )
 
+        # The persisted meta file must (a) not carry the secret value, and
+        # (b) not carry a `params` field at all — the cache slot already
+        # encodes the redacted params, and dropping the field is what makes
+        # the disk write provably independent of any secret-tainted value.
         meta_text = meta_path.read_text()
         self.assertNotIn("SECRET_VALUE", meta_text, "secret param leaked into meta on disk")
-        self.assertIn("[REDACTED]", meta_text)
+        meta_obj = json.loads(meta_text)
+        self.assertNotIn("params", meta_obj, "meta should not carry a params field at all")
+        # The Fetched object (in-memory only, never persisted as `meta`)
+        # still carries the redacted params for the evidence bundle.
         self.assertEqual(fetched.params["key"], "[REDACTED]")
         self.assertEqual(fetched.params["lat"], 51.5)
 

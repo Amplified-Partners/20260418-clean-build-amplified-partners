@@ -18,7 +18,7 @@
           "source": "ons_beta",
           "url": "https://api.beta.ons.gov.uk/v1/datasets/retail-sales-index-all-businesses/editions",
           "params": {},
-          "accessed_utc": "2026-05-03T21:21:13Z",
+          "accessed_utc": "2026-05-03T21:40:07Z",
           "status": 200,
           "sha256": "f4639f30028c17b9df0a548d9ffbafa507f2d993c868d7c18328820631b54ea8",
           "cached": true,
@@ -59,8 +59,8 @@
     "Client leg (own Google Ads data) confirms efficiency at deploy time."
   ],
   "confidence": 80,
-  "run_at_utc": "2026-05-03T21:21:14Z",
-  "git_sha": "29016229d1a6b6f250b6e6da10cdcec5a11ad00f",
+  "run_at_utc": "2026-05-03T21:40:07Z",
+  "git_sha": "28e71c408e8e9cd8996eb7a91fd63811a214a3ed",
   "session_id": "devin-9a6bd256bd7c4a90a083a471fa94a810",
   "signed_by": "Devon-9a6b"
 }
