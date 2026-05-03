@@ -18,7 +18,7 @@ from collections.abc import Callable
 from importlib import import_module
 from pathlib import Path
 
-from .sources._http import HttpClient
+from .sources._http import CacheMiss, HttpClient
 from .verdict import Verdict, VerdictBand
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -72,6 +72,11 @@ def run(
         for ins_id, fn in items:
             try:
                 verdict = fn(client)
+            except CacheMiss:
+                # ``--no-network`` requires every fetch to be served from the
+                # cache; a miss is a CI signal that the cache is stale, not a
+                # PLAUSIBLE verdict. Propagate so the run fails deterministically.
+                raise
             except Exception as exc:  # pragma: no cover — defensive
                 logging.exception("validator %s failed", ins_id)
                 verdict = Verdict(

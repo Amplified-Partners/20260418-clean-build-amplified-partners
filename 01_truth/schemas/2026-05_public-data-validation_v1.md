@@ -102,7 +102,7 @@ insight at `03_shadow/validators/<vertical>/<INS-NNN>.json`):
 | `band` | enum | yes | One of the four bands in §1. |
 | `test_class` | enum | yes | One of `existence`, `base_rate`, `correlation`, `distribution`. |
 | `rationale` | string | yes | Plain English. State which leg (public / client) is being validated and what the verdict means. |
-| `evidence` | array | yes | One entry per upstream HTTP fetch. Empty only if the band is `PENDING-API-KEY`. |
+| `evidence` | array | yes | One entry per upstream HTTP fetch. Empty when (a) the band is `PENDING-API-KEY`, or (b) the insight has no public-data leg — i.e. the recipe is fully client-side (POS / rota / reservations). In hospitality this applies to e.g. INS-045, INS-046, INS-054, INS-058: each is `PLAUSIBLE` because the public side cannot fetch anything; the rationale field carries the explanation. |
 | `evidence[i].source` | string | yes | Slug, dotted: `fsa.fhrs`, `ons.cpih_food`, `met_office.datapoint`. |
 | `evidence[i].url` | string | yes | Final URL hit (after redirects). |
 | `evidence[i].accessed_at` | ISO-8601 | yes | UTC. |
