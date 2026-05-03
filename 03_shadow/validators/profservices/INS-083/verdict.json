@@ -1,0 +1,43 @@
+{
+  "band": "PROVEN",
+  "evidence": [
+    {
+      "accessed_at": "2026-05-03T21:02:25+00:00",
+      "content_sha256": "ddaf7d7808f193b0b431c3b460aec37ca82ae6094b5448e3eebf59bc448e3cf9",
+      "raw_path": "~/.cache/amp-validators/a1e8f53f1845c04d7806a6fc5da1c1b08cc1b2e7b26e4699ccd5508cd117d14b.bin",
+      "source": "HMRC Making Tax Digital for Income Tax",
+      "summary": "HMRC MTD ITSA implementation guidance",
+      "url": "https://www.gov.uk/government/publications/making-tax-digital"
+    },
+    {
+      "accessed_at": "2026-05-03T21:02:26+00:00",
+      "content_sha256": "236ce34e911cdb09362b51ff0a31c7b5d5ef29f94b0286ed90e4ea55a3a9104e",
+      "raw_path": "~/.cache/amp-validators/73f9018cff7c5c8f85b3f4342eef71a0344421997a27e8d5b65b16781a3cffa0.bin",
+      "source": "FCA Handbook (rulebook)",
+      "summary": "FCA Handbook root index",
+      "url": "https://www.handbook.fca.org.uk/"
+    },
+    {
+      "accessed_at": "2026-05-03T21:02:27+00:00",
+      "content_sha256": "3770fa587fc640ac3c4b54676acd1e64f7a1b68f5240b167194d1deef4a5cc0d",
+      "raw_path": "~/.cache/amp-validators/eca2c28ce4d42ca1be03df61a26c33037f1f1d9e41456216c3f40e350c87f0db.bin",
+      "source": "ICO guidance for organisations",
+      "summary": "ICO guidance index page (regulatory change source)",
+      "url": "https://ico.org.uk/"
+    }
+  ],
+  "finding": "All 3 required tokens present in the public source response.",
+  "insight_id": "INS-083",
+  "method": "Confirm HMRC MTD ITSA guidance, FCA Handbook, and ICO guidance indexes are reachable and publish regulatory change feeds.",
+  "notes": [],
+  "run_at": "2026-05-03T21:02:27+00:00",
+  "signed_by": "Devon-ab74 | 2026-05-03 | devin-ab740f2c78ee477a9c16ea3b6ed15293",
+  "statistic": {
+    "checks_failed": 0,
+    "checks_passed": 3,
+    "tokens_checked": 3,
+    "tokens_missing": 0
+  },
+  "test_class": "existence",
+  "vertical": "profservices"
+}

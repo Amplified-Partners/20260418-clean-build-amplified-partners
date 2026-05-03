@@ -1,0 +1,34 @@
+{
+  "band": "PLAUSIBLE",
+  "evidence": [
+    {
+      "accessed_at": "2026-05-03T21:02:23+00:00",
+      "content_sha256": "3c98ca54e459dbd232806d9fda199746da5f4602c0f54e9ccc2bbadf98d6edb9",
+      "raw_path": "~/.cache/amp-validators/21e89a67df42212340c009847dfcf3252c85433660ceb61b119b6ea1a5048105.bin",
+      "source": "Companies House accounts data product",
+      "summary": "Bulk XBRL accounts ZIP archive index",
+      "url": "https://download.companieshouse.gov.uk/en_accountsdata.html"
+    },
+    {
+      "accessed_at": "2026-05-03T21:02:25+00:00",
+      "content_sha256": "8216601e786b4420a6b3c234d2485b5b2fa78bb4a36ee643f9ea941e31f62030",
+      "raw_path": "~/.cache/amp-validators/c5fdcb4879b4589a54b508506ed7879144804d0721855b29ca9390e4288a5f1f.bin",
+      "source": "The Gazette (UK official public record)",
+      "summary": "Gazette insolvency notices, category G201299",
+      "url": "https://www.thegazette.co.uk/all-notices/notice/data.json?categorycode-all=G201299&numberOfLocationSearchFields=1"
+    }
+  ],
+  "finding": "Companies House accounts data product reachable; Gazette returned corporate-insolvency notices (count unavailable in this response) in the queried slice.",
+  "insight_id": "INS-080",
+  "method": "Existence: Companies House bulk accounts product + Gazette insolvency feed both reachable; per-firm Altman Z'' screen blocked on live API key.",
+  "notes": [
+    "Per-firm Altman Z'' screening at scale requires the Companies House live REST API (key-gated). Apply at https://developer.company-information.service.gov.uk/ and store as the COMPANIES_HOUSE_API_KEY org secret to upgrade this from PLAUSIBLE to PROVEN."
+  ],
+  "run_at": "2026-05-03T21:02:25+00:00",
+  "signed_by": "Devon-ab74 | 2026-05-03 | devin-ab740f2c78ee477a9c16ea3b6ed15293",
+  "statistic": {
+    "gazette_total": null
+  },
+  "test_class": "existence",
+  "vertical": "profservices"
+}

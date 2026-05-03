@@ -1623,6 +1623,7 @@ signed_by: "Devon, 2026-04-25, devin-992682c244cf444f91e0a516498afbfd"
 **PUDDING BRIDGE:** Companies House publishes formation and dissolution statistics for every SIC code every quarter. A law firm's conveyancing pipeline is a direct function of property transactions; a property transaction is a direct function of formation/dissolution activity in the local economy. The same data that feeds ONS GDP estimates feeds a professional services capacity model
 **SOURCE DOC:** 06
 **STATUS:** HYPOTHESIS
+**VALIDATION:** PROVEN | existence | accessed 2026-05-03 | evidence: `03_shadow/validators/profservices/INS-079/verdict.json`
 
 ---
 
@@ -1642,6 +1643,7 @@ signed_by: "Devon, 2026-04-25, devin-992682c244cf444f91e0a516498afbfd"
 **PUDDING BRIDGE:** Credit insurers (Euler Hermes) decline cover on clients whose Companies House filings show Z'' in the distress zone. A professional services firm that continues billing into a distress-zone client is underwriting the same risk for free — without any premium
 **SOURCE DOC:** 06
 **STATUS:** CONFIRMED-EXTERNAL
+**VALIDATION:** PLAUSIBLE | existence | accessed 2026-05-03 | evidence: `03_shadow/validators/profservices/INS-080/verdict.json`
 
 ---
 
@@ -1661,6 +1663,7 @@ signed_by: "Devon, 2026-04-25, devin-992682c244cf444f91e0a516498afbfd"
 **PUDDING BRIDGE:** McKinsey's relationship intelligence teams map client referral networks to identify which partner relationships to invest in. The same directed graph — with edge weights proportional to revenue generated per referral relationship — is constructable from a professional services firm's matter management system
 **SOURCE DOC:** 06
 **STATUS:** CONFIRMED-EXTERNAL
+**VALIDATION:** PLAUSIBLE | existence | accessed 2026-05-03 | evidence: `03_shadow/validators/profservices/INS-081/verdict.json`
 
 ---
 
@@ -1680,6 +1683,7 @@ signed_by: "Devon, 2026-04-25, devin-992682c244cf444f91e0a516498afbfd"
 **PUDDING BRIDGE:** Amazon's customer service SLA (24-hour response requirement for marketplace sellers) is backed by the empirical finding that response time is the single highest-correlating predictor of repeat purchase. In professional services, the same relationship holds: clients who wait >24 hours for a response behave exactly like customers who received poor Amazon delivery service
 **SOURCE DOC:** 06
 **STATUS:** CONFIRMED-EXTERNAL
+**VALIDATION:** PLAUSIBLE | existence | accessed 2026-05-03 | evidence: `03_shadow/validators/profservices/INS-082/verdict.json`
 
 ---
 
@@ -1699,6 +1703,7 @@ signed_by: "Devon, 2026-04-25, devin-992682c244cf444f91e0a516498afbfd"
 **PUDDING BRIDGE:** HMRC publishes TIINs (Tax Information and Impact Notes) for every tax rule change, with affected taxpayer counts and implementation timelines. A professional services firm that reads TIINs before they are in the trade press has a 3–6 month head start on competitors in identifying which clients to contact
 **SOURCE DOC:** 06
 **STATUS:** PROVEN
+**VALIDATION:** PROVEN | existence | accessed 2026-05-03 | evidence: `03_shadow/validators/profservices/INS-083/verdict.json`
 
 ---
 
@@ -1718,6 +1723,7 @@ signed_by: "Devon, 2026-04-25, devin-992682c244cf444f91e0a516498afbfd"
 **PUDDING BRIDGE:** A matter where week-2 hours exceed 20% of the total budget has already broken the original estimate. The timesheet system has been recording this fact for weeks; nobody has looked at it in real time. The data is not missing — it is present and unread
 **SOURCE DOC:** 06
 **STATUS:** CONFIRMED-EXTERNAL
+**VALIDATION:** PLAUSIBLE | existence | accessed 2026-05-03 | evidence: `03_shadow/validators/profservices/INS-084/verdict.json`
 
 ---
 
@@ -1737,6 +1743,7 @@ signed_by: "Devon, 2026-04-25, devin-992682c244cf444f91e0a516498afbfd"
 **PUDDING BRIDGE:** The most sophisticated law firm succession planning tools (CIELO, viGlobal) charge £15,000/year to calculate what can be computed from Companies House director filings + LinkedIn career history + internal billing records. Only 25% of UK professional services firms have done this calculation at all
 **SOURCE DOC:** 06
 **STATUS:** CONFIRMED-EXTERNAL
+**VALIDATION:** PLAUSIBLE | existence | accessed 2026-05-03 | evidence: `03_shadow/validators/profservices/INS-085/verdict.json`
 
 ---
 
@@ -1756,6 +1763,7 @@ signed_by: "Devon, 2026-04-25, devin-992682c244cf444f91e0a516498afbfd"
 **PUDDING BRIDGE:** The HHI was developed by the US Department of Justice to measure market concentration in antitrust cases. It is equally applicable to measuring how concentrated a professional services firm's revenue is — and the same structural logic applies: high concentration = fragility; diversification = resilience
 **SOURCE DOC:** 06
 **STATUS:** PROVEN
+**VALIDATION:** PLAUSIBLE | existence | accessed 2026-05-03 | evidence: `03_shadow/validators/profservices/INS-086/verdict.json`
 
 ---
 
@@ -1775,6 +1783,7 @@ signed_by: "Devon, 2026-04-25, devin-992682c244cf444f91e0a516498afbfd"
 **PUDDING BRIDGE:** McKinsey charges clients for the same analytical framework: regressing win rate against quoted price to determine pricing power by service category. The inputs (win/loss data + quoted fees) are in every professional services firm's practice management system. The analysis has been available for 20 years. Almost nobody does it
 **SOURCE DOC:** 06
 **STATUS:** HYPOTHESIS
+**VALIDATION:** PROVEN | existence | accessed 2026-05-03 | evidence: `03_shadow/validators/profservices/INS-087/verdict.json`
 
 ---
 
@@ -1794,6 +1803,7 @@ signed_by: "Devon, 2026-04-25, devin-992682c244cf444f91e0a516498afbfd"
 **PUDDING BRIDGE:** The same ANOVA approach that pharmaceutical companies use to compare the efficacy of different drug formulations is used here to compare the billing effectiveness of different fee-earners — controlling for the "matter type" confounder, exactly as a drug trial controls for patient demographics
 **SOURCE DOC:** 06
 **STATUS:** CONFIRMED-EXTERNAL
+**VALIDATION:** PLAUSIBLE | existence | accessed 2026-05-03 | evidence: `03_shadow/validators/profservices/INS-088/verdict.json`
 
 ---
 
@@ -1813,6 +1823,7 @@ signed_by: "Devon, 2026-04-25, devin-992682c244cf444f91e0a516498afbfd"
 **PUDDING BRIDGE:** CourtServe publishes daily court listings for England and Wales. Every court appearance of a corporate debtor is a public record. Creditors and debt buyers read CourtServe before making collection decisions. A professional services firm should read it before building more WIP for the same client
 **SOURCE DOC:** 06
 **STATUS:** PROVEN
+**VALIDATION:** PROVEN | existence | accessed 2026-05-03 | evidence: `03_shadow/validators/profservices/INS-089/verdict.json`
 
 ---
 
@@ -1832,6 +1843,7 @@ signed_by: "Devon, 2026-04-25, devin-992682c244cf444f91e0a516498afbfd"
 **PUDDING BRIDGE:** Amazon's "frequently bought together" algorithm is a temporal co-purchase graph with lift weighting — identical in structure to the temporal matter-sequence graph for professional services. The same algorithm that surfaces "customers who bought conveyancing also bought wills within 18 months" is available from a practice management system export
 **SOURCE DOC:** 06
 **STATUS:** HYPOTHESIS
+**VALIDATION:** PLAUSIBLE | existence | accessed 2026-05-03 | evidence: `03_shadow/validators/profservices/INS-090/verdict.json`
 
 ---
 
@@ -1851,6 +1863,7 @@ signed_by: "Devon, 2026-04-25, devin-992682c244cf444f91e0a516498afbfd"
 **PUDDING BRIDGE:** PII underwriters already score claims risk by matter type (conveyancing is their worst-performing category). A law firm that builds the same scoring matrix and manages its matter complexity distribution accordingly is essentially doing the underwriter's job — and can negotiate preferentially with the insurer based on its demonstrably lower-risk portfolio
 **SOURCE DOC:** 06
 **STATUS:** HYPOTHESIS
+**VALIDATION:** PROVEN | existence | accessed 2026-05-03 | evidence: `03_shadow/validators/profservices/INS-091/verdict.json`
 
 ---
 
@@ -1870,6 +1883,7 @@ signed_by: "Devon, 2026-04-25, devin-992682c244cf444f91e0a516498afbfd"
 **PUDDING BRIDGE:** Insurance contracts have mandatory disclosure clauses that transfer risk back to the insured if they fail to disclose material facts. The engagement letter's scope-change protocol is the professional services equivalent: it transfers the financial risk of scope creep back to the client, where it belongs
 **SOURCE DOC:** 06
 **STATUS:** CONFIRMED-EXTERNAL
+**VALIDATION:** PLAUSIBLE | existence | accessed 2026-05-03 | evidence: `03_shadow/validators/profservices/INS-092/verdict.json`
 
 ---
 
@@ -1893,6 +1907,7 @@ of open matters by type; historical deadline-period utilisation data
 **PUDDING BRIDGE:** Hospital winter bed-capacity planning: NHS Trusts map anticipated winter admissions 12 weeks out, hire bank nurses in October, discharge patients early from October wards. The accountancy firm's January 31 is structurally identical to the hospital's winter surge — both are predictable, recurring, and routinely handled reactively by organisations that could handle them proactively for a fraction of the cost
 **SOURCE DOC:** 06
 **STATUS:** CONFIRMED-EXTERNAL
+**VALIDATION:** PROVEN | existence | accessed 2026-05-03 | evidence: `03_shadow/validators/profservices/INS-093/verdict.json`
 
 ---
 
@@ -1912,6 +1927,7 @@ of open matters by type; historical deadline-period utilisation data
 **PUDDING BRIDGE:** Military signals intelligence: enemy radio traffic volume and content is a leading indicator of operational intent. LinkedIn hiring traffic volume and content from competitor firms is the commercial equivalent — a competitor posting 6 vacancies in a specific practice area is signalling both growth capacity and current stress. The signal is public; almost nobody is reading it systematically
 **SOURCE DOC:** 06
 **STATUS:** HYPOTHESIS
+**VALIDATION:** PLAUSIBLE | existence | accessed 2026-05-03 | evidence: `03_shadow/validators/profservices/INS-094/verdict.json`
 
 ---
 

@@ -1,0 +1,35 @@
+{
+  "band": "PLAUSIBLE",
+  "evidence": [
+    {
+      "accessed_at": "2026-05-03T21:34:58+00:00",
+      "content_sha256": "8ab6705c45b1208bc899b5f715b138362dd63d0d7226c43849b08022f29d21e5",
+      "raw_path": "~/.cache/amp-validators/21e2fb941e6003f8c3eb14f4ce074bdfd46cdfd4332d4a511d72a34f94a02e94.bin",
+      "source": "Companies House bulk data products",
+      "summary": "Bulk CSV/JSON snapshot index (no API key required)",
+      "url": "https://download.companieshouse.gov.uk/en_output.html"
+    },
+    {
+      "accessed_at": "2026-05-03T21:34:58+00:00",
+      "content_sha256": "1c082b8c429c3dca136ce3bbf24b94833462f2ade78c0e54bbf634db78b21c7a",
+      "raw_path": "~/.cache/amp-validators/0991cc3d771b79f85a76428e272f673660d3b89c3125e50e0276d78ba7e8fb36.bin",
+      "source": "Nomis dataset NM_30_1",
+      "summary": "Nomis SDMX-JSON definition for NM_30_1",
+      "url": "https://www.nomisweb.co.uk/api/v01/dataset/NM_30_1.def.sdmx.json"
+    }
+  ],
+  "finding": "Companies House officer-data product reachable; Nomis ASHE definition reachable. LinkedIn leg requires non-open data.",
+  "insight_id": "INS-094",
+  "method": "Existence: Companies House officer data + Nomis ASHE both reachable; LinkedIn hiring-volume data is private.",
+  "notes": [
+    "LinkedIn job-postings volume is not open public data; only available via Talent Insights subscription or scraping (ToS)."
+  ],
+  "run_at": "2026-05-03T21:34:58+00:00",
+  "signed_by": "Devon-ab74 | 2026-05-03 | devin-ab740f2c78ee477a9c16ea3b6ed15293",
+  "statistic": {
+    "public_legs_blocked": 1,
+    "public_legs_validated": 2
+  },
+  "test_class": "existence",
+  "vertical": "profservices"
+}

@@ -1,0 +1,19 @@
+{
+  "band": "PLAUSIBLE",
+  "evidence": [],
+  "finding": "Catalogue entry: 'None required (internal pattern recognition using historical matter data)'. Methodology supported by process-mining literature (van der Aalst) cited in entry.",
+  "insight_id": "INS-084",
+  "method": "No public-data leg; recipe is timesheet event-log + regression on matter-level write-off.",
+  "notes": [
+    "Recipe is internal-data-only; no UK public-data leg to test.",
+    "Methodology is supported by published research (cited in catalogue).",
+    "Verdict marked PLAUSIBLE pending client-data trial."
+  ],
+  "run_at": "2026-05-03T21:02:27+00:00",
+  "signed_by": "Devon-ab74 | 2026-05-03 | devin-ab740f2c78ee477a9c16ea3b6ed15293",
+  "statistic": {
+    "recipe_class": "pure-internal"
+  },
+  "test_class": "existence",
+  "vertical": "profservices"
+}

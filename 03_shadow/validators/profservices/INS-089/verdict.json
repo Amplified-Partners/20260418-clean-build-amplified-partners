@@ -1,0 +1,35 @@
+{
+  "band": "PROVEN",
+  "evidence": [
+    {
+      "accessed_at": "2026-05-03T21:02:28+00:00",
+      "content_sha256": "4e79ba18c15d8ea00581d8dea8fe72d8a154b5faa3115d76bdb867447c0f87ba",
+      "raw_path": "~/.cache/amp-validators/c64b6203d9dcb9a853a55e367578d2590e80cc4707103a3db694173e0ce87edf.bin",
+      "source": "UK Employment Tribunal decisions database",
+      "summary": "Employment Tribunal decisions search page (gov.uk)",
+      "url": "https://www.gov.uk/employment-tribunal-decisions"
+    },
+    {
+      "accessed_at": "2026-05-03T21:02:29+00:00",
+      "content_sha256": "581ef9ff8897f58b3f0d0769d8e2af524948cc6eae5cacdf6d02edfc46fecb72",
+      "raw_path": "~/.cache/amp-validators/8cb7d45b6df3bf499421032b82ff7a051f96248c7270d57fdf03c66eb9430db2.bin",
+      "source": "CourtServe daily court listings",
+      "summary": "CourtServe landing page (free sign-up; daily court listings)",
+      "url": "https://www.courtserve.net/"
+    }
+  ],
+  "finding": "All 3 required tokens present in the public source response.",
+  "insight_id": "INS-089",
+  "method": "Confirm Employment Tribunal decisions database + CourtServe exist as public-data sources for litigation risk monitoring.",
+  "notes": [],
+  "run_at": "2026-05-03T21:02:29+00:00",
+  "signed_by": "Devon-ab74 | 2026-05-03 | devin-ab740f2c78ee477a9c16ea3b6ed15293",
+  "statistic": {
+    "checks_failed": 0,
+    "checks_passed": 2,
+    "tokens_checked": 3,
+    "tokens_missing": 0
+  },
+  "test_class": "existence",
+  "vertical": "profservices"
+}

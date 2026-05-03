@@ -1,0 +1,27 @@
+{
+  "band": "PLAUSIBLE",
+  "evidence": [
+    {
+      "accessed_at": "2026-05-03T21:02:27+00:00",
+      "content_sha256": "0d06bc6e02df230a5b57b1fd7e26880aac292f43c7d63f5508689eb53359c364",
+      "raw_path": "~/.cache/amp-validators/d1d3bf0b9654d2b212dbad0127d1602ccfffb1d15c16ef719b9be3f07e9e0955.bin",
+      "source": "ONS Services Producer Price Indices",
+      "summary": "ONS Services PPI latest bulletin (legal/accountancy series)",
+      "url": "https://www.ons.gov.uk/economy/inflationandpriceindices/bulletins/servicesproducerpriceindices/latest"
+    }
+  ],
+  "finding": "ONS SPPI reachable for inflation deflator. Recipe is fundamentally an internal ANOVA on fee-earner recovery rates.",
+  "insight_id": "INS-088",
+  "method": "Existence: ONS SPPI provides services-inflation deflator; Armstrong Watson recovery benchmark is a published-but-paywalled industry survey, not open data.",
+  "notes": [
+    "Methodology (ANOVA on recovery rates) is industry-standard and supported by activity-based-costing literature."
+  ],
+  "run_at": "2026-05-03T21:02:27+00:00",
+  "signed_by": "Devon-ab74 | 2026-05-03 | devin-ab740f2c78ee477a9c16ea3b6ed15293",
+  "statistic": {
+    "public_legs_blocked": 1,
+    "public_legs_validated": 1
+  },
+  "test_class": "existence",
+  "vertical": "profservices"
+}

@@ -14,6 +14,7 @@ promoted in `00_authority/MANIFEST.md`.
 | `processes/` | Runnable SOPs, rubrics, charters | How-to: inputs → outputs → acceptance → failure modes → provenance. See `01_truth/processes/AGENTS.md`. |
 | `schemas/` | Typed shapes, validation, versioning | Pinhole-tight contracts. See `01_truth/schemas/README.md` + `AGENTS.md`. |
 | `interfaces/` | Cross-system contracts (APIs, events, errors) | Inputs, outputs, error/retry semantics. See `01_truth/interfaces/README.md` + `AGENTS.md`. |
+| `research/` | Truth-tier research evidence (e.g. `validations/` for promoted verdicts from `03_shadow/validators/`) | See `01_truth/research/validations/README.md`. |
 
 ## Clean-build rule (same as `00_authority/NORTH_STAR.md`)
 

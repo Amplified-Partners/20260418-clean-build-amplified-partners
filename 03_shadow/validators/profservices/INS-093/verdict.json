@@ -1,0 +1,51 @@
+{
+  "band": "PROVEN",
+  "evidence": [
+    {
+      "accessed_at": "2026-05-03T21:02:32+00:00",
+      "content_sha256": "081e62c78a8b6b27dc1a8605c1c2ffbfaf23da567dd81d1970bb3932a3279940",
+      "raw_path": "~/.cache/amp-validators/d41f59728fd43cce25cdd21248291a20d66431e21e6369dcd16e9a6cccd3c23d.bin",
+      "source": "HMRC Self Assessment deadlines",
+      "summary": "HMRC Self Assessment deadline page (31 January / 31 October)",
+      "url": "https://www.gov.uk/self-assessment-tax-returns/deadlines"
+    },
+    {
+      "accessed_at": "2026-05-03T21:02:33+00:00",
+      "content_sha256": "c1181776cacd45b5ccc92b8d3be82c2b5bcf3f1efda0cd7a61ec8f2e84a385fc",
+      "raw_path": "~/.cache/amp-validators/888ec0967ac1d06ae7abd28746feb616c15254069bf180320dbcf66628d29d2b.bin",
+      "source": "HMRC VAT return deadlines",
+      "summary": "HMRC quarterly VAT deadline page",
+      "url": "https://www.gov.uk/vat-returns/deadlines"
+    },
+    {
+      "accessed_at": "2026-05-03T21:02:34+00:00",
+      "content_sha256": "e7b9077c63d0027a3940481497598776c556ab2e2c3ddcb6f4e5591a2385f3ea",
+      "raw_path": "~/.cache/amp-validators/f8c6f0ef41efe28576993a2924940b7da79212a93ed58503bfdb550e200047ef.bin",
+      "source": "HMRC Corporation Tax accounting period",
+      "summary": "HMRC Corporation Tax 9-month deadline guidance",
+      "url": "https://www.gov.uk/corporation-tax-accounting-period"
+    },
+    {
+      "accessed_at": "2026-05-03T21:02:34+00:00",
+      "content_sha256": "ddaf7d7808f193b0b431c3b460aec37ca82ae6094b5448e3eebf59bc448e3cf9",
+      "raw_path": "~/.cache/amp-validators/a1e8f53f1845c04d7806a6fc5da1c1b08cc1b2e7b26e4699ccd5508cd117d14b.bin",
+      "source": "HMRC Making Tax Digital for Income Tax",
+      "summary": "HMRC MTD ITSA implementation guidance",
+      "url": "https://www.gov.uk/government/publications/making-tax-digital"
+    }
+  ],
+  "finding": "All 5 required tokens present in the public source response.",
+  "insight_id": "INS-093",
+  "method": "Confirm HMRC publishes Self Assessment / VAT / Corporation Tax / MTD deadline calendars (all open, gov.uk).",
+  "notes": [],
+  "run_at": "2026-05-03T21:02:34+00:00",
+  "signed_by": "Devon-ab74 | 2026-05-03 | devin-ab740f2c78ee477a9c16ea3b6ed15293",
+  "statistic": {
+    "checks_failed": 0,
+    "checks_passed": 4,
+    "tokens_checked": 5,
+    "tokens_missing": 0
+  },
+  "test_class": "existence",
+  "vertical": "profservices"
+}

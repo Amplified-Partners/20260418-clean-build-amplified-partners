@@ -1,0 +1,27 @@
+{
+  "band": "PROVEN",
+  "evidence": [
+    {
+      "accessed_at": "2026-05-03T21:02:30+00:00",
+      "content_sha256": "a15dcb9cd7323778577d6d96731e49ca4689a58f8680808a6e2705250f2a0fdb",
+      "raw_path": "~/.cache/amp-validators/4763859b204b7db5a743b8c4134f4efda123d0450f99e9c66a9c86ef8352374c.bin",
+      "source": "Law Society research topic index (legal-services data anchor)",
+      "summary": "Law Society research index reachable as proxy for SRA / Legal Services Board PII publications (direct sra.org.uk requests are 403'd by their WAF).",
+      "url": "https://www.lawsociety.org.uk/topics/research"
+    }
+  ],
+  "finding": "All 1 required tokens present in the public source response.",
+  "insight_id": "INS-091",
+  "method": "Confirm Law Society research index publishes legal-sector research as anchor for matter-class risk weights (SRA direct fetch blocked by WAF).",
+  "notes": [],
+  "run_at": "2026-05-03T21:02:30+00:00",
+  "signed_by": "Devon-ab74 | 2026-05-03 | devin-ab740f2c78ee477a9c16ea3b6ed15293",
+  "statistic": {
+    "checks_failed": 0,
+    "checks_passed": 1,
+    "tokens_checked": 1,
+    "tokens_missing": 0
+  },
+  "test_class": "existence",
+  "vertical": "profservices"
+}

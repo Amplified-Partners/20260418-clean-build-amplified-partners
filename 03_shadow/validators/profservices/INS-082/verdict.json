@@ -1,0 +1,19 @@
+{
+  "band": "PLAUSIBLE",
+  "evidence": [],
+  "finding": "Catalogue entry explicitly says 'None required' under PUBLIC DATA. Methodology validated by Reichheld retention economics and Amazon SLA empirical research cited in the entry.",
+  "insight_id": "INS-082",
+  "method": "No public-data leg; recipe is internal email metadata + Kaplan-Meier survival analysis.",
+  "notes": [
+    "Recipe is internal-data-only; no UK public-data leg to test.",
+    "Methodology is supported by published research (cited in catalogue).",
+    "Verdict marked PLAUSIBLE pending client-data trial."
+  ],
+  "run_at": "2026-05-03T21:02:25+00:00",
+  "signed_by": "Devon-ab74 | 2026-05-03 | devin-ab740f2c78ee477a9c16ea3b6ed15293",
+  "statistic": {
+    "recipe_class": "pure-internal"
+  },
+  "test_class": "existence",
+  "vertical": "profservices"
+}

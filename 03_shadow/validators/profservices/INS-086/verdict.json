@@ -1,0 +1,19 @@
+{
+  "band": "PLAUSIBLE",
+  "evidence": [],
+  "finding": "Methodology validated by US DoJ antitrust HHI literature (public reference, not a data source).",
+  "insight_id": "INS-086",
+  "method": "HHI is a mathematical concentration measure applied to internal client-fee data; no public-data leg to validate.",
+  "notes": [
+    "Recipe is internal-data-only; no UK public-data leg to test.",
+    "Methodology is supported by published research (cited in catalogue).",
+    "Verdict marked PLAUSIBLE pending client-data trial."
+  ],
+  "run_at": "2026-05-03T21:02:27+00:00",
+  "signed_by": "Devon-ab74 | 2026-05-03 | devin-ab740f2c78ee477a9c16ea3b6ed15293",
+  "statistic": {
+    "recipe_class": "pure-internal"
+  },
+  "test_class": "existence",
+  "vertical": "profservices"
+}
