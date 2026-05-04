@@ -1,7 +1,7 @@
 ---
 title: Governed workspace manifest (authoritative inventory)
-date: 2026-05-03
-version: 52
+date: 2026-05-04
+version: 53
 status: draft
 ---
 
@@ -170,6 +170,14 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
     - `P10-kill-switch-master-reference.md` `[NON-AUTHORITATIVE]` (510 lines — binary shutdown architecture)
 
 ## Changelog
+
+### v53 — 2026-05-04
+
+- Bumped `02_build/INFRASTRUCTURE.md` to v5 (Ollama row updated with `cpus: '48'` resource cap under `deploy.resources.limits`).
+- Added `00_authority/DECISION_LOG.md` v18 entry: `2026-05-04 — Ollama CPU cap on Beast (AMP-75)`. Linked to [AMP-75](https://linear.app/amplifiedpartners/issue/AMP-75/fix-ollama-cpu-limits-70b-model-melting-beast-load-44) and PR #42.
+- Mirror file at `02_build/compose/ollama/docker-compose.yml` (already indexed in v51) updated; no new files indexed.
+
+Signed-by: Devon-aacb | 2026-05-04 | devin-aacb143761d74e1b95dc6cf7596fd4cb
 
 ### v52 — 2026-05-03
 
