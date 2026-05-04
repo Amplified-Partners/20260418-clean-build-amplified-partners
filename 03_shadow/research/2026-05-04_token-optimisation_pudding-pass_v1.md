@@ -23,7 +23,7 @@ A **research-only** pass scoping Phase 2 of the cost-tools work. Phase 1 (`AMP-2
 1. Research the 5+ best named techniques (not summaries, not hand-waves)
 2. Score each through the rubric
 3. Apply the neutral PUDDING 2026 label (`WHAT.HOW.SCALE.TIME`)
-4. Match on labels — same code across different domains is a high-signal pudding candidate (P(identical 4/4) = 1/2058 = 0.049%, p < 0.001 per `90_archive/specifications/mac-drop-2026-04/pudding-taxonomy-synthesis.md` § 19)
+4. Match on labels — same code across different domains is a high-signal pudding candidate (P(identical 4/4) = 1/2058 = 0.049%, p < 0.001 per `90_archive/specifications/mac-drop-2026-04/pudding-taxonomy-synthesis.md` § 10 line 669)
 5. Re-score the combinations through the same rubric — does the combination produce something neither ingredient could alone?
 6. Recommend the top 2–3 to build, with effort estimates
 
