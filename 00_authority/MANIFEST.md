@@ -1,7 +1,7 @@
 ---
 title: Governed workspace manifest (authoritative inventory)
 date: 2026-05-03
-version: 50
+version: 51
 status: draft
 ---
 
@@ -78,7 +78,7 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
 - `00_authority/BUILD_LOOP.md`
 - `00_authority/DECISION_LOG.md`
 - `STATUS.md` (operations status board — async handshake between Devon and OpenClaw; versioned handoffs, no chat)
-- `02_build/INFRASTRUCTURE.md` (canonical infrastructure manifest — single source of truth for all 40 containers, services, scheduled jobs, and server specs on Amplified Core)
+- `02_build/INFRASTRUCTURE.md` (canonical infrastructure manifest — single source of truth for all 41 containers, services, scheduled jobs, and server specs on Amplified Core)
 - `.cursor/rules/stateless-handover-kaizen.mdc` `[LOGIC TO BE CONFIRMED]` (mechanical enforcement of existing handover policy; not a separate policy spine)
 - `.cursor/hooks.json` `[LOGIC TO BE CONFIRMED]` (**No hooks** — `"hooks": {}`. **TESTING NEED:** reinstatement gate → `.cursor/HOOKS_TESTING_NEED.md`; history → `03_shadow/2026-04-16_stop-hook_followup-checklist-loop_bug-report.md` § Final resolution)
 - `.cursor/hooks/stateless-handover-stop.py` `[LOGIC TO BE CONFIRMED]` (**Dormant / testing only** — **not invoked** while `hooks` is empty; do not treat as enforcement)
@@ -168,6 +168,12 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
     - `P10-kill-switch-master-reference.md` `[NON-AUTHORITATIVE]` (510 lines — binary shutdown architecture)
 
 ## Changelog
+
+### v51 — 2026-05-03
+
+- Corrected stale container count in the **Authoritative now** section: `02_build/INFRASTRUCTURE.md` line was "all 40 containers" but the file now documents 41 (the **token-proxy** row added in v50 brought the documented total to 41). Verified against live state on Beast (`docker ps --format "{{.Names}}" | wc -l` = 41 on 2026-05-03). Historical changelog entries that reference "40 containers" (this file's v36-pre entry; `02_build/INFRASTRUCTURE.md` v1 entry) are left as-is per the additive-edits rule. Closes the bibliography-integrity finding from Devin Review on PR #39 (post-merge).
+
+Signed-by: Devon-6ca5 | Devin (Cognition AI) | 2026-05-03 | session `devin-6ca57553eefe4806b613070325964703`
 
 ### v50 — 2026-05-03
 
