@@ -10,15 +10,23 @@ See `ENFORCER-SPEC.md` for the canonical spec and `enforcer.py:142-166` for the 
 
 ## Monitored Services
 
-- Container health (38/40 containers)
-- FalkorDB (graph database)
-- Qdrant (vector database)
-- PostgreSQL
-- Ollama (LLM inference)
-- LiteLLM (LLM routing proxy)
-- Temporal (workflow orchestration)
-- MinIO (object storage)
-- SearXNG (metasearch)
+The enforcer's `EXPECTED_CONTAINERS` is configurable. As deployed in `docker-compose.yml:31` it monitors 11 containers; the fallback in `config.yaml:72-79` lists 7. The actual list runs at runtime via the `EXPECTED_CONTAINERS` env var.
+
+`docker-compose.yml` (currently-deployed list, 11 containers):
+
+- `traefik` — reverse proxy
+- `falkordb` — graph database
+- `postgres` — relational database
+- `redis` — cache / message broker
+- `qdrant` — vector database
+- `langfuse` — LLM observability
+- `portainer` — container UI
+- `openclaw-agents` — agent runtime
+- `litellm` — LLM routing proxy
+- `searxng` — metasearch
+- `ollama` — local LLM inference
+
+Plus database-connectivity probes for FalkorDB, PostgreSQL, Redis, Qdrant; HTTP/TCP probe for Traefik (ports 80/443/8080); session-state freshness on `SESSION_STATE_PATH`; security checks (firewall, SSH key auth — note `fail2ban_enabled` flag is currently a no-op, see Known Issue below).
 
 ## Known Issue (flagged for follow-up)
 
