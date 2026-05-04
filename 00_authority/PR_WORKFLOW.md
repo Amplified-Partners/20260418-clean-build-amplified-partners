@@ -124,4 +124,16 @@ configuration to the current spec.
 - Implementation: Devon-4330 (session `devin-4330c661a80b4770aa8f62980c21366a`),
   2026-05-03.
 
+## Changelog
+
+### v1 — 2026-05-03
+
+- Initial version. Branch protection policy on `main`, Linear ticket
+  linkage (`AMP-NNN` in PR title or body), branch-name prefix convention
+  (Cove, Devin/Devon, Clawd, Cassian, Antigravity, OpenClaw, Dependabot,
+  conventional types), CODEOWNERS-as-Arbiter merge gate, and the
+  `pr-validation` + `linear-sync` workflow contracts. Scope: the four
+  active Amplified-Partners repos (`clean-build`, `ground-truth`, `crm`,
+  `beast-code-export`). Source: AMP-70.
+
 Signed-by: Devon-4330 | 2026-05-03 | session devin-4330c661a80b4770aa8f62980c21366a
