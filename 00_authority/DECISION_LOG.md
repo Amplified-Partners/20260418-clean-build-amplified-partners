@@ -1,7 +1,7 @@
 ---
 title: Decision log
 date: 2026-05-03
-version: 17
+version: 18
 status: draft
 ---
 
@@ -12,6 +12,22 @@ status: draft
 One entry per decision. Keep it short. Link out to supporting docs.
 
 ## Entries
+
+### 2026-05-03 — cost-tools (token_proxy.py) deployed on Beast and indexed in spine
+
+- **Decision**: Deploy `cost-tools/token_proxy.py` on Beast as the `token-proxy` container on `amplified-net`, with `restart: always` + healthcheck on `/proxy/stats`. Index it in the authority spine via `01_truth/SYSTEMS-AND-API-REGISTER.md` v2 (cost-tools section), `02_build/INFRASTRUCTURE.md` v2 (token-proxy row under AI / ML services), and this entry. The proxy adds Sonnet→Haiku model-layer routing for extractive/classificatory prompts, prompt caching, semantic similarity cache (Qdrant `llm_cache`, 0.95 threshold, 24h TTL), native context compaction, and a daily $100 budget circuit-breaker.
+- **Why**: AMP-28 verification revealed the optimiser was on disk at `/opt/amplified/apps/real/token_proxy.py` since 2026-03-12 but had never been deployed (Mac-specific code paths, no Dockerfile, no compose, no RUNBOOK), and was not indexed anywhere in the authority spine. Verification (n=69 calls, 100% routing accuracy on the labelled set, 30.7% saved on the test sample, 5× latency drop, 0 failures) showed the routing logic works on real Anthropic traffic; live canary calls on Beast confirmed Sonnet→Haiku for extractive prompts and Sonnet retained for strategic prompts. Indexing it in the spine prevents the same code from going dormant again.
+- **Where encoded**: `Amplified-Partners/cost-tools#2` (Linux portability patch + Dockerfile + docker-compose + RUNBOOK + README); `01_truth/SYSTEMS-AND-API-REGISTER.md` v2; `02_build/INFRASTRUCTURE.md` v2; `00_authority/MANIFEST.md` v49; `03_shadow/job-wrapups/2026-05-03_cost-tools-resurrection_v1.md`.
+- **Status**: active (proxy running on Beast; canary agents not yet wired — held until cost-tools PR is reviewed).
+- **Signed-by**: Devon-6ca5 | Devin (Cognition AI) | 2026-05-03 | session `devin-6ca57553eefe4806b613070325964703`
+
+### 2026-05-03 — Agent routing rule established (AGENT_ROUTING.md)
+
+- **Decision**: Create `00_authority/AGENT_ROUTING.md` v1 (`[LOGIC TO BE CONFIRMED]`) as the agent-layer routing rule — which agent (Devon, Cassian/OpenClaw, Cursor, Antigravity, Perplexity, Qwen) runs which class of task. Eight rules covering live-infrastructure code, clean-build edits, vault content, strategic decisions, external research, novel decisions, scheduled tasks, and customer-facing change. Stacks on top of `cost-tools/token_proxy.py` (the model-layer routing) and references but does not duplicate `00_authority/TAXONOMY.md` (the agent roster).
+- **Why**: AMP-28 asked for a routing rule. Without an explicit rule, agents inferred their own routing (which led to the cost-tools proxy being lost — nobody owned its deployment). This file is the missing coordination contract. Cost-tier classification is explicitly the proxy's job, not the taxonomy's job, so this file does not assign cost tiers per agent.
+- **Where encoded**: `00_authority/AGENT_ROUTING.md` v1; `00_authority/MANIFEST.md` v49 § Candidate authority.
+- **Status**: candidate (pending Ewan review).
+- **Signed-by**: Devon-6ca5 | Devin (Cognition AI) | 2026-05-03 | session `devin-6ca57553eefe4806b613070325964703`
 
 ### 2026-05-03 — Public-data validation framework + ProfServices pilot (AMP-67)
 
