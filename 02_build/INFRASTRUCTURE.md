@@ -1,6 +1,6 @@
 ---
 title: Infrastructure manifest — Amplified Partners Core Server
-date: 2026-05-03
+date: 2026-05-04
 version: 3
 status: authoritative now
 signed-by:
@@ -208,6 +208,7 @@ Source: `/root/cove-repo/infrastructure/`
 
 - Corrects the v2 changelog entry below: the v2 entry stated "No changes to existing rows; all edits are additive" but the same entry also clarified the **litellm** row's behaviour text two bullets above. The litellm clarification was additive in semantic effect (no behavioural change to the running container), but the row text was edited, so the v2 line as written was self-contradictory. The contradictory line has been removed from the v2 entry; the Linear reference (AMP-28) is preserved on its own line.
 - No changes to any container row, the Compose-file-locations table, or the self-heal / wiring instructions added in v2. This is a bibliography-integrity correction to the v2 changelog only. Companion follow-up to PR #39.
+- Frontmatter `date` advanced to 2026-05-04 to match this entry and the new `signed-by` line for Devon-3adb.
 
 Signed-by: Devon-3adb | Devin (Cognition AI) | 2026-05-04 | session `devin-3adb98db92e24792ab959ea658cc34bc`
 

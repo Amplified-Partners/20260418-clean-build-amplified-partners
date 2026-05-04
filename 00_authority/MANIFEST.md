@@ -1,6 +1,6 @@
 ---
 title: Governed workspace manifest (authoritative inventory)
-date: 2026-05-03
+date: 2026-05-04
 version: 51
 status: draft
 ---
@@ -173,6 +173,7 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
 
 - Removed the stale "40 containers" count from the `02_build/INFRASTRUCTURE.md` reference at § Authoritative now. The count was correct at INFRASTRUCTURE v1 (audit on 2026-04-30) but went stale when the `token-proxy` row was added in INFRASTRUCTURE v2 on 2026-05-03 (PR #39). Replaced with "all containers" so the same staleness does not recur on every future container add. Bibliography-integrity-class fix; no semantic change to what `INFRASTRUCTURE.md` is.
 - Bumped `02_build/INFRASTRUCTURE.md` to v3: corrects the v2 changelog's self-contradictory line "No changes to existing rows; all edits are additive" — the same v2 entry explicitly clarified the litellm row text. The litellm change was additive in semantic effect (no behavioural change), but the line as written in v2 contradicted the litellm clarification two bullets above it.
+- Frontmatter `date` advanced to 2026-05-04 to match this entry (following the convention used at v46, v36, v34).
 - Companion follow-up to PR #39 (AMP-28). No changes to any rule, decision, or artefact — these are bibliography corrections only.
 
 Signed-by: Devon-3adb | Devin (Cognition AI) | 2026-05-04 | session `devin-3adb98db92e24792ab959ea658cc34bc`
