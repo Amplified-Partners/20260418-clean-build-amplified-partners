@@ -151,14 +151,28 @@ Same rubric, applied to the four meaningful puddings (B1, B2, B3, B6). The test 
 | **B3 — Cascade × Schema × CoD** | 4 (more prompts route to Haiku because output is reliable; kept-on-Sonnet calls cost less because reasoning tokens drop ~92%) | 2 (per-agent prompt edits, no infra) | 1 (no infrastructure at all) | 3 (CoD accuracy on Amplified's long-tail prompts unverified — needs per-agent A/B) | **+4** | **PARTIAL** — schema-constrained alone tightens output; CoD alone shortens reasoning. The pudding is that schema-constrained *opens up the routable surface for cascading*, multiplying cascading's existing benefit. CoD is independent extra credit. |
 | **B1 — Cascade × Local-first** | 4 (Ollama is free; large fraction of short-factual prompts may be Ollama-eligible) | 3 (Ollama latency check + fallback path; agents see longer p99) | 3 (3-tier orchestration: cache → local → cloud) | 3 (Ollama quality vs Haiku on Amplified's actual prompts is **unknown**) | **+1** | **CONDITIONALLY** — only a pudding if Ollama quality clears the bar on the prompts we care about. Needs a measurement pass first. |
 
-**Scoring math note** (per pudding-taxonomy-synthesis.md § 7 *Recipe Score = |intersection| + |union|* — algebraically equivalent to `(2 × shared) + unique_A + unique_B`):
+**Scoring math note + degeneracy finding** (per `pudding-taxonomy-synthesis.md` § 6 Formula 1 *`Recipe Score = (Shared Dimensions × 2) + Unique_A + Unique_B`*; algebraic equivalent `|intersection| + |union|` summarised in § 10 line 673):
 
-- B1 — shared: WHAT, HOW, SCALE, TIME (4); unique each side: 0; **score 8** (high — but the two ingredients are too similar; less novelty potential, more redundancy risk).
-- B6 — shared: WHAT (1); unique: 3 + 3 = 6; **score 8** (same headline number, but the ingredients sit on opposite ends of TIME and SCALE — high novelty, more genuine synthesis).
-- B2 — shared: WHAT, HOW-proximity (≈2); unique: 2 + 2 = 4; **score 6** (solid bridge).
-- B3 — shared: WHAT, SCALE, TIME (3); unique: 1 + 1 = 2; **score 8** (three constraint-shaped ingredients with strong alignment).
+For any pair of **fixed 4-dimension PUDDING 2026 labels**, the simple Recipe Score is **constant**:
 
-The mathematical floor of "build immediately" per the canonical scoring is **≥ 18** on the *advanced* formula `(domain_distance × pattern_alignment) + gap_complement + tension_bonus`. None of these clear that floor — but this is a **single-domain** prospecting pass (token economics on a hosted API), not the cross-domain LBD use case the formula was tuned for. For single-domain combinations, the simple recipe-score and the rubric-score above are the load-bearing signals.
+`(2 × s) + (4 − s) + (4 − s) = 2s + 8 − 2s = 8` for every value of `s ∈ {0..4}`.
+
+This means the simple formula yields **score = 8** for every bridge in this set — including B1 (4/4 identical), B6 (1/4 shared), B2 (~2/4), B3 (3/4):
+
+- B1 — shared 4, unique 0+0 = **score 8**
+- B2 — shared 2 (WHAT + HOW-proximity), unique 2+2 = **score 8**
+- B3 — shared 3 (WHAT, SCALE, TIME), unique 1+1 = **score 8**
+- B6 — shared 1 (WHAT), unique 3+3 = **score 8**
+
+This is a **methodology finding, not a scoring bug**: Formula 1 (`|intersection| + |union|`) was originally defined for the **v1 multi-dimension semantic-dimensions schema** — 3–7 dimensions per document, drawn from the 24-dimension B-Term ontology in `pudding-taxonomy-synthesis.md` § 3 (line 153) — where `|intersection|` and `|union|` genuinely vary. The PUDDING 2026 fixed 4-character label collapses that variability. Caught by Devin Review on this PR; flagged here as a candidate update to the canonical taxonomy spec — either (a) drop Formula 1 from the PUDDING 2026 chapter and rely only on Jaccard / Formula 2, or (b) refine Formula 1 to weight the *positions* of shared dimensions (e.g., shared HOW counts more than shared TIME) so the score is no longer constant.
+
+**For this pudding pass, the differentiating signals are:**
+
+- **Jaccard slot match** (canonical confidence band per § 10): B1 = 1.0 (PROVEN); B3 = 0.75 (HIGH); B2 ≈ 0.5 (MEDIUM); B6 = 0.25 (LOW).
+- **Rubric net score** in the table above: B2 +6, B6 +4, B3 +4, B1 +1.
+- **"1+1=3?" qualitative test**: B2 YES, B6 YES, B3 PARTIAL, B1 CONDITIONAL.
+
+The mathematical floor of "build immediately" per Formula 2 is **≥ 18** (`(domain_distance × pattern_alignment) + gap_complement + tension_bonus`). None of these clear that floor — but this is a **single-domain** prospecting pass (token economics on a hosted API), not the cross-domain LBD use case Formula 2 was tuned for. For single-domain prospecting, the **rubric net + Jaccard band + 1+1=3 test** are the load-bearing signals, not Formula 1.
 
 ---
 
