@@ -1,7 +1,7 @@
 ---
 title: Infrastructure manifest — Amplified Partners Core Server
 date: 2026-05-03
-version: 3
+version: 4
 status: authoritative now
 signed-by:
   - Devon | 2026-04-30 | devin-66aa3ce48c7e407f8ad9bf066541b604
@@ -63,7 +63,7 @@ These are shared infrastructure that other services depend on.
 | Container | Image | Status | Purpose |
 |-----------|-------|--------|---------|
 | **ollama** | `ollama/ollama:latest` | Running | Local LLM inference server. Hosts llama3.1-8b/70b, qwen3-coder-30b, nomic-embed-text. Internal port 11434 on `amplified-net`. Host-loopback bind `127.0.0.1:11434` (added 2026-05-03 per AMP-46 — for Beast-side scripts). Public HTTPS via Traefik at `ollama.beast.amplifiedpartners.ai`. |
-| **litellm** | `ghcr.io/berriai/litellm:main-latest` | Running | LLM proxy — unified API for local (Ollama) and remote (OpenAI, Anthropic) models. Internal port 4000. Routes by `simple-shuffle` with failover chains; **does not** classify by cost. |
+| **litellm** | `ghcr.io/berriai/litellm:main-latest` | Running | LLM proxy — unified API for local (Ollama) and remote (Anthropic, OpenAI, Moonshot, DeepSeek, xAI) models. Internal port 4000 on `amplified-net`. Host-loopback bind `127.0.0.1:4000` (added 2026-05-03 per AMP-71 — for Beast-side scripts). Public HTTPS via Traefik at `litellm.beast.amplifiedpartners.ai`. Routes by `simple-shuffle` with failover chains; **does not** classify by cost. |
 | **token-proxy** | `amplified/token-proxy:latest` (built locally from `Amplified-Partners/cost-tools`) | Running (healthy) | Anthropic-only reverse proxy. Sonnet→Haiku model-layer routing on extractive/classification prompts; prompt caching; semantic similarity cache (Qdrant `llm_cache`, 0.95, 24h TTL); native context compaction; daily $100 budget circuit-breaker; per-agent cost log. Container port 8088 (host-bound to `127.0.0.1:8088` for diagnostics; agents reach it via DNS name `token-proxy:8088` on `amplified-net`). Compose file: `/opt/amplified/apps/cost-tools/docker-compose.yml`. RUNBOOK: `cost-tools/RUNBOOK.md`. Linear: AMP-28. |
 | **langfuse** | `langfuse/langfuse:latest` | Running | LLM observability — traces, costs, prompt versioning. |
 
@@ -203,6 +203,20 @@ Source: `/root/cove-repo/infrastructure/`
 ---
 
 ## Changelog
+
+### v4 — 2026-05-03
+
+LiteLLM row updated to reflect [AMP-71](https://linear.app/amplifiedpartners/issue/AMP-71/) fix (sibling of AMP-46):
+
+- Added host-loopback bind `127.0.0.1:4000` (so Beast-side scripts can reach LiteLLM at the canonical loopback address instead of churning bridge IPs).
+- Made the existing public Traefik route (`litellm.beast.amplifiedpartners.ai`) explicit — was previously omitted.
+- Listed the full provider set the proxy fronts (Anthropic, OpenAI, Moonshot, DeepSeek, xAI in addition to Ollama) instead of just OpenAI/Anthropic.
+- Preserved the AMP-28 routing clarification (`simple-shuffle` with failover chains; does not classify by cost) on the same row.
+- LiteLLM compose **not** mirrored into the repo because the live file embeds plaintext API keys for six providers — see [AMP-72](https://linear.app/amplifiedpartners/issue/AMP-72/) for the secrets-hardening follow-up.
+
+Verified end-to-end: host loopback, in-net Docker DNS, and Traefik public route all return 200 on `/health/liveliness`.
+
+Signed-by: Devon-a9a7 | 2026-05-03 | devin-a9a78d0c72d9491aa3a70b18cb741936
 
 ### v3 — 2026-05-03
 

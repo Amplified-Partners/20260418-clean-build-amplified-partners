@@ -1,7 +1,7 @@
 ---
 title: Decision log
 date: 2026-05-03
-version: 16
+version: 17
 status: draft
 ---
 
@@ -12,6 +12,20 @@ status: draft
 One entry per decision. Keep it short. Link out to supporting docs.
 
 ## Entries
+
+### 2026-05-03 — LiteLLM host-loopback port mapping + pudding-testing env-driven base URLs (AMP-71)
+
+- **Decision**: Add a host-loopback port mapping (`127.0.0.1:4000:4000`) to the LiteLLM container's `docker-compose.yml` on Beast (`/opt/amplified/apps/litellm/docker-compose.yml`). Loopback only — not bound to `0.0.0.0`. Refactor `/opt/amplified/pudding-testing/src/llm.py` (Beast-side test harness, not in any repo) to read base URLs from environment variables (`LITELLM_BASE_URL`, `OLLAMA_BASE_URL`) with host-loopback defaults. **Do not** mirror the LiteLLM compose into version control: the live file embeds plaintext API keys for six providers (see related ticket [AMP-72](https://linear.app/amplifiedpartners/issue/AMP-72/)).
+- **Why**: Linear ticket [AMP-71](https://linear.app/amplifiedpartners/issue/AMP-71/) — surfaced during AMP-46 review. The same brittleness pattern AMP-46 fixed for Ollama also affected LiteLLM and the pudding-testing harness: hardcoded Docker bridge IPs (`172.18.0.9` for LiteLLM, `172.18.0.14` for Ollama) that change on container recreation. Closing the loop on the bridge-IP class of bug across all in-repo and Beast-side touchpoints. Env-driven defaults are deliberate so the same script works whether run on the host (loopback) or inside a container on `amplified-net` (override to `litellm:4000` / `ollama:11434`).
+- **Where encoded**:
+  - Live config: `/opt/amplified/apps/litellm/docker-compose.yml` on Beast (signed leading comment).
+  - Beast-side script: `/opt/amplified/pudding-testing/src/llm.py` — `LLMConfig.base_url` and `EmbeddingClient.__init__` are now env-driven.
+  - Manifest: `02_build/INFRASTRUCTURE.md` v4 — LiteLLM row updated, changelog entry signed.
+  - Repo mirror of compose: **not done deliberately** — gated on AMP-72.
+- **Verification**: `ss -tlnp | grep ':4000 '` shows `LISTEN 127.0.0.1:4000` (loopback only). `curl http://127.0.0.1:4000/health/liveliness` (host) → 200. `curl http://litellm:4000/health/liveliness` from a container on `amplified-net` → 200 (no DNS regression). `curl https://litellm.beast.amplifiedpartners.ai/health/liveliness` → 200 (Traefik route still works). Smoke test on the refactored `llm.py` confirms defaults resolve to `127.0.0.1:4000` and `127.0.0.1:11434`, env overrides work, and explicit positional override on `EmbeddingClient` still works (back-compat).
+- **Status**: active
+- **Reversible**: yes — remove the `ports:` block on Beast and `docker compose up -d litellm` returns to in-network-only.
+- **Signed-by**: Devon-a9a7 | 2026-05-03 | devin-a9a78d0c72d9491aa3a70b18cb741936
 
 ### 2026-05-03 — cost-tools (token_proxy.py) deployed on Beast and indexed in spine
 
@@ -36,7 +50,6 @@ One entry per decision. Keep it short. Link out to supporting docs.
 - **Where encoded**: `01_truth/schemas/2026-05_public-data-validation_v1.md` v1, `02_build/validators/` (framework + ProfServices runners), `03_shadow/validators/profservices/` (16 verdict JSONs + `rollup.json`), `01_truth/schemas/research-index/00-insight-catalogue_v1.md` (16 `VALIDATION:` lines added), `01_truth/research/validations/README.md` (truth-tier promotion stub), `00_authority/MANIFEST.md` v45–v48 changelog entries.
 - **Status**: candidate (pending Ewan review of the PR + verdicts)
 - **Signed-by**: Devon-ab74 | 2026-05-03 | devin-ab740f2c78ee477a9c16ea3b6ed15293
-
 
 ### 2026-05-03 — Ollama port-mapping fix on Beast (AMP-46)
 
@@ -375,6 +388,12 @@ One entry per decision. Keep it short. Link out to supporting docs.
 ## Changelog
 
 This section was added in v16 to satisfy `AGENTS.md` rule #3 (authority files must record version bumps in a changelog). Earlier `version` bumps (v1 — v13) were made without a corresponding changelog entry; that history is preserved in git but not enumerated here. From v14 onward, every bump appends an entry below.
+
+### v17 — 2026-05-03
+
+Added the `2026-05-03 — LiteLLM host-loopback port mapping + pudding-testing env-driven base URLs (AMP-71)` entry to the top of `## Entries`. Decision is reversible. Linked to [AMP-71](https://linear.app/amplifiedpartners/issue/AMP-71/) and PR #38. Manifest pointer references `02_build/INFRASTRUCTURE.md` v4 (rebased onto updated PR #32 base, which sits above current main with the AMP-28 token-proxy row).
+
+Signed-by: Devon-a9a7 | 2026-05-03 | devin-a9a78d0c72d9491aa3a70b18cb741936
 
 ### v16 — 2026-05-03
 
