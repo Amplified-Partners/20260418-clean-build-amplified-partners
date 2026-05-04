@@ -67,7 +67,7 @@ Plans and execution logs use whatever format is natural to the work. Minimum con
 
 ## Where they live
 
-- Plans and execution logs for Beast operational work: `agent-comms/beast-ops/`
+- Plans and execution logs for Beast operational work: `Amplified-Partners/agent-comms` repo, `beast-ops/` directory `[SOURCE REQUIRED]` (companion PR in progress)
 - Plans and execution logs for clean-build work: `03_shadow/job-wrapups/`
 - Plans and execution logs for other repos: in the repo, location agent's choice
 
