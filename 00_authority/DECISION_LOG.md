@@ -1,7 +1,7 @@
 ---
 title: Decision log
 date: 2026-05-03
-version: 15
+version: 16
 status: draft
 ---
 
@@ -363,8 +363,9 @@ One entry per decision. Keep it short. Link out to supporting docs.
 
 ## Changelog
 
-### v14 — 2026-05-03
+### v16 — 2026-05-03
 
-- Added 2026-05-03 entry: Branch protection + Linear-linked PR workflow for active repos (AMP-70). Records the decision to adopt a uniform PR workflow across `clean-build`, `ground-truth`, `crm`, `beast-code-export`: branch protection on `main`, required Linear ticket reference, branch-name prefix convention, CODEOWNERS-gated review, and PR↔Linear status sync. Encoded at `00_authority/PR_WORKFLOW.md` v1, `00_authority/MANIFEST.md` v49, `01_truth/processes/2026-05_pr-workflow_branch-protection_sop_v1.md` v1.
+- Added 2026-05-03 entry: Branch protection + Linear-linked PR workflow for active repos (AMP-70). Records the decision to adopt a uniform PR workflow across `clean-build`, `ground-truth`, `crm`, `beast-code-export`: branch protection on `main`, required Linear ticket reference, branch-name prefix convention, CODEOWNERS-gated review, and PR↔Linear status sync. Encoded at `00_authority/PR_WORKFLOW.md` v1, `00_authority/MANIFEST.md` v51, `01_truth/processes/2026-05_pr-workflow_branch-protection_sop_v1.md` v1.
+- Added the `## Changelog` section itself (per AGENTS.md rule #3) — first time DECISION_LOG.md has had one. Earlier version bumps (pre-v14) were made before the section existed and are not retroactively backfilled; their decision content is preserved in the `## Entries` section above.
 
 Signed-by: Devon-4330 | 2026-05-03 | session devin-4330c661a80b4770aa8f62980c21366a

@@ -21,7 +21,6 @@ jobs:
   linear-ticket:
     name: Linear ticket reference
     runs-on: ubuntu-latest
-    if: github.actor != 'dependabot[bot]'
     steps:
       - name: Check PR title or body contains AMP-XXX
         env:
@@ -29,6 +28,15 @@ jobs:
           PR_BODY: ${{ github.event.pull_request.body }}
         run: |
           set -euo pipefail
+          # Dependabot PRs are exempt from the Linear-ticket rule (their
+          # branches are auto-generated, no human author to file a ticket).
+          # The check must still run (not be skipped via job-level `if`)
+          # because it is a *required* status check in branch protection;
+          # a skipped required check blocks merging.
+          if [ "${GITHUB_ACTOR:-}" = "dependabot[bot]" ]; then
+            echo "Dependabot PR — skipping Linear-ticket requirement."
+            exit 0
+          fi
           # Strip HTML comments (<!-- ... -->) from the body before matching so
           # AMP-XXX placeholders inside the PR template's example comments do
           # not satisfy the check. python -c with a regex handles multi-line
@@ -47,13 +55,20 @@ jobs:
   branch-name:
     name: Branch name convention
     runs-on: ubuntu-latest
-    if: github.actor != 'dependabot[bot]'
     steps:
       - name: Check head branch matches allowed pattern
         env:
           HEAD_REF: ${{ github.head_ref }}
         run: |
           set -euo pipefail
+          # Dependabot uses `dependabot/<...>` branches, which already match
+          # the allowed prefix list, but we early-exit explicitly so the
+          # check is unambiguous and to keep behaviour symmetrical with the
+          # Linear-ticket job. Same skipped-required-check reasoning applies.
+          if [ "${GITHUB_ACTOR:-}" = "dependabot[bot]" ]; then
+            echo "Dependabot PR — skipping branch-name check (dependabot/* is allowed by convention)."
+            exit 0
+          fi
           # Allowed prefixes:
           #   cove/      — Cove worker branches (canonical for AMP-XXX flow)
           #   devin/     — Devin/Devon session branches

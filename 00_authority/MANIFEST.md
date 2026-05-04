@@ -174,7 +174,7 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
 ### v51 — 2026-05-03
 
 - Added `00_authority/PR_WORKFLOW.md` to **Authoritative now**: branch protection, Linear ticket linkage, branch-name convention, and CODEOWNERS-as-Arbiter policy for active repos (clean-build, ground-truth, crm, beast-code-export). Implementation lives in `.github/workflows/{pr-validation,linear-sync}.yml`, `.github/CODEOWNERS`, and `02_build/scripts/apply_branch_protection.py`.
-- Indexed `01_truth/processes/2026-05_pr-workflow_branch-protection_sop_v1.md` under **Candidate authority** as the operating SOP for the new policy. Decision recorded at `00_authority/DECISION_LOG.md` v14 (2026-05-03 entry). Source: AMP-70.
+- Indexed `01_truth/processes/2026-05_pr-workflow_branch-protection_sop_v1.md` under **Candidate authority** as the operating SOP for the new policy. Decision recorded at `00_authority/DECISION_LOG.md` v16 (2026-05-03 entry). Source: AMP-70.
 
 Signed-by: Devon-4330 | 2026-05-03 | session devin-4330c661a80b4770aa8f62980c21366a
 

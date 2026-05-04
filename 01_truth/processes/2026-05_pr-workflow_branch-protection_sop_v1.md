@@ -82,10 +82,13 @@ status: candidate-authority
   the PR is still in draft, mark it ready-for-review once corrected).
 - **Devin (`devin-ai-integration[bot]`) cannot self-merge** — by design.
   Ewan / Antigravity merges. Operator action: none required.
-- **Dependabot PR fails branch-name check** — workflow skips dependabot
-  (`if: github.actor != 'dependabot[bot]'`). If the skip ever stops working,
-  the operator can add `dependabot/` to the allowed prefix regex (already
-  present).
+- **Dependabot PR fails a required check** — `pr-validation.yml` does
+  *not* skip dependabot at the job level (a skipped required check blocks
+  merging). Instead each step checks `GITHUB_ACTOR` and exits 0 early
+  when it is `dependabot[bot]`, so the check reports success and the PR
+  remains mergeable. `linear-sync.yml` is not a required check, so it
+  retains the simpler job-level `if: github.actor != 'dependabot[bot]'`
+  skip. Operator action: none unless dependabot's actor name changes.
 
 ## Provenance
 
