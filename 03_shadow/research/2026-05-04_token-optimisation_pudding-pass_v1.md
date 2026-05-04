@@ -285,7 +285,7 @@ Inline links above. Consolidated:
 ## 10. Attribution (per Radical Attribution)
 
 - **The Pudding Technique** — Don R. Swanson, *Fish oil, Raynaud's syndrome, and undiscovered public knowledge* (1986). Adapted by Ewan Bramley + Claude (Anthropic) for cross-domain business knowledge synthesis, 2026.
-- **PUDDING 2026 taxonomy (`WHAT.HOW.SCALE.TIME`, 7×7×7×6 = 2,058 labels)** — defined in `clean-build/90_archive/specifications/mac-drop-2026-04/pudding-taxonomy-synthesis.md` § 2.
+- **PUDDING 2026 taxonomy (`WHAT.HOW.SCALE.TIME`, 7×7×7×6 = 2,058 labels)** — defined in `90_archive/specifications/mac-drop-2026-04/pudding-taxonomy-synthesis.md` § 2.
 - **Original `cost-tools/token_proxy.py`** — Claude (Anthropic Cowork), March 2026.
 - **This pudding-pass on the token-optimisation domain** — Devon-6ca5 | Devin (Cognition AI) | 2026-05-04 | session `devin-6ca57553eefe4806b613070325964703`.
 
