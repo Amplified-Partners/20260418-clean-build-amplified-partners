@@ -1,7 +1,7 @@
 ---
 title: Taxonomy — Amplified Partners entity definitions and agent roles
-date: 2026-04-29
-version: 1
+date: 2026-05-03
+version: 3
 status: draft
 ---
 
@@ -16,6 +16,10 @@ This file is the single canonical reference for:
 3. Terminology — locked definitions so agents do not confuse similarly-named things
 
 If a name is not in this file, treat it as `[SOURCE REQUIRED]`.
+
+## What this taxonomy is not
+
+This file defines **entities, agents, and locked terminology**. It does **not** assign **cost tiers** to agents (e.g. "Devon = always-Sonnet", "Cassian = always-Haiku"). Cost-tier classification is the job of `cost-tools/token_proxy.py`, which routes per-call based on prompt content (see `01_truth/SYSTEMS-AND-API-REGISTER.md` § 14 and `02_build/INFRASTRUCTURE.md` § AI / ML services). Agent-layer routing (which agent runs which task) lives in `00_authority/AGENT_ROUTING.md`. The two layers stack and are deliberately independent of this file.
 
 ---
 
@@ -48,7 +52,7 @@ The operating model: each agent is self-contained. Projects are independent. Coo
 | Agent | Name | Core responsibility | Access scope | Reports to |
 |-------|------|---------------------|--------------|------------|
 | **Devin** | Devon | Infrastructure & systems coordinator. The only agent who writes code to Amplified Core or any production system. Maintains GitHub. Keeps repos clean, cohesive, and canonical. Deploys updates. Sets schedules. Makes everyone else's work better by keeping the foundation solid. | Core (SSH), GitHub, Linear, Slack | OpenClaw (status updates) → Ewan (escalations) |
-| **OpenClaw** | Sam / Clawd | Partner and coordinator. Lives on Ewan's Mac. Reads vault, processes voice notes, talks to Ewan via Telegram/WhatsApp/Slack. Investigates process failures (not people failures). Maintains shared state. | Local filesystem, all channels, vault, all repos (read) | Ewan directly |
+| **OpenClaw** | Sam / Clawd / Cassian | Partner and coordinator. Lives on Ewan's Mac. Reads vault, processes voice notes, talks to Ewan via Telegram/WhatsApp/Slack. Investigates process failures (not people failures). Maintains shared state. | Local filesystem, all channels, vault, all repos (read) | Ewan directly |
 | **Cursor** | — | Builder. Produces code in clean-build workspace. Outputs to GitHub. Does not deploy directly — deployment goes through Devon. | clean-build workspace, GitHub (write to own branches) | Devon (for deployment), Ewan (for direction) |
 | **Antigravity / AG** | — | Business Arbiter and COO. Strategic decisions for the firm. Does not direct agent cognition — directs the business. | Strategic review | Ewan |
 | **Perplexity** | Comet (in browser) | Researcher. External research, synthesis, brainstorm inputs. | External web | Ewan / whoever runs the session |
@@ -88,7 +92,7 @@ The principle: one person does one thing. Clean boundaries. No stepping on each 
 | **Pudding** | The cross-client anonymised discovery technique | A specific tool or library. It is a methodology. |
 | **PicoClaw** | Beelink N150 mini PC placed physically on-site at Tier 3+ clients | The Core. Client-side hardware, not central infrastructure. |
 | **Devon** | Devin's name within the Amplified Partners ecosystem | Any other agent |
-| **Sam / Clawd** | OpenClaw's name within the ecosystem | Devon |
+| **Sam / Clawd / Cassian** | OpenClaw's names within the ecosystem (all three are aliases for the same agent; Ewan uses them interchangeably in chat and knowledge notes) | Devon |
 
 ---
 
@@ -101,3 +105,21 @@ The principle: one person does one thing. Clean boundaries. No stepping on each 
 ---
 
 *Written by: Devon (Devin) | 2026-04-29 | ground-truth session*
+
+---
+
+## Changelog
+
+### v3 — 2026-05-03
+
+- Added **Cassian** as a canonical alias for OpenClaw (alongside the existing **Sam / Clawd**) in both the agent-roster row and the locked-terminology table. Ewan uses "Cassian" interchangeably with "OpenClaw" / "Clawd" / "Sam" in chat and knowledge notes; this brings the locked terminology in line with established usage so `AGENT_ROUTING.md` and other authority files can use "Cassian" without violating bibliography integrity. **No changes to the company structure or agent roster** — same agent, additional canonical alias.
+- Frontmatter `version` bumped to v3.
+
+Signed-by: Devon-6ca5 | Devin (Cognition AI) | 2026-05-03 | session `devin-6ca57553eefe4806b613070325964703`
+
+### v2 — 2026-05-03
+
+- Added § "What this taxonomy is not": an explicit lock that cost-tier classification is the job of `cost-tools/token_proxy.py`, not this file. Agent-layer routing rules live in `00_authority/AGENT_ROUTING.md`. The two layers (model-layer routing in the proxy + agent-layer routing in `AGENT_ROUTING.md`) stack and are independent of this taxonomy.
+- No changes to the company structure or agent roster.
+
+Signed-by: Devon-6ca5 | Devin (Cognition AI) | 2026-05-03 | session `devin-6ca57553eefe4806b613070325964703`

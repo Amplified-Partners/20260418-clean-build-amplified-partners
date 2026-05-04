@@ -1,19 +1,19 @@
 ---
 title: "Systems and API Register"
 id: "systems-and-api-register"
-version: 1
+version: 2
 created: 2026-05-01
-last_validated: 2026-05-01
+last_validated: 2026-05-03
 type: register
 status: candidate
-signed_by: "Devon, 2026-05-01, devin-f32d587cc3e54f959c5309d93f72bc97"
+signed_by: "Devon, 2026-05-01, devin-f32d587cc3e54f959c5309d93f72bc97; Devon-6ca5, 2026-05-03, devin-6ca57553eefe4806b613070325964703"
 ---
 
 # Systems and API Register
 
 **Purpose:** Single document that tells you what's where. Every API, MCP server, telephony system, and functional module across Amplified Partners — with file paths, line counts, and endpoint counts.
 
-**Last validated:** 2026-05-01 by Devon (automated scan of all repos).
+**Last validated:** 2026-05-03 by Devon-6ca5 (cost-tools section added; AMP-28). Earlier scan: 2026-05-01 by Devon (automated scan of all repos).
 
 ---
 
@@ -31,6 +31,7 @@ signed_by: "Devon, 2026-05-01, devin-f32d587cc3e54f959c5309d93f72bc97"
 | Content Engine | 6 | ~1,120 |
 | Safety & Monitoring | 4 | ~1,080 |
 | Knowledge & Ingestion | 7 | ~1,500 |
+| Cost-tools (Anthropic token proxy) | 1 module + helpers | ~988 (proxy) + 2 helpers |
 
 ---
 
@@ -490,6 +491,65 @@ Layer 6: Accounting     Stripe, Xero, QuickBooks, Calendar integrations
 | MCP Servers | crm, grok, gemini, kimi, pii | email, filesystem, github, langfuse, litellm, nightscout, postgresql, telegram | grok, gemini, kimi (older versions) | — |
 | Safety | — | — | security_scanner, prompt_sanitizer, cost_monitor, sentinel | — |
 | Accounting | stripe, xero, quickbooks, calendar | — | — | — |
+
+---
+
+## 14. Cost-tools — Anthropic Token Proxy
+
+**Repo:** `Amplified-Partners/cost-tools` — https://github.com/Amplified-Partners/cost-tools
+**Running on:** Beast (`amplified-core`, `135.181.161.131`) as Docker container `token-proxy` on `amplified-net` (see `02_build/INFRASTRUCTURE.md` v2)
+**Status:** **Running** as of 2026-05-03 (deployed via PR `Amplified-Partners/cost-tools#2`).
+**Linear:** AMP-28
+
+### What it is
+
+A reverse proxy in front of `https://api.anthropic.com` that adds:
+
+- **Model-layer routing** — prompt-content classifier downgrades Sonnet → Haiku for extractive / classification / format prompts; keeps Sonnet for strategy / writing / long-form.
+- **Prompt caching** — injects `cache_control: ephemeral` on system prompts (Anthropic native, ~90% off on repeats).
+- **Native context compaction** — `compact-2026-01-12` beta, server-side, zero cost.
+- **Semantic similarity cache** — Qdrant collection `llm_cache`, 0.95 similarity, 24h TTL. ≥0.95 match → zero API call.
+- **Daily budget circuit-breaker** — `DAILY_BUDGET_USD=100` (configurable). Above the line, all calls are forced to Haiku.
+- **Per-agent cost log** — `~/.amplified/cost-log.jsonl` (per-call: agent id, model, input/output tokens, cost).
+- **Routing stats endpoint** — `GET /proxy/stats` returns running counters (haiku_routed, sonnet_kept, haiku_rate).
+- **Telegram cost alert** — fires when daily spend crosses an alert threshold (default $5).
+
+### Files
+
+| File | Lines | What it does |
+|------|-------|-------------|
+| `token_proxy.py` | 988 | Main FastAPI proxy. `/v1/messages` endpoint mirrors Anthropic; routing classifier, cache, budget, log all live here. |
+| `context_compressor.py` | helper | Detects oversized contexts and triggers Anthropic native compaction beta. |
+| `daily_cost_report.py` | helper | Reads the JSONL log and produces a daily spend summary; designed for cron + Telegram. |
+| `Dockerfile` | new (2026-05-03) | python:3.12-slim, non-root user `tokenproxy` uid 10001, EXPOSE 8088. |
+| `docker-compose.yml` | new (2026-05-03) | Joins `amplified-net`. `restart: always`, healthcheck on `/proxy/stats` every 30s, `env_file` for `ANTHROPIC_API_KEY`. |
+| `RUNBOOK.md` | new (2026-05-03) | Five failure modes (F1–F5), per-failure 30-second fix, rollback, escalation rule. |
+
+### Endpoints (HTTP, container-internal port 8088)
+
+- `POST /v1/messages` — Anthropic-compatible proxy. Routes the request through the classifier, then forwards to `https://api.anthropic.com/v1/messages`.
+- `GET /proxy/stats` — routing counters and recent decisions. Used by healthcheck.
+- `GET /proxy/costs` — cost-per-tool breakdown over a time window.
+
+### Verification (n=69 calls, 2026-05-03)
+
+- Routing accuracy on labelled set (n=38): 38/38 = 100%.
+- Cost saved on the test sample: 30.7% (actual $0.0425 vs all-Sonnet baseline $0.0613).
+- Latency: Haiku mean 1.18s vs Sonnet 6.16s (5× faster on routed prompts).
+- Failures: 0.
+- Live canary calls on Beast (2026-05-04 ~00:14 UTC): extractive prompt routed to Haiku; strategic prompt kept on Sonnet. `/proxy/stats` confirmed `haiku_routed=1, sonnet_kept=1`.
+
+### Attribution
+
+- Original `token_proxy.py` by Claude (Anthropic Cowork), March 2026.
+- Linux deployment, verification, RUNBOOK by Devon-6ca5 | Devin (Cognition AI) | 2026-05-03 | session `devin-6ca57553eefe4806b613070325964703`.
+
+### Companion documents
+
+- `02_build/INFRASTRUCTURE.md` v2 — `token-proxy` container row (running status).
+- `00_authority/AGENT_ROUTING.md` v1 — agent-layer routing rule that stacks on top.
+- `00_authority/DECISION_LOG.md` — 2026-05-03 decision entry.
+- `03_shadow/job-wrapups/2026-05-03_cost-tools-resurrection_v1.md` — wrap-up + pattern for future dormant-code finds.
 
 ---
 

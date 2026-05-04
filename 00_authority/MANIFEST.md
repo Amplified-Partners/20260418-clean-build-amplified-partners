@@ -1,7 +1,7 @@
 ---
 title: Governed workspace manifest (authoritative inventory)
 date: 2026-05-03
-version: 48
+version: 50
 status: draft
 ---
 
@@ -107,6 +107,7 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
 - `01_truth/schemas/` `[LOGIC TO BE CONFIRMED]` (schema contracts to be populated)
   - `01_truth/schemas/README.md` `[LOGIC TO BE CONFIRMED]` (folder purpose stub)
   - `01_truth/schemas/2026-05_public-data-validation_v1.md` `[LOGIC TO BE CONFIRMED]` (public-data verdict schema: 3-band PROVEN/PLAUSIBLE/DISPROVEN + BLOCKED gap-marker; additive `VALIDATION:` field on catalogue; reference impl at `02_build/validators/`)
+- `00_authority/AGENT_ROUTING.md` `[LOGIC TO BE CONFIRMED]` (agent-layer routing — which agent runs which task; stacks on top of `cost-tools/token_proxy.py` model-layer routing; eight rules; AMP-28; status: candidate — pending Ewan review per `DECISION_LOG.md`)
 - `01_truth/interfaces/` `[LOGIC TO BE CONFIRMED]` (API contracts to be populated)
   - `01_truth/interfaces/README.md` `[LOGIC TO BE CONFIRMED]` (folder purpose stub)
 - `01_truth/research/` `[LOGIC TO BE CONFIRMED]` (truth-tier research evidence; promotion target for shadow research)
@@ -167,6 +168,21 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
     - `P10-kill-switch-master-reference.md` `[NON-AUTHORITATIVE]` (510 lines — binary shutdown architecture)
 
 ## Changelog
+
+### v50 — 2026-05-03
+
+- Bumped `00_authority/TAXONOMY.md` to v3: added **Cassian** as a canonical alias for OpenClaw (alongside the existing **Sam / Clawd**) in both the agent-roster row and the locked-terminology table. Brings the locked terminology in line with established usage so `AGENT_ROUTING.md` and other authority files can use "Cassian" without violating bibliography integrity. **No changes to the company structure or agent roster.**
+- Bumped `02_build/INFRASTRUCTURE.md` to v2 in the changelog (frontmatter was already v2): documents the `token-proxy` container row, self-heal layers, agent-wiring instructions, the litellm clarification (does not classify by cost), and the cost-tools entry in the Compose-file-locations table.
+
+Signed-by: Devon-6ca5 | Devin (Cognition AI) | 2026-05-03 | session `devin-6ca57553eefe4806b613070325964703`
+
+### v49 — 2026-05-03
+
+- Added `00_authority/AGENT_ROUTING.md` to **Candidate authority** as `[LOGIC TO BE CONFIRMED]`: agent-layer routing rule (which agent runs which task). Stacks on top of, and explicitly references, the model-layer routing in `cost-tools/token_proxy.py` (which decides Sonnet vs Haiku per call). Companion to AMP-28. Filed under Candidate authority to match the file's own `status: candidate` and the `DECISION_LOG.md` entry status `candidate (pending Ewan review)`.
+- Indexed cost-tools (`token_proxy.py`) into the spine via the existing register and manifest pointers — see `01_truth/SYSTEMS-AND-API-REGISTER.md` v2 (cost-tools / token-proxy section) and `02_build/INFRASTRUCTURE.md` v2 (token-proxy container row under AI / ML services). The proxy was on disk at `/opt/amplified/apps/real/token_proxy.py` since 2026-03-12 but was never deployed and never indexed; it is now deployed on Beast as the `token-proxy` container on `amplified-net` with healthcheck and `restart: always`.
+- Resurrection wrap-up filed at `03_shadow/job-wrapups/2026-05-03_cost-tools-resurrection_v1.md` documenting the discovery, verification (n=69, 100% routing accuracy on the labelled set, 30.7% saved on the test sample, 5× latency drop), deploy, and pattern for future dormant-code finds.
+
+Signed-by: Devon-6ca5 | Devin (Cognition AI) | 2026-05-03 | session `devin-6ca57553eefe4806b613070325964703`
 
 ### v48 — 2026-05-03
 
