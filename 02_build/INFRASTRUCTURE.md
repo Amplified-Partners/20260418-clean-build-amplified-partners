@@ -1,12 +1,13 @@
 ---
 title: Infrastructure manifest — Amplified Partners Core Server
-date: 2026-05-03
-version: 4
+date: 2026-05-04
+version: 5
 status: authoritative now
 signed-by:
   - Devon | 2026-04-30 | devin-66aa3ce48c7e407f8ad9bf066541b604
   - Devon-6ca5 | 2026-05-03 | devin-6ca57553eefe4806b613070325964703
   - Devon-a9a7 | 2026-05-03 | devin-a9a78d0c72d9491aa3a70b18cb741936
+  - Devon-aacb | 2026-05-04 | devin-aacb143761d74e1b95dc6cf7596fd4cb
 ---
 
 <!-- markdownlint-disable-file MD013 -->
@@ -62,7 +63,7 @@ These are shared infrastructure that other services depend on.
 
 | Container | Image | Status | Purpose |
 |-----------|-------|--------|---------|
-| **ollama** | `ollama/ollama:latest` | Running | Local LLM inference server. Hosts llama3.1-8b/70b, qwen3-coder-30b, nomic-embed-text. Internal port 11434 on `amplified-net`. Host-loopback bind `127.0.0.1:11434` (added 2026-05-03 per AMP-46 — for Beast-side scripts). Public HTTPS via Traefik at `ollama.beast.amplifiedpartners.ai`. |
+| **ollama** | `ollama/ollama:latest` | Running | Local LLM inference server. Hosts llama3.1-8b/70b, qwen3-coder-30b, nomic-embed-text. Internal port 11434 on `amplified-net`. Host-loopback bind `127.0.0.1:11434` (added 2026-05-03 per AMP-46 — for Beast-side scripts). Public HTTPS via Traefik at `ollama.beast.amplifiedpartners.ai`. **Resource caps**: `cpus: '48'` + `memory: 96G` under `deploy.resources.limits` (CPU cap added 2026-05-04 per AMP-75 — the 70B runner had been hitting 4806 % CPU and pushing host load >46). |
 | **litellm** | `ghcr.io/berriai/litellm:main-latest` | Running | LLM proxy — unified API for local (Ollama) and remote (Anthropic, OpenAI, Moonshot, DeepSeek, xAI) models. Internal port 4000 on `amplified-net`. Host-loopback bind `127.0.0.1:4000` (added 2026-05-03 per AMP-71 — for Beast-side scripts). Public HTTPS via Traefik at `litellm.beast.amplifiedpartners.ai`. Routes by `simple-shuffle` with failover chains; **does not** classify by cost. |
 | **token-proxy** | `amplified/token-proxy:latest` (built locally from `Amplified-Partners/cost-tools`) | Running (healthy) | Anthropic-only reverse proxy. Sonnet→Haiku model-layer routing on extractive/classification prompts; prompt caching; semantic similarity cache (Qdrant `llm_cache`, 0.95, 24h TTL); native context compaction; daily $100 budget circuit-breaker; per-agent cost log. Container port 8088 (host-bound to `127.0.0.1:8088` for diagnostics; agents reach it via DNS name `token-proxy:8088` on `amplified-net`). Compose file: `/opt/amplified/apps/cost-tools/docker-compose.yml`. RUNBOOK: `cost-tools/RUNBOOK.md`. Linear: AMP-28. |
 | **langfuse** | `langfuse/langfuse:latest` | Running | LLM observability — traces, costs, prompt versioning. |
@@ -203,6 +204,19 @@ Source: `/root/cove-repo/infrastructure/`
 ---
 
 ## Changelog
+
+### v5 — 2026-05-04
+
+Ollama row updated to reflect AMP-75 fix:
+
+- Added `cpus: '48'` (48 logical CPUs = half the 96-thread box) under `deploy.resources.limits` in `/opt/amplified/apps/ollama/docker-compose.yml` and the in-repo mirror.
+- Pre-fix: `HostConfig.NanoCpus = 0` (no cap); 70B runner observed at 4363–4806 % CPU, host load 44–46.
+- Post-fix: `HostConfig.NanoCpus = 48000000000`; 8B smoke test peaked at 4444 % CPU under the cap; host load dropped to 40.60 within 2 minutes of recreate.
+- Container recreate was clean (`Status=running`, all 4 models reachable via `/api/tags`).
+
+Linear: AMP-75. Reversible: remove the `cpus:` line + `docker compose up -d ollama`.
+
+Signed-by: Devon-aacb | 2026-05-04 | devin-aacb143761d74e1b95dc6cf7596fd4cb
 
 ### v4 — 2026-05-03
 

@@ -1,4 +1,5 @@
 # Authored by Devon-a9a7 | 2026-05-03 | AMP-46 Ollama port-mapping fix
+# Updated by Devon-aacb | 2026-05-04 | AMP-75 add cpus: '48' limit (70B was hitting 4806% CPU / load 46)
 # Beast source-of-truth: /opt/amplified/apps/ollama/docker-compose.yml. Mirror in Amplified-Partners/clean-build at 02_build/compose/ollama/docker-compose.yml.
 services:
   ollama:
@@ -24,6 +25,7 @@ services:
     deploy:
       resources:
         limits:
+          cpus: '48'
           memory: 96G
         reservations:
           memory: 48G
