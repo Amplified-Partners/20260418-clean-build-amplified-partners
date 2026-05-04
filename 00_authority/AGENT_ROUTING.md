@@ -75,7 +75,7 @@ If no rule above applies cleanly, **default to Park** (per `AGENTS.md`): send to
 
 ## Cost discipline (cross-reference, not policy)
 
-Cost discipline at the model layer (which LLM the agent uses) is enforced by `cost-tools/token_proxy.py` — see `01_truth/SYSTEMS-AND-API-REGISTER.md` and `02_build/INFRASTRUCTURE.md` for the running container row. This file does not assign a cost tier to each agent. Per `00_authority/TAXONOMY.md` v2, **cost-tier classification is the proxy's job, not the taxonomy's job.**
+Cost discipline at the model layer (which LLM the agent uses) is enforced by `cost-tools/token_proxy.py` — see `01_truth/SYSTEMS-AND-API-REGISTER.md` and `02_build/INFRASTRUCTURE.md` for the running container row. This file does not assign a cost tier to each agent. Per `00_authority/TAXONOMY.md` v3, **cost-tier classification is the proxy's job, not the taxonomy's job.**
 
 If an agent's pattern of work justifies a different proxy configuration (e.g. always-Haiku, always-Sonnet, cache-only), that is a configuration on the proxy, not a rule in this file.
 

@@ -23,7 +23,7 @@ Open in any order:
 - This file.
 - `https://github.com/Amplified-Partners/cost-tools/pull/2` — Linux portability + Dockerfile + compose + RUNBOOK + README. Created and approved (status pending review at time of writing).
 - `https://github.com/Amplified-Partners/cost-tools/blob/devin/2026-05-04-linux-deploy/RUNBOOK.md` — operational playbook (5 failure modes, 30-second rollback, escalation rule).
-- `00_authority/MANIFEST.md` (v49+).
+- `00_authority/MANIFEST.md` (v50+).
 - `00_authority/AGENT_ROUTING.md` (new this PR — agent-layer routing rule that stacks on top of the cost-tools model-layer routing).
 - `01_truth/SYSTEMS-AND-API-REGISTER.md` — cost-tools section.
 - `02_build/INFRASTRUCTURE.md` — `token-proxy` container row.
@@ -92,9 +92,9 @@ The result: from a clean-build agent's perspective, this code did not exist. It 
 In a single PR on `clean-build` (this PR, branch `devin/2026-05-04-amp-28-cost-tools-indexing`):
 
 - New `00_authority/AGENT_ROUTING.md` — the **agent-layer** routing rule (which agent runs which task), explicitly stacking on top of the **model-layer** routing the proxy enforces.
-- `00_authority/MANIFEST.md` v49 — `AGENT_ROUTING.md` indexed under **Candidate authority** (matches its own `status: candidate` and DECISION_LOG entry); cost-tools indexed via the registers below.
+- `00_authority/MANIFEST.md` v50 — `AGENT_ROUTING.md` indexed under **Candidate authority** (matches its own `status: candidate` and DECISION_LOG entry); cost-tools indexed via the registers below. (v50 entry catches up the TAXONOMY v3 alias addition and the INFRASTRUCTURE v2 changelog.)
 - `00_authority/DECISION_LOG.md` — entries for "cost-tools indexed in spine" and "Agent routing established".
-- `00_authority/TAXONOMY.md` v2 — adds the lock that **cost-tier classification is the proxy's job**, not the taxonomy's job; the taxonomy stays an entity/role document, not a cost ladder.
+- `00_authority/TAXONOMY.md` v3 — v2 added the lock that **cost-tier classification is the proxy's job**, not the taxonomy's job; v3 added **Cassian** as a canonical alias for OpenClaw alongside Sam / Clawd. The taxonomy stays an entity/role document, not a cost ladder.
 - `01_truth/SYSTEMS-AND-API-REGISTER.md` v2 — new section `cost-tools / token-proxy` with file paths, line counts, endpoint list, attribution.
 - `02_build/INFRASTRUCTURE.md` v2 — new row under AI / ML services: `token-proxy` container, what it does, deploy path.
 
@@ -150,9 +150,9 @@ In a single PR on `clean-build` (this PR, branch `devin/2026-05-04-amp-28-cost-t
 **`Amplified-Partners/clean-build` (this PR, branch `devin/2026-05-04-amp-28-cost-tools-indexing`):**
 
 - `00_authority/AGENT_ROUTING.md` — new.
-- `00_authority/MANIFEST.md` — v49 (AGENT_ROUTING indexed under Candidate authority; cost-tools registers cited; changelog entry).
+- `00_authority/MANIFEST.md` — v50 (AGENT_ROUTING indexed under Candidate authority; cost-tools registers cited; v49 changelog for AGENT_ROUTING + cost-tools indexing; v50 changelog catches up the TAXONOMY v3 alias addition and INFRASTRUCTURE v2 changelog).
 - `00_authority/DECISION_LOG.md` — two new entries (cost-tools resurrection; agent routing).
-- `00_authority/TAXONOMY.md` — v2 (locks cost-tier as proxy concern, not taxonomy concern).
+- `00_authority/TAXONOMY.md` — v3 (v2 locks cost-tier as proxy concern, not taxonomy concern; v3 adds Cassian as a canonical alias for OpenClaw).
 - `01_truth/SYSTEMS-AND-API-REGISTER.md` — v2 (cost-tools / token-proxy section).
 - `02_build/INFRASTRUCTURE.md` — v2 (token-proxy row added under AI / ML services).
 - `03_shadow/job-wrapups/2026-05-03_cost-tools-resurrection_v1.md` — this file.
