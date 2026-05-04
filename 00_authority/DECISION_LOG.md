@@ -1,7 +1,7 @@
 ---
 title: Decision log
 date: 2026-05-03
-version: 15
+version: 16
 status: draft
 ---
 
@@ -368,10 +368,10 @@ One entry per decision. Keep it short. Link out to supporting docs.
 
 ## Changelog
 
-### v15 — 2026-05-02
+### v16 — 2026-05-03
 
 - Added entry: "2026-05-02 — Marketing Engine Phase 0 parked pending customer signal." Records park decision for `Amplified-Partners/marketing-engine` PR #1 under `00_authority/USE_IT_OR_CUT_IT.md`. Reversal condition documented inline.
-- Establishes the changelog section on this file (previously absent). Per `AGENTS.md` § "PR reviewers — what to flag" rule 3, every `00_authority/*` edit must bump version + append a changelog entry. Entries v1–v14 of this file (the date-stamped decision entries above; v14 was AMP-67 ProfServices validation framework) implicitly tracked version-equivalent state without a dedicated changelog block. Going forward, the version field bumps and changelog entries co-exist, matching the pattern in `MANIFEST.md` and `SIGNATURES.md`.
-- Numbering note: this entry was originally drafted as `v14` against pre-rebase main. AMP-67 (PR #35) merged to main first and used v14, so this rebased entry is now v15.
+- Establishes the changelog section on this file (previously absent). Per `AGENTS.md` § "PR reviewers — what to flag" rule 3, every `00_authority/*` edit must bump version + append a changelog entry. Entries v1–v15 of this file (the date-stamped decision entries above; v14 was AMP-67 ProfServices validation framework, v15 was AMP-28 cost-tools indexing + AGENT_ROUTING.md) implicitly tracked version-equivalent state without a dedicated changelog block. Going forward, the version field bumps and changelog entries co-exist, matching the pattern in `MANIFEST.md` and `SIGNATURES.md`.
+- Numbering note: this entry was originally drafted as `v14` against pre-rebase main. AMP-67 (PR #35) merged first taking v14, then AMP-28 (PR #39) merged taking v15, so this rebased entry is now v16.
 
-Signed-by: Devon-5da3 | 2026-05-02 | devin-5da3bd275191469c8400142fd0ae1d69
+Signed-by: Devon-5da3 | 2026-05-03 | devin-5da3bd275191469c8400142fd0ae1d69
