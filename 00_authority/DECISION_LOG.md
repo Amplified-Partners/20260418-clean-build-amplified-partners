@@ -21,6 +21,23 @@ One entry per decision. Keep it short. Link out to supporting docs.
 - **Status**: active (pending PR merge).
 - **Signed-by**: Devon-codeowners-daughter | 2026-05-05 | devin-487f10ace93b4cdfbcc49f9bb5c300b0
 
+### 2026-05-04 — Ollama CPU cap on Beast (AMP-75)
+
+- **Decision**: Add `cpus: '48'` under `services.ollama.deploy.resources.limits` in `/opt/amplified/apps/ollama/docker-compose.yml` on Beast (alongside the existing `memory: 96G`). Mirror to `02_build/compose/ollama/docker-compose.yml` in version control. Caps Ollama at half the box's 96 logical CPUs, leaving headroom for Cove workers, Sovereign Fleet entities, LiteLLM, and everything else.
+- **Why**: Linear ticket [AMP-75](https://linear.app/amplifiedpartners/issue/AMP-75/fix-ollama-cpu-limits-70b-model-melting-beast-load-44) (from Clawd). Pre-fix snapshot: 70B runner hitting 4363 % CPU (~44 cores), host load average 44. Re-verified at apply time: 4806 % CPU / load 46.18. No CPU limit was previously set (`HostConfig.NanoCpus = 0`). The cap matches Clawd's recommendation literally.
+- **Where encoded**:
+  - Live config: `/opt/amplified/apps/ollama/docker-compose.yml` on Beast (signed leading comment updated).
+  - Repo mirror: `02_build/compose/ollama/docker-compose.yml` + `02_build/compose/ollama/README.md`.
+  - Manifest: `02_build/INFRASTRUCTURE.md` v5 — Ollama row updated, changelog entry signed.
+- **Verification (post-apply, 2026-05-04 03:03 UTC)**:
+  - `docker inspect ollama --format '{{.HostConfig.NanoCpus}}'` → `48000000000` (= 48 logical CPUs, exactly as configured).
+  - `docker compose up -d ollama` → clean recreate, Status=running.
+  - `curl http://127.0.0.1:11434/api/tags` → 200, all 4 models listed (`llama3.1:8b`, `llama3.1:70b`, `qwen3-coder:30b`, `nomic-embed-text`).
+  - 8B smoke inference returned `"Ok"` in 20 s wall-clock; `docker stats` peaked at 4444 % CPU (under the 4800 % cap); host load average dropped from 46.18 → 40.60 over the same window.
+- **Status**: active
+- **Reversible**: yes — remove the `cpus: '48'` line and `docker compose up -d ollama` returns to the unlimited-CPU state.
+- **Signed-by**: Devon-aacb | 2026-05-04 | devin-aacb143761d74e1b95dc6cf7596fd4cb
+
 ### 2026-05-03 — LiteLLM host-loopback port mapping + pudding-testing env-driven base URLs (AMP-71)
 
 - **Decision**: Add a host-loopback port mapping (`127.0.0.1:4000:4000`) to the LiteLLM container's `docker-compose.yml` on Beast (`/opt/amplified/apps/litellm/docker-compose.yml`). Loopback only — not bound to `0.0.0.0`. Refactor `/opt/amplified/pudding-testing/src/llm.py` (Beast-side test harness, not in any repo) to read base URLs from environment variables (`LITELLM_BASE_URL`, `OLLAMA_BASE_URL`) with host-loopback defaults. **Do not** mirror the LiteLLM compose into version control: the live file embeds plaintext API keys for six providers (see related ticket [AMP-72](https://linear.app/amplifiedpartners/issue/AMP-72/)).
@@ -58,23 +75,6 @@ One entry per decision. Keep it short. Link out to supporting docs.
 - **Where encoded**: `01_truth/schemas/2026-05_public-data-validation_v1.md` v1, `02_build/validators/` (framework + ProfServices runners), `03_shadow/validators/profservices/` (16 verdict JSONs + `rollup.json`), `01_truth/schemas/research-index/00-insight-catalogue_v1.md` (16 `VALIDATION:` lines added), `01_truth/research/validations/README.md` (truth-tier promotion stub), `00_authority/MANIFEST.md` v45–v48 changelog entries.
 - **Status**: candidate (pending Ewan review of the PR + verdicts)
 - **Signed-by**: Devon-ab74 | 2026-05-03 | devin-ab740f2c78ee477a9c16ea3b6ed15293
-
-### 2026-05-04 — Ollama CPU cap on Beast (AMP-75)
-
-- **Decision**: Add `cpus: '48'` under `services.ollama.deploy.resources.limits` in `/opt/amplified/apps/ollama/docker-compose.yml` on Beast (alongside the existing `memory: 96G`). Mirror to `02_build/compose/ollama/docker-compose.yml` in version control. Caps Ollama at half the box's 96 logical CPUs, leaving headroom for Cove workers, Sovereign Fleet entities, LiteLLM, and everything else.
-- **Why**: Linear ticket [AMP-75](https://linear.app/amplifiedpartners/issue/AMP-75/fix-ollama-cpu-limits-70b-model-melting-beast-load-44) (from Clawd). Pre-fix snapshot: 70B runner hitting 4363 % CPU (~44 cores), host load average 44. Re-verified at apply time: 4806 % CPU / load 46.18. No CPU limit was previously set (`HostConfig.NanoCpus = 0`). The cap matches Clawd's recommendation literally.
-- **Where encoded**:
-  - Live config: `/opt/amplified/apps/ollama/docker-compose.yml` on Beast (signed leading comment updated).
-  - Repo mirror: `02_build/compose/ollama/docker-compose.yml` + `02_build/compose/ollama/README.md`.
-  - Manifest: `02_build/INFRASTRUCTURE.md` v5 — Ollama row updated, changelog entry signed.
-- **Verification (post-apply, 2026-05-04 03:03 UTC)**:
-  - `docker inspect ollama --format '{{.HostConfig.NanoCpus}}'` → `48000000000` (= 48 logical CPUs, exactly as configured).
-  - `docker compose up -d ollama` → clean recreate, Status=running.
-  - `curl http://127.0.0.1:11434/api/tags` → 200, all 4 models listed (`llama3.1:8b`, `llama3.1:70b`, `qwen3-coder:30b`, `nomic-embed-text`).
-  - 8B smoke inference returned `"Ok"` in 20 s wall-clock; `docker stats` peaked at 4444 % CPU (under the 4800 % cap); host load average dropped from 46.18 → 40.60 over the same window.
-- **Status**: active
-- **Reversible**: yes — remove the `cpus: '48'` line and `docker compose up -d ollama` returns to the unlimited-CPU state.
-- **Signed-by**: Devon-aacb | 2026-05-04 | devin-aacb143761d74e1b95dc6cf7596fd4cb
 
 ### 2026-05-03 — Ollama port-mapping fix on Beast (AMP-46)
 
@@ -414,17 +414,17 @@ One entry per decision. Keep it short. Link out to supporting docs.
 
 This section was added in v17 (the AMP-46 rebase commit, originally drafted as v16 — renumbered during merge with main when CODEOWNERS PR #49 took v16) to satisfy `AGENTS.md` rule #3 (authority files must record version bumps in a changelog). Earlier `version` bumps (v1 — v13) were made without a corresponding changelog entry; that history is preserved in git but not enumerated here. From v14 onward, every bump appends an entry below.
 
+### v19 — 2026-05-05
+
+Added the `2026-05-04 — Ollama CPU cap on Beast (AMP-75)` entry to `## Entries` (placed second, immediately below the v16 CODEOWNERS entry — newest-first reverse-chronological ordering: 2026-05-05 → 2026-05-04 → 2026-05-03 → ...). Decision is reversible. Linked to [AMP-75](https://linear.app/amplifiedpartners/issue/AMP-75/fix-ollama-cpu-limits-70b-model-melting-beast-load-44) and PR #42. Originally drafted as v18; renumbered to v19 during rebase against PR #32 base (which now holds v18 = AMP-71, v17 = AMP-46, v16 = CODEOWNERS PR #49 retroactive entry). Manifest pointer references `02_build/INFRASTRUCTURE.md` v5.
+
+Signed-by: Devon-aacb | 2026-05-05 | devin-aacb143761d74e1b95dc6cf7596fd4cb
+
 ### v18 — 2026-05-03
 
 Added the `2026-05-03 — LiteLLM host-loopback port mapping + pudding-testing env-driven base URLs (AMP-71)` entry to `## Entries` (renumbered from v17 during merge with main). Decision is reversible. Linked to [AMP-71](https://linear.app/amplifiedpartners/issue/AMP-71/) and PR #38. Manifest pointer references `02_build/INFRASTRUCTURE.md` v4.
 
 Signed-by: Devon-a9a7 | 2026-05-03 | devin-a9a78d0c72d9491aa3a70b18cb741936
-
-### v19 — 2026-05-05
-
-Added the `2026-05-04 — Ollama CPU cap on Beast (AMP-75)` entry to `## Entries` (originally placed adjacent to the AMP-46 entry; moved to top of `## Entries` in a follow-up commit per Devin Review feedback to maintain reverse-chronological ordering). Decision is reversible. Linked to [AMP-75](https://linear.app/amplifiedpartners/issue/AMP-75/fix-ollama-cpu-limits-70b-model-melting-beast-load-44) and PR #42. Originally drafted as v18; renumbered to v19 during rebase against PR #32 base (which now holds v18 = AMP-71, v17 = AMP-46, v16 = CODEOWNERS PR #49 retroactive entry). Manifest pointer references `02_build/INFRASTRUCTURE.md` v5.
-
-Signed-by: Devon-aacb | 2026-05-05 | devin-aacb143761d74e1b95dc6cf7596fd4cb
 
 ### v17 — 2026-05-03
 
