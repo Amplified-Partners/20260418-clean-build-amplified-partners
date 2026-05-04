@@ -9,7 +9,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /opt/amplified/logs:/logs
-      - /opt/amplified/vault:/opt/amplified/vault:rw
+      - /opt/amplified/vault:/opt/amplified/vault:ro
     networks:
       - amplified-net
     environment:

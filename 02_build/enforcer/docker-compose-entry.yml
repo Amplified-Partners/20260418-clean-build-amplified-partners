@@ -8,9 +8,11 @@ enforcer:
   build: /opt/amplified/apps/enforcer
   container_name: enforcer
   restart: unless-stopped
-  
+  user: "1000:988"  # UID 1000 (enforcer) + GID 988 (docker group on Beast); required to read /var/run/docker.sock
+
   # Mount Docker socket (read-only) to check container status
   # Mount logs directory for persistent log files
+  # Mount vault read-only so checks/session_hygiene.py can read SESSION-STATE.md
   volumes:
     - /var/run/docker.sock:/var/run/docker.sock:ro
     - /opt/amplified/logs:/logs
