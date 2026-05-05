@@ -147,8 +147,8 @@ echo "Cleared $PYC_CLEARED .pyc files"
 
 echo ""
 echo "=== Verification ==="
-OPS_OK=$(grep -c "startNode(e) AS n, endNode(e) AS m" "$SEARCH_OPS" || echo 0)
-UTILS_OK=$(grep -c "startNode(e) AS n, endNode(e) AS m" "$SEARCH_UTILS" || echo 0)
+OPS_OK=$(grep -c "startNode(e) AS n, endNode(e) AS m" "$SEARCH_OPS" || true)
+UTILS_OK=$(grep -c "startNode(e) AS n, endNode(e) AS m" "$SEARCH_UTILS" || true)
 if [ "$OPS_OK" -gt 0 ] && [ "$UTILS_OK" -gt 0 ]; then
     echo "Fix verified — startNode/endNode pattern present in both files."
 else
@@ -159,8 +159,8 @@ else
 fi
 
 # Check for any remaining buggy pattern
-REMAINING_OPS=$(grep -c "RELATES_TO {uuid: rel.uuid}" "$SEARCH_OPS" || echo 0)
-REMAINING_UTILS=$(grep -c "RELATES_TO {uuid: rel.uuid}" "$SEARCH_UTILS" || echo 0)
+REMAINING_OPS=$(grep -c "RELATES_TO {uuid: rel.uuid}" "$SEARCH_OPS" || true)
+REMAINING_UTILS=$(grep -c "RELATES_TO {uuid: rel.uuid}" "$SEARCH_UTILS" || true)
 if [ "$REMAINING_OPS" -gt 0 ] || [ "$REMAINING_UTILS" -gt 0 ]; then
     echo "Note: $REMAINING_OPS / $REMAINING_UTILS remaining occurrences in edge_bfs_search (unfixed by design — semantics change is non-trivial)."
 fi
