@@ -11,12 +11,26 @@ which uses a different vocabulary. See `02_build/apds/README.md` for the
 schema-divergence note. Linear: AMP-104.
 
 Originally hand-deployed to /opt/amplified/apds/label/apds_labeller.py by Kimmy.
-Promoted to version control unchanged (apart from this header) so this PR is
-a true "what's running" mirror. Behaviour-changing edits land in a separate PR
-once the schema divergence is resolved.
+Promoted to version control with two minimal hardening edits over the Beast
+version, both flagged by Devin Review on PR #52:
+  1. The five PUDDING label values from Ollama are now escape_cypher()'d before
+     being interpolated into the GRAPH.QUERY string (was: raw interpolation -- a
+     malformed LLM response containing a single quote would have produced a
+     Cypher syntax error or, worst case, an injection). The 250 production docs
+     were unaffected because every successful Ollama response in the run had
+     values from the fixed PUDDING vocabulary.
+  2. `confidence` is cast to float() to reject non-numeric LLM output cleanly.
+
+The Beast copy at /opt/amplified/apds/label/apds_labeller.py is now one revision
+behind this file. Sync is tracked as a follow-on action; the next session that
+re-runs the labeller on Beast must `scp` this hardened copy first.
+
+Behaviour on the happy path (LLM returns clean values from the fixed PUDDING
+vocab) is identical to the version that produced the 250 production docs.
 
 Authored-by: Kimmy (hand-deployed to Beast 2026-05-05)
 Promoted-by: Devon-9f21 | 2026-05-05 | devin-9f2104fb06624b009f2879c50957c647
+Hardened-by: Devon-9f21 | 2026-05-05 | per Devin Review on PR #52
 """
 
 import json
@@ -93,12 +107,12 @@ def store_in_falkor(r, doc_id, title, url, labels, source="APDS"):
             f"SET d.title = '{title_esc}', "
             f"d.url = '{url_esc}', "
             f"d.source = '{source}', "
-            f"d.WHAT = '{labels.get('WHAT', 'UNKNOWN')}', "
-            f"d.HOW = '{labels.get('HOW', 'UNKNOWN')}', "
-            f"d.SCALE = '{labels.get('SCALE', 'UNKNOWN')}', "
-            f"d.TIME = '{labels.get('TIME', 'UNKNOWN')}', "
-            f"d.PATTERN = '{labels.get('PATTERN', 'UNKNOWN')}', "
-            f"d.confidence = {labels.get('confidence', 0.0)} "
+            f"d.WHAT = '{escape_cypher(str(labels.get('WHAT', 'UNKNOWN')))}', "
+            f"d.HOW = '{escape_cypher(str(labels.get('HOW', 'UNKNOWN')))}', "
+            f"d.SCALE = '{escape_cypher(str(labels.get('SCALE', 'UNKNOWN')))}', "
+            f"d.TIME = '{escape_cypher(str(labels.get('TIME', 'UNKNOWN')))}', "
+            f"d.PATTERN = '{escape_cypher(str(labels.get('PATTERN', 'UNKNOWN')))}', "
+            f"d.confidence = {float(labels.get('confidence', 0.0))} "
             f"RETURN d"
         )
         r.execute_command("GRAPH.QUERY", GRAPH_NAME, query)

@@ -49,7 +49,7 @@ There are now three "PUDDING" implementations in the workspace, all using overla
 | **Repo script** — `02_build/scripts/pudding_labeler.py` | 5: `+ PATTERN` | `E / R / P / S / C / I / M` (single-letter symbolic) | runnable, not running |
 | **Beast script (this dir)** — `apds_labeller.py` | 5: `+ PATTERN` | `FIN / OPS / MKT / TECH / PPL / GOV / EXT` (functional business categories) | **running**, 250 production docs labelled |
 
-`HOW`, `SCALE`, `TIME`, `PATTERN` vocabularies also differ across the three. See <ref_file file="/home/ubuntu/repos/clean-build/03_shadow/state-2026-05-05-amp-104-pre-pudding.md" /> for the full divergence table.
+`HOW`, `SCALE`, `TIME`, `PATTERN` vocabularies also differ across the three. See [`03_shadow/state-2026-05-05-amp-104-pre-pudding.md`](../../03_shadow/state-2026-05-05-amp-104-pre-pudding.md) for the full divergence table.
 
 **Decision parked** in `00_authority/DECISION_LOG.md` v17 with a `[DECISION REQUIRED]` token. Two questions for Ewan:
 
@@ -63,7 +63,7 @@ Devon-9f21 will not resolve unilaterally — these are truth/world-shaping (Pudd
 | File | What it does | Provenance |
 |---|---|---|
 | `harvester_mvp.py` | SearXNG harvester. 8 UK-SMB queries × 11 engines, top-5 hits per. | Hand-deployed to Beast by Kimmy 2026-05-05; promoted to repo by Devon-9f21 (this PR). |
-| `apds_labeller.py` | Ollama (llama3.1:8b) PUDDING labeller + FalkorDB writer. Idempotent — skips already-labelled doc IDs. | Hand-deployed to Beast by Kimmy 2026-05-05; promoted to repo by Devon-9f21 (this PR). |
+| `apds_labeller.py` | Ollama (llama3.1:8b) PUDDING labeller + FalkorDB writer. Idempotent — skips already-labelled doc IDs. | Hand-deployed to Beast by Kimmy 2026-05-05; promoted to repo by Devon-9f21 (this PR) **+ two hardening edits per Devin Review** (escape PUDDING label values into Cypher; cast `confidence` to float). Beast copy is now one revision behind — see file docstring for sync note. |
 | `README.md` | This file. | Devon-9f21. |
 
 ## How to re-run on Beast
@@ -72,7 +72,7 @@ Devon-9f21 will not resolve unilaterally — these are truth/world-shaping (Pudd
 ssh root@135.181.161.131
 cd /opt/amplified/apds
 python3 harvest/harvester_mvp.py    # writes harvest_<run_id>.json
-python3 label/apds_labeller.py      # reads HARVEST_FILE env or hardcoded path, writes to FalkorDB
+python3 label/apds_labeller.py      # reads hardcoded harvest path, writes to FalkorDB
 ```
 
 Cost: zero (Ollama is local; SearXNG is local; FalkorDB is local).
