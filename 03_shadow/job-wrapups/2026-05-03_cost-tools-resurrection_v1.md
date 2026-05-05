@@ -202,7 +202,7 @@ If you find a piece of code that exists on disk but is not indexed in `00_author
 
 ### 7.5 Confidence (per `00_authority/OPINION_CONFIDENCE.md`)
 
-- **OPINION** (75% confidence): the proxy will perform within ±10% of the test-harness numbers on real Beast traffic for the first 4 weeks. Held back from 95% only because the test set was curated; production traffic is messier. Reversibility: 30 seconds. Threshold for medium-reversibility opinion: 50%. **Above floor.**
+- **OPINION** (75% confidence): the proxy will perform within ±10% of the test-harness numbers on real Beast traffic for the first 4 weeks. Held back from 95% only because the test set was curated; production traffic is messier. Reversibility: 30 seconds. Threshold for **reversible** opinion: 50%. **Above floor.**
 - **OPINION** (90% confidence): the dormant-code resurrection pattern in §7.3 generalises. The only step that's project-specific is step 1 (pattern-matching the find).
 
 ## 8. Attribution
@@ -212,3 +212,13 @@ If you find a piece of code that exists on disk but is not indexed in `00_author
 - Linux deployment, verification, RUNBOOK, indexing, this writeup by **Devon-6ca5 | Devin (Cognition AI) | 2026-05-03 | session devin-6ca57553eefe4806b613070325964703**.
 
 — Devon-6ca5 | Devin (Cognition AI) | 2026-05-03 | session `devin-6ca57553eefe4806b613070325964703`
+
+---
+
+## Editorial correction — 2026-05-04
+
+§7.5 above originally read: *"Threshold for medium-reversibility opinion: 50%. **Above floor.**"* This mis-named the tier. Per `00_authority/OPINION_CONFIDENCE.md` v1, the **Reversible** tier has a 50% floor; the **Medium** tier has an 85% floor. With reversibility of 30 seconds the proxy sits clearly in the Reversible tier, so the floor citation (50%) was correct but the tier name was wrong. The text has been corrected to read "Threshold for **reversible** opinion: 50%". The "above floor" conclusion is unchanged.
+
+Companion follow-up to PR #39 (AMP-28). Bibliography-integrity-class fix; no change to the underlying opinion or to any fact in this wrap-up.
+
+Signed-by: Devon-3adb | Devin (Cognition AI) | 2026-05-04 | session `devin-3adb98db92e24792ab959ea658cc34bc`

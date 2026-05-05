@@ -1,11 +1,12 @@
 ---
 title: Infrastructure manifest — Amplified Partners Core Server
-date: 2026-05-03
-version: 2
+date: 2026-05-04
+version: 3
 status: authoritative now
 signed-by:
   - Devon | 2026-04-30 | devin-66aa3ce48c7e407f8ad9bf066541b604
   - Devon-6ca5 | 2026-05-03 | devin-6ca57553eefe4806b613070325964703
+  - Devon-3adb | 2026-05-04 | devin-3adb98db92e24792ab959ea658cc34bc
 ---
 
 <!-- markdownlint-disable-file MD013 -->
@@ -203,6 +204,14 @@ Source: `/root/cove-repo/infrastructure/`
 
 ## Changelog
 
+### v3 — 2026-05-04
+
+- Corrects the v2 changelog entry below: the v2 entry stated "No changes to existing rows; all edits are additive" but the same entry also clarified the **litellm** row's behaviour text two bullets above. The litellm clarification was additive in semantic effect (no behavioural change to the running container), but the row text was edited, so the v2 line as written was self-contradictory. The contradictory line has been removed from the v2 entry; the Linear reference (AMP-28) is preserved on its own line.
+- No changes to any container row, the Compose-file-locations table, or the self-heal / wiring instructions added in v2. This is a bibliography-integrity correction to the v2 changelog only. Companion follow-up to PR #39.
+- Frontmatter `date` advanced to 2026-05-04 to match this entry and the new `signed-by` line for Devon-3adb.
+
+Signed-by: Devon-3adb | Devin (Cognition AI) | 2026-05-04 | session `devin-3adb98db92e24792ab959ea658cc34bc`
+
 ### v2 — 2026-05-03
 
 - Added **token-proxy** container row under § AI / ML services: Anthropic-only reverse proxy on `amplified-net`, Sonnet→Haiku model-layer routing on extractive/classification prompts, prompt caching, semantic similarity cache (Qdrant `llm_cache`, 0.95, 24h TTL), native context compaction, daily $100 budget circuit-breaker. Container reachable as `token-proxy:8088` on `amplified-net`; host-bound to `127.0.0.1:8088` for diagnostics. Compose file at `/opt/amplified/apps/cost-tools/docker-compose.yml`. RUNBOOK in the `cost-tools` repo.
@@ -210,7 +219,7 @@ Source: `/root/cove-repo/infrastructure/`
 - Clarified the **litellm** row: routes by `simple-shuffle` with failover chains; **does not** classify by cost. Cost-tier classification is the proxy's job (per `00_authority/TAXONOMY.md` v2/v3 lock).
 - Documented the **self-heal layers** for token-proxy (Docker `restart: always` + healthcheck on `/proxy/stats`; Temporal workflow check every 5 min; RUNBOOK escalation rule — 2 attempts → rollback → page Ewan via Telegram).
 - Added agent-wiring instructions: `ANTHROPIC_BASE_URL=http://token-proxy:8088` on agents that hit Anthropic directly; reversible in 30 sec by unsetting the env var.
-- No changes to existing rows; all edits are additive. Linear: AMP-28.
+- Linear: AMP-28.
 
 Signed-by: Devon-6ca5 | Devin (Cognition AI) | 2026-05-03 | session `devin-6ca57553eefe4806b613070325964703`
 
