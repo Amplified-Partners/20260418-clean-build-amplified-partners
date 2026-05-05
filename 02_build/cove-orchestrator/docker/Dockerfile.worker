@@ -2,18 +2,29 @@ FROM python:3.12-slim
 
 WORKDIR /app
 
-# System deps
+# System deps — Playwright Chromium needs the libs below to render at all.
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    git curl && \
-    rm -rf /var/lib/apt/lists/*
+    git curl \
+    libnss3 libatk1.0-0 libatk-bridge2.0-0 libcups2 libxkbcommon0 \
+    libxcomposite1 libxdamage1 libxfixes3 libxrandr2 libgbm1 libpango-1.0-0 \
+    libcairo2 libasound2 libgtk-3-0 fonts-liberation \
+    && rm -rf /var/lib/apt/lists/*
 
 # Python deps
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Playwright browser binaries (Chromium only — keeps the image lean).
+RUN python -m playwright install chromium
+
+# Pull the upstream Visual Polish System so rubric.json / core.rules.json
+# are present on disk at the expected /opt path.
+RUN git clone --depth 1 https://github.com/Amplified-Partners/visual-polish-system.git /opt/visual-polish-system
+
 # App code
 COPY temporal/ ./temporal/
 COPY mcp-servers/ ./mcp-servers/
 COPY agents/ ./agents/
+COPY api/ ./api/
 
 CMD ["python", "-m", "temporal.workers.main"]

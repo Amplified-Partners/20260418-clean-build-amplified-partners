@@ -1,0 +1,53 @@
+name: cove-orchestrator-tests
+
+on:
+  pull_request:
+    paths:
+      - "02_build/cove-orchestrator/**"
+      - ".github/workflows/cove-orchestrator-tests.yml"
+  push:
+    branches: [main]
+    paths:
+      - "02_build/cove-orchestrator/**"
+
+# Least-privilege GITHUB_TOKEN: this workflow only reads code and runs tests.
+permissions:
+  contents: read
+
+jobs:
+  lint-and-test:
+    name: ruff + pytest
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: 02_build/cove-orchestrator
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install runtime deps (without git submodules)
+        run: |
+          # Strip the visual-polish-system git+https dependency for unit tests —
+          # the workflow tests mock all activities, and the integration tests
+          # auto-skip when scoring.engine is not importable.
+          grep -v "^visual-polish-system" requirements.txt > /tmp/req.txt
+          pip install -r /tmp/req.txt
+          pip install -r requirements-dev.txt
+
+      - name: Lint (polish-gate scope)
+        run: |
+          # Scope lint to AMP-73 / polish-gate code only. Pre-existing
+          # issues in agent_activities.py are tracked separately.
+          ruff check \
+            temporal/activities/polish_activities.py \
+            temporal/workflows/polish_gate_workflow.py \
+            temporal/workers/main.py \
+            api/ \
+            tests/
+
+      - name: Run tests
+        run: pytest tests/ -v

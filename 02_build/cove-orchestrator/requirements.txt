@@ -26,3 +26,9 @@ feedparser>=6.0.0
 
 # Utilities
 python-dotenv>=1.0.0
+
+# ─── Visual Polish Gate (AMP-73) ───────────────────────────────────────────────
+fastapi>=0.110.0
+uvicorn[standard]>=0.27.0
+playwright>=1.42.0
+visual-polish-system @ git+https://github.com/Amplified-Partners/visual-polish-system.git@main

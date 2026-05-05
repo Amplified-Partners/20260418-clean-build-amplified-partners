@@ -121,6 +121,20 @@ nightscout-rebuild: ## Rebuild and restart NightScout
 	$(COMPOSE) build nightscout nightscout-mcp
 	$(COMPOSE) up -d nightscout nightscout-mcp
 
+# ─── Visual Polish Gate (AMP-73) ─────────────────────────────────────
+polish-gate-up: ## Start the polish-gate-api and worker
+	$(COMPOSE) up -d temporal-worker polish-gate-api
+
+polish-gate-rebuild: ## Rebuild the worker and polish-gate-api images
+	$(COMPOSE) build temporal-worker polish-gate-api
+	$(COMPOSE) up -d temporal-worker polish-gate-api
+
+polish-gate-logs: ## Tail polish-gate-api logs
+	$(COMPOSE) logs -f polish-gate-api
+
+polish-gate-test: ## Run polish-gate unit / workflow tests
+	python -m pytest tests/test_polish_activities.py tests/test_polish_gate_workflow.py -v
+
 # ─── Cleanup ─────────────────────────────────────────────────────────
 clean: ## Remove build artifacts and caches
 	find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true

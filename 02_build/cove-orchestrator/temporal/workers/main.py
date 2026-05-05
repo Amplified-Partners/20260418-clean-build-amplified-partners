@@ -13,12 +13,21 @@ from temporalio.client import Client
 from temporalio.worker import Worker
 
 from temporal.workflows.build_workflow import ProjectBuildWorkflow
+from temporal.workflows.polish_gate_workflow import PolishGateWorkflow
 from temporal.activities.agent_activities import (
     run_agent,
     request_approval,
     check_approval_status,
     update_task_status,
     log_agent_run,
+)
+from temporal.activities.polish_activities import (
+    screenshot_pr_preview,
+    uiclip_score,
+    rubric_score,
+    evaluate_polish_gate,
+    post_pr_comment,
+    langfuse_log_polish_score,
 )
 
 TEMPORAL_ADDRESS = os.getenv("TEMPORAL_ADDRESS", "localhost:7233")
@@ -36,13 +45,19 @@ async def main():
     worker = Worker(
         client,
         task_queue=TASK_QUEUE,
-        workflows=[ProjectBuildWorkflow],
+        workflows=[ProjectBuildWorkflow, PolishGateWorkflow],
         activities=[
             run_agent,
             request_approval,
             check_approval_status,
             update_task_status,
             log_agent_run,
+            screenshot_pr_preview,
+            uiclip_score,
+            rubric_score,
+            evaluate_polish_gate,
+            post_pr_comment,
+            langfuse_log_polish_score,
         ],
     )
     await worker.run()

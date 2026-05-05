@@ -1,7 +1,7 @@
 ---
 title: Decision log
 date: 2026-05-05
-version: 16
+version: 17
 status: draft
 ---
 
@@ -20,6 +20,14 @@ One entry per decision. Keep it short. Link out to supporting docs.
 - **Where encoded**: `.github/CODEOWNERS`; `00_authority/MANIFEST.md` v51; this entry.
 - **Status**: active (pending PR merge).
 - **Signed-by**: Devon-codeowners-daughter | 2026-05-05 | devin-487f10ace93b4cdfbcc49f9bb5c300b0
+
+### 2026-05-04 — Visual Polish gate wired into Cove (AMP-73)
+
+- **Decision**: Wire `Amplified-Partners/visual-polish-system` (Python `scoring.engine.run_pipeline`, 67 passing arithmetic tests) into Cove as a per-PR merge gate. New Temporal workflow `polish_gate` runs three activities (`screenshot_pr_preview`, `uiclip_score`, `rubric_score`) plus three supporting activities (`evaluate_polish_gate`, `post_pr_comment`, `langfuse_log_polish_score`). New FastAPI HTTP trigger (`api/polish_gate.py`, port 8090, single shared-secret auth via `X-Cove-Token`, constant-time compare) so per-repo GitHub Actions can fire the workflow on PR open. Gate fails iff `composite < threshold` OR any error-severity hard check failed. Score history written to Langfuse for Kaizen trend tracking. Gated repos: `amplified-site`, `the-amplified-method`, `amplified-website`, `crm`, `marketing-engine`. Per-repo GHA wiring follows in separate PRs.
+- **Why**: AMP-73. Visual quality of the public-facing repos was unmeasured — PRs could merge regressing typography, hierarchy, or hard rules without any signal. The scoring engine had been merged to main on 2026-05-03 (Amplified-Partners/visual-polish-system PR #1) but was unconnected. Gating at the PR boundary catches regressions before they hit production while the merge is the cheapest place to fix them.
+- **Where encoded**: `Amplified-Partners/clean-build#47` (Cove activities + workflow + FastAPI trigger + Docker + tests + docs); `Amplified-Partners/visual-polish-system#2` (`pyproject.toml` so the engine is pip-installable); `02_build/cove-orchestrator/temporal/activities/polish_activities.py`; `02_build/cove-orchestrator/temporal/workflows/polish_gate_workflow.py`; `02_build/cove-orchestrator/api/polish_gate.py`; `02_build/cove-orchestrator/docker/docker-compose.yml` (`polish-gate-api` service); `02_build/cove-orchestrator/docs/polish-gate.md`.
+- **Status**: pending review. Beast firewall (`ufw allow 8090/tcp`) + reverse-proxy DNS + per-repo GHA workflows still TODO; tracked in the PR description.
+- **Signed-by**: Devon-29bf | Devin (Cognition AI) | 2026-05-04 | session `devin-29bff990c5b34f269d9b27864a5abdcc`
 
 ### 2026-05-03 — cost-tools (token_proxy.py) deployed on Beast and indexed in spine
 

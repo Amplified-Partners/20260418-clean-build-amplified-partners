@@ -77,6 +77,31 @@ services:
       - ../temporal:/app/temporal
       - ../mcp-servers:/app/mcp-servers
       - ../agents:/app/agents
+      - ../api:/app/api
+      - polish_screenshots:/tmp/cove-polish
+
+  # ─── Cove Polish Gate API (HTTP trigger for PolishGateWorkflow) ─────
+  polish-gate-api:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.api
+    restart: unless-stopped
+    depends_on:
+      temporal:
+        condition: service_started
+    environment:
+      TEMPORAL_ADDRESS: temporal:7233
+      COVE_TASK_QUEUE: ${COVE_TASK_QUEUE:-cove-build-queue}
+      COVE_POLISH_GATE_TOKEN: ${COVE_POLISH_GATE_TOKEN:-}
+      POLISH_GATE_THRESHOLD: ${POLISH_GATE_THRESHOLD:-0.65}
+      POLISH_GATE_RUBRIC_PATH: ${POLISH_GATE_RUBRIC_PATH:-/opt/visual-polish-system/principles/references/rubric.json}
+      POLISH_GATE_RULES_PATH: ${POLISH_GATE_RULES_PATH:-/opt/visual-polish-system/principles/rules/core.rules.json}
+      POLISH_GATE_REFERENCES_DIR: ${POLISH_GATE_REFERENCES_DIR:-}
+    ports:
+      - "${COVE_POLISH_GATE_PORT:-8090}:8090"
+    volumes:
+      - ../api:/app/api
+      - ../temporal:/app/temporal
 
   # ─── LiteLLM Proxy ──────────────────────────────────────────────────
   litellm:
@@ -140,3 +165,4 @@ services:
 volumes:
   postgres_data:
   nightscout_logs:
+  polish_screenshots:
