@@ -1,13 +1,16 @@
-# Dependabot config — version updates (security updates are repo-level, not here).
-# See: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates
-# Authored by Devon (Devin session 4cc8b0d727684f94a8f055853099d8e6), 2026-04-23.
+# Dependabot config — standardised across Amplified-Partners org.
+# Schedule: weekly, Monday 09:00 UTC. Limit: 5 PRs per ecosystem.
+# Signed: Devon-dependabot-daughter | 2026-05-05
 version: 2
 updates:
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Etc/UTC"
     open-pull-requests-limit: 5
     labels:
       - "dependencies"
-      - "ci"
+      - "auto-merge"
