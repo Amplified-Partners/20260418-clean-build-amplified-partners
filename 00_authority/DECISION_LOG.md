@@ -1,7 +1,7 @@
 ---
 title: Decision log
 date: 2026-05-03
-version: 15
+version: 16
 status: draft
 ---
 
@@ -12,6 +12,14 @@ status: draft
 One entry per decision. Keep it short. Link out to supporting docs.
 
 ## Entries
+
+### 2026-05-03 — Branch protection + Linear-linked PR workflow for active repos (AMP-70)
+
+- **Decision**: Adopt a uniform PR workflow across the four active Amplified-Partners repos (`clean-build`, `ground-truth`, `crm`, `beast-code-export`): branch protection on `main`, required Linear ticket reference (`AMP-XXX`) in PR title or body, branch-name prefix convention (`cove/`, `devin/`, `devon/`, `clawd/`, `cassian/`, `antigravity/`, `openclaw/`, `dependabot/`, plus conventional types), CODEOWNERS-gated review, and PR↔Linear status sync. Antigravity holds the Arbiter (merge) role; until it has a GitHub identity, the Architect (`@ewan-dot`) holds the role operationally — flagged `[SOURCE REQUIRED]` in CODEOWNERS.
+- **Why**: AMP-70 (Clawd → Devon). Direct commits to `main` are currently possible across all four repos; PRs are not required to link to Linear; review authority is implicit, not enforced; Linear ticket state does not reflect PR state. The policy makes the existing implicit norm enforceable.
+- **Where encoded**: `00_authority/PR_WORKFLOW.md` v1 (canonical policy); `00_authority/MANIFEST.md` v51 § Authoritative now; `01_truth/processes/2026-05_pr-workflow_branch-protection_sop_v1.md` v1 (operating SOP); `02_build/scripts/apply_branch_protection.py` (idempotent ops script); `.github/CODEOWNERS`; `.github/workflows/pr-validation.yml`; `.github/workflows/linear-sync.yml`; `.github/pull_request_template.md`. Mirror PRs in the other three repos: `Amplified-Partners/crm` PR #25, `Amplified-Partners/ground-truth` PR #8, `Amplified-Partners/beast-code-export` PR #2.
+- **Status**: active (policy committed; branch-protection API call applied separately by the Architect's PAT).
+- **Signed-by**: Devon-4330 | 2026-05-03 | session devin-4330c661a80b4770aa8f62980c21366a
 
 ### 2026-05-03 — cost-tools (token_proxy.py) deployed on Beast and indexed in spine
 
@@ -28,7 +36,6 @@ One entry per decision. Keep it short. Link out to supporting docs.
 - **Where encoded**: `00_authority/AGENT_ROUTING.md` v1; `00_authority/MANIFEST.md` v49 § Candidate authority.
 - **Status**: candidate (pending Ewan review).
 - **Signed-by**: Devon-6ca5 | Devin (Cognition AI) | 2026-05-03 | session `devin-6ca57553eefe4806b613070325964703`
-
 ### 2026-05-03 — Public-data validation framework + ProfServices pilot (AMP-67)
 
 - **Decision**: Create `01_truth/schemas/2026-05_public-data-validation_v1.md` defining the 3-band PROVEN / PLAUSIBLE / DISPROVEN public-data verdict scheme + BLOCKED gap-marker, and an additive `VALIDATION:` field on the insight catalogue (literature `STATUS:` field unchanged). Build the reference implementation at `02_build/validators/` (vertical-agnostic; fetchers in `sources/`, reusable test classes in `tests/`, CLI orchestrator). Land verdicts in `03_shadow/validators/<vertical>/<INS-NNN>/verdict.json` first; promote to `01_truth/research/validations/` after human review. Run the framework against the 16 ProfServices catalogue entries (INS-079 .. INS-094) as the first vertical. All 16 came back PROVEN or PLAUSIBLE; zero DISPROVEN.
@@ -36,7 +43,6 @@ One entry per decision. Keep it short. Link out to supporting docs.
 - **Where encoded**: `01_truth/schemas/2026-05_public-data-validation_v1.md` v1, `02_build/validators/` (framework + ProfServices runners), `03_shadow/validators/profservices/` (16 verdict JSONs + `rollup.json`), `01_truth/schemas/research-index/00-insight-catalogue_v1.md` (16 `VALIDATION:` lines added), `01_truth/research/validations/README.md` (truth-tier promotion stub), `00_authority/MANIFEST.md` v45–v48 changelog entries.
 - **Status**: candidate (pending Ewan review of the PR + verdicts)
 - **Signed-by**: Devon-ab74 | 2026-05-03 | devin-ab740f2c78ee477a9c16ea3b6ed15293
-
 ### 2026-05-01 — Systems and API Register created as candidate authority
 
 - **Decision**: Create `01_truth/SYSTEMS-AND-API-REGISTER.md` — a single register documenting all pre-built APIs, MCP servers, telephony systems, and code modules across all Amplified Partners repos. Indexed in MANIFEST.md v40 as `[LOGIC TO BE CONFIRMED]`.
@@ -354,3 +360,12 @@ One entry per decision. Keep it short. Link out to supporting docs.
   `01_truth/processes/2026-04_job-wrapup_and_escalation-note_sop_v1.md` (v14),
   `AGENTS.md`, `03_shadow/job-wrapups/README.md`.
 - **Status**: active
+
+## Changelog
+
+### v16 — 2026-05-03
+
+- Added 2026-05-03 entry: Branch protection + Linear-linked PR workflow for active repos (AMP-70). Records the decision to adopt a uniform PR workflow across `clean-build`, `ground-truth`, `crm`, `beast-code-export`: branch protection on `main`, required Linear ticket reference, branch-name prefix convention, CODEOWNERS-gated review, and PR↔Linear status sync. Encoded at `00_authority/PR_WORKFLOW.md` v1, `00_authority/MANIFEST.md` v51, `01_truth/processes/2026-05_pr-workflow_branch-protection_sop_v1.md` v1.
+- Added the `## Changelog` section itself (per AGENTS.md rule #3) — first time DECISION_LOG.md has had one. Earlier version bumps (pre-v14) were made before the section existed and are not retroactively backfilled; their decision content is preserved in the `## Entries` section above.
+
+Signed-by: Devon-4330 | 2026-05-03 | session devin-4330c661a80b4770aa8f62980c21366a

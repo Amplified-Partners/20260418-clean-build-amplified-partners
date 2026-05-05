@@ -1,7 +1,7 @@
 ---
 title: Governed workspace manifest (authoritative inventory)
 date: 2026-05-03
-version: 50
+version: 51
 status: draft
 ---
 
@@ -77,6 +77,7 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
 - `00_authority/PROMOTION_GATE.md`
 - `00_authority/BUILD_LOOP.md`
 - `00_authority/DECISION_LOG.md`
+- `00_authority/PR_WORKFLOW.md` (branch protection + Linear linkage + review authority for active repos; AMP-70)
 - `STATUS.md` (operations status board — async handshake between Devon and OpenClaw; versioned handoffs, no chat)
 - `02_build/INFRASTRUCTURE.md` (canonical infrastructure manifest — single source of truth for all 40 containers, services, scheduled jobs, and server specs on Amplified Core)
 - `.cursor/rules/stateless-handover-kaizen.mdc` `[LOGIC TO BE CONFIRMED]` (mechanical enforcement of existing handover policy; not a separate policy spine)
@@ -104,6 +105,7 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
   - `01_truth/processes/2026-04_research-operations-cadence_v1.md` `[LOGIC TO BE CONFIRMED]`
   - `01_truth/processes/2026-04_research-on-research_bootstrap-remit_v1.md` `[LOGIC TO BE CONFIRMED]`
   - `01_truth/processes/2026-04_stateless-handover_neutrality-clause_v1.md` `[LOGIC TO BE CONFIRMED]` (candidate addendum to the job-wrapup SOP; neutrality rule for stateless handovers; authoritative `00_authority/OPINION_CONFIDENCE.md` references this file)
+  - `01_truth/processes/2026-05_pr-workflow_branch-protection_sop_v1.md` `[LOGIC TO BE CONFIRMED]` (PR workflow + branch-protection operating SOP; parent rule: `00_authority/PR_WORKFLOW.md`; AMP-70)
 - `01_truth/schemas/` `[LOGIC TO BE CONFIRMED]` (schema contracts to be populated)
   - `01_truth/schemas/README.md` `[LOGIC TO BE CONFIRMED]` (folder purpose stub)
   - `01_truth/schemas/2026-05_public-data-validation_v1.md` `[LOGIC TO BE CONFIRMED]` (public-data verdict schema: 3-band PROVEN/PLAUSIBLE/DISPROVEN + BLOCKED gap-marker; additive `VALIDATION:` field on catalogue; reference impl at `02_build/validators/`)
@@ -168,6 +170,13 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
     - `P10-kill-switch-master-reference.md` `[NON-AUTHORITATIVE]` (510 lines — binary shutdown architecture)
 
 ## Changelog
+
+### v51 — 2026-05-03
+
+- Added `00_authority/PR_WORKFLOW.md` to **Authoritative now**: branch protection, Linear ticket linkage, branch-name convention, and CODEOWNERS-as-Arbiter policy for active repos (clean-build, ground-truth, crm, beast-code-export). Implementation lives in `.github/workflows/{pr-validation,linear-sync}.yml`, `.github/CODEOWNERS`, and `02_build/scripts/apply_branch_protection.py`.
+- Indexed `01_truth/processes/2026-05_pr-workflow_branch-protection_sop_v1.md` under **Candidate authority** as the operating SOP for the new policy. Decision recorded at `00_authority/DECISION_LOG.md` v16 (2026-05-03 entry). Source: AMP-70.
+
+Signed-by: Devon-4330 | 2026-05-03 | session devin-4330c661a80b4770aa8f62980c21366a
 
 ### v50 — 2026-05-03
 

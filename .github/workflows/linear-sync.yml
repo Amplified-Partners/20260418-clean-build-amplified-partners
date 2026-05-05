@@ -1,0 +1,168 @@
+# Linear ↔ GitHub sync — comments on the linked Linear ticket as the PR moves
+# through opened, ready-for-review, merged, and closed states.
+#
+# Per AMP-70:
+#   - On PR opened/ready_for_review: post the PR link on the Linear ticket and
+#     move it to "In Review" if it is currently in Todo / Backlog / In Progress.
+#   - On PR merged: post a merge note on the Linear ticket. Status is left for
+#     the human (Arbiter) to advance to "Done" — no auto-close.
+#   - On PR closed without merge: post a closure note.
+#
+# Requires repo or organisation secret `LINEAR_API_KEY` (a Linear API key with
+# write access to the workspace). The job no-ops with a warning if the secret
+# is not configured.
+#
+# Authored by Devon-4330 | 2026-05-03 | session devin-4330c661a80b4770aa8f62980c21366a.
+name: Linear sync
+
+on:
+  pull_request_target:
+    types: [opened, reopened, ready_for_review, closed]
+    branches: [main]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  sync:
+    name: Sync to Linear
+    runs-on: ubuntu-latest
+    if: github.actor != 'dependabot[bot]'
+    steps:
+      - name: Extract Linear ticket reference
+        id: extract
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_BODY: ${{ github.event.pull_request.body }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+        run: |
+          set -euo pipefail
+          # Strip HTML comments from the body so PR-template example
+          # placeholders (AMP-NNN inside <!-- ... -->) do not get mistaken
+          # for the real ticket reference. Match priority is title, then
+          # stripped body, then head ref.
+          body_stripped=$(printf '%s' "${PR_BODY:-}" | python3 -c 'import re,sys; sys.stdout.write(re.sub(r"<!--.*?-->", "", sys.stdin.read(), flags=re.DOTALL))')
+          combined="${PR_TITLE}"$'\n'"${body_stripped}"$'\n'"${HEAD_REF}"
+          ticket=$(printf '%s' "$combined" | grep -Eoi 'AMP-[0-9]+' | head -1 | tr '[:lower:]' '[:upper:]' || true)
+          if [ -n "$ticket" ]; then
+            echo "ticket=$ticket" >> "$GITHUB_OUTPUT"
+            echo "Found ticket: $ticket"
+          else
+            echo "ticket=" >> "$GITHUB_OUTPUT"
+            echo "No AMP-XXX ticket reference found; skipping Linear sync."
+          fi
+
+      - name: Sync to Linear
+        if: steps.extract.outputs.ticket != ''
+        env:
+          LINEAR_API_KEY: ${{ secrets.LINEAR_API_KEY }}
+          TICKET: ${{ steps.extract.outputs.ticket }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+          PR_ACTION: ${{ github.event.action }}
+          PR_DRAFT: ${{ github.event.pull_request.draft }}
+          PR_MERGED: ${{ github.event.pull_request.merged }}
+          MERGE_SHA: ${{ github.event.pull_request.merge_commit_sha }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "${LINEAR_API_KEY:-}" ]; then
+            echo "::warning::LINEAR_API_KEY secret not set; skipping Linear sync."
+            echo "::warning::Add it at: https://github.com/${REPO}/settings/secrets/actions"
+            exit 0
+          fi
+
+          # Determine event type and comment body.
+          # Draft PRs do not signal readiness for review, so we skip the
+          # comment + state move on `opened`/`reopened` while draft.
+          # `ready_for_review` always signals readiness, so we never skip
+          # there even if `pull_request.draft` somehow reads as true.
+          comment_body=""
+          should_move_to_review="false"
+          case "$PR_ACTION" in
+            opened|reopened)
+              if [ "$PR_DRAFT" = "true" ]; then
+                echo "Draft PR; skipping Linear sync until marked ready for review."
+                exit 0
+              fi
+              comment_body="**PR opened** by @${PR_AUTHOR} in \`${REPO}\`: [#${PR_NUMBER} — ${PR_TITLE}](${PR_URL})"
+              should_move_to_review="true"
+              ;;
+            ready_for_review)
+              comment_body="**PR ready for review** by @${PR_AUTHOR} in \`${REPO}\`: [#${PR_NUMBER} — ${PR_TITLE}](${PR_URL})"
+              should_move_to_review="true"
+              ;;
+            closed)
+              if [ "$PR_MERGED" = "true" ]; then
+                comment_body="**PR merged** by @${PR_AUTHOR} in \`${REPO}\`: [#${PR_NUMBER} — ${PR_TITLE}](${PR_URL}) — \`${MERGE_SHA:0:7}\`. Human review of acceptance criteria is required before this ticket is moved to Done."
+              else
+                comment_body="**PR closed without merge** by @${PR_AUTHOR} in \`${REPO}\`: [#${PR_NUMBER} — ${PR_TITLE}](${PR_URL})."
+              fi
+              ;;
+            *)
+              echo "Unhandled action: $PR_ACTION"
+              exit 0
+              ;;
+          esac
+
+          # Resolve issue UUID from identifier (AMP-XXX).
+          query_payload=$(jq -nc --arg id "$TICKET" '{
+            query: "query($id: String!) { issue(id: $id) { id state { id name type } team { id } } }",
+            variables: { id: $id }
+          }')
+          resp=$(curl -fsS -X POST https://api.linear.app/graphql \
+            -H "Authorization: ${LINEAR_API_KEY}" \
+            -H "Content-Type: application/json" \
+            -d "$query_payload")
+          issue_id=$(printf '%s' "$resp" | jq -r '.data.issue.id // empty')
+          state_type=$(printf '%s' "$resp" | jq -r '.data.issue.state.type // empty')
+          state_name=$(printf '%s' "$resp" | jq -r '.data.issue.state.name // empty')
+          team_id=$(printf '%s' "$resp" | jq -r '.data.issue.team.id // empty')
+          if [ -z "$issue_id" ]; then
+            echo "::warning::Could not resolve Linear issue $TICKET. Response: $resp"
+            exit 0
+          fi
+          echo "Resolved $TICKET → $issue_id (state: $state_name / $state_type)"
+
+          # Post the comment.
+          comment_payload=$(jq -nc --arg issueId "$issue_id" --arg body "$comment_body" '{
+            query: "mutation($issueId: String!, $body: String!) { commentCreate(input: { issueId: $issueId, body: $body }) { success } }",
+            variables: { issueId: $issueId, body: $body }
+          }')
+          curl -fsS -X POST https://api.linear.app/graphql \
+            -H "Authorization: ${LINEAR_API_KEY}" \
+            -H "Content-Type: application/json" \
+            -d "$comment_payload" | jq -e '.data.commentCreate.success' >/dev/null
+          echo "Posted comment on $TICKET."
+
+          # Move to "In Review" on PR open, unless the ticket is already
+          # there, completed, or canceled.
+          if [ "$should_move_to_review" = "true" ] \
+             && [ "$state_name" != "In Review" ] \
+             && [ "$state_type" != "completed" ] \
+             && [ "$state_type" != "canceled" ]; then
+            review_state_id=$(curl -fsS -X POST https://api.linear.app/graphql \
+              -H "Authorization: ${LINEAR_API_KEY}" \
+              -H "Content-Type: application/json" \
+              -d "$(jq -nc --arg teamId "$team_id" '{
+                query: "query($teamId: String!) { workflowStates(filter: { team: { id: { eq: $teamId } }, name: { eq: \"In Review\" } }) { nodes { id } } }",
+                variables: { teamId: $teamId }
+              }')" | jq -r '.data.workflowStates.nodes[0].id // empty')
+            if [ -n "$review_state_id" ]; then
+              update_payload=$(jq -nc --arg id "$issue_id" --arg stateId "$review_state_id" '{
+                query: "mutation($id: String!, $stateId: String!) { issueUpdate(id: $id, input: { stateId: $stateId }) { success } }",
+                variables: { id: $id, stateId: $stateId }
+              }')
+              curl -fsS -X POST https://api.linear.app/graphql \
+                -H "Authorization: ${LINEAR_API_KEY}" \
+                -H "Content-Type: application/json" \
+                -d "$update_payload" | jq -e '.data.issueUpdate.success' >/dev/null
+              echo "Moved $TICKET → In Review."
+            else
+              echo "::warning::Could not find 'In Review' workflow state for team $team_id; leaving status unchanged."
+            fi
+          fi
