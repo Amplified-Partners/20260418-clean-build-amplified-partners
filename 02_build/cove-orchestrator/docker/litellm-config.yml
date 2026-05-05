@@ -32,6 +32,22 @@ model_list:
       model: openai/gpt-4o-mini
       api_key: os.environ/OPENAI_API_KEY
 
+  # ─── Grok (cheap tier — fast coding) ────────────────────────────
+  - model_name: grok-code-fast-1
+    litellm_params:
+      model: xai/grok-code-fast-1
+      api_key: os.environ/XAI_API_KEY
+    model_info:
+      max_tokens: 8192
+
+  # ─── Grok (medium tier — general) ───────────────────────────────
+  - model_name: grok-4-fast
+    litellm_params:
+      model: xai/grok-4-fast
+      api_key: os.environ/XAI_API_KEY
+    model_info:
+      max_tokens: 8192
+
 litellm_settings:
   drop_params: true
   set_verbose: false
