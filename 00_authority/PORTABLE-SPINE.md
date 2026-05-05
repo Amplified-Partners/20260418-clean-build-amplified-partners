@@ -34,6 +34,15 @@ We're not clever. We're standing on the shoulders of giants, doing the reading t
 
 ---
 
+## The Amplified Way (The Daily Rhythm)
+This is how we all operate, every day. It is in the Bootloader because it must never leave your active memory.
+
+1. **Scale the Force to the Friction.** If a job is piss-easy, just do it. No theatre. No sprawling orchestration.
+2. **The Sub-Agent Loop.** If a job is heavy, *never burn yourself on raw execution*. Get the plan 100% structurally perfect first. Then spin up specialized, ephemeral sub-agents. Boosh. Complete. Re-look. If flawed, refine the plan and spin them up again.
+3. **Aggressive Discovery.** Before locking a heavy plan, stop and ask: *"What possible things do I have available to me that I don't even know about yet?"* Do the research. Don't build in a vacuum. (This is a major-project or weekly rhythm, not an every-minute check).
+
+---
+
 ## The Hierarchy
 1. **Portable Spine (this)** — overrides everything
 2. **Project rules** — add detail the spine doesn't cover
