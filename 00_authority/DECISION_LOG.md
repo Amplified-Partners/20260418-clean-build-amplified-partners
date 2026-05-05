@@ -1,7 +1,7 @@
 ---
 title: Decision log
 date: 2026-05-03
-version: 15
+version: 16
 status: draft
 ---
 
@@ -12,6 +12,14 @@ status: draft
 One entry per decision. Keep it short. Link out to supporting docs.
 
 ## Entries
+
+### 2026-05-05 — CODEOWNERS added to clean-build (governance enforcement via GitHub)
+
+- **Decision**: Add `.github/CODEOWNERS` to `Amplified-Partners/clean-build` requiring `@ewanbramley` as a reviewer for all changes to `00_authority/**` and `01_truth/**`. No default `*` owner — other paths remain open for any reviewer.
+- **Why**: `00_authority/` and `01_truth/` contain governance and truth-layer documents. Changes to these paths are significant or irreversible and should require Ewan's review before merge. GitHub's CODEOWNERS mechanism enforces this automatically at PR time.
+- **Where encoded**: `.github/CODEOWNERS`; `00_authority/MANIFEST.md` v51; this entry.
+- **Status**: active (pending PR merge).
+- **Signed-by**: Devon-codeowners-daughter | 2026-05-05 | devin-487f10ace93b4cdfbcc49f9bb5c300b0
 
 ### 2026-05-03 — cost-tools (token_proxy.py) deployed on Beast and indexed in spine
 

@@ -1,7 +1,7 @@
 ---
 title: Governed workspace manifest (authoritative inventory)
 date: 2026-05-03
-version: 50
+version: 51
 status: draft
 ---
 
@@ -168,6 +168,12 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
     - `P10-kill-switch-master-reference.md` `[NON-AUTHORITATIVE]` (510 lines — binary shutdown architecture)
 
 ## Changelog
+
+### v51 — 2026-05-05
+
+- Added `.github/CODEOWNERS` enforcing `@ewanbramley` as required reviewer for `00_authority/**` and `01_truth/**`. No default `*` owner. Decision logged in `00_authority/DECISION_LOG.md` v16. This is a GitHub-level governance enforcement — changes to authority and truth paths now require Ewan's review before merge.
+
+Signed-by: Devon-codeowners-daughter | 2026-05-05 | devin-487f10ace93b4cdfbcc49f9bb5c300b0
 
 ### v50 — 2026-05-03
 
