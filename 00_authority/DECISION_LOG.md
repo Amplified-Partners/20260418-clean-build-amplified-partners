@@ -1,7 +1,7 @@
 ---
 title: Decision log
 date: 2026-05-05
-version: 16
+version: 18
 status: draft
 ---
 
@@ -20,6 +20,20 @@ One entry per decision. Keep it short. Link out to supporting docs.
 - **Where encoded**: `.github/CODEOWNERS`; `00_authority/MANIFEST.md` v51; this entry.
 - **Status**: active (pending PR merge).
 - **Signed-by**: Devon-codeowners-daughter | 2026-05-05 | devin-487f10ace93b4cdfbcc49f9bb5c300b0
+
+### 2026-05-03 — LiteLLM host-loopback port mapping + pudding-testing env-driven base URLs (AMP-71)
+
+- **Decision**: Add a host-loopback port mapping (`127.0.0.1:4000:4000`) to the LiteLLM container's `docker-compose.yml` on Beast (`/opt/amplified/apps/litellm/docker-compose.yml`). Loopback only — not bound to `0.0.0.0`. Refactor `/opt/amplified/pudding-testing/src/llm.py` (Beast-side test harness, not in any repo) to read base URLs from environment variables (`LITELLM_BASE_URL`, `OLLAMA_BASE_URL`) with host-loopback defaults. **Do not** mirror the LiteLLM compose into version control: the live file embeds plaintext API keys for six providers (see related ticket [AMP-72](https://linear.app/amplifiedpartners/issue/AMP-72/)).
+- **Why**: Linear ticket [AMP-71](https://linear.app/amplifiedpartners/issue/AMP-71/) — surfaced during AMP-46 review. The same brittleness pattern AMP-46 fixed for Ollama also affected LiteLLM and the pudding-testing harness: hardcoded Docker bridge IPs (`172.18.0.9` for LiteLLM, `172.18.0.14` for Ollama) that change on container recreation. Closing the loop on the bridge-IP class of bug across all in-repo and Beast-side touchpoints. Env-driven defaults are deliberate so the same script works whether run on the host (loopback) or inside a container on `amplified-net` (override to `litellm:4000` / `ollama:11434`).
+- **Where encoded**:
+  - Live config: `/opt/amplified/apps/litellm/docker-compose.yml` on Beast (signed leading comment).
+  - Beast-side script: `/opt/amplified/pudding-testing/src/llm.py` — `LLMConfig.base_url` and `EmbeddingClient.__init__` are now env-driven.
+  - Manifest: `02_build/INFRASTRUCTURE.md` v4 — LiteLLM row updated, changelog entry signed.
+  - Repo mirror of compose: **not done deliberately** — gated on AMP-72.
+- **Verification**: `ss -tlnp | grep ':4000 '` shows `LISTEN 127.0.0.1:4000` (loopback only). `curl http://127.0.0.1:4000/health/liveliness` (host) → 200. `curl http://litellm:4000/health/liveliness` from a container on `amplified-net` → 200 (no DNS regression). `curl https://litellm.beast.amplifiedpartners.ai/health/liveliness` → 200 (Traefik route still works). Smoke test on the refactored `llm.py` confirms defaults resolve to `127.0.0.1:4000` and `127.0.0.1:11434`, env overrides work, and explicit positional override on `EmbeddingClient` still works (back-compat).
+- **Status**: active
+- **Reversible**: yes — remove the `ports:` block on Beast and `docker compose up -d litellm` returns to in-network-only.
+- **Signed-by**: Devon-a9a7 | 2026-05-03 | devin-a9a78d0c72d9491aa3a70b18cb741936
 
 ### 2026-05-03 — cost-tools (token_proxy.py) deployed on Beast and indexed in spine
 
@@ -44,6 +58,20 @@ One entry per decision. Keep it short. Link out to supporting docs.
 - **Where encoded**: `01_truth/schemas/2026-05_public-data-validation_v1.md` v1, `02_build/validators/` (framework + ProfServices runners), `03_shadow/validators/profservices/` (16 verdict JSONs + `rollup.json`), `01_truth/schemas/research-index/00-insight-catalogue_v1.md` (16 `VALIDATION:` lines added), `01_truth/research/validations/README.md` (truth-tier promotion stub), `00_authority/MANIFEST.md` v45–v48 changelog entries.
 - **Status**: candidate (pending Ewan review of the PR + verdicts)
 - **Signed-by**: Devon-ab74 | 2026-05-03 | devin-ab740f2c78ee477a9c16ea3b6ed15293
+
+### 2026-05-03 — Ollama port-mapping fix on Beast (AMP-46)
+
+- **Decision**: Add a host-loopback port mapping (`127.0.0.1:11434:11434`) to the Ollama container's `docker-compose.yml` on Beast (`/opt/amplified/apps/ollama/docker-compose.yml`). Mirror the compose file into version control at `02_build/compose/ollama/docker-compose.yml`. Loopback only — not bound to `0.0.0.0`. Public access remains only via the existing Traefik HTTPS route at `ollama.beast.amplifiedpartners.ai`.
+- **Why**: Linear ticket [AMP-46](https://linear.app/amplifiedpartners/issue/AMP-46/beast-ops-fix-ollama-container-port-mapping). Ollama was reachable inside `amplified-net` (via Docker DNS `ollama:11434`) but not from the Beast host itself, which broke Beast-side scripts. The Arbiter shipped a workaround that pointed `pudding_extractor.py` at the bridge IP `172.18.0.3:11434` — brittle, because Docker bridge IPs churn on container restart. Loopback is the canonical, stable host-side address.
+- **Where encoded**:
+  - Live config: `/opt/amplified/apps/ollama/docker-compose.yml` on Beast (signed leading comment).
+  - Repo mirror: `02_build/compose/ollama/docker-compose.yml` + `02_build/compose/ollama/README.md`.
+  - Manifest: `02_build/INFRASTRUCTURE.md` v3 — Ollama row updated, changelog entry signed.
+  - Workaround revert: `/opt/amplified/pudding_extractor.py` on Beast — bridge IP `172.18.0.3` swapped back to canonical `127.0.0.1`. Beast-side only, not in any repo.
+- **Verification**: `curl http://127.0.0.1:11434/api/tags` (host) → 200, 4 models. `curl http://ollama:11434/api/tags` from a container on `amplified-net` → 200 (no DNS regression). `curl https://ollama.beast.amplifiedpartners.ai/api/tags` → 200 (Traefik route still works).
+- **Status**: active
+- **Reversible**: yes — remove the `ports:` block and `docker compose up -d ollama` returns to in-network-only.
+- **Signed-by**: Devon-a9a7 | 2026-05-03 | devin-a9a78d0c72d9491aa3a70b18cb741936
 
 ### 2026-05-01 — Systems and API Register created as candidate authority
 
@@ -362,3 +390,39 @@ One entry per decision. Keep it short. Link out to supporting docs.
   `01_truth/processes/2026-04_job-wrapup_and_escalation-note_sop_v1.md` (v14),
   `AGENTS.md`, `03_shadow/job-wrapups/README.md`.
 - **Status**: active
+
+---
+
+## Changelog
+
+This section was added in v17 (the AMP-46 rebase commit, originally drafted as v16 — renumbered during merge with main when CODEOWNERS PR #49 took v16) to satisfy `AGENTS.md` rule #3 (authority files must record version bumps in a changelog). Earlier `version` bumps (v1 — v13) were made without a corresponding changelog entry; that history is preserved in git but not enumerated here. From v14 onward, every bump appends an entry below.
+
+### v18 — 2026-05-03
+
+Added the `2026-05-03 — LiteLLM host-loopback port mapping + pudding-testing env-driven base URLs (AMP-71)` entry to `## Entries` (renumbered from v17 during merge with main). Decision is reversible. Linked to [AMP-71](https://linear.app/amplifiedpartners/issue/AMP-71/) and PR #38. Manifest pointer references `02_build/INFRASTRUCTURE.md` v4.
+
+Signed-by: Devon-a9a7 | 2026-05-03 | devin-a9a78d0c72d9491aa3a70b18cb741936
+
+### v17 — 2026-05-03
+
+Added the `2026-05-03 — Ollama port-mapping fix on Beast (AMP-46)` entry to `## Entries` (renumbered from v16 during merge with main; main now holds v16 = CODEOWNERS PR #49). Decision is reversible. Linked to [AMP-46](https://linear.app/amplifiedpartners/issue/AMP-46/beast-ops-fix-ollama-container-port-mapping) and PR #32. Manifest pointer now references `02_build/INFRASTRUCTURE.md` v3.
+
+Signed-by: Devon-a9a7 | 2026-05-03 | devin-a9a78d0c72d9491aa3a70b18cb741936
+
+### v16 — 2026-05-05
+
+Recorded retroactively. The `2026-05-05 — CODEOWNERS added to clean-build (governance enforcement via GitHub)` entry shipped on `main` via PR #49 with a frontmatter version bump to v16 but no changelog entry; preserved here so the audit trail stays complete. Linked to PR #49. Manifest pointer references `00_authority/MANIFEST.md` v51.
+
+Signed-by: Devon-a9a7 | 2026-05-04 | devin-a9a78d0c72d9491aa3a70b18cb741936
+
+### v15 — 2026-05-03
+
+Added two entries to `## Entries`: `2026-05-03 — cost-tools (token_proxy.py) deployed on Beast and indexed in spine` and `2026-05-03 — Agent routing rule established (AGENT_ROUTING.md)`. Recorded retroactively in v17 (originally drafted as v16) because the v15 bump shipped on `main` (PR #39, AMP-28) without a changelog entry — preserved here so the audit trail is complete.
+
+Signed-by: Devon-a9a7 | 2026-05-03 | devin-a9a78d0c72d9491aa3a70b18cb741936
+
+### v14 — 2026-05-03
+
+Added the `2026-05-03 — Public-data validation framework + ProfServices pilot (AMP-67)` entry to `## Entries`. Recorded retroactively in v17 (originally drafted as v16) because the v14 bump shipped on `main` (PR #35) without a changelog entry — preserved here so the audit trail starts at the first observed bump.
+
+Signed-by: Devon-a9a7 | 2026-05-03 | devin-a9a78d0c72d9491aa3a70b18cb741936
