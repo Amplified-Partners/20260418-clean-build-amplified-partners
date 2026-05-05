@@ -366,6 +366,7 @@ async def main():
         pass
     finally:
         enforcer.stop()
+        check_task.cancel()
         await asyncio.gather(check_task, return_exceptions=True)
         logger.info('Enforcer stopped')
 
