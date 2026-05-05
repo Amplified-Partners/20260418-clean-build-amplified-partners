@@ -1,0 +1,213 @@
+# Hazel pack — classification policy
+# AMP-83 | Devon-fad5 | 2026-05-05
+#
+# Order of evaluation per file:
+#   1. protected_globs   → PROTECTED_LEAVE_ALONE (terminal)
+#   2. secret_patterns   → SECRET_QUARANTINE     (terminal)
+#   3. bloat_globs       → BLOAT_DROP
+#   4. signal_globs      → SIGNAL_KEEP
+#   5. signal_extensions + size + mtime heuristics → SIGNAL_KEEP
+#   6. bloat_extensions  → BLOAT_DROP
+#   7. otherwise         → AMBIGUOUS_REVIEW
+#
+# Globs are POSIX shell-style with `**` recursion. Paths are absolute and
+# evaluated under $HOME unless prefixed with `/`.
+
+version: 1
+date: 2026-05-05
+ticket: AMP-83
+
+# --- Step 1: never touch these ---------------------------------------------
+protected_globs:
+  - "$HOME/.ssh/**"
+  - "$HOME/.gnupg/**"
+  - "$HOME/Library/Keychains/**"
+  - "$HOME/Library/Mail/**"
+  - "$HOME/Library/Photos Library.photoslibrary/**"
+  - "$HOME/Library/Containers/**"
+  - "$HOME/Library/Group Containers/**"
+  - "$HOME/Library/CloudStorage/**"
+  - "$HOME/Library/Application Support/1Password 7/**"
+  - "$HOME/Library/Application Support/1Password/**"
+  - "$HOME/Library/Application Support/com.apple.*/**"
+  - "$HOME/Library/Application Support/Hazel/**"
+  - "$HOME/Library/Application Support/Notion/**"
+  - "$HOME/Library/Application Support/Slack/**"
+  - "$HOME/Library/Application Support/Cursor/**"
+  - "$HOME/Library/Application Support/Code/**"
+  - "$HOME/Library/Application Support/iTerm2/**"
+  - "$HOME/Library/Application Support/Obsidian/**"
+  - "$HOME/Library/Application Support/Anthropic/**"
+  - "$HOME/Library/Application Support/Google/Chrome/**"
+  - "$HOME/Library/Application Support/Firefox/**"
+  - "$HOME/Library/Safari/**"
+  - "$HOME/Library/Cookies/**"
+  - "$HOME/.config/gh/**"
+  - "$HOME/**/*.app/**"
+  - "$HOME/**/*.framework/**"
+  - "$HOME/.Trash/**"             # leave it for the user; reap step empties it last
+
+# --- Step 2: secret detection (terminal) -----------------------------------
+secret_patterns:
+  - id: github_pat_classic
+    regex: 'ghp_[A-Za-z0-9]{20,}'
+  - id: github_oauth
+    regex: 'gho_[A-Za-z0-9]{20,}'
+  - id: github_u2s
+    regex: 'ghu_[A-Za-z0-9]{20,}'
+  - id: github_s2s
+    regex: 'ghs_[A-Za-z0-9]{20,}'
+  - id: github_pat_finegrained
+    regex: 'github_pat_[A-Za-z0-9_]{50,}'
+  - id: openai_anthropic
+    regex: 'sk-[A-Za-z0-9_-]{20,}'
+  - id: aws_access_key
+    regex: 'AKIA[0-9A-Z]{16}'
+  - id: pem_private
+    regex: '-----BEGIN [A-Z ]*PRIVATE KEY-----'
+  - id: slack
+    regex: 'xox[bpoa]-[A-Za-z0-9-]{10,}'
+  - id: huggingface
+    regex: 'hf_[A-Za-z0-9]{30,}'
+
+# Files larger than this byte size are scanned only by extension/path, not
+# content (avoids reading 10GB video files looking for 'sk-').
+secret_scan_max_bytes: 10485760   # 10 MiB
+
+# --- Step 3: bloat globs (terminal-ish — overridden only by signal_globs) --
+bloat_globs:
+  - "**/node_modules/**"
+  - "**/__pycache__/**"
+  - "**/.venv/**"
+  - "**/venv/**"
+  - "**/*.pyc"
+  - "**/.pytest_cache/**"
+  - "**/.mypy_cache/**"
+  - "**/.ruff_cache/**"
+  - "**/.tox/**"
+  - "**/dist/**"
+  - "**/build/**"
+  - "**/.next/**"
+  - "**/.nuxt/**"
+  - "**/target/**"
+  - "**/.gradle/**"
+  - "**/Pods/**"
+  - "**/DerivedData/**"
+  - "**/.cache/**"
+  - "**/.DS_Store"
+  - "**/Thumbs.db"
+  - "$HOME/Library/Caches/**"
+  - "$HOME/Library/Logs/**"
+  - "$HOME/Library/Saved Application State/**"
+  - "$HOME/Library/Developer/Xcode/DerivedData/**"
+  - "$HOME/Library/Developer/CoreSimulator/**"
+  - "$HOME/Downloads/**/*.dmg"
+  - "$HOME/Downloads/**/*.pkg"
+  - "$HOME/Downloads/**/*.iso"
+
+# Bloat purely by extension (after signal_globs match):
+bloat_extensions:
+  - ".log"
+  - ".tmp"
+  - ".swp"
+  - ".swo"
+  - ".bak"
+  - ".old"
+  - ".dmg"
+  - ".pkg"
+  - ".iso"
+  - ".crdownload"
+  - ".part"
+
+# --- Step 4: signal globs --------------------------------------------------
+signal_globs:
+  - "$HOME/Manual Library/**"
+  - "$HOME/Documents/**"
+  - "$HOME/Desktop/**"
+  - "$HOME/Notes/**"
+  - "$HOME/Obsidian/**"
+  - "$HOME/Projects/**"
+  - "$HOME/code/**"
+  - "$HOME/repos/**"
+  - "$HOME/dev/**"
+  - "$HOME/work/**"
+
+# Anything matching these extensions inside a signal_glob = SIGNAL_KEEP
+signal_extensions:
+  - ".md"
+  - ".txt"
+  - ".rst"
+  - ".org"
+  - ".py"
+  - ".js"
+  - ".ts"
+  - ".tsx"
+  - ".jsx"
+  - ".rb"
+  - ".rs"
+  - ".go"
+  - ".java"
+  - ".c"
+  - ".h"
+  - ".cpp"
+  - ".swift"
+  - ".sh"
+  - ".bash"
+  - ".zsh"
+  - ".fish"
+  - ".sql"
+  - ".yaml"
+  - ".yml"
+  - ".toml"
+  - ".json"        # only if outside a bloat_glob
+  - ".csv"
+  - ".tsv"
+  - ".pdf"
+  - ".html"
+  - ".css"
+  - ".scss"
+  - ".tex"
+  - ".bib"
+  - ".ipynb"
+  - ".plist"       # mostly user prefs but inspect
+  - ".rules"       # Hazel rules
+  - ".hazelrules"
+
+# --- Step 5: ambiguous-by-default extensions -------------------------------
+# Things that could be either; default to AMBIGUOUS_REVIEW unless inside a
+# strong signal_glob.
+ambiguous_extensions:
+  - ".png"
+  - ".jpg"
+  - ".jpeg"
+  - ".heic"
+  - ".gif"
+  - ".webp"
+  - ".mov"
+  - ".mp4"
+  - ".m4a"
+  - ".mp3"
+  - ".wav"
+  - ".zip"
+  - ".tar"
+  - ".gz"
+  - ".tgz"
+
+# --- Step 6: heuristic thresholds ------------------------------------------
+heuristics:
+  # If a file hasn't been touched in this many days AND is in ambiguous_extensions,
+  # downgrade to BLOAT_DROP.
+  ambiguous_to_bloat_age_days: 365
+  # If a file is bigger than this, never inline-grep it for secrets (path/name only).
+  max_grep_bytes: 10485760
+  # Confidence required to commit a class before AMBIGUOUS fallback.
+  min_confidence: 0.85
+
+# --- Step 7: confidence cap on heuristic moves -----------------------------
+# Even if heuristics say SIGNAL_KEEP, we cap confidence here so Ewan sees the
+# move in plan.jsonl before Phase 3 runs.
+default_confidence_signal: 0.90
+default_confidence_bloat: 0.95
+default_confidence_ambiguous: 0.50
+
+# Signed: Devon-fad5 | 2026-05-05 | devin-fad59f8cffd245618655e5b692895bbc
