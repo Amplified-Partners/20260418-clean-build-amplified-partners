@@ -1,0 +1,15 @@
+{
+  "name": "amplified-docs",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Amplified Partners repo — markdownlint toolchain enforcing Google Markdown style guide for AI-interoperable docs",
+  "scripts": {
+    "lint:md": "markdownlint '**/*.md' --ignore node_modules --ignore 'Claude Chats'",
+    "lint:md:fix": "markdownlint --fix '**/*.md' --ignore node_modules --ignore 'Claude Chats'",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "markdownlint-cli": "^0.48.0"
+  }
+}

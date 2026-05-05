@@ -1,0 +1,50 @@
+{
+  "sync_interval_minutes": 5,
+  "source_directories": [
+    "/Users/ewanbramley/Manual Library/Projects/amplified-crm",
+    "/Users/ewanbramley/.openclaw/workspace",
+    "/Users/ewanbramley/.claude/projects/-Users-ewanbramley",
+    "/Users/ewanbramley/.claude/plans",
+    "/Users/ewanbramley/Manual Library/real-vault/research"
+  ],
+  "vault_root": "/Users/ewanbramley/Manual Library/real-vault",
+  "routing_rules": {
+    "SESSION-*.md": "work/sessions/",
+    "DEMO-*.md": "projects/case-studies/",
+    "business-knowledge*.md": "projects/frameworks/",
+    "stakeholder*.md": "projects/research/",
+    "*roadmap*.md": "projects/roadmaps/",
+    "*content-draft*.md": "_inbox/content/",
+    "2026-*-research*.md": "research/",
+    "2026-*-anthropic*.md": "research/",
+    "2026-*-langfuse*.md": "research/",
+    "2026-*-semantic*.md": "research/",
+    "2026-*-qdrant*.md": "research/",
+    "*.md": "_inbox/"
+  },
+  "exclude_patterns": [
+    "node_modules/",
+    ".git/",
+    "venv/",
+    "env/",
+    ".venv/",
+    "__pycache__/",
+    "*.pyc",
+    ".pytest_cache/",
+    ".coverage",
+    "htmlcov/",
+    "dist/",
+    "build/",
+    "*.egg-info/",
+    ".DS_Store",
+    "*.log",
+    "backend.log",
+    ".next/",
+    "out/",
+    "MEMORY.md",
+    "README.md",
+    "package-lock.json",
+    "yarn.lock"
+  ],
+  "file_extensions": [".md", ".py"]
+}

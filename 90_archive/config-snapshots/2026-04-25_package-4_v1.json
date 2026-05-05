@@ -1,0 +1,10 @@
+{
+  "name": "whatsapp-test-scripts",
+  "version": "1.0.0",
+  "scripts": {
+    "test-whatsapp": "tsx test-whatsapp.ts"
+  },
+  "dependencies": {
+    "tsx": "^4.7.0"
+  }
+}
