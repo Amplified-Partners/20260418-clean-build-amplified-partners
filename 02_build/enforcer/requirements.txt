@@ -1,0 +1,10 @@
+# Authored by Claude (Haiku 4.5), 2026-03-11
+# Merged into clean-build/02_build/enforcer/ by Devon (Devin session devin-1bdaf31798874921940598bed17ca9e3), 2026-05-04 (AMP-77)
+fastapi>=0.110.0
+uvicorn[standard]>=0.27.0
+pyyaml>=6.0
+docker>=7.1.0
+redis>=5.0
+psycopg2-binary>=2.9.9
+httpx>=0.27.0
+pydantic>=2.5

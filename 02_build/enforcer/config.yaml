@@ -1,0 +1,153 @@
+# The Enforcer — Configuration
+# Default values; override via environment variables
+# Authored by Claude (Haiku 4.5), 2026-03-11
+# Merged into clean-build/02_build/enforcer/ by Devon (Devin session devin-1bdaf31798874921940598bed17ca9e3), 2026-05-04 (AMP-77)
+
+enforcer:
+  # Check interval in seconds (10 minutes = 600s)
+  check_interval: 600
+  
+  # Log level: DEBUG, INFO, WARNING, ERROR, CRITICAL
+  log_level: INFO
+  
+  # Alert webhook URL for critical failures
+  # Set via ALERT_WEBHOOK_URL environment variable
+  alert_webhook_url: ""
+  
+  # Observability
+  langfuse_host: "http://langfuse:3000"
+  langfuse_enabled: false
+
+# Database connectivity configuration
+databases:
+  falkordb:
+    host: falkordb
+    port: 6379
+    type: redis-module
+    description: "FalkorDB graph database (Redis module)"
+  
+  postgres:
+    host: postgres
+    port: 5432
+    type: postgresql
+    description: "PostgreSQL relational database"
+  
+  redis:
+    host: redis
+    port: 6379
+    type: redis
+    description: "Redis cache and message broker"
+  
+  qdrant:
+    host: qdrant
+    port: 6333
+    type: vector-db
+    description: "Qdrant vector database"
+
+# Traefik reverse proxy
+traefik:
+  host: traefik
+  api_port: 8080
+  description: "Traefik reverse proxy and load balancer"
+
+# Session hygiene (baton-pass protocol)
+session:
+  state_path: "/opt/amplified/vault/00-handover/SESSION-STATE.md"
+  max_age_hours: 24
+  required_sections:
+    - "What Happened This Session"
+    - "What This Means"
+    - "Ewan Needs To Do"
+
+# Security checks
+security:
+  fail2ban_enabled: true
+  fail2ban_check_jails:
+    - sshd
+  firewall_enabled: true
+  ssh_key_auth_required: true
+
+# Expected Docker containers
+docker:
+  expected_containers:
+    - traefik
+    - falkordb
+    - postgres
+    - redis
+    - qdrant
+    - langfuse
+    - portainer
+  
+  # Define expected container behaviors
+  containers:
+    traefik:
+      required: true
+      critical: true
+      description: "Reverse proxy and load balancer"
+    
+    falkordb:
+      required: true
+      critical: true
+      description: "Knowledge graph database"
+    
+    postgres:
+      required: true
+      critical: true
+      description: "Relational database"
+    
+    redis:
+      required: true
+      critical: true
+      description: "Cache and session store"
+    
+    qdrant:
+      required: true
+      critical: true
+      description: "Vector database for embeddings"
+    
+    langfuse:
+      required: false
+      critical: false
+      description: "LLM observability (optional)"
+    
+    portainer:
+      required: false
+      critical: false
+      description: "Docker management UI (optional)"
+
+# Alert configuration
+alerts:
+  # Critical issues that trigger immediate alerts
+  critical_triggers:
+    - docker_container_not_running
+    - database_unavailable
+    - firewall_inactive
+    - session_state_stale
+  
+  # Warning issues that accumulate
+  warning_triggers:
+    - high_memory_usage
+    - high_disk_usage
+    - slow_response_times
+  
+  # Webhook destinations (can be configured per environment)
+  webhooks:
+    slack: ""
+    pagerduty: ""
+    custom: ""
+
+# Observability
+observability:
+  langfuse:
+    enabled: false
+    host: "http://langfuse:3000"
+  
+  prometheus:
+    enabled: true
+    scrape_interval: 60
+    metrics_path: "/metrics"
+  
+  structured_logging:
+    enabled: true
+    format: "json"
+    log_level: "INFO"

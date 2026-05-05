@@ -1,0 +1,41 @@
+# Authored by Claude (Haiku 4.5), 2026-03-11
+# Merged into clean-build/02_build/enforcer/ by Devon (Devin session devin-1bdaf31798874921940598bed17ca9e3), 2026-05-04 (AMP-77)
+#
+# Keep the Docker image lean — exclude docs, VCS metadata, and dev-only files
+# that the enforcer service does not need at runtime.
+
+# VCS
+.git/
+.gitignore
+
+# Docs (not needed at runtime; lives in the repo for humans)
+*.md
+ENFORCER-SPEC.md
+IMPLEMENTATION-SUMMARY.md
+README.md
+
+# Compose / orchestration files (the image is what runs; compose is for the host)
+docker-compose.yml
+docker-compose-entry.yml
+
+# Python build artefacts
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtualenvs
+.venv/
+venv/
+env/
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+
+# Logs and local state
+*.log
+logs/

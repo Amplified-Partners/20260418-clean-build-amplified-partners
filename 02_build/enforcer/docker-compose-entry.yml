@@ -1,0 +1,84 @@
+# Docker Compose Entry for The Enforcer
+# Add this service to your docker-compose.yml on The Beast
+# Build path: /opt/amplified/apps/enforcer
+# Authored by Claude (Haiku 4.5), 2026-03-11
+# Merged into clean-build/02_build/enforcer/ by Devon (Devin session devin-1bdaf31798874921940598bed17ca9e3), 2026-05-04 (AMP-77)
+
+enforcer:
+  build: /opt/amplified/apps/enforcer
+  container_name: enforcer
+  restart: unless-stopped
+  user: "1000:988"  # UID 1000 (enforcer) + GID 988 (docker group on Beast); required to read /var/run/docker.sock
+
+  # Mount Docker socket (read-only) to check container status
+  # Mount logs directory for persistent log files
+  # Mount vault read-only so checks/session_hygiene.py can read SESSION-STATE.md
+  volumes:
+    - /var/run/docker.sock:/var/run/docker.sock:ro
+    - /opt/amplified/logs:/logs
+    - /opt/amplified/vault:/opt/amplified/vault:ro
+  
+  # Network must match other services
+  networks:
+    - amplified-net
+  
+  # Environment configuration
+  environment:
+    # Check interval in seconds (600 = 10 minutes)
+    - CHECK_INTERVAL=600
+    
+    # Alert webhook URL (optional)
+    # Examples:
+    # - https://hooks.slack.com/services/YOUR/WEBHOOK/URL
+    # - https://events.pagerduty.com/v2/enqueue
+    - ALERT_WEBHOOK_URL=
+    
+    # Observability
+    - LANGFUSE_HOST=http://langfuse:3000
+    - LOG_LEVEL=INFO
+    
+    # Database hosts (must match docker-compose service names)
+    - FALKORDB_HOST=falkordb
+    - FALKORDB_PORT=6379
+    - POSTGRES_HOST=postgres
+    - POSTGRES_PORT=5432
+    - REDIS_HOST=redis
+    - REDIS_PORT=6379
+    - QDRANT_HOST=qdrant
+    - QDRANT_PORT=6333
+    
+    # Session hygiene checks
+    - SESSION_STATE_PATH=/opt/amplified/vault/00-handover/SESSION-STATE.md
+    - MAX_SESSION_STATE_AGE_HOURS=24
+    
+    # Security checks
+    - FAIL2BAN_ENABLED=true
+
+    # Expected containers (comma-separated; must match actual Beast service names).
+    # Without this set, EnforcerConfig falls back to a 7-container default that
+    # omits openclaw-agents, litellm, searxng, ollama. Keep aligned with the
+    # canonical sibling docker-compose.yml:31.
+    - EXPECTED_CONTAINERS=traefik,falkordb,postgres,redis,qdrant,langfuse,portainer,openclaw-agents,litellm,searxng,ollama
+  
+  # Traefik routing (for enforcer.beast.amplifiedpartners.ai)
+  labels:
+    - "traefik.enable=true"
+    - "traefik.http.routers.enforcer.rule=Host(`enforcer.beast.amplifiedpartners.ai`)"
+    - "traefik.http.routers.enforcer.tls.certresolver=letsencrypt"
+    - "traefik.http.services.enforcer.loadbalancer.server.port=8000"
+  
+  # Service dependencies
+  depends_on:
+    - falkordb
+    - postgres
+    - redis
+    - qdrant
+    - traefik
+  
+  # Health check (checked by Docker every 30 seconds)
+  healthcheck:
+    test: ["CMD", "python", "-c", "import httpx; httpx.get('http://localhost:8000/livez').raise_for_status()"]
+    interval: 30s
+    timeout: 5s
+    retries: 3
+    start_period: 10s

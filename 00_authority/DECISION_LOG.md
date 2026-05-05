@@ -1,7 +1,7 @@
 ---
 title: Decision log
 date: 2026-05-05
-version: 16
+version: 17
 status: draft
 ---
 
@@ -12,6 +12,14 @@ status: draft
 One entry per decision. Keep it short. Link out to supporting docs.
 
 ## Entries
+
+### 2026-05-05 — Enforcer service merged into clean-build under AMP-77 (GitHub Repo Spine Cleanup)
+
+- **Decision**: Merge the contents of `Amplified-Partners/enforcer` into `clean-build/02_build/enforcer/` as part of the AMP-77 spine-cleanup effort, and index `02_build/enforcer/README.md` under **Candidate authority** in `00_authority/MANIFEST.md`. The enforcer is the Beast health-monitoring service: 5 deterministic checks (Docker container health, database connectivity, Traefik, session hygiene, security) on a 10-minute cycle, exposing FastAPI `/health`, `/health/detailed`, `/metrics`. The source repo (`Amplified-Partners/enforcer`) will be archived once this PR and the four sibling AMP-77 PRs (vault, amplified-site, ground-truth, pudding-core) are merged.
+- **Why**: AMP-77 directs consolidation of nine fragmented repos into the canonical spine repos (`clean-build`, `vault`, `amplified-site`, `ground-truth`, `pudding-core`) and archival of dead-weight repos. The enforcer is a runnable artefact, so it lands under `02_build/`. Filed under **Candidate authority** (not Authoritative now) because the source code's behaviour does not match its own spec in two places — see the "Known Issue" section in `02_build/enforcer/README.md`: (1) async check functions use synchronous blocking I/O, breaking the documented concurrency claim; (2) `fail2ban_enabled` config flag is accepted but never used by `check_security`. Pre-existing source-repo defects, preserved verbatim by the merge; tracked separately for fix.
+- **Where encoded**: `02_build/enforcer/` (full tree merged from source repo); `00_authority/MANIFEST.md` v52 (Candidate authority entry + changelog); this entry. Multiple Devin-Review re-pass fixes also landed in this PR: corrected `curl` healthcheck to `python/httpx` (matches Alpine image, in both `docker-compose-entry.yml` and `ENFORCER-SPEC.md`); corrected `enforcer_checks_total` Prometheus type from `counter` to `gauge`; replaced unreachable `isinstance(result, CheckResult)` with `hasattr(result, 'duration_ms')`; fixed Traefik unreachable from `warn` to `fail/critical` per spec; aligned README's "Monitored Services" with the actual `EXPECTED_CONTAINERS` list (replacing the inaccurate "38/40 containers" claim and the non-monitored Temporal/MinIO entries); added per-file signatures to all six Python source files plus `.gitignore`, `.dockerignore`, `requirements.txt`, and `checks/__init__.py`; created the previously-referenced-but-missing `.dockerignore`; added the missing `/opt/amplified/vault:ro` volume to `docker-compose-entry.yml` and the missing `user: "1000:988"` directive (without it the container can't read the Docker socket); changed `docker-compose.yml` vault mount from `:rw` to `:ro` to match `docker-compose-entry.yml`. Two pre-existing source-repo behaviour defects flagged in `02_build/enforcer/README.md` "Known Issue" — async/sync I/O mismatch and ignored `fail2ban_enabled` flag — and a third one is now also flagged: `enforcer.py` imports `yaml` but never loads `config.yaml`; `EnforcerConfig` reads exclusively from environment variables, so editing `config.yaml` has no runtime effect.
+- **Status**: candidate (pending Ewan review of the PR; merge unblocks archival of `Amplified-Partners/enforcer`).
+- **Signed-by**: Devon-1bda | Devin (Cognition AI) | 2026-05-04 | session `devin-1bdaf31798874921940598bed17ca9e3`
 
 ### 2026-05-05 — CODEOWNERS added to clean-build (governance enforcement via GitHub)
 
