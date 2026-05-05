@@ -1,7 +1,7 @@
 ---
 title: Decision log
 date: 2026-05-05
-version: 16
+version: 18
 status: draft
 ---
 
@@ -13,6 +13,19 @@ One entry per decision. Keep it short. Link out to supporting docs.
 
 ## Entries
 
+### 2026-05-05 — Five architectural decisions: Two-engine model, Perplexity research engine, Data lake, Change control, Build everything
+
+- **Decision**: Five architectural decisions made by Ewan Bramley during 2026-05-05 session with Devon-77fb:
+  1. **Two-engine architecture** — Beast (Engine 1, internal) + Cloud Engine (Engine 2, client-facing). Client data NEVER touches Beast. Each client gets their own container. Shamir's Secret Sharing for PII. We see anonymised outcomes, aggregated patterns, functional descriptors only. Structural GDPR compliance.
+  2. **Perplexity as research engine** — Bottom of the research pipe and vault curation. £200/month subscription. Feeds data lake, vault, APDS. Quality proven by Cassian's 9 briefs. Cheaper than per-search API costs for the volume we need.
+  3. **Data lake** — Raw repository for everything: session threads, agent conversations, research, execution logs. Keeps GitHub clean (canonical code only), machines clean, vault current. MinIO (object store) + ClickHouse (analytics) + PostgreSQL (metadata) + Qdrant (semantic search). The compost heap that feeds the compounding loop.
+  4. **Change control pipeline** — Once the system is set, Ewan steps back. Changes go through due diligence: Linear issue → impact analysis → Devil's Advocate Gate → Doppelganger test → two-agent review. Ulysses Clause made operational. "Appropriateness — otherwise we'll get disorganised again."
+  5. **Build everything** — CRM, Intelligence Engine, APDS, vault extraction, data lake, marketing engine — all into one integrated machine. "We might as well put everything into a big pot and build the amplified machine."
+- **Why**: The ecosystem audit revealed 25+ LIVE components, 20+ CODE EXISTS (need deploying), 15+ SPECKED (need building). The CRM alone has 1,739 lines of intelligence engine and 13 features — all written, none deployed. The gap is deployment and wiring, not design. Building everything into one integrated machine is achievable. The two-engine architecture enforces data sovereignty structurally. The data lake enables compounding from 7 months of accumulated work. Change control prevents the chaos that comes from rapid iteration once the system is stable.
+- **Where encoded**: `[SOURCE REQUIRED]` — comprehensive architecture document at `/home/ubuntu/amplified-machine-complete.md` (local), to be committed to GitHub after Ewan review.
+- **Status**: active
+- **Signed-by**: Devon-77fb | Devin (Cognition AI) | 2026-05-05 | session `devin-77fb25185c00483eb965e894efc62e39`
+
 ### 2026-05-05 — CODEOWNERS added to clean-build (governance enforcement via GitHub)
 
 - **Decision**: Add `.github/CODEOWNERS` to `Amplified-Partners/clean-build` requiring `@ewanbramley` as a reviewer for all changes to `00_authority/**` and `01_truth/**`. No default `*` owner — other paths remain open for any reviewer.
@@ -20,6 +33,17 @@ One entry per decision. Keep it short. Link out to supporting docs.
 - **Where encoded**: `.github/CODEOWNERS`; `00_authority/MANIFEST.md` v51; this entry.
 - **Status**: active (pending PR merge).
 - **Signed-by**: Devon-codeowners-daughter | 2026-05-05 | devin-487f10ace93b4cdfbcc49f9bb5c300b0
+
+### 2026-05-04 — Governance principles: Plan–Execution Mirror, Collaborative Discovery, Spine Refinement
+
+- **Decision**: Create three new authority-level rules codifying governance principles articulated by Ewan Bramley in conversation with Devon-77fb on 2026-05-04:
+  1. `00_authority/PLAN_EXECUTION_MIRROR.md` v1 — every non-trivial unit of work produces two receipts (plan before, execution log after). External accountability (others compare them) + self-reflection (agent compares them and adjusts its own spine). Born from a productive misunderstanding where Devon interpreted Ewan's external-accountability protocol as self-directed, accidentally creating a complementary mechanism.
+  2. `00_authority/COLLABORATIVE_DISCOVERY.md` v1 — three principles unified: disagreement is compounding (not friction), misunderstanding is signal (mine it, don't just fix it), ego is a working condition (make visible through the mirror, do not suppress). Full attribution chain preserved in the document.
+  3. `00_authority/SPINE_REFINEMENT.md` v1 — the spine is built through situations, not prescribed in advance. Domain-specific spines (planning, coding, research, communication, operations) follow the same refinement cycle as the governance spine. The governance spine is the factory that builds the factories.
+- **Why**: These principles emerged from a real-time conversation demonstrating all three in action. They close the loop on how multi-agent collaboration becomes trustworthy: not by removing flaws, but by making them visible and self-correcting. They are the structural fix for the AI deference problem (training optimises for agreement) and the meta-mechanism that makes compound engineering work at the agent level, not just the code level.
+- **Where encoded**: `00_authority/PLAN_EXECUTION_MIRROR.md` v1, `00_authority/COLLABORATIVE_DISCOVERY.md` v1, `00_authority/SPINE_REFINEMENT.md` v1, `00_authority/MANIFEST.md` v52.
+- **Status**: active
+- **Signed-by**: Devon-77fb | Devin (Cognition AI) | 2026-05-04 | session `devin-77fb25185c00483eb965e894efc62e39`
 
 ### 2026-05-03 — cost-tools (token_proxy.py) deployed on Beast and indexed in spine
 
@@ -362,3 +386,13 @@ One entry per decision. Keep it short. Link out to supporting docs.
   `01_truth/processes/2026-04_job-wrapup_and_escalation-note_sop_v1.md` (v14),
   `AGENTS.md`, `03_shadow/job-wrapups/README.md`.
 - **Status**: active
+
+---
+
+## Changelog
+
+| Version | Date | What changed | Signed-by |
+|---------|------|-------------|-----------|
+| v18 | 2026-05-05 | Rebased on main after CODEOWNERS merge (v16→v17 collision). Added Changelog section. Bumped version to v18. | Devon-77fb |
+| v17 | 2026-05-05 | Added 5 architectural decisions (two-engine model, Perplexity research engine, data lake, change control, build everything). Fixed date frontmatter. Added `[SOURCE REQUIRED]` tag per AGENTS.md rule #1. | Devon-77fb |
+| v16 | 2026-05-04 | Added governance principles entry (Plan-Execution Mirror, Collaborative Discovery, Spine Refinement). | Devon-77fb |

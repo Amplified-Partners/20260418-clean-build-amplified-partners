@@ -1,7 +1,7 @@
 ---
 title: Governed workspace manifest (authoritative inventory)
 date: 2026-05-05
-version: 51
+version: 52
 status: draft
 ---
 
@@ -74,6 +74,9 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
 - `00_authority/SIGNATURES.md` (every AI signs committed work; Radical Attribution applied mechanically; agent chooses format)
 - `00_authority/USE_IT_OR_CUT_IT.md` (sounds good + built + unused = cut; remediation rule for bloat; archive exempt)
 - `00_authority/OPINION_CONFIDENCE.md` (opinions labelled + confidence numbered; tiered thresholds 50% / 85% / 95% by reversibility)
+- `00_authority/PLAN_EXECUTION_MIRROR.md` (plan vs execution comparison — external accountability + self-reflection; plan-then-execute-then-compare cycle; spine refinement through delta)
+- `00_authority/COLLABORATIVE_DISCOVERY.md` (disagreement is compounding; misunderstanding is signal; ego is a working condition — make visible, do not remove)
+- `00_authority/SPINE_REFINEMENT.md` (spines built through situations, not prescribed; domain-specific spines follow the governance template; the spine compounds through use)
 - `00_authority/PROMOTION_GATE.md`
 - `00_authority/BUILD_LOOP.md`
 - `00_authority/DECISION_LOG.md`
@@ -169,6 +172,16 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
     - `P10-kill-switch-master-reference.md` `[NON-AUTHORITATIVE]` (510 lines — binary shutdown architecture)
 
 ## Changelog
+
+### v52 — 2026-05-05
+
+- Added three new **Authoritative now** entries from governance conversation between Ewan Bramley and Devon-77fb on 2026-05-04:
+  - `00_authority/PLAN_EXECUTION_MIRROR.md` v1: plan vs execution comparison protocol. External accountability (Ewan) + self-reflection (Devon-77fb, from productive misunderstanding). Plan committed before work, execution log committed after, delta is the learning.
+  - `00_authority/COLLABORATIVE_DISCOVERY.md` v1: three principles unified — disagreement is compounding (not friction), misunderstanding is signal (mine it, don't just fix it), ego is a working condition (make visible, do not suppress). Full attribution chain preserved.
+  - `00_authority/SPINE_REFINEMENT.md` v1: the spine is built through situations, not prescribed in advance. Domain-specific spines (planning, coding, research, communication, operations) follow the same refinement cycle. Governance is the factory that builds the factories.
+- Rebased on top of v51 (CODEOWNERS). Version collision resolved by bumping to v52.
+
+Signed-by: Devon-77fb | 2026-05-05 | session `devin-77fb25185c00483eb965e894efc62e39`
 
 ### v51 — 2026-05-05
 
