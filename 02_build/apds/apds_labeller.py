@@ -11,8 +11,8 @@ which uses a different vocabulary. See `02_build/apds/README.md` for the
 schema-divergence note. Linear: AMP-104.
 
 Originally hand-deployed to /opt/amplified/apds/label/apds_labeller.py by Kimmy.
-Promoted to version control with two minimal hardening edits over the Beast
-version, both flagged by Devin Review on PR #52:
+Promoted to version control with three minimal hardening edits over the Beast
+version, all flagged by Devin Review on PR #52:
   1. The five PUDDING label values from Ollama are now escape_cypher()'d before
      being interpolated into the GRAPH.QUERY string (was: raw interpolation -- a
      malformed LLM response containing a single quote would have produced a
@@ -20,6 +20,16 @@ version, both flagged by Devin Review on PR #52:
      were unaffected because every successful Ollama response in the run had
      values from the fixed PUDDING vocabulary.
   2. `confidence` is cast to float() to reject non-numeric LLM output cleanly.
+  3. Idempotency check fixed: `check[1][0] == 1` is always False because
+     FalkorDB's redis-protocol GRAPH.QUERY returns rows as nested lists
+     (`check[1][0]` is `[1]`, not `1`). The same shape produced the run log
+     line `Total APDS documents in graph: [250]` -- the brackets are the
+     fingerprint of this bug. The README claim of "skips already-labelled
+     doc IDs" did not actually hold on Beast; on a re-run, every doc was
+     re-Ollama'd. Data integrity was preserved by MERGE, but ~17 minutes of
+     CPU inference were wasted per re-run. Fixed here as `check[1][0][0]`.
+     Cosmetic companion fix to the final stats print so it shows `250` not
+     `[250]`.
 
 The Beast copy at /opt/amplified/apds/label/apds_labeller.py is now one revision
 behind this file. Sync is tracked as a follow-on action; the next session that
@@ -171,7 +181,7 @@ def main():
 
         check = r.execute_command("GRAPH.QUERY", GRAPH_NAME,
             f"MATCH (d:Document {{id: '{doc_id}'}}) RETURN count(d)")
-        if check and len(check) > 1 and check[1][0] == 1:
+        if check and len(check) > 1 and check[1] and check[1][0] and check[1][0][0] == 1:
             print(f"  Already labelled, skipping")
             continue
 
@@ -188,8 +198,8 @@ def main():
 
     stats = r.execute_command("GRAPH.QUERY", GRAPH_NAME,
         "MATCH (d:Document {source: 'APDS'}) RETURN count(d)")
-    if stats and len(stats) > 1:
-        print(f"Total APDS documents in graph: {stats[1][0]}")
+    if stats and len(stats) > 1 and stats[1] and stats[1][0]:
+        print(f"Total APDS documents in graph: {stats[1][0][0]}")
 
 
 if __name__ == "__main__":

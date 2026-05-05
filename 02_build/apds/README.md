@@ -63,7 +63,7 @@ Devon-9f21 will not resolve unilaterally — these are truth/world-shaping (Pudd
 | File | What it does | Provenance |
 |---|---|---|
 | `harvester_mvp.py` | SearXNG harvester. 8 UK-SMB queries × 11 engines, top-5 hits per. | Hand-deployed to Beast by Kimmy 2026-05-05; promoted to repo by Devon-9f21 (this PR). |
-| `apds_labeller.py` | Ollama (llama3.1:8b) PUDDING labeller + FalkorDB writer. Idempotent — skips already-labelled doc IDs. | Hand-deployed to Beast by Kimmy 2026-05-05; promoted to repo by Devon-9f21 (this PR) **+ two hardening edits per Devin Review** (escape PUDDING label values into Cypher; cast `confidence` to float). Beast copy is now one revision behind — see file docstring for sync note. |
+| `apds_labeller.py` | Ollama (llama3.1:8b) PUDDING labeller + FalkorDB writer. Idempotent — skips already-labelled doc IDs (this version actually skips; see below). | Hand-deployed to Beast by Kimmy 2026-05-05; promoted to repo by Devon-9f21 (this PR) **+ three hardening edits per Devin Review** (escape PUDDING label values into Cypher; cast `confidence` to float; fix the idempotency check that compared a list to an int and was always False on Beast). Beast copy is now one revision behind — see file docstring for sync note. |
 | `README.md` | This file. | Devon-9f21. |
 
 ## How to re-run on Beast
