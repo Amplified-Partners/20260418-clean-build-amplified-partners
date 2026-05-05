@@ -1,0 +1,42 @@
+# Amplified Knowledge MCP Server — Docker Compose
+# Deploy on amplified-net alongside FalkorDB and Qdrant.
+#
+# FalkorDB knowledge graph and Qdrant vector embeddings built by Clawd (OpenClaw).
+#
+# Usage:
+#   docker compose up -d                          # read-only (default)
+#   TIER=readwrite docker compose up -d           # read-write
+#   TIER=admin docker compose up -d               # admin
+#
+# Signed-by: Devon | 2026-04-29 | devin-60ae27b157c3459d90abd0c80734513b
+
+services:
+  amplified-knowledge-mcp:
+    build: .
+    container_name: amplified-knowledge-mcp
+    restart: unless-stopped
+    environment:
+      TIER: ${TIER:-readonly}
+      FALKORDB_HOST: falkordb
+      FALKORDB_PORT: "6379"
+      QDRANT_HOST: qdrant
+      QDRANT_PORT: "6333"
+      EMBEDDING_MODEL: all-MiniLM-L6-v2
+      LOG_DIR: /var/log/amplified-mcp
+      AGENT_NAME: ${AGENT_NAME:-unknown}
+      SESSION_ID: ${SESSION_ID:-unset}
+    volumes:
+      - mcp-logs:/var/log/amplified-mcp
+    networks:
+      - amplified-net
+    # MCP servers communicate via stdio — no port mapping needed.
+    # To connect from another container, use:
+    #   docker exec -i amplified-knowledge-mcp amplified-knowledge-mcp
+    stdin_open: true
+
+volumes:
+  mcp-logs:
+
+networks:
+  amplified-net:
+    external: true
