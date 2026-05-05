@@ -1,0 +1,50 @@
+# Vault → FalkorDB Graphiti Ingestion Container — with AMP-1272 patch
+#
+# Applies community fix for getzep/graphiti issue #1272 at build time.
+# Requires the build context to also include:
+#   - requirements-graphiti.txt   [SOURCE REQUIRED] (pinning graphiti-core; lives on Beast at /opt/amplified/agent-stack/vault-ingestion/)
+#   - graphiti_ingest.py          [SOURCE REQUIRED] (vault-ingestion entrypoint; lives on Beast at /opt/amplified/agent-stack/vault-ingestion/)
+#   - patch-graphiti-1272.sh      (the patch — committed alongside this Dockerfile in 02_build/scripts/)
+#
+# This Dockerfile is the canonical record of the patched image build recipe;
+# the runtime artefacts (requirements file + ingest script) are owned by the
+# vault-ingestion stack on Beast and are not duplicated into clean-build to
+# avoid two-source-of-truth drift. To rebuild, copy this Dockerfile + the patch
+# script alongside the existing files on Beast and run docker build there.
+#
+# The patch step rewrites two files in the installed graphiti_core package:
+#   - graphiti_core/driver/falkordb/operations/search_ops.py  (FalkorSearchOperations.edge_fulltext_search)
+#   - graphiti_core/search/search_utils.py                    (default match_query — the actual hot path)
+# and clears the entire graphiti_core .pyc cache so Python re-compiles on import.
+#
+# Without this image, Kimmy's vault enrichment hits FalkorDB's 30s query
+# TIMEOUT for ~33% of files on graphs above ~5k edges, projecting an 8-day
+# completion time for the 16,403-file vault. With this image, edge_fulltext_search
+# drops from 15.7s internal Cypher time to 0.66ms (~24,000× faster).
+#
+# See `fix-graphiti-falkordb.sh` in this directory for the patch script,
+# the full attribution, and the discovery story.
+#
+# Devon-b098 | 2026-05-05 | session devin-b0988ede3c7644dd880d8efb6a1fe932
+
+FROM python:3.12-slim
+
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y --no-install-recommends curl && \
+    rm -rf /var/lib/apt/lists/*
+
+COPY requirements-graphiti.txt requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+
+# AMP-1272 patch — applied at build time so any later import sees the fix.
+COPY patch-graphiti-1272.sh /tmp/
+RUN sh /tmp/patch-graphiti-1272.sh && rm /tmp/patch-graphiti-1272.sh
+
+COPY graphiti_ingest.py .
+
+VOLUME ["/vault"]
+VOLUME ["/app/progress"]
+
+ENTRYPOINT ["python", "graphiti_ingest.py"]
+CMD ["--resume"]
