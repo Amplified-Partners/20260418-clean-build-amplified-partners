@@ -1,10 +1,11 @@
 # CODEOWNERS — Amplified-Partners/clean-build
-# Signed-by: Devon-codeowners-daughter | 2026-05-05
 
 # Governance changes need Ewan
-00_authority/* @ewanbramley
+00_authority/** @ewanbramley
 
 # Truth layer needs Ewan
-01_truth/* @ewanbramley
+01_truth/** @ewanbramley
 
 # No default owner — anyone can review
+
+# Signed-by: Devon-codeowners-daughter | 2026-05-05 | devin-487f10ace93b4cdfbcc49f9bb5c300b0
