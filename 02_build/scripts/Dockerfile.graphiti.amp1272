@@ -2,9 +2,15 @@
 #
 # Applies community fix for getzep/graphiti issue #1272 at build time.
 # Requires the build context to also include:
-#   - requirements-graphiti.txt   (pinning graphiti-core)
-#   - graphiti_ingest.py          (vault-ingestion entrypoint)
-#   - patch-graphiti-1272.sh      (the patch — see fix-graphiti-falkordb.sh in this dir)
+#   - requirements-graphiti.txt   [SOURCE REQUIRED] (pinning graphiti-core; lives on Beast at /opt/amplified/agent-stack/vault-ingestion/)
+#   - graphiti_ingest.py          [SOURCE REQUIRED] (vault-ingestion entrypoint; lives on Beast at /opt/amplified/agent-stack/vault-ingestion/)
+#   - patch-graphiti-1272.sh      (the patch — committed alongside this Dockerfile in 02_build/scripts/)
+#
+# This Dockerfile is the canonical record of the patched image build recipe;
+# the runtime artefacts (requirements file + ingest script) are owned by the
+# vault-ingestion stack on Beast and are not duplicated into clean-build to
+# avoid two-source-of-truth drift. To rebuild, copy this Dockerfile + the patch
+# script alongside the existing files on Beast and run docker build there.
 #
 # The patch step rewrites two files in the installed graphiti_core package:
 #   - graphiti_core/driver/falkordb/operations/search_ops.py  (FalkorSearchOperations.edge_fulltext_search)
