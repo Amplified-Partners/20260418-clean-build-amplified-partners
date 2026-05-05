@@ -1,0 +1,53 @@
+{
+  "insight_id": "INS-064",
+  "title": "Competitor Death-Spiral Detection via Companies House + Gazette (Retail)",
+  "vertical": "Retail",
+  "verdict": "PLAUSIBLE",
+  "test_class": "existence",
+  "summary": "1 source(s) need a key \u2014 partial validation",
+  "evidence": [
+    {
+      "test": "existence",
+      "claim": "Insolvency Service monthly stats reachable; CH SIC-47 retail census reachable with key",
+      "n_sources": 2,
+      "n_reachable": 1,
+      "n_skipped_keyless": 1,
+      "n_failed": 0,
+      "sources": [
+        {
+          "source": "insolvency_stats",
+          "url": "https://www.gov.uk/api/content/government/collections/company-insolvency-statistics-releases",
+          "params": {},
+          "accessed_utc": "2026-05-03T21:39:53Z",
+          "status": 200,
+          "sha256": "97ff849c789957936d97dde19188cccc16ed3479851cd66492c62c110963d1c1",
+          "cached": true,
+          "sample": {
+            "analytics_identifier": null,
+            "base_path": "/government/collections/company-insolvency-statistics-releases"
+          }
+        },
+        {
+          "source": "companies_house",
+          "url": "skipped",
+          "sample": {
+            "_skipped": true,
+            "reason": "COMPANIES_HOUSE_API_KEY not set"
+          },
+          "status": 0
+        }
+      ],
+      "reason": "1 source(s) need a key \u2014 partial validation"
+    }
+  ],
+  "notes": [
+    "Insolvency Service publishes monthly + quarterly + annual releases by sector.",
+    "Companies House API key (free) enables late-filing detection per company; without it, we can only validate population-level distress trends.",
+    "The Gazette RSS feed is an alternative for individual notices \u2014 its anti-bot defence rejected our default User-Agent during scoping; capturing as a follow-up rather than blocker."
+  ],
+  "confidence": 65,
+  "run_at_utc": "2026-05-03T23:45:40Z",
+  "git_sha": "b3ae4081167af430b103b8d2957dbae518fe0816",
+  "session_id": "devin-9a6bd256bd7c4a90a083a471fa94a810",
+  "signed_by": "Devon-9a6b | 2026-05-03 | devin-9a6bd256bd7c4a90a083a471fa94a810"
+}

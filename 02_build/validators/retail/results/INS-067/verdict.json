@@ -1,0 +1,591 @@
+{
+  "insight_id": "INS-067",
+  "title": "Shrinkage Detection \u00d7 Police.uk Crime \u00d7 CCTV Event Logs (Retail)",
+  "vertical": "Retail",
+  "verdict": "PROVEN",
+  "test_class": "existence+distribution",
+  "summary": "Police.uk shoplifting present at street-level for all 10 England+Wales retail anchors in 2026-03; mean=184.2, \u03c3=158.2 (z=1.13)",
+  "evidence": [
+    {
+      "test": "existence",
+      "claim": "Police.uk shoplifting available at street level across 10 England+Wales retail anchors",
+      "n_sources": 10,
+      "n_reachable": 10,
+      "n_skipped_keyless": 0,
+      "n_failed": 0,
+      "sources": [
+        {
+          "source": "police_uk",
+          "url": "https://data.police.uk/api/crimes-street/shoplifting",
+          "params": {
+            "lat": 54.9744,
+            "lng": -1.6131,
+            "date": "2026-03"
+          },
+          "accessed_utc": "2026-05-03T21:39:56Z",
+          "status": 200,
+          "sha256": "08d8b7289f303fe8ba6ac81a900071585ca6bf04fafa0a5b0a3c0f665c1aee12",
+          "cached": true,
+          "sample": [
+            {
+              "category": "shoplifting",
+              "location_type": "Force",
+              "location": {
+                "latitude": "54.975661",
+                "street": {
+                  "id": 1874020,
+                  "name": "On or near Bus/coach Station"
+                },
+                "longitude": "-1.615314"
+              },
+              "context": "",
+              "outcome_status": {
+                "category": "Awaiting court outcome",
+                "date": "2026-03"
+              },
+              "persistent_id": "cd9ebdcc3d634c2a831bf9df818db1be0836b150ad9a4c0e692ecfd2b26c08e1",
+              "id": 134447761,
+              "location_subtype": "",
+              "month": "2026-03"
+            },
+            {
+              "category": "shoplifting",
+              "location_type": "Force",
+              "location": {
+                "latitude": "54.977138",
+                "street": {
+                  "id": 1874932,
+                  "name": "On or near Petrol Station"
+                },
+                "longitude": "-1.598808"
+              },
+              "context": "",
+              "outcome_status": {
+                "category": "Investigation complete; no suspect identified",
+                "date": "2026-03"
+              },
+              "persistent_id": "1a732fec173559dbcfcf2246618a06634b5d29442b1051637130ea7ba067d1f1",
+              "id": 134448383,
+              "location_subtype": "",
+              "month": "2026-03"
+            }
+          ],
+          "anchor": "NE1_eldon_square",
+          "n_shoplifting": 168
+        },
+        {
+          "source": "police_uk",
+          "url": "https://data.police.uk/api/crimes-street/shoplifting",
+          "params": {
+            "lat": 54.9929,
+            "lng": -1.6092,
+            "date": "2026-03"
+          },
+          "accessed_utc": "2026-05-03T21:39:57Z",
+          "status": 200,
+          "sha256": "7f148beb4815225500003c921f23f275b769b52d1e2e378db1fa524702e9da1e",
+          "cached": true,
+          "sample": [
+            {
+              "category": "shoplifting",
+              "location_type": "Force",
+              "location": {
+                "latitude": "54.993619",
+                "street": {
+                  "id": 1874332,
+                  "name": "On or near West Jesmond"
+                },
+                "longitude": "-1.609756"
+              },
+              "context": "",
+              "outcome_status": {
+                "category": "Investigation complete; no suspect identified",
+                "date": "2026-03"
+              },
+              "persistent_id": "9cd03e0141133fb9873e6837e28f3af3e038437cd4f6970121dc4e0f893be9d3",
+              "id": 134439064,
+              "location_subtype": "",
+              "month": "2026-03"
+            },
+            {
+              "category": "shoplifting",
+              "location_type": "Force",
+              "location": {
+                "latitude": "54.995871",
+                "street": {
+                  "id": 1875630,
+                  "name": "On or near Supermarket"
+                },
+                "longitude": "-1.587023"
+              },
+              "context": "",
+              "outcome_status": {
+                "category": "Investigation complete; no suspect identified",
+                "date": "2026-03"
+              },
+              "persistent_id": "da7108c630b8480e3826a7bba3afcb3865613eb3b680793e439fb7ed32b59e9e",
+              "id": 134434973,
+              "location_subtype": "",
+              "month": "2026-03"
+            }
+          ],
+          "anchor": "NE2_jesmond_acorn_rd",
+          "n_shoplifting": 20
+        },
+        {
+          "source": "police_uk",
+          "url": "https://data.police.uk/api/crimes-street/shoplifting",
+          "params": {
+            "lat": 55.0083,
+            "lng": -1.6233,
+            "date": "2026-03"
+          },
+          "accessed_utc": "2026-05-03T21:39:57Z",
+          "status": 200,
+          "sha256": "304bcbfae0be9a1764b621a7deac94a59e7b16ab1299ea448ea2ba3a43fb4366",
+          "cached": true,
+          "sample": [
+            {
+              "category": "shoplifting",
+              "location_type": "Force",
+              "location": {
+                "latitude": "55.012800",
+                "street": {
+                  "id": 1873163,
+                  "name": "On or near Harbottle Avenue"
+                },
+                "longitude": "-1.634324"
+              },
+              "context": "",
+              "outcome_status": {
+                "category": "Under investigation",
+                "date": "2026-03"
+              },
+              "persistent_id": "f4fd5e997c7226c3b69a931f2db42f316c85541f7079c6e174b56120afe4a14b",
+              "id": 134447119,
+              "location_subtype": "",
+              "month": "2026-03"
+            },
+            {
+              "category": "shoplifting",
+              "location_type": "Force",
+              "location": {
+                "latitude": "55.008193",
+                "street": {
+                  "id": 1874192,
+                  "name": "On or near Hyde Terrace"
+                },
+                "longitude": "-1.612039"
+              },
+              "context": "",
+              "outcome_status": {
+                "category": "Investigation complete; no suspect identified",
+                "date": "2026-03"
+              },
+              "persistent_id": "393e5845dac9013a5762aba09eba895de42e97e7bff742dffe82c48c3a457bbf",
+              "id": 134440090,
+              "location_subtype": "",
+              "month": "2026-03"
+            }
+          ],
+          "anchor": "NE3_gosforth_high_st",
+          "n_shoplifting": 27
+        },
+        {
+          "source": "police_uk",
+          "url": "https://data.police.uk/api/crimes-street/shoplifting",
+          "params": {
+            "lat": 53.4838,
+            "lng": -2.2381,
+            "date": "2026-03"
+          },
+          "accessed_utc": "2026-05-03T21:39:58Z",
+          "status": 200,
+          "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "cached": true,
+          "sample": [],
+          "anchor": "M3_manchester_arndale",
+          "n_shoplifting": 0
+        },
+        {
+          "source": "police_uk",
+          "url": "https://data.police.uk/api/crimes-street/shoplifting",
+          "params": {
+            "lat": 52.4775,
+            "lng": -1.8941,
+            "date": "2026-03"
+          },
+          "accessed_utc": "2026-05-03T21:39:58Z",
+          "status": 200,
+          "sha256": "e2f272e705b1dba32285ee3d77afe834bc6bcce44a5acdba838fe89c9877108b",
+          "cached": true,
+          "sample": [
+            {
+              "category": "shoplifting",
+              "location_type": "Force",
+              "location": {
+                "latitude": "52.478295",
+                "street": {
+                  "id": 1639389,
+                  "name": "On or near Moor Street"
+                },
+                "longitude": "-1.892298"
+              },
+              "context": "",
+              "outcome_status": {
+                "category": "Under investigation",
+                "date": "2026-03"
+              },
+              "persistent_id": "fcdf2de4d48c0113157ea06be6b6892542c4c49accd839b52d72dd283a643d7d",
+              "id": 134354905,
+              "location_subtype": "",
+              "month": "2026-03"
+            },
+            {
+              "category": "shoplifting",
+              "location_type": "Force",
+              "location": {
+                "latitude": "52.479565",
+                "street": {
+                  "id": 1639371,
+                  "name": "On or near High Street"
+                },
+                "longitude": "-1.894592"
+              },
+              "context": "",
+              "outcome_status": {
+                "category": "Local resolution",
+                "date": "2026-03"
+              },
+              "persistent_id": "6a09d912591765bc6a03f38c1db3563477b49e1a4967723c2bd20a5f9f18dee0",
+              "id": 134364740,
+              "location_subtype": "",
+              "month": "2026-03"
+            }
+          ],
+          "anchor": "B5_birmingham_bullring",
+          "n_shoplifting": 196
+        },
+        {
+          "source": "police_uk",
+          "url": "https://data.police.uk/api/crimes-street/shoplifting",
+          "params": {
+            "lat": 53.403,
+            "lng": -2.987,
+            "date": "2026-03"
+          },
+          "accessed_utc": "2026-05-03T21:39:59Z",
+          "status": 200,
+          "sha256": "34af9344311faf741b79f1324a26c6c507e8d652afd5fb87968c54631a7428df",
+          "cached": true,
+          "sample": [
+            {
+              "category": "shoplifting",
+              "location_type": "Force",
+              "location": {
+                "latitude": "53.402501",
+                "street": {
+                  "id": 2083737,
+                  "name": "On or near A5040"
+                },
+                "longitude": "-2.986024"
+              },
+              "context": "",
+              "outcome_status": {
+                "category": "Investigation complete; no suspect identified",
+                "date": "2026-03"
+              },
+              "persistent_id": "411405e70c277bd311353627d0a7573aa2d968f1ff0dfb1aa33887507d6e570d",
+              "id": 133966083,
+              "location_subtype": "",
+              "month": "2026-03"
+            },
+            {
+              "category": "shoplifting",
+              "location_type": "Force",
+              "location": {
+                "latitude": "53.405998",
+                "street": {
+                  "id": 2083715,
+                  "name": "On or near Rainford Gardens"
+                },
+                "longitude": "-2.985999"
+              },
+              "context": "",
+              "outcome_status": {
+                "category": "Under investigation",
+                "date": "2026-03"
+              },
+              "persistent_id": "c78250633564fe185cc7fd5c8aa9a7f9ba0e7f6acf84236af782f6c53f9bd3b3",
+              "id": 133968722,
+              "location_subtype": "",
+              "month": "2026-03"
+            }
+          ],
+          "anchor": "L1_liverpool_one",
+          "n_shoplifting": 244
+        },
+        {
+          "source": "police_uk",
+          "url": "https://data.police.uk/api/crimes-street/shoplifting",
+          "params": {
+            "lat": 51.4576,
+            "lng": -2.5867,
+            "date": "2026-03"
+          },
+          "accessed_utc": "2026-05-03T21:40:00Z",
+          "status": 200,
+          "sha256": "14f3bcd0736c31054437687f1d34be97d465c802dd64dd0530936439ee5af2b0",
+          "cached": true,
+          "sample": [
+            {
+              "category": "shoplifting",
+              "location_type": "Force",
+              "location": {
+                "latitude": "51.458559",
+                "street": {
+                  "id": 2278955,
+                  "name": "On or near The Horsefair"
+                },
+                "longitude": "-2.589740"
+              },
+              "context": "",
+              "outcome_status": {
+                "category": "Investigation complete; no suspect identified",
+                "date": "2026-03"
+              },
+              "persistent_id": "33f9b60844c9924239e79da65f0bf3571d90ff557abf2c3c55984b41ab00a872",
+              "id": 134156795,
+              "location_subtype": "",
+              "month": "2026-03"
+            },
+            {
+              "category": "shoplifting",
+              "location_type": "Force",
+              "location": {
+                "latitude": "51.458279",
+                "street": {
+                  "id": 2279368,
+                  "name": "On or near Shopping Area"
+                },
+                "longitude": "-2.584727"
+              },
+              "context": "",
+              "outcome_status": {
+                "category": "Investigation complete; no suspect identified",
+                "date": "2026-03"
+              },
+              "persistent_id": "248a98f587cdb6a51e699f080ca96783da43474496c9cf5421354f0bbd140a4c",
+              "id": 134164618,
+              "location_subtype": "",
+              "month": "2026-03"
+            }
+          ],
+          "anchor": "BS1_bristol_cabot_circus",
+          "n_shoplifting": 161
+        },
+        {
+          "source": "police_uk",
+          "url": "https://data.police.uk/api/crimes-street/shoplifting",
+          "params": {
+            "lat": 53.7975,
+            "lng": -1.543,
+            "date": "2026-03"
+          },
+          "accessed_utc": "2026-05-03T21:40:02Z",
+          "status": 200,
+          "sha256": "c87175eefbb9a088af330ab04b2e04d721f02d7ccfd33f3b0ce9d03abca1422c",
+          "cached": true,
+          "sample": [
+            {
+              "category": "shoplifting",
+              "location_type": "Force",
+              "location": {
+                "latitude": "53.797993",
+                "street": {
+                  "id": 2122779,
+                  "name": "On or near Shopping Area"
+                },
+                "longitude": "-1.541897"
+              },
+              "context": "",
+              "outcome_status": {
+                "category": "Awaiting court outcome",
+                "date": "2026-03"
+              },
+              "persistent_id": "ef55db2a8aa57d987cdbb5dd33327a7f0a7d5995a37ec1fa0909727610ba3ec6",
+              "id": 133996623,
+              "location_subtype": "",
+              "month": "2026-03"
+            },
+            {
+              "category": "shoplifting",
+              "location_type": "Force",
+              "location": {
+                "latitude": "53.797864",
+                "street": {
+                  "id": 2122514,
+                  "name": "On or near Parking Area"
+                },
+                "longitude": "-1.545800"
+              },
+              "context": "",
+              "outcome_status": {
+                "category": "Investigation complete; no suspect identified",
+                "date": "2026-03"
+              },
+              "persistent_id": "1a9abec4c6f52883c188d236f6d7531b835068f463fffcec62ac0793e633aa46",
+              "id": 133996739,
+              "location_subtype": "",
+              "month": "2026-03"
+            }
+          ],
+          "anchor": "LS1_leeds_briggate",
+          "n_shoplifting": 279
+        },
+        {
+          "source": "police_uk",
+          "url": "https://data.police.uk/api/crimes-street/shoplifting",
+          "params": {
+            "lat": 51.5147,
+            "lng": -0.1426,
+            "date": "2026-03"
+          },
+          "accessed_utc": "2026-05-03T21:40:03Z",
+          "status": 200,
+          "sha256": "a36f7241717f0458b28a7b8ccee5ddeaff01ef9fce2716a034bc2548128b57d7",
+          "cached": true,
+          "sample": [
+            {
+              "category": "shoplifting",
+              "location_type": "Force",
+              "location": {
+                "latitude": "51.514195",
+                "street": {
+                  "id": 1675879,
+                  "name": "On or near Dering Street"
+                },
+                "longitude": "-0.145735"
+              },
+              "context": "",
+              "outcome_status": {
+                "category": "Under investigation",
+                "date": "2026-03"
+              },
+              "persistent_id": "3119525325400ee156a82fd9e3e9452410693596041ab430d461c10a68a83aa1",
+              "id": 134294188,
+              "location_subtype": "",
+              "month": "2026-03"
+            },
+            {
+              "category": "shoplifting",
+              "location_type": "Force",
+              "location": {
+                "latitude": "51.523786",
+                "street": {
+                  "id": 1676953,
+                  "name": "On or near Whitfield Place"
+                },
+                "longitude": "-0.138152"
+              },
+              "context": "",
+              "outcome_status": {
+                "category": "Under investigation",
+                "date": "2026-03"
+              },
+              "persistent_id": "e2cc23b95466c1dd616c9123ad3f92ac39f20124940e76e506be25c3624933a4",
+              "id": 134295598,
+              "location_subtype": "",
+              "month": "2026-03"
+            }
+          ],
+          "anchor": "W1_oxford_st_london",
+          "n_shoplifting": 573
+        },
+        {
+          "source": "police_uk",
+          "url": "https://data.police.uk/api/crimes-street/shoplifting",
+          "params": {
+            "lat": 51.5055,
+            "lng": -0.0905,
+            "date": "2026-03"
+          },
+          "accessed_utc": "2026-05-03T21:40:04Z",
+          "status": 200,
+          "sha256": "97b85457a0988370258d4e9e4be881e1937fd55b642abe254bcb2b0b9fc10109",
+          "cached": true,
+          "sample": [
+            {
+              "category": "shoplifting",
+              "location_type": "Force",
+              "location": {
+                "latitude": "51.512033",
+                "street": {
+                  "id": 1490764,
+                  "name": "On or near Kingscote Street"
+                },
+                "longitude": "-0.104980"
+              },
+              "context": "",
+              "outcome_status": {
+                "category": "Under investigation",
+                "date": "2026-03"
+              },
+              "persistent_id": "627152d3a5a2238583b27ec61128c1ac531c42364c4dcd5b9e8f6575655a71b1",
+              "id": 134347545,
+              "location_subtype": "",
+              "month": "2026-03"
+            },
+            {
+              "category": "shoplifting",
+              "location_type": "Force",
+              "location": {
+                "latitude": "51.511896",
+                "street": {
+                  "id": 1490867,
+                  "name": "On or near Cannon Street"
+                },
+                "longitude": "-0.091540"
+              },
+              "context": "",
+              "outcome_status": {
+                "category": "Under investigation",
+                "date": "2026-03"
+              },
+              "persistent_id": "915636ea59cb35200d5811da2f0b499ed335be0958d48af75625e866df985dd9",
+              "id": 134347560,
+              "location_subtype": "",
+              "month": "2026-03"
+            }
+          ],
+          "anchor": "SE1_borough_market_london",
+          "n_shoplifting": 174
+        }
+      ],
+      "reason": "all 10 sources reachable; data shape consistent with claim"
+    },
+    {
+      "test": "distribution",
+      "claim": "monthly shoplifting count exceeds 5 incidents in retail anchor areas",
+      "n": 10,
+      "mean": 184.2,
+      "stdev": 158.232614,
+      "threshold": 5.0,
+      "direction": "above",
+      "z": 1.1325,
+      "z_min": 1.0,
+      "reason": "mean exceeds threshold by 1.13\u03c3 \u2265 1.0\u03c3"
+    }
+  ],
+  "notes": [
+    "month sampled: 2026-03",
+    "anchors (England+Wales only): NE1_eldon_square, NE2_jesmond_acorn_rd, NE3_gosforth_high_st, M3_manchester_arndale, B5_birmingham_bullring, L1_liverpool_one, BS1_bristol_cabot_circus, LS1_leeds_briggate, W1_oxford_st_london, SE1_borough_market_london",
+    "Glasgow + Edinburgh excluded from Police.uk distribution test \u2014 Police Scotland is not on data.police.uk.",
+    "Population shrink rate (1.68%) is industry research, not Police.uk; the validatable leg here is crime-data availability + variance \u2014 sufficient for the 'spike-detection' leading-indicator claim."
+  ],
+  "confidence": 88,
+  "run_at_utc": "2026-05-03T23:45:40Z",
+  "git_sha": "b3ae4081167af430b103b8d2957dbae518fe0816",
+  "session_id": "devin-9a6bd256bd7c4a90a083a471fa94a810",
+  "signed_by": "Devon-9a6b | 2026-05-03 | devin-9a6bd256bd7c4a90a083a471fa94a810"
+}

@@ -1,0 +1,23 @@
+{
+  "insight_id": "INS-077",
+  "title": "Product-Description Semantic Match vs Competitor Listings \u2192 Relevance-Gap Insight (Retail)",
+  "vertical": "Retail",
+  "verdict": "DEFERRED",
+  "test_class": "manual",
+  "summary": "Recipe relies on scraping Amazon/Etsy/Google Shopping competitor listings. ToS + legal review required before any public-data validation; deferred from automated pipeline.",
+  "evidence": [
+    {
+      "test": "manual",
+      "reason": "ToS-bound scraping; deferred from automated public-data validation by policy"
+    }
+  ],
+  "notes": [
+    "Per AGENTS.md / OPINION_CONFIDENCE: deployment is medium-to-irreversible; needs Ewan + legal review.",
+    "Recipe value claim is supported by general SEO/Google Shopping relevance literature \u2014 but this specific implementation must not run from a Devin session against live retailer sites."
+  ],
+  "confidence": 75,
+  "run_at_utc": "2026-05-03T23:45:40Z",
+  "git_sha": "b3ae4081167af430b103b8d2957dbae518fe0816",
+  "session_id": "devin-9a6bd256bd7c4a90a083a471fa94a810",
+  "signed_by": "Devon-9a6b | 2026-05-03 | devin-9a6bd256bd7c4a90a083a471fa94a810"
+}

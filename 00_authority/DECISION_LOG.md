@@ -1,7 +1,7 @@
 ---
 title: Decision log
 date: 2026-05-03
-version: 15
+version: 18
 status: draft
 ---
 
@@ -36,6 +36,20 @@ One entry per decision. Keep it short. Link out to supporting docs.
 - **Where encoded**: `01_truth/schemas/2026-05_public-data-validation_v1.md` v1, `02_build/validators/` (framework + ProfServices runners), `03_shadow/validators/profservices/` (16 verdict JSONs + `rollup.json`), `01_truth/schemas/research-index/00-insight-catalogue_v1.md` (16 `VALIDATION:` lines added), `01_truth/research/validations/README.md` (truth-tier promotion stub), `00_authority/MANIFEST.md` v45–v48 changelog entries.
 - **Status**: candidate (pending Ewan review of the PR + verdicts)
 - **Signed-by**: Devon-ab74 | 2026-05-03 | devin-ab740f2c78ee477a9c16ea3b6ed15293
+
+### 2026-05-03 — Retail vertical reference implementation + DEFERRED policy band (AMP-66)
+
+- **Decision**: Sister to the AMP-67 entry above. Build a self-contained retail validator package at `02_build/validators/retail/` (fetchers, runners, results, CLI) covering all 19 retail catalogue entries (INS-060..INS-078) against UK public sources (Police.uk, ONS Beta API, Nomis, Land Registry CCOD, Insolvency Service stats, GOV.UK content API, Bank of England, etc.). Extend the verdict scheme with a **DEFERRED** policy band (distinct from BLOCKED: BLOCKED = waiting on creds, DEFERRED = refusing to run on ToS/legal grounds) and apply it to INS-077 (competitor pricing scraping). Headline outcome: 8 PROVEN / 10 PLAUSIBLE / 1 DEFERRED (after Devin-Review-driven framework fix on existence_check; see Manifest v51).
+- **Why**: AMP-66 (sister to AMP-67 under parent AMP-59) requires that retail insights be backed by reachable public data at the granularity claimed, not just plausible narrative. The DEFERRED band closes a gap in the AMP-67 scheme: BLOCKED handles "we'd run if we could" but not "we refuse to run on policy grounds". The retail package was built self-contained because AMP-66 and AMP-67 ran in parallel sessions; lifting the retail fetchers + test classes into the shared `02_build/validators/sources/` + `tests/` layer is deferred to a follow-up once all five sibling verticals (AMP-64/65/66/67/68) have landed.
+- **Where encoded**:
+  - Schema: `01_truth/schemas/2026-05_public-data-validation_v1.md` extended with the DEFERRED band (the schema's v1 changelog records the AMP-67 + AMP-66 joint authorship).
+  - Retail rollup: `01_truth/schemas/research-index/06a-vertical-retail-validation-rollup_v1.md` v4 (per-insight verdict table, public sources reached, key-gated downgrades, reproducibility).
+  - Implementation: `02_build/validators/retail/` (self-contained fetchers, runners, results, CLI).
+  - Verdict JSONs: `02_build/validators/retail/results/INS-NNN/verdict.json` (will lift to `03_shadow/validators/retail/` when retail joins the shared layer).
+  - Catalogue: `01_truth/schemas/research-index/00-insight-catalogue_v1.md` updated additively with `**VALIDATION (AMP-66):**` lines on each retail entry.
+  - Manifest: `00_authority/MANIFEST.md` v49 § Candidate authority indexes the rollup file (the schema doc was already indexed by AMP-67 v45). v50 records the Devin-Review-driven count update from 8/10/1 → 9/9/1 (Police.uk anchor list split into England+Wales-only subset for distribution tests). v51 records the framework-level fix to `existence_check` (silently accepted partial coverage as PROVEN; now correctly returns PLAUSIBLE when any source failed) which honestly downgrades INS-062 from PROVEN to PLAUSIBLE — final headline 8 / 10 / 1.
+- **Status**: candidate (pending Ewan review). Verdicts re-runnable from cache; verdict JSONs include `git_sha`, `run_at_utc`, `signed_by`, and SHA-256 hashes of every source response.
+- **Signed-by**: Devon-9a6b | 2026-05-03 | devin-9a6bd256bd7c4a90a083a471fa94a810
 
 ### 2026-05-01 — Systems and API Register created as candidate authority
 

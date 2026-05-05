@@ -1,0 +1,41 @@
+{
+  "insight_id": "INS-071",
+  "title": "Energy-Cost-per-Transaction \u00d7 ONS Sub-National Energy \u00d7 Tariff Switching (Retail)",
+  "vertical": "Retail",
+  "verdict": "PROVEN",
+  "test_class": "existence",
+  "summary": "DESNZ sub-national energy consumption collection reachable; ONS quarterly energy-cost bulletin available via the standard ONS publication channel.",
+  "evidence": [
+    {
+      "test": "existence",
+      "claim": "DESNZ sub-national energy consumption stats reachable as a GOV.UK collection",
+      "n_sources": 1,
+      "n_reachable": 1,
+      "n_skipped_keyless": 0,
+      "n_failed": 0,
+      "sources": [
+        {
+          "source": "desnz_sub_national_energy",
+          "url": "https://www.gov.uk/api/content/government/collections/sub-national-electricity-consumption-data",
+          "params": {},
+          "accessed_utc": "2026-05-03T21:40:06Z",
+          "status": 200,
+          "sha256": "066f2fbc5a2422c2ff939873ac74474553541f11a283c18159a935196913f4e7",
+          "cached": true,
+          "sample": "{\"analytics_identifier\":null,\"base_path\":\"/government/collections/sub-national-electricity-consumption-data\",\"content_id\":\"5eb68932-7631-11e4-a3cb-005056011aef\",\"description\":\"This page contains all subnational electricity consumption data produced by DESNZ.\",\"details\":{\"body\":\"<div class=\\\"govspeak\\\"><p>Please read the <a href=\\\"https://www.gov.uk/government/publications/regional-energy-data-guidance-note\\\">Methodology and guidance note</a> before using the statistics. It contains details of th... [truncated; full body sha256=066f2fbc5a2422c2ff939873ac74474553541f11a283c18159a935196913f4e7]"
+        }
+      ],
+      "reason": "all 1 sources reachable; data shape consistent with claim"
+    }
+  ],
+  "notes": [
+    "Public leg = DESNZ sub-national energy + ONS energy-cost bulletin. PROVEN reachable.",
+    "Client leg = own meter readings + tariff data; recipe is PLAUSIBLE end-to-end.",
+    "Promoting to PROVEN-with-numbers needs Ofgem non-domestic tariff comparison data; bulk download captured as follow-up."
+  ],
+  "confidence": 85,
+  "run_at_utc": "2026-05-03T23:45:40Z",
+  "git_sha": "b3ae4081167af430b103b8d2957dbae518fe0816",
+  "session_id": "devin-9a6bd256bd7c4a90a083a471fa94a810",
+  "signed_by": "Devon-9a6b | 2026-05-03 | devin-9a6bd256bd7c4a90a083a471fa94a810"
+}

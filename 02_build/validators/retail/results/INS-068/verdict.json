@@ -1,0 +1,74 @@
+{
+  "insight_id": "INS-068",
+  "title": "Marketplace Fee Leakage \u00d7 FBA Storage Ageing \u00d7 Demand Signals (Retail)",
+  "vertical": "Retail",
+  "verdict": "PLAUSIBLE",
+  "test_class": "existence",
+  "summary": "ONS CPIH price index reachable; Amazon fee schedule reachable. The 'fee leakage' computation requires per-SKU fee + revenue from Seller Central \u2014 client data, not public \u2014 so recipe end-to-end remains PLAUSIBLE.",
+  "evidence": [
+    {
+      "test": "existence",
+      "claim": "ONS CPIH reachable; Amazon fee schedule documented",
+      "n_sources": 2,
+      "n_reachable": 2,
+      "n_skipped_keyless": 0,
+      "n_failed": 0,
+      "sources": [
+        {
+          "source": "ons_cpih01",
+          "url": "https://api.beta.ons.gov.uk/v1/datasets/cpih01/editions",
+          "params": {},
+          "accessed_utc": "2026-05-03T21:39:50Z",
+          "status": 200,
+          "sha256": "8a6cbe418b8bf3aaf3aae9806772dc1825b6f83cb35be5ccdd6cd1340ad4c1e1",
+          "cached": true,
+          "sample": {
+            "items": [
+              {
+                "edition": "time-series",
+                "id": "9a599e93-05bc-4e10-a77a-ba94faebb9c7",
+                "links": {
+                  "dataset": {
+                    "href": "https://api.beta.ons.gov.uk/v1/datasets/cpih01",
+                    "id": "cpih01"
+                  },
+                  "latest_version": {
+                    "href": "https://api.beta.ons.gov.uk/v1/datasets/cpih01/editions/time-series/versions/67",
+                    "id": "67"
+                  },
+                  "self": {
+                    "href": "https://api.beta.ons.gov.uk/v1/datasets/cpih01/editions/time-series"
+                  },
+                  "versions": {
+                    "href": "https://api.beta.ons.gov.uk/v1/datasets/cpih01/editions/time-series/versions"
+                  }
+                },
+                "state": "published"
+              }
+            ]
+          }
+        },
+        {
+          "source": "amazon_fees_page",
+          "url": "https://sellercentral.amazon.co.uk/help/hub/reference/200336920",
+          "params": {},
+          "accessed_utc": "2026-05-03T21:40:06Z",
+          "status": 200,
+          "sha256": "2f760bf98cc39373ac185358a49c05bafa3304da5e1f3524f71c86649c73afd5",
+          "cached": true,
+          "sample": "\n\n\n\n\n\n\n<!doctype html><html lang=\"en-GB\" class=\"a-no-js\" data-19ax5a9jf=\"dingo\">\n  <head><script>var aPageStart = (new Date()).getTime();</script><meta charset=\"utf-8\"/>\n    \n<script type='text/javascript'>var ue_t0=ue_t0||+new Date();</script>\n<script type='text/javascript'>\nwindow.ue_ihb = (window.ue_ihb || window.ueinit || 0) + 1;\nif (window.ue_ihb === 1) {\n\nvar ue_csm = window,\n    ue_hob = +new Date();\n(function(d){var e=d.ue=d.ue||{},f=Date.now||function(){return+new Date};e.d=function(b){... [truncated; full body sha256=2f760bf98cc39373ac185358a49c05bafa3304da5e1f3524f71c86649c73afd5]"
+        }
+      ],
+      "reason": "all 2 sources reachable; data shape consistent with claim"
+    }
+  ],
+  "notes": [
+    "Public legs reachable: ONS CPIH + Amazon fee schedule.",
+    "FBA fee leakage = client Seller Central data; recipe is PLAUSIBLE end-to-end."
+  ],
+  "confidence": 75,
+  "run_at_utc": "2026-05-03T23:45:40Z",
+  "git_sha": "b3ae4081167af430b103b8d2957dbae518fe0816",
+  "session_id": "devin-9a6bd256bd7c4a90a083a471fa94a810",
+  "signed_by": "Devon-9a6b | 2026-05-03 | devin-9a6bd256bd7c4a90a083a471fa94a810"
+}

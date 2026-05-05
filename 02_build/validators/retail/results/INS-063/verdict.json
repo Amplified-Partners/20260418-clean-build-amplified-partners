@@ -1,0 +1,43 @@
+{
+  "insight_id": "INS-063",
+  "title": "Land Registry Commercial Voids as Neighbourhood Demand Signal (Retail)",
+  "vertical": "Retail",
+  "verdict": "PLAUSIBLE",
+  "test_class": "existence",
+  "summary": "CCOD service page reachable but download link not detected",
+  "evidence": [
+    {
+      "test": "existence",
+      "claim": "HMLR CCOD service page exists and exposes monthly download",
+      "n_sources": 1,
+      "n_reachable": 1,
+      "n_skipped_keyless": 0,
+      "n_failed": 0,
+      "sources": [
+        {
+          "source": "land_registry",
+          "url": "https://use-land-property-data.service.gov.uk/datasets/ccod",
+          "params": {},
+          "accessed_utc": "2026-05-03T21:39:52Z",
+          "status": 200,
+          "sha256": "8f88eeb047cf9b591613b6e26f224249ae9344b6f9d5aeffc5fd4d9fa9fcaa59",
+          "cached": true,
+          "sample": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"utf-8\" />\n    <title>UK companies that own property in England and Wales - \n        Use land and property data\n    </title>\n\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <meta name=\"theme-color\" content=\"#0b0c0c\" />\n\n    <link rel=\"shortcut icon\" sizes=\"16x16 32x32 48x48\" href=\"/assets/images/favicon.ico\" type=\"image/x-icon\" />\n    <link rel=\"mask-icon\" href=\"/assets/images/govuk-mask-icon.svg\" color=\"#0b0... [truncated; full body sha256=8f88eeb047cf9b591613b6e26f224249ae9344b6f9d5aeffc5fd4d9fa9fcaa59]",
+          "has_download_link": false,
+          "page_size_bytes": 41448
+        }
+      ],
+      "reason": "all 1 sources reachable; data shape consistent with claim"
+    }
+  ],
+  "notes": [
+    "CCOD is the canonical UK source for commercial property ownership; published monthly under OGL.",
+    "Promoting this insight to PROVEN requires (a) downloading a CCOD snapshot and (b) joining with LA empty-property datasets \u2014 both feasible but out of scope for first PR.",
+    "Documented as a follow-up rather than a blocker."
+  ],
+  "confidence": 65,
+  "run_at_utc": "2026-05-03T23:45:40Z",
+  "git_sha": "b3ae4081167af430b103b8d2957dbae518fe0816",
+  "session_id": "devin-9a6bd256bd7c4a90a083a471fa94a810",
+  "signed_by": "Devon-9a6b | 2026-05-03 | devin-9a6bd256bd7c4a90a083a471fa94a810"
+}

@@ -1,0 +1,39 @@
+{
+  "insight_id": "INS-066",
+  "title": "Google Trends Local \u00d7 Ad Spend Efficiency (Retail)",
+  "vertical": "Retail",
+  "verdict": "PLAUSIBLE",
+  "test_class": "existence",
+  "summary": "pytrends not installed; install enables live validation. Recipe is reproducible by the published Google Trends API.",
+  "evidence": [
+    {
+      "test": "existence",
+      "claim": "pytrends installed",
+      "n_sources": 1,
+      "n_reachable": 0,
+      "n_skipped_keyless": 1,
+      "n_failed": 0,
+      "sources": [
+        {
+          "source": "pytrends",
+          "url": "https://trends.google.com/trends/api",
+          "sample": {
+            "_skipped": true,
+            "reason": "pytrends not installed"
+          },
+          "status": 0
+        }
+      ],
+      "reason": "no source reachable"
+    }
+  ],
+  "notes": [
+    "Install pytrends to upgrade verdict on next run.",
+    "Google Trends is ToS-restricted but widely used; pytrends wraps the public Trends API."
+  ],
+  "confidence": 65,
+  "run_at_utc": "2026-05-03T23:45:40Z",
+  "git_sha": "b3ae4081167af430b103b8d2957dbae518fe0816",
+  "session_id": "devin-9a6bd256bd7c4a90a083a471fa94a810",
+  "signed_by": "Devon-9a6b | 2026-05-03 | devin-9a6bd256bd7c4a90a083a471fa94a810"
+}

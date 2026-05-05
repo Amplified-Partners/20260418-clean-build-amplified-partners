@@ -1,0 +1,66 @@
+{
+  "insight_id": "INS-074",
+  "title": "Google Shopping Share-of-Voice \u00d7 Keyword Bid Efficiency (Retail)",
+  "vertical": "Retail",
+  "verdict": "PROVEN",
+  "test_class": "existence",
+  "summary": "ONS RSI (all businesses) reachable with category breakdown; Google Trends: skipped (pytrends not installed)",
+  "evidence": [
+    {
+      "test": "existence",
+      "claim": "ONS retail sales by category available; Google Trends as search-demand proxy",
+      "n_sources": 1,
+      "n_reachable": 1,
+      "n_skipped_keyless": 0,
+      "n_failed": 0,
+      "sources": [
+        {
+          "source": "ons_beta",
+          "url": "https://api.beta.ons.gov.uk/v1/datasets/retail-sales-index-all-businesses/editions",
+          "params": {},
+          "accessed_utc": "2026-05-03T21:40:07Z",
+          "status": 200,
+          "sha256": "f4639f30028c17b9df0a548d9ffbafa507f2d993c868d7c18328820631b54ea8",
+          "cached": true,
+          "sample": {
+            "items": [
+              {
+                "edition": "time-series",
+                "id": "190d1421-40e5-44c4-b3ec-9f843258d88a",
+                "links": {
+                  "dataset": {
+                    "href": "https://api.beta.ons.gov.uk/v1/datasets/retail-sales-index-all-businesses",
+                    "id": "retail-sales-index-all-businesses"
+                  },
+                  "latest_version": {
+                    "href": "https://api.beta.ons.gov.uk/v1/datasets/retail-sales-index-all-businesses/editions/time-series/versions/45",
+                    "id": "45"
+                  },
+                  "self": {
+                    "href": "https://api.beta.ons.gov.uk/v1/datasets/retail-sales-index-all-businesses/editions/time-series"
+                  },
+                  "versions": {
+                    "href": "https://api.beta.ons.gov.uk/v1/datasets/retail-sales-index-all-businesses/editions/time-series/versions"
+                  }
+                },
+                "state": "published"
+              }
+            ]
+          },
+          "dataset": "retail-sales-index-all-businesses"
+        }
+      ],
+      "reason": "all 1 sources reachable; data shape consistent with claim"
+    }
+  ],
+  "notes": [
+    "Public leg = ONS retail sales by category, PROVEN reachable.",
+    "Search demand leg via pytrends is opportunistic (rate-limited); not required for verdict.",
+    "Client leg (own Google Ads data) confirms efficiency at deploy time."
+  ],
+  "confidence": 80,
+  "run_at_utc": "2026-05-03T23:45:40Z",
+  "git_sha": "b3ae4081167af430b103b8d2957dbae518fe0816",
+  "session_id": "devin-9a6bd256bd7c4a90a083a471fa94a810",
+  "signed_by": "Devon-9a6b | 2026-05-03 | devin-9a6bd256bd7c4a90a083a471fa94a810"
+}

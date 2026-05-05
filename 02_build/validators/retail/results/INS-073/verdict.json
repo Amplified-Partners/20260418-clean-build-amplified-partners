@@ -1,0 +1,135 @@
+{
+  "insight_id": "INS-073",
+  "title": "ROI on Loyalty Program with Control-Group Analysis (Retail)",
+  "vertical": "Retail",
+  "verdict": "PROVEN",
+  "test_class": "existence",
+  "summary": "ONS Retail Sales Index + RSI (all businesses) + UK Spending on Cards are all reachable with monthly granularity. latest edition 'time-series' release_date=",
+  "evidence": [
+    {
+      "test": "existence",
+      "claim": "ONS Retail Sales Index + UK Spending on Cards available as monthly benchmark series",
+      "n_sources": 3,
+      "n_reachable": 3,
+      "n_skipped_keyless": 0,
+      "n_failed": 0,
+      "sources": [
+        {
+          "source": "ons_beta",
+          "url": "https://api.beta.ons.gov.uk/v1/datasets/retail-sales-index/editions",
+          "params": {},
+          "accessed_utc": "2026-05-03T21:40:07Z",
+          "status": 200,
+          "sha256": "2fa5478f1b55b43a990d294b08f4786ce66ac038b57b1ef66cde4837f6706b62",
+          "cached": true,
+          "sample": {
+            "items": [
+              {
+                "edition": "time-series",
+                "id": "5a5cd231-3c09-4ce6-8c62-d8bd01f8cccf",
+                "links": {
+                  "dataset": {
+                    "href": "https://api.beta.ons.gov.uk/v1/datasets/retail-sales-index",
+                    "id": "retail-sales-index"
+                  },
+                  "latest_version": {
+                    "href": "https://api.beta.ons.gov.uk/v1/datasets/retail-sales-index/editions/time-series/versions/45",
+                    "id": "45"
+                  },
+                  "self": {
+                    "href": "https://api.beta.ons.gov.uk/v1/datasets/retail-sales-index/editions/time-series"
+                  },
+                  "versions": {
+                    "href": "https://api.beta.ons.gov.uk/v1/datasets/retail-sales-index/editions/time-series/versions"
+                  }
+                },
+                "state": "published"
+              }
+            ]
+          },
+          "dataset": "retail-sales-index"
+        },
+        {
+          "source": "ons_beta",
+          "url": "https://api.beta.ons.gov.uk/v1/datasets/retail-sales-index-all-businesses/editions",
+          "params": {},
+          "accessed_utc": "2026-05-03T21:40:07Z",
+          "status": 200,
+          "sha256": "f4639f30028c17b9df0a548d9ffbafa507f2d993c868d7c18328820631b54ea8",
+          "cached": true,
+          "sample": {
+            "items": [
+              {
+                "edition": "time-series",
+                "id": "190d1421-40e5-44c4-b3ec-9f843258d88a",
+                "links": {
+                  "dataset": {
+                    "href": "https://api.beta.ons.gov.uk/v1/datasets/retail-sales-index-all-businesses",
+                    "id": "retail-sales-index-all-businesses"
+                  },
+                  "latest_version": {
+                    "href": "https://api.beta.ons.gov.uk/v1/datasets/retail-sales-index-all-businesses/editions/time-series/versions/45",
+                    "id": "45"
+                  },
+                  "self": {
+                    "href": "https://api.beta.ons.gov.uk/v1/datasets/retail-sales-index-all-businesses/editions/time-series"
+                  },
+                  "versions": {
+                    "href": "https://api.beta.ons.gov.uk/v1/datasets/retail-sales-index-all-businesses/editions/time-series/versions"
+                  }
+                },
+                "state": "published"
+              }
+            ]
+          },
+          "dataset": "retail-sales-index-all-businesses"
+        },
+        {
+          "source": "ons_beta",
+          "url": "https://api.beta.ons.gov.uk/v1/datasets/uk-spending-on-cards/editions",
+          "params": {},
+          "accessed_utc": "2026-05-03T21:40:07Z",
+          "status": 200,
+          "sha256": "22dbb731837454a7fa743170e54fba9e3450b4ba3cce66f0a233276ad703e1e3",
+          "cached": true,
+          "sample": {
+            "items": [
+              {
+                "edition": "time-series",
+                "id": "d1f60a81-28dd-4cbe-8ace-94806e6bb826",
+                "links": {
+                  "dataset": {
+                    "href": "https://api.beta.ons.gov.uk/v1/datasets/uk-spending-on-cards",
+                    "id": "uk-spending-on-cards"
+                  },
+                  "latest_version": {
+                    "href": "https://api.beta.ons.gov.uk/v1/datasets/uk-spending-on-cards/editions/time-series/versions/130",
+                    "id": "130"
+                  },
+                  "self": {
+                    "href": "https://api.beta.ons.gov.uk/v1/datasets/uk-spending-on-cards/editions/time-series"
+                  },
+                  "versions": {
+                    "href": "https://api.beta.ons.gov.uk/v1/datasets/uk-spending-on-cards/editions/time-series/versions"
+                  }
+                },
+                "state": "published"
+              }
+            ]
+          },
+          "dataset": "uk-spending-on-cards"
+        }
+      ],
+      "reason": "all 3 sources reachable; data shape consistent with claim"
+    }
+  ],
+  "notes": [
+    "Public leg = ONS RSI exists as a monthly sector benchmark (PROVEN here).",
+    "Client leg = loyalty-program incremental LTV requires control-group analysis on internal data; remains PLAUSIBLE in production but confirmable per-client."
+  ],
+  "confidence": 90,
+  "run_at_utc": "2026-05-03T23:45:40Z",
+  "git_sha": "b3ae4081167af430b103b8d2957dbae518fe0816",
+  "session_id": "devin-9a6bd256bd7c4a90a083a471fa94a810",
+  "signed_by": "Devon-9a6b | 2026-05-03 | devin-9a6bd256bd7c4a90a083a471fa94a810"
+}

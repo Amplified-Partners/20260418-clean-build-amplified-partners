@@ -1,0 +1,78 @@
+{
+  "insight_id": "INS-062",
+  "title": "Price Elasticity from ONS CPI \u00d7 Sector CPI \u00d7 Own Historical Prices (Retail)",
+  "vertical": "Retail",
+  "verdict": "PLAUSIBLE",
+  "test_class": "existence",
+  "summary": "CPI dataset reachable but partial granularity: 1 source(s) failed \u2014 partial validation",
+  "evidence": [
+    {
+      "test": "existence",
+      "claim": "ONS CPI/CPIH item-level sub-indices reachable as time-series",
+      "n_sources": 2,
+      "n_reachable": 1,
+      "n_skipped_keyless": 0,
+      "n_failed": 1,
+      "sources": [
+        {
+          "source": "ons_beta",
+          "url": "https://api.beta.ons.gov.uk/v1/datasets/cpih01/editions",
+          "params": {},
+          "accessed_utc": "2026-05-03T21:39:50Z",
+          "status": 200,
+          "sha256": "8a6cbe418b8bf3aaf3aae9806772dc1825b6f83cb35be5ccdd6cd1340ad4c1e1",
+          "cached": true,
+          "sample": {
+            "items": [
+              {
+                "edition": "time-series",
+                "id": "9a599e93-05bc-4e10-a77a-ba94faebb9c7",
+                "links": {
+                  "dataset": {
+                    "href": "https://api.beta.ons.gov.uk/v1/datasets/cpih01",
+                    "id": "cpih01"
+                  },
+                  "latest_version": {
+                    "href": "https://api.beta.ons.gov.uk/v1/datasets/cpih01/editions/time-series/versions/67",
+                    "id": "67"
+                  },
+                  "self": {
+                    "href": "https://api.beta.ons.gov.uk/v1/datasets/cpih01/editions/time-series"
+                  },
+                  "versions": {
+                    "href": "https://api.beta.ons.gov.uk/v1/datasets/cpih01/editions/time-series/versions"
+                  }
+                },
+                "state": "published"
+              }
+            ]
+          },
+          "dataset": "cpih01"
+        },
+        {
+          "source": "ons_beta",
+          "url": "https://api.beta.ons.gov.uk/v1/datasets/cpi01/editions",
+          "params": {},
+          "accessed_utc": "2026-05-03T23:45:40Z",
+          "status": 404,
+          "sha256": "",
+          "cached": false,
+          "sample": {
+            "_error": "HTTP 404"
+          },
+          "dataset": "cpi01"
+        }
+      ],
+      "reason": "1 source(s) failed \u2014 partial validation"
+    }
+  ],
+  "notes": [
+    "Public leg = ONS CPI sub-indices, PROVEN reachable with monthly time-series granularity.",
+    "Client leg = own historical prices needs internal data; recipe is PLAUSIBLE end-to-end at deploy."
+  ],
+  "confidence": 70,
+  "run_at_utc": "2026-05-03T23:45:40Z",
+  "git_sha": "b3ae4081167af430b103b8d2957dbae518fe0816",
+  "session_id": "devin-9a6bd256bd7c4a90a083a471fa94a810",
+  "signed_by": "Devon-9a6b | 2026-05-03 | devin-9a6bd256bd7c4a90a083a471fa94a810"
+}

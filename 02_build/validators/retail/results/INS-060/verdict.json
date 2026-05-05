@@ -1,0 +1,49 @@
+{
+  "insight_id": "INS-060",
+  "title": "Footfall Forecasting \u00d7 Met Office \u00d7 Local Events \u00d7 Transport Disruption (Retail)",
+  "vertical": "Retail",
+  "verdict": "PLAUSIBLE",
+  "test_class": "existence",
+  "summary": "School-term page reachable; Met Office DataPoint requires free key (MET_OFFICE_DATAPOINT_KEY). Recipe published-literature support is strong (footfall vs weather is a well-established regression in UK retail).",
+  "evidence": [
+    {
+      "test": "existence",
+      "claim": "Met Office DataPoint + school term dates + local-event sources reachable",
+      "n_sources": 2,
+      "n_reachable": 1,
+      "n_skipped_keyless": 1,
+      "n_failed": 0,
+      "sources": [
+        {
+          "source": "school_term_dates_govuk",
+          "url": "https://www.gov.uk/school-term-holiday-dates",
+          "params": {},
+          "accessed_utc": "2026-05-03T21:39:49Z",
+          "status": 200,
+          "sha256": "93d598b8b08f7505b1efcbbeeb95801fdbf5e698cc6aae05eb2a9b7594522fd1",
+          "cached": true,
+          "sample": "\n\n<!DOCTYPE html>\n<html class=\"govuk-template govuk-template--rebranded\" lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <title lang=\"en\">School term and holiday dates - GOV.UK</title>\n\n    <script src=\"/assets/frontend/govuk_publishing_components/vendor/lux/lux-measurer-d66192b1b665d415e1874e49a48138b7ae339548aa6cdb8687c7f9933e72b969.js\" async=\"async\"></script>\n    <script src=\"/assets/frontend/govuk_publishing_components/rum-custom-data-b9e1806d1da2fa8ef1855d01aa71ba5eb0afc010dd2c4de3672cc7... [truncated; full body sha256=93d598b8b08f7505b1efcbbeeb95801fdbf5e698cc6aae05eb2a9b7594522fd1]"
+        },
+        {
+          "source": "met_office_datapoint",
+          "url": "skipped",
+          "sample": {
+            "_skipped": true,
+            "reason": "MET_OFFICE_DATAPOINT_KEY not set"
+          },
+          "status": 0
+        }
+      ],
+      "reason": "1 source(s) need a key \u2014 partial validation"
+    }
+  ],
+  "notes": [
+    "Public legs: Met Office DataPoint (KEY), school term dates (no key), event/transport (LA-specific).",
+    "Recipe quantitative validation requires the DataPoint key \u2014 flagged as follow-up."
+  ],
+  "confidence": 70,
+  "run_at_utc": "2026-05-03T23:45:39Z",
+  "git_sha": "b3ae4081167af430b103b8d2957dbae518fe0816",
+  "session_id": "devin-9a6bd256bd7c4a90a083a471fa94a810",
+  "signed_by": "Devon-9a6b | 2026-05-03 | devin-9a6bd256bd7c4a90a083a471fa94a810"
+}

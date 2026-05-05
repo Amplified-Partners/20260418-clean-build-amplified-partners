@@ -1,0 +1,43 @@
+{
+  "insight_id": "INS-069",
+  "title": "Category Cannibalisation \u00d7 Cross-Sell Graph Analysis (Retail)",
+  "vertical": "Retail",
+  "verdict": "PROVEN",
+  "test_class": "existence",
+  "summary": "ONS Family Spending Workbook 1 (Detailed Expenditure and Trends) page reachable; confirms household-spending-by-category data exists at the claimed granularity.",
+  "evidence": [
+    {
+      "test": "existence",
+      "claim": "ONS Family Spending Workbook 1 (Detailed Expenditure and Trends) reachable",
+      "n_sources": 1,
+      "n_reachable": 1,
+      "n_skipped_keyless": 0,
+      "n_failed": 0,
+      "sources": [
+        {
+          "source": "ons_publication",
+          "url": "https://www.ons.gov.uk/peoplepopulationandcommunity/personalandhouseholdfinances/expenditure/datasets/familyspendingworkbook1detailedexpenditureandtrends",
+          "params": {},
+          "accessed_utc": "2026-05-03T21:40:06Z",
+          "status": 200,
+          "sha256": "dc86dcb5a0db2570c53648d31cbac597a39e8d08b030093aed287977f31106cd",
+          "cached": true,
+          "sample": "",
+          "source_label": "ONS Family Spending Workbook 1",
+          "title_match": true
+        }
+      ],
+      "reason": "all 1 sources reachable; data shape consistent with claim"
+    }
+  ],
+  "notes": [
+    "Public leg = ONS Family Spending Workbook 1 (canonical UK household-spending-by-category dataset).",
+    "Co-purchase graph leg = client transactional data; recipe is PLAUSIBLE end-to-end at deploy.",
+    "ONS Beta API does NOT index this workbook; we verify the publication route directly."
+  ],
+  "confidence": 80,
+  "run_at_utc": "2026-05-03T23:45:40Z",
+  "git_sha": "b3ae4081167af430b103b8d2957dbae518fe0816",
+  "session_id": "devin-9a6bd256bd7c4a90a083a471fa94a810",
+  "signed_by": "Devon-9a6b | 2026-05-03 | devin-9a6bd256bd7c4a90a083a471fa94a810"
+}

@@ -1,7 +1,7 @@
 ---
 title: Governed workspace manifest (authoritative inventory)
 date: 2026-05-03
-version: 50
+version: 53
 status: draft
 ---
 
@@ -106,7 +106,8 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
   - `01_truth/processes/2026-04_stateless-handover_neutrality-clause_v1.md` `[LOGIC TO BE CONFIRMED]` (candidate addendum to the job-wrapup SOP; neutrality rule for stateless handovers; authoritative `00_authority/OPINION_CONFIDENCE.md` references this file)
 - `01_truth/schemas/` `[LOGIC TO BE CONFIRMED]` (schema contracts to be populated)
   - `01_truth/schemas/README.md` `[LOGIC TO BE CONFIRMED]` (folder purpose stub)
-  - `01_truth/schemas/2026-05_public-data-validation_v1.md` `[LOGIC TO BE CONFIRMED]` (public-data verdict schema: 3-band PROVEN/PLAUSIBLE/DISPROVEN + BLOCKED gap-marker; additive `VALIDATION:` field on catalogue; reference impl at `02_build/validators/`)
+  - `01_truth/schemas/2026-05_public-data-validation_v1.md` `[LOGIC TO BE CONFIRMED]` (public-data verdict schema: PROVEN / PLAUSIBLE / DISPROVEN core bands + BLOCKED gap-marker + DEFERRED policy band; four reusable test classes; additive `VALIDATION:` field on catalogue; reference impls at `02_build/validators/` shared and `02_build/validators/retail/` self-contained; AMP-67 + AMP-66 joint)
+  - `01_truth/schemas/research-index/06a-vertical-retail-validation-rollup_v1.md` `[LOGIC TO BE CONFIRMED]` (retail vertical validation rollup: 8 PROVEN / 10 PLAUSIBLE / 1 DEFERRED across 19 retail insights against real UK public data; companion to `06-vertical-retail-profservices_v1.md` and to validators in `02_build/validators/retail/`; AMP-66)
 - `00_authority/AGENT_ROUTING.md` `[LOGIC TO BE CONFIRMED]` (agent-layer routing — which agent runs which task; stacks on top of `cost-tools/token_proxy.py` model-layer routing; eight rules; AMP-28; status: candidate — pending Ewan review per `DECISION_LOG.md`)
 - `01_truth/interfaces/` `[LOGIC TO BE CONFIRMED]` (API contracts to be populated)
   - `01_truth/interfaces/README.md` `[LOGIC TO BE CONFIRMED]` (folder purpose stub)
@@ -168,6 +169,37 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
     - `P10-kill-switch-master-reference.md` `[NON-AUTHORITATIVE]` (510 lines — binary shutdown architecture)
 
 ## Changelog
+
+### v53 — 2026-05-03
+
+- Headline rollup count for `06a-vertical-retail-validation-rollup_v1.md` updated to **8 PROVEN / 10 PLAUSIBLE / 1 DEFERRED** (was 9 / 9 / 1 in v52).
+- Reason: Devin Review found a framework-level bug in `02_build/validators/retail/tests/existence.py::existence_check` — when `require_all=False` (the default), the function silently accepted partial coverage as PROVEN. The `n_failed` count was computed and stored in the bundle but never gated the verdict, so a runner with one 200 + one 404 source landed at PROVEN with reason "all 1 sources reachable". Added a `len(failed) > 0 → PLAUSIBLE` branch with reason "{N} source(s) failed — partial validation"; added five unit tests in `tests/test_existence.py` covering all branches (all-reachable, all-failed, mixed-skipped, mixed-failed, require_all-with-failures).
+- Cascading effect: INS-062 (Price Elasticity from ONS CPI × Sector CPI × Own Historical Prices) was the only insight exhibiting the symptom — it queries cpih01 (200) + cpi01 (404) and was falsely PROVEN at conf 90. Now correctly PLAUSIBLE at conf 70. cpih01 alone supports the recipe; cleaning the runner to query only cpih01 is left for a follow-up so this commit is purely the framework fix + the honest downgrade.
+- Also addressed two earlier Devin Review findings on commit b3ae408: `02_build/validators/retail/verdict.py` no longer hardcodes `SESSION_ID` and `AGENT` — both now read from `AMP_SIGNED_BY` / `AMP_SESSION_ID` env vars via `_default_signed_by()` / `_default_session_id()` factory functions matching the shared `02_build/validators/core.py` pattern, so re-runs by other agents (Beast cron, a different Devin session, OpenClaw, …) attribute their verdicts correctly. Fixed an implicit-string-concatenation pitfall in `INS-077` notes that had split one sentence across two `notes[]` entries.
+- Earlier Devin Review fix on commit 2795082 (broad-exception retry loops): changed `except Exception` in `fetch_json` and `fetch_text` to `except _TRANSIENT` (`ConnectionError`, `Timeout`, `ChunkedEncodingError`) so deterministic 4xx errors fail fast instead of burning DEFAULT_RETRIES backoff seconds. Two regression tests in `tests/test_redaction.py` lock in the behaviour.
+- No new files added or removed; new test file `02_build/validators/retail/tests/test_existence.py` is internal to the retail validator package.
+
+Signed-by: Devon-9a6b | 2026-05-03 | devin-9a6bd256bd7c4a90a083a471fa94a810
+
+### v52 — 2026-05-03
+
+- Headline rollup count for `06a-vertical-retail-validation-rollup_v1.md` updated to **9 PROVEN / 9 PLAUSIBLE / 1 DEFERRED** (was 8 / 10 / 1 in v51).
+- Reason: Devin Review found that `RETAIL_AREAS` in the Police.uk fetcher silently included Glasgow + Edinburgh, but Police.uk only covers England + Wales (Police Scotland is separate). Two structural zeros were corrupting the INS-067 distribution test. Split into canonical `RETAIL_AREAS` (master list) + `RETAIL_AREAS_POLICE_UK` (E+W subset for Police.uk-specific tests). INS-067 upgrades to PROVEN (z=1.13 ≥ 1.0).
+- Also addressed earlier Devin Review findings on the same PR (cumulative): truncated string-body samples in `Fetched.evidence()` so verdict JSONs no longer carry full HTML pages (668 KB → 192 KB across 19 verdicts); added `DEFERRED` to the shared `02_build/validators/core.VerdictBand` enum and `__init__.py` docstring (was schema-only); added `BLOCKED` to retail `VERDICT_BANDS` and routed runtime exceptions to BLOCKED instead of DEFERRED so the policy-refusal count stays clean.
+- No new files added or removed; all changes are local to `02_build/validators/retail/` + the shared `02_build/validators/__init__.py` + this MANIFEST + the rollup + DECISION_LOG.
+
+Signed-by: Devon-9a6b | 2026-05-03 | devin-9a6bd256bd7c4a90a083a471fa94a810
+
+### v51 — 2026-05-03
+
+- Added under **Candidate authority** (AMP-66 sister of AMP-67 v45):
+  - `01_truth/schemas/research-index/06a-vertical-retail-validation-rollup_v1.md` — retail vertical validation rollup, headline 9 PROVEN / 9 PLAUSIBLE / 1 DEFERRED across 19 retail insights (INS-060..INS-078) (later corrected to 8/10/1 in v53).
+- Extended the schema doc `01_truth/schemas/2026-05_public-data-validation_v1.md` (introduced in v45 by AMP-67) with the **DEFERRED** policy band, distinct from BLOCKED: BLOCKED = "we'd run if creds existed", DEFERRED = "we refuse to run on ToS/legal grounds". First DEFERRED entry is INS-077 (retail competitor pricing scraping). Added the AMP-66 retail self-contained reference implementation at `02_build/validators/retail/` and documented the secret-redaction discipline (CodeQL `py/clear-text-storage-sensitive-data` clean) introduced by the AMP-66 cache layer. No removal of AMP-67 content.
+- Catalogue `01_truth/schemas/research-index/00-insight-catalogue_v1.md` updated additively with `**VALIDATION (AMP-66):**` lines on each retail entry.
+- Per `AGENTS.md` § "PR reviewers — what to flag" rule 7 (new file in indexed class must appear in MANIFEST).
+- Merged forward with `origin/main` after AMP-28 (#39) landed (which had taken v49+v50 for cost-tools / AGENT_ROUTING.md); slotted these AMP-66 entries at v51–v53 to preserve AMP-28's history verbatim.
+
+Signed-by: Devon-9a6b | 2026-05-03 | devin-9a6bd256bd7c4a90a083a471fa94a810
 
 ### v50 — 2026-05-03
 

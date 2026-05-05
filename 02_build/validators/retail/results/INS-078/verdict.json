@@ -1,0 +1,28 @@
+{
+  "insight_id": "INS-078",
+  "title": "Customer-Service Chat Sentiment Turn-by-Turn \u2192 Rebook/Repurchase Rate Predictor (Retail)",
+  "vertical": "Retail",
+  "verdict": "PLAUSIBLE",
+  "test_class": "manual",
+  "summary": "No public data required. Recipe is reproducible on internal chat-transcript + repurchase data. Service-recovery-paradox literature supports the claim qualitatively; verdict held at PLAUSIBLE pending client-data validation.",
+  "evidence": [
+    {
+      "test": "manual",
+      "reason": "no public-data validation possible by claim definition",
+      "research_references": [
+        "McCollough & Bharadwaj 1992 \u2014 The recovery paradox; AMA Educators' Proceedings.",
+        "Magnini et al. 2007 \u2014 The service recovery paradox; Journal of Service Research.",
+        "Liu et al. 2018 \u2014 A study of conversational sentiment dynamics in customer service; ACL Workshop."
+      ]
+    }
+  ],
+  "notes": [
+    "Published research supports the qualitative pattern but not the specific magnitude claim.",
+    "PLAUSIBLE is the highest verdict band achievable for purely-internal recipes."
+  ],
+  "confidence": 70,
+  "run_at_utc": "2026-05-03T23:45:40Z",
+  "git_sha": "b3ae4081167af430b103b8d2957dbae518fe0816",
+  "session_id": "devin-9a6bd256bd7c4a90a083a471fa94a810",
+  "signed_by": "Devon-9a6b | 2026-05-03 | devin-9a6bd256bd7c4a90a083a471fa94a810"
+}

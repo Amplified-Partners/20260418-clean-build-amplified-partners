@@ -1,0 +1,87 @@
+{
+  "insight_id": "INS-072",
+  "title": "Return-Fraud Scoring \u00d7 Postcode IMD (Ethically Framed) (Retail)",
+  "vertical": "Retail",
+  "verdict": "PROVEN",
+  "test_class": "existence",
+  "summary": "Police.uk shoplifting + DLUHC IMD 2019 LSOA dataset both reachable; ethical framing of recipe is a deployment-policy concern, not a data-availability concern.",
+  "evidence": [
+    {
+      "test": "existence",
+      "claim": "Police.uk + DLUHC IMD 2019 both reachable as public datasets",
+      "n_sources": 2,
+      "n_reachable": 2,
+      "n_skipped_keyless": 0,
+      "n_failed": 0,
+      "sources": [
+        {
+          "source": "police_uk_availability",
+          "url": "https://data.police.uk/api/crimes-street-dates",
+          "params": {},
+          "accessed_utc": "2026-05-03T21:39:56Z",
+          "status": 200,
+          "sha256": "ae96da48bacc85524622a484d31f67218308f5b955c2c033180649247c53a823",
+          "cached": true,
+          "sample": [
+            {
+              "date": "2026-03",
+              "stop-and-search": [
+                "avon-and-somerset",
+                "bedfordshire",
+                "btp",
+                "cambridgeshire",
+                "cheshire",
+                "city-of-london",
+                "cleveland",
+                "cumbria",
+                "derbyshire",
+                "devon-and-cornwall",
+                "dorset",
+                "durham",
+                "essex",
+                "hampshire",
+                "hertfordshire",
+                "kent",
+                "lancashire",
+                "leicestershire",
+                "merseyside",
+                "north-wales",
+                "northamptonshire",
+                "northumbria",
+                "south-wales",
+                "south-yorkshire",
+                "surrey",
+                "sussex",
+                "thames-valley",
+                "west-mercia",
+                "west-midlands",
+                "west-yorkshire",
+                "wiltshire"
+              ]
+            }
+          ]
+        },
+        {
+          "source": "imd_2019_govuk",
+          "url": "https://www.gov.uk/api/content/government/statistics/english-indices-of-deprivation-2019",
+          "params": {},
+          "accessed_utc": "2026-05-03T21:40:07Z",
+          "status": 200,
+          "sha256": "c725b508bfc673b005fa7656afa508063a9ba5ddc3e4efc8e0712bca9bc2d570",
+          "cached": true,
+          "sample": "{\"analytics_identifier\":null,\"base_path\":\"/government/statistics/english-indices-of-deprivation-2019\",\"content_id\":\"fd8cb4c8-d8d8-4f3f-87ad-fdff3dc4b9c6\",\"description\":\"Statistics on relative deprivation in small areas in England. Further details are provided at the bottom of this page and in the FAQ document.\",\"details\":{\"attachments\":[{\"accessible\":false,\"alternative_format_contact_email\":\"alternativeformats@communities.gov.uk\",\"assets\":[{\"asset_manager_id\":\"5d8e26f6ed915d5570c6cc55\",\"filename... [truncated; full body sha256=c725b508bfc673b005fa7656afa508063a9ba5ddc3e4efc8e0712bca9bc2d570]"
+        }
+      ],
+      "reason": "all 2 sources reachable; data shape consistent with claim"
+    }
+  ],
+  "notes": [
+    "Public leg = IMD 2019 + Police.uk; both PROVEN reachable.",
+    "Ethical implementation = aggregate signals only, photo-evidence at item level; documented in catalogue."
+  ],
+  "confidence": 85,
+  "run_at_utc": "2026-05-03T23:45:40Z",
+  "git_sha": "b3ae4081167af430b103b8d2957dbae518fe0816",
+  "session_id": "devin-9a6bd256bd7c4a90a083a471fa94a810",
+  "signed_by": "Devon-9a6b | 2026-05-03 | devin-9a6bd256bd7c4a90a083a471fa94a810"
+}

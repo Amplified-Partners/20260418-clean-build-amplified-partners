@@ -1,0 +1,50 @@
+{
+  "insight_id": "INS-061",
+  "title": "Stock-Out Risk \u00d7 Shipping Port Dwell \u00d7 HMRC Trade Data \u00d7 FX (Retail)",
+  "vertical": "Retail",
+  "verdict": "PROVEN",
+  "test_class": "existence",
+  "summary": "DfT maritime/port statistics + BoE statistical database both reachable. HMRC UK Trade Info needs lightweight registration for bulk; not blocking.",
+  "evidence": [
+    {
+      "test": "existence",
+      "claim": "DfT port statistics + BoE statistical database both reachable",
+      "n_sources": 2,
+      "n_reachable": 2,
+      "n_skipped_keyless": 0,
+      "n_failed": 0,
+      "sources": [
+        {
+          "source": "dft_port_stats",
+          "url": "https://www.gov.uk/api/content/government/collections/maritime-and-shipping-statistics",
+          "params": {},
+          "accessed_utc": "2026-05-03T21:39:49Z",
+          "status": 200,
+          "sha256": "b7779fb257ddb408958a18e918dddfaeb1b3e8c56493d235f99dab3dfc765ca6",
+          "cached": true,
+          "sample": "{\"analytics_identifier\":null,\"base_path\":\"/government/collections/maritime-and-shipping-statistics\",\"content_id\":\"5eba84a2-7631-11e4-a3cb-005056011aef\",\"description\":\"Data and statistics about ports, shipping, sea passengers, waterborne freight and seafarers.\",\"details\":{\"body\":\"<div class=\\\"govspeak\\\"><h2 id=\\\"maritime-statistics-interactive-dashboard\\\">Maritime statistics interactive dashboard</h2>\\n\\n<p><a rel=\\\"external\\\" href=\\\"https://maps.dft.gov.uk/maritime-statistics/index.html\\\">Intera... [truncated; full body sha256=b7779fb257ddb408958a18e918dddfaeb1b3e8c56493d235f99dab3dfc765ca6]"
+        },
+        {
+          "source": "boe_database_root",
+          "url": "https://www.bankofengland.co.uk/boeapps/database",
+          "params": {},
+          "accessed_utc": "2026-05-03T21:39:49Z",
+          "status": 200,
+          "sha256": "afbaefb1f22d1504f677364b454f4189747cecfa8e1b7ef2e9f37e8bfdd758a9",
+          "cached": true,
+          "sample": "\n<!DOCTYPE html>\n<html lang=\"en\" class=\"no-js\">\n    <head>\n    <meta charset=\"utf-8\">\n    <meta http-equiv=\"Content-type\" content=\"text/html; charset=utf-8\">\n    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <meta name=\"format-detection\" content=\"telephone=no\">\n    <title>Bank of England Database</title>\n    <link rel=\"shortcut icon\" href=\"favicon.ico\" type=\"image/x-icon\">\n<link rel=\"stylesheet\" href=\"assets/c... [truncated; full body sha256=afbaefb1f22d1504f677364b454f4189747cecfa8e1b7ef2e9f37e8bfdd758a9]"
+        }
+      ],
+      "reason": "all 2 sources reachable; data shape consistent with claim"
+    }
+  ],
+  "notes": [
+    "Public legs: DfT port stats, BoE FX, HMRC trade info \u2014 all PROVEN reachable.",
+    "Per-supplier transit predictions need client SKU + supplier metadata; recipe is PLAUSIBLE end-to-end."
+  ],
+  "confidence": 80,
+  "run_at_utc": "2026-05-03T23:45:39Z",
+  "git_sha": "b3ae4081167af430b103b8d2957dbae518fe0816",
+  "session_id": "devin-9a6bd256bd7c4a90a083a471fa94a810",
+  "signed_by": "Devon-9a6b | 2026-05-03 | devin-9a6bd256bd7c4a90a083a471fa94a810"
+}

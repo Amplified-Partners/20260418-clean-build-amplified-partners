@@ -1,0 +1,28 @@
+{
+  "insight_id": "INS-075",
+  "title": "Review Text Topic Drift \u00d7 SKU Returns Clustering \u2192 Product-Quality Early Warning (Retail)",
+  "vertical": "Retail",
+  "verdict": "PLAUSIBLE",
+  "test_class": "manual",
+  "summary": "No public data required (catalogue: PUBLIC DATA = None). Recipe is internal-only. Published academic research consistently supports review-text as a leading indicator of product-quality issues \u2014 verdict held at PLAUSIBLE pending client-data validation.",
+  "evidence": [
+    {
+      "test": "manual",
+      "reason": "no public-data validation possible by claim definition",
+      "research_references": [
+        "Hu & Liu 2004 \u2014 Mining and summarising customer reviews; KDD-04.",
+        "Archak et al. 2011 \u2014 Deriving the pricing power of product features by mining consumer reviews; Management Science.",
+        "Tirunillai & Tellis 2014 \u2014 Mining marketing meaning from online chatter; Journal of Marketing Research."
+      ]
+    }
+  ],
+  "notes": [
+    "Catalogue marks PUBLIC DATA = None. Recipe is reproducible on internal review + returns data.",
+    "PLAUSIBLE is the highest verdict band achievable for purely-internal recipes within this scheme."
+  ],
+  "confidence": 70,
+  "run_at_utc": "2026-05-03T23:45:40Z",
+  "git_sha": "b3ae4081167af430b103b8d2957dbae518fe0816",
+  "session_id": "devin-9a6bd256bd7c4a90a083a471fa94a810",
+  "signed_by": "Devon-9a6b | 2026-05-03 | devin-9a6bd256bd7c4a90a083a471fa94a810"
+}

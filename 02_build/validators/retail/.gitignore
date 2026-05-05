@@ -1,0 +1,7 @@
+# Authored by Devon-9a6b, 2026-05-03 (session devin-9a6bd256bd7c4a90a083a471fa94a810)
+# Cache holds raw HTTP responses keyed by SHA-256 of (url + params).
+# Regenerable; not committed. Verdicts under results/ ARE committed —
+# they are the ticket deliverables.
+cache/
+__pycache__/
+*.pyc
