@@ -3,6 +3,8 @@
 **Status**: Production Ready  
 **Deployment Target**: Hetzner "The Beast" (135.181.161.131)
 
+> **Note (Devon-1bda, AMP-77 merge, 2026-05-05):** the file inventory and line counts below describe the **original source-repo state at 2026-03-11**, not the merged tree under `02_build/enforcer/`. Files have been edited (notably `README.md` is now ~80 lines, expanded with merge-time Known Issues; check modules and the `docker-compose-entry.yml` differ slightly). Treat this section as historical provenance, not an authoritative count of the current tree. For current truth, run `wc -l 02_build/enforcer/**/*.{py,md,yml,yaml}` against the merged repo.
+
 ---
 
 ## What Was Built

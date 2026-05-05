@@ -262,6 +262,19 @@ def create_app(config: EnforcerConfig, enforcer: EnforcerEngine) -> FastAPI:
         version='1.0.0'
     )
     
+    @app.get('/livez')
+    async def livez() -> JSONResponse:
+        """
+        Liveness probe. Always returns 200 as long as the FastAPI server is up.
+        Use this for Docker HEALTHCHECK so a single unhealthy *monitored*
+        service does not mark the enforcer container itself unhealthy.
+        Use /health for application-level health (returns 503 on critical).
+        """
+        return JSONResponse(
+            status_code=200,
+            content={'status': 'alive', 'timestamp': datetime.utcnow().isoformat() + 'Z'}
+        )
+
     @app.get('/health')
     async def health() -> JSONResponse:
         """

@@ -77,7 +77,7 @@ enforcer:
   
   # Health check (checked by Docker every 30 seconds)
   healthcheck:
-    test: ["CMD", "python", "-c", "import httpx; httpx.get('http://localhost:8000/health').raise_for_status()"]
+    test: ["CMD", "python", "-c", "import httpx; httpx.get('http://localhost:8000/livez').raise_for_status()"]
     interval: 30s
     timeout: 5s
     retries: 3

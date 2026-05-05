@@ -58,9 +58,11 @@ This contradicts the documented behaviour in `ENFORCER-SPEC.md` ("All checks run
 
 `ENFORCER-SPEC.md:151-153` defines three severity tiers for the Docker check (PASS, WARN, FAIL), but `checks/docker_health.py:75-96` collapses WARN and FAIL: any non-empty `missing or unhealthy` list returns `status='fail', severity='critical'`. There is no code path that returns `status='warn'`. Note that `checks/database_health.py:128` *does* implement the two-tier split (`severity='critical' if len(failed) >= 2 else 'warning'`), so the Docker check is inconsistent with its sibling and with the spec.
 
-**Production impact:** a single non-critical container going down (e.g. `portainer`, `langfuse`) immediately sets `severity='critical'`; `enforcer.py:190-191` flips `is_healthy=False`; `/health` returns HTTP 503 instead of the spec's intended warning-only behaviour. This makes the enforcer noisier than designed and can flap Docker's own healthcheck on the enforcer container.
+**Production impact:** a single non-critical container going down (e.g. `portainer`, `langfuse`) immediately sets `severity='critical'`; `enforcer.py:190-191` flips `is_healthy=False`; `/health` returns HTTP 503 instead of the spec's intended warning-only behaviour. This makes the enforcer noisier than designed.
 
-**Fix path:** mirror `database_health.py:128` — `severity='critical' if (len(missing) + len(unhealthy)) >= 2 else 'warning'`, and `status='fail' if (...) >= 2 else 'warn'`. Tracked separately from this merge.
+**Partial mitigation in this PR:** Docker's own `HEALTHCHECK` now probes `/livez` (a new always-200 liveness endpoint) instead of `/health`, so the enforcer container is no longer marked unhealthy when monitored services degrade — that decoupling is fixed. The underlying Docker WARN-tier collapse remains (so `/health` still returns 503 on a single missing container), tracked separately.
+
+**Fix path (still open):** mirror `database_health.py:128` — `severity='critical' if (len(missing) + len(unhealthy)) >= 2 else 'warning'`, and `status='fail' if (...) >= 2 else 'warn'`. Tracked separately from this merge.
 
 ---
 
