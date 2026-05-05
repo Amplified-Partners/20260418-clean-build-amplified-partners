@@ -171,7 +171,7 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
 
 ## Changelog
 
-### v52 — 2026-05-04
+### v52 — 2026-05-05
 
 - Added `02_build/enforcer/README.md` to **Candidate authority** as `[LOGIC TO BE CONFIRMED]`. The enforcer is a Beast health-monitoring service merged into `clean-build/02_build/enforcer/` from the now-to-be-archived `Amplified-Partners/enforcer` repo per **AMP-77** ("GitHub Repo Spine Cleanup"). Five deterministic checks (Docker, databases, Traefik, session hygiene, security) on a 10-minute cycle; FastAPI HTTP endpoints. Filed under Candidate authority because the source code's behaviour does not match its own spec — see the "Known Issue" section in `02_build/enforcer/README.md` (async check functions use blocking I/O, so concurrency claim in `ENFORCER-SPEC.md` is incorrect under load). Pre-existing source-repo defect, preserved verbatim by the merge; tracked separately for fix.
 
