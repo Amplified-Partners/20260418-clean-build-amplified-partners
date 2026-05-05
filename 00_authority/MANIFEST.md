@@ -1,7 +1,7 @@
 ---
 title: Governed workspace manifest (authoritative inventory)
 date: 2026-05-03
-version: 50
+version: 51
 status: draft
 ---
 
@@ -117,6 +117,7 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
 - `02_build/validators/README.md` `[LOGIC TO BE CONFIRMED]` (public-data validation framework; reference impl of `01_truth/schemas/2026-05_public-data-validation_v1.md`; ProfServices pilot at AMP-67)
 - `03_shadow/README.md` `[LOGIC TO BE CONFIRMED]` (experiment routing stub)
 - `03_shadow/job-wrapups/README.md` `[NON-AUTHORITATIVE]` (wrap-ups/escalation notes location; learning only)
+- `03_shadow/strategies/README.md` `[NON-AUTHORITATIVE]` (working-draft strategy documents location; e.g., Ken-Huang-derived architecture chapters with Antigravity adaptations awaiting promotion path)
 - `03_shadow/validators/README.md` `[NON-AUTHORITATIVE]` (shadow tier for public-data verdicts produced by `02_build/validators/`; non-authoritative pending review-promote)
 
 ## Reference only (sanitised; never authoritative by default)
@@ -168,6 +169,12 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
     - `P10-kill-switch-master-reference.md` `[NON-AUTHORITATIVE]` (510 lines — binary shutdown architecture)
 
 ## Changelog
+
+### v51 — 2026-05-03
+
+- Added `03_shadow/strategies/README.md` to **Candidate authority** as `[NON-AUTHORITATIVE]`. Indexes the new `03_shadow/strategies/` subfolder, which holds working-draft strategy documents (synthesis of Ken Huang Medium chapters with first-pass Antigravity adaptations) brought into version control via PR #29. Pattern parallel to `03_shadow/job-wrapups/README.md` and `03_shadow/validators/README.md`. Closes a gap surfaced by Devin Review on PR #29 per `AGENTS.md` § "PR reviewers — what to flag" rule 7 (new file in indexed class not appearing in `MANIFEST.md`). The seven strategy files themselves remain inside `03_shadow/` and are not individually indexed; the folder README is the routing stub. Original commit was authored 2026-05-02 and numbered v45; rebased onto v50 on 2026-05-03 after AMP-67 (validators framework) and AMP-28 (cost-tools indexing + AGENT_ROUTING.md) merged to `main`. Date here reflects the rebase to keep changelog ordering monotonic.
+
+Signed-by: Devon-5da3 | 2026-05-03 | devin-5da3bd275191469c8400142fd0ae1d69
 
 ### v50 — 2026-05-03
 
