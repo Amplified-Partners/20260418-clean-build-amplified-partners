@@ -1,7 +1,7 @@
 ---
 title: Decision log
 date: 2026-05-05
-version: 19
+version: 20
 status: draft
 ---
 
@@ -413,6 +413,12 @@ One entry per decision. Keep it short. Link out to supporting docs.
 
 This section was added in v17 (the AMP-46 rebase commit, originally drafted as v16 — renumbered during merge with main when CODEOWNERS PR #49 took v16) to satisfy `AGENTS.md` rule #3 (authority files must record version bumps in a changelog). Earlier `version` bumps (v1 — v13) were made without a corresponding changelog entry; that history is preserved in git but not enumerated here. From v14 onward, every bump appends an entry below.
 
+### v20 — 2026-05-05
+
+Fixed signature-date contradiction in the v16 retroactive entry (Devin Review BUG-0001 on PR #46): the entry heads `v16 — 2026-05-05` and records the CODEOWNERS event from 2026-05-05, but the `Signed-by` line previously read `2026-05-04`. Per `00_authority/SIGNATURES.md`, signatures must use the correct ISO date; per `AGENTS.md` rule #6, the heading and signature must agree. Updated to `2026-05-05` (which also matches the merge commit `9087b55` on origin/main). No other entries touched.
+
+Signed-by: Devon-a9a7 | 2026-05-05 | devin-a9a78d0c72d9491aa3a70b18cb741936
+
 ### v19 — 2026-05-04
 
 Added the `2026-05-04 — LiteLLM secrets moved to \`.env\` + compose mirrored (AMP-72)` entry to `## Entries` (renumbered from a prior draft v18 during merge with main — main had advanced to v16 with the CODEOWNERS PR #49 between branch creation and merge). Decision is reversible (backups at `/opt/amplified/apps/litellm/docker-compose.yml.bak.20260504-amp72` + `.env.bak.20260504-amp72`). Linked to [AMP-72](https://linear.app/amplifiedpartners/issue/AMP-72/). Manifest pointer references `02_build/INFRASTRUCTURE.md` v5.
@@ -435,7 +441,7 @@ Signed-by: Devon-a9a7 | 2026-05-03 | devin-a9a78d0c72d9491aa3a70b18cb741936
 
 Recorded retroactively. The `2026-05-05 — CODEOWNERS added to clean-build (governance enforcement via GitHub)` entry shipped on `main` via PR #49 with a frontmatter version bump to v16 but no changelog entry; preserved here so the audit trail stays complete. Linked to PR #49. Manifest pointer references `00_authority/MANIFEST.md` v51.
 
-Signed-by: Devon-a9a7 | 2026-05-04 | devin-a9a78d0c72d9491aa3a70b18cb741936
+Signed-by: Devon-a9a7 | 2026-05-05 | devin-a9a78d0c72d9491aa3a70b18cb741936
 
 ### v15 — 2026-05-03
 
