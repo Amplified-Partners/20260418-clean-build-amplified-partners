@@ -386,3 +386,12 @@ One entry per decision. Keep it short. Link out to supporting docs.
   `01_truth/processes/2026-04_job-wrapup_and_escalation-note_sop_v1.md` (v14),
   `AGENTS.md`, `03_shadow/job-wrapups/README.md`.
 - **Status**: active
+
+---
+
+## Changelog
+
+| Version | Date | What changed | Signed-by |
+|---------|------|-------------|-----------|
+| v17 | 2026-05-05 | Added 5 architectural decisions (two-engine model, Perplexity research engine, data lake, change control, build everything). Fixed date frontmatter. Added `[SOURCE REQUIRED]` tag per AGENTS.md rule #1. | Devon-77fb |
+| v16 | 2026-05-04 | Added governance principles entry (Plan-Execution Mirror, Collaborative Discovery, Spine Refinement). | Devon-77fb |
