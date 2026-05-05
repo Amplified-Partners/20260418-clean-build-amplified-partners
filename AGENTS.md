@@ -20,13 +20,13 @@ We are building **Amplified Partners**: an AI system that gives small business o
 
 **Every single thing is Ewan's responsibility.**
 
-This is the accountability boundary for irreversible truth/world commitments. Canonical expansion: `00_authority/PRINCIPLES.md`.
+This is the accountability boundary for irreversible truth/world commitments. Canonical expansion: `00_authority/PORTABLE-SPINE.md`.
 
 ## Agent session — first 60 seconds
 
 This section is the **single source of truth** for "where do I start?" Other files point here; they do not replace this order.
 
-1. Read in order: `00_authority/NORTH_STAR.md` → `00_authority/MANIFEST.md` → `00_authority/PROJECT_INTENT.md` + `00_authority/PRINCIPLES.md` → `00_authority/SIGNATURES.md` (every AI signs committed work) → `01_truth/README.md` (routing).
+1. Read in order: `00_authority/NORTH_STAR.md` → `00_authority/MANIFEST.md` → `00_authority/PROJECT_INTENT.md` + `00_authority/PORTABLE-SPINE.md` → `00_authority/SIGNATURES.md` (every AI signs committed work) → `01_truth/README.md` (routing).
 2. **Bounded autonomy.** Default **Act** inside the frame when impact is reversible or confidence is high and contained — ingenuity belongs there. **Surface** when significant or irreversible but you can own it. **Park** only after the full problem-solving ladder when you cannot own the decision.
 3. **Mistakes are signal, not shame.** Capture honest errors in the wrap-up / escalation path per `01_truth/processes/2026-04_job-wrapup_and_escalation-note_sop_v1.md`.
 
@@ -97,4 +97,4 @@ Do not dump raw research into this workspace. Raw research lands in `Amplified-P
 - Plan before you act; keep plans small and executable.
 - Leave slack for wrap-ups and small process improvements. Compounding quality beats running hot with errors.
 
-Full principles: `00_authority/PRINCIPLES.md`.
+Full principles: `00_authority/PORTABLE-SPINE.md`.

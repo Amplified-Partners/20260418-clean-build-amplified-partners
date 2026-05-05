@@ -11,7 +11,7 @@ status: shadow-of-prod (mirror of /opt/amplified/apds on Beast)
 
 # APDS Stage-1 — version-controlled mirror
 
-This directory is the **version-controlled mirror** of the APDS Stage-1 scripts that ran on Beast (`/opt/amplified/apds/{harvest,label}/`) on 2026-05-05 to satisfy Hazel Gate 3 (Pudding ingestion pipe flowing). The scripts here are byte-identical to what ran in production except for an added attribution header per `00_authority/SIGNATURES.md`.
+This directory is the **version-controlled mirror** of the APDS Stage-1 scripts that ran on Beast (`/opt/amplified/apds/{harvest,label}/`) on 2026-05-05 to satisfy Hazel Gate 3 (Pudding ingestion pipe flowing). The **harvester** is byte-identical to what ran in production except for an added attribution header per `00_authority/SIGNATURES.md`. The **labeller** adds three minimal hardening edits over the Beast copy (Cypher escaping of label values, `float()` cast on confidence, idempotency-check fix) flagged by Devin Review on PR #52 — see `apds_labeller.py` docstring and § Files below for details. The Beast copy is therefore one revision behind this file.
 
 This is **not** the canonical clean-build labeller. See § Schema divergence below.
 

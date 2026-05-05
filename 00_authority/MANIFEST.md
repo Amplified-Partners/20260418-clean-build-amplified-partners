@@ -70,7 +70,7 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
 - `00_authority/PROJECT_INTENT.md`
 - `00_authority/REMIT_PARTNER_CURSOR.md`
 - `00_authority/PARTNER_TRANSFER_INSTRUCTIONS.md`
-- `00_authority/PRINCIPLES.md` `[LOGIC TO BE CONFIRMED]` (norms downstream of **Absolute** in root `AGENTS.md`; `anchor_lineage: 35` in file frontmatter — see § Provenance and versioning there)
+- `00_authority/PORTABLE-SPINE.md` (Bootloader / Nine Principles + Operating Rules; replaces the deleted `PRINCIPLES.md` per commit `e4b6e38` "promoted to Canonical PORTABLE-SPINE")
 - `00_authority/SIGNATURES.md` (every AI signs committed work; Radical Attribution applied mechanically; agent chooses format)
 - `00_authority/USE_IT_OR_CUT_IT.md` (sounds good + built + unused = cut; remediation rule for bloat; archive exempt)
 - `00_authority/OPINION_CONFIDENCE.md` (opinions labelled + confidence numbered; tiered thresholds 50% / 85% / 95% by reversibility)
@@ -178,6 +178,7 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
 - Indexed `02_build/apds/README.md` under **Candidate authority** (APDS Stage-1 mirror of what ran on Beast 2026-05-05; flags 3-way PUDDING schema divergence between `01_truth/schemas/2026-03_pudding-discovery-system_v1.md` (4-dim spec), `02_build/scripts/pudding_labeler.py` (5-dim symbolic), and `02_build/apds/apds_labeller.py` (5-dim functional, currently in production with 250 docs in FalkorDB)).
 - See `00_authority/DECISION_LOG.md` v17 for Hazel-gate status + parked PUDDING vocabulary decision.
 - See `02_build/INFRASTRUCTURE.md` v3 for Graphiti container state change (`vault-graphiti:latest` → `vault-graphiti:secure`, now running) and the APDS Stage-1 row.
+- **Dead-reference fix (Devin Review on PR #52):** updated the authoritative-now index entry above (line 73) from the deleted `00_authority/PRINCIPLES.md` to its replacement `00_authority/PORTABLE-SPINE.md` per commit `e4b6e38` "promoted to Canonical PORTABLE-SPINE". Same fix applied in this PR to root `AGENTS.md` (3 references) and to the new `00_authority/DECISION_LOG.md` v17 entry (2 references). Pre-existing references to `PRINCIPLES.md` in historical changelog entries (`MANIFEST.md` lines 342–443, `DECISION_LOG.md` lines 145, 214, 348) are left untouched per `00_authority/AGENTS.md` "Use additive edits and changelogs; do not silently rewrite history" — they are accurate records of past edits, not current claims.
 
 Signed-by: Devon-9f21 | Devin (Cognition AI) | 2026-05-05 | session `devin-9f2104fb06624b009f2879c50957c647`
 
