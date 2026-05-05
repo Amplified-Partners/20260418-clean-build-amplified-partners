@@ -1,7 +1,7 @@
 ---
 title: Decision log
 date: 2026-05-05
-version: 16
+version: 20
 status: draft
 ---
 
@@ -20,6 +20,36 @@ One entry per decision. Keep it short. Link out to supporting docs.
 - **Where encoded**: `.github/CODEOWNERS`; `00_authority/MANIFEST.md` v51; this entry.
 - **Status**: active (pending PR merge).
 - **Signed-by**: Devon-codeowners-daughter | 2026-05-05 | devin-487f10ace93b4cdfbcc49f9bb5c300b0
+
+### 2026-05-04 — LiteLLM secrets moved to `.env` + compose mirrored (AMP-72)
+
+- **Decision**: Move all seven secret values out of `/opt/amplified/apps/litellm/docker-compose.yml` (`LITELLM_MASTER_KEY`, `DATABASE_URL` with embedded Postgres password, `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, `MOONSHOT_API_KEY`, `DEEPSEEK_API_KEY`, `XAI_API_KEY_BEAST`) into a sibling `.env` file at `/opt/amplified/apps/litellm/.env` (mode 600, owner root, gitignored, never mirrored anywhere). Compose now references via `env_file: - .env`; non-secret connection metadata (`REDIS_HOST`, `REDIS_PORT`) stays inline. Mirror the cleaned compose into `02_build/compose/litellm/docker-compose.yml` with a README following the AMP-46 Ollama precedent. Update the existing rotation script at `/opt/amplified/secrets/rotation/rotate-keys.sh` to also write the new `.env` (it already updates `.env` files for the cove-orchestrator stack).
+- **Why**: Linear ticket [AMP-72](https://linear.app/amplifiedpartners/issue/AMP-72/) — surfaced during AMP-71 implementation. Plaintext secrets in source-of-truth files are a one-way ratchet: every backup, snapshot, accidental scp, or cross-agent fix attempt copies them. The compose was readable by anything with root on Beast and could not be mirrored into version control without committing secrets. Moving to an `env_file` reference is the standard 12-factor pattern, fully reversible until any subsequent rotation, and unblocks version-control mirroring of the compose itself.
+- **Where encoded**:
+  - Live config: `/opt/amplified/apps/litellm/docker-compose.yml` on Beast (no inline secrets remaining; signed leading comment).
+  - Live secrets: `/opt/amplified/apps/litellm/.env` on Beast (mode 600, root-owned, gitignored).
+  - Rotation: `/opt/amplified/secrets/rotation/rotate-keys.sh` updated with `LITELLM_ENV_FILE` variable + `update_litellm_env` function + backup hook (signed comments mark the AMP-72 additions).
+  - Repo mirror: `02_build/compose/litellm/docker-compose.yml` + `02_build/compose/litellm/README.md` (this PR).
+  - Manifest: `02_build/INFRASTRUCTURE.md` v5 — LiteLLM row updated, compose-file-locations table updated, changelog entry signed.
+- **Verification**: After `docker compose up -d --force-recreate litellm`, all 9 expected env vars (7 secrets + `REDIS_HOST` + `REDIS_PORT`) resolve inside the container. `curl http://127.0.0.1:4000/health/liveliness` (host loopback), in-net DNS via `http://litellm:4000/health/liveliness`, and `https://litellm.beast.amplifiedpartners.ai/health/liveliness` (Traefik public) all return 200. End-to-end provider smoke test against `/chat/completions`: 5 of 6 providers return PONG (Anthropic via `claude-haiku`, Moonshot via `kimi-k2.6`, DeepSeek via `deepseek-v4-flash`, xAI via `grok-fast`, local/Ollama via `local/llama3.1-8b`). OpenAI returns `AuthenticationError: Incorrect API key` — verified pre-existing (the same key value in `docker-compose.yml.bak.20260503-amp71` is byte-identical to the one now in `.env`, and the same key fails when called directly against `https://api.openai.com/v1/models`); AMP-72 migration did not change a byte. Tracked separately for Ewan; not blocking.
+- **Status**: active
+- **Reversible**: yes — backups at `/opt/amplified/apps/litellm/docker-compose.yml.bak.20260504-amp72` + `.env.bak.20260504-amp72`; restore is a `cp` of either backup over the live file followed by `docker compose up -d --force-recreate litellm`.
+- **Out of scope (deliberate)**: Key rotation. The original AMP-72 description called for rotating every key after the move. Rotation has non-trivial blast radius — the LiteLLM master key gates 3 virtual keys in the LiteLLM Postgres DB plus consumers across `agent-stack/cove-orchestrator/` and `agent-stack/vault-ingestion/` — and the existing monthly rotation script (`rotate-keys.sh`, last ran 2026-05-01) is the right channel for it. The `.env` migration alone delivers the structural fix (compose mirror unblocked, root-only file mode, gitignored). Rotation will follow on the next monthly cron or under a dedicated ticket once consumers are inventoried.
+- **Signed-by**: Devon-a9a7 | 2026-05-04 | devin-a9a78d0c72d9491aa3a70b18cb741936
+
+### 2026-05-03 — LiteLLM host-loopback port mapping + pudding-testing env-driven base URLs (AMP-71)
+
+- **Decision**: Add a host-loopback port mapping (`127.0.0.1:4000:4000`) to the LiteLLM container's `docker-compose.yml` on Beast (`/opt/amplified/apps/litellm/docker-compose.yml`). Loopback only — not bound to `0.0.0.0`. Refactor `/opt/amplified/pudding-testing/src/llm.py` (Beast-side test harness, not in any repo) to read base URLs from environment variables (`LITELLM_BASE_URL`, `OLLAMA_BASE_URL`) with host-loopback defaults. **Do not** mirror the LiteLLM compose into version control: the live file embeds plaintext API keys for five providers plus the LiteLLM master key and a Postgres URL with embedded password (see related ticket [AMP-72](https://linear.app/amplifiedpartners/issue/AMP-72/)).
+- **Why**: Linear ticket [AMP-71](https://linear.app/amplifiedpartners/issue/AMP-71/) — surfaced during AMP-46 review. The same brittleness pattern AMP-46 fixed for Ollama also affected LiteLLM and the pudding-testing harness: hardcoded Docker bridge IPs (`172.18.0.9` for LiteLLM, `172.18.0.14` for Ollama) that change on container recreation. Closing the loop on the bridge-IP class of bug across all in-repo and Beast-side touchpoints. Env-driven defaults are deliberate so the same script works whether run on the host (loopback) or inside a container on `amplified-net` (override to `litellm:4000` / `ollama:11434`).
+- **Where encoded**:
+  - Live config: `/opt/amplified/apps/litellm/docker-compose.yml` on Beast (signed leading comment).
+  - Beast-side script: `/opt/amplified/pudding-testing/src/llm.py` — `LLMConfig.base_url` and `EmbeddingClient.__init__` are now env-driven.
+  - Manifest: `02_build/INFRASTRUCTURE.md` v4 — LiteLLM row updated, changelog entry signed.
+  - Repo mirror of compose: **not done deliberately** — gated on AMP-72.
+- **Verification**: `ss -tlnp | grep ':4000 '` shows `LISTEN 127.0.0.1:4000` (loopback only). `curl http://127.0.0.1:4000/health/liveliness` (host) → 200. `curl http://litellm:4000/health/liveliness` from a container on `amplified-net` → 200 (no DNS regression). `curl https://litellm.beast.amplifiedpartners.ai/health/liveliness` → 200 (Traefik route still works). Smoke test on the refactored `llm.py` confirms defaults resolve to `127.0.0.1:4000` and `127.0.0.1:11434`, env overrides work, and explicit positional override on `EmbeddingClient` still works (back-compat).
+- **Status**: active
+- **Reversible**: yes — remove the `ports:` block on Beast and `docker compose up -d litellm` returns to in-network-only.
+- **Signed-by**: Devon-a9a7 | 2026-05-03 | devin-a9a78d0c72d9491aa3a70b18cb741936
 
 ### 2026-05-03 — cost-tools (token_proxy.py) deployed on Beast and indexed in spine
 
@@ -44,6 +74,20 @@ One entry per decision. Keep it short. Link out to supporting docs.
 - **Where encoded**: `01_truth/schemas/2026-05_public-data-validation_v1.md` v1, `02_build/validators/` (framework + ProfServices runners), `03_shadow/validators/profservices/` (16 verdict JSONs + `rollup.json`), `01_truth/schemas/research-index/00-insight-catalogue_v1.md` (16 `VALIDATION:` lines added), `01_truth/research/validations/README.md` (truth-tier promotion stub), `00_authority/MANIFEST.md` v45–v48 changelog entries.
 - **Status**: candidate (pending Ewan review of the PR + verdicts)
 - **Signed-by**: Devon-ab74 | 2026-05-03 | devin-ab740f2c78ee477a9c16ea3b6ed15293
+
+### 2026-05-03 — Ollama port-mapping fix on Beast (AMP-46)
+
+- **Decision**: Add a host-loopback port mapping (`127.0.0.1:11434:11434`) to the Ollama container's `docker-compose.yml` on Beast (`/opt/amplified/apps/ollama/docker-compose.yml`). Mirror the compose file into version control at `02_build/compose/ollama/docker-compose.yml`. Loopback only — not bound to `0.0.0.0`. Public access remains only via the existing Traefik HTTPS route at `ollama.beast.amplifiedpartners.ai`.
+- **Why**: Linear ticket [AMP-46](https://linear.app/amplifiedpartners/issue/AMP-46/beast-ops-fix-ollama-container-port-mapping). Ollama was reachable inside `amplified-net` (via Docker DNS `ollama:11434`) but not from the Beast host itself, which broke Beast-side scripts. The Arbiter shipped a workaround that pointed `pudding_extractor.py` at the bridge IP `172.18.0.3:11434` — brittle, because Docker bridge IPs churn on container restart. Loopback is the canonical, stable host-side address.
+- **Where encoded**:
+  - Live config: `/opt/amplified/apps/ollama/docker-compose.yml` on Beast (signed leading comment).
+  - Repo mirror: `02_build/compose/ollama/docker-compose.yml` + `02_build/compose/ollama/README.md`.
+  - Manifest: `02_build/INFRASTRUCTURE.md` v3 — Ollama row updated, changelog entry signed.
+  - Workaround revert: `/opt/amplified/pudding_extractor.py` on Beast — bridge IP `172.18.0.3` swapped back to canonical `127.0.0.1`. Beast-side only, not in any repo.
+- **Verification**: `curl http://127.0.0.1:11434/api/tags` (host) → 200, 4 models. `curl http://ollama:11434/api/tags` from a container on `amplified-net` → 200 (no DNS regression). `curl https://ollama.beast.amplifiedpartners.ai/api/tags` → 200 (Traefik route still works).
+- **Status**: active
+- **Reversible**: yes — remove the `ports:` block and `docker compose up -d ollama` returns to in-network-only.
+- **Signed-by**: Devon-a9a7 | 2026-05-03 | devin-a9a78d0c72d9491aa3a70b18cb741936
 
 ### 2026-05-01 — Systems and API Register created as candidate authority
 
@@ -362,3 +406,51 @@ One entry per decision. Keep it short. Link out to supporting docs.
   `01_truth/processes/2026-04_job-wrapup_and_escalation-note_sop_v1.md` (v14),
   `AGENTS.md`, `03_shadow/job-wrapups/README.md`.
 - **Status**: active
+
+---
+
+## Changelog
+
+This section was added in v17 (the AMP-46 rebase commit, originally drafted as v16 — renumbered during merge with main when CODEOWNERS PR #49 took v16) to satisfy `AGENTS.md` rule #3 (authority files must record version bumps in a changelog). Earlier `version` bumps (v1 — v13) were made without a corresponding changelog entry; that history is preserved in git but not enumerated here. From v14 onward, every bump appends an entry below.
+
+### v20 — 2026-05-05
+
+Fixed signature-date contradiction in the v16 retroactive entry (Devin Review BUG-0001 on PR #46): the entry heads `v16 — 2026-05-05` and records the CODEOWNERS event from 2026-05-05, but the `Signed-by` line previously read `2026-05-04`. Per `00_authority/SIGNATURES.md`, signatures must use the correct ISO date; per `AGENTS.md` rule #6, the heading and signature must agree. Updated to `2026-05-05` (which also matches the merge commit `9087b55` on origin/main). No other entries touched.
+
+Signed-by: Devon-a9a7 | 2026-05-05 | devin-a9a78d0c72d9491aa3a70b18cb741936
+
+### v19 — 2026-05-04
+
+Added the `2026-05-04 — LiteLLM secrets moved to \`.env\` + compose mirrored (AMP-72)` entry to `## Entries` (renumbered from a prior draft v18 during merge with main — main had advanced to v16 with the CODEOWNERS PR #49 between branch creation and merge). Decision is reversible (backups at `/opt/amplified/apps/litellm/docker-compose.yml.bak.20260504-amp72` + `.env.bak.20260504-amp72`). Linked to [AMP-72](https://linear.app/amplifiedpartners/issue/AMP-72/). Manifest pointer references `02_build/INFRASTRUCTURE.md` v5.
+
+Signed-by: Devon-a9a7 | 2026-05-04 | devin-a9a78d0c72d9491aa3a70b18cb741936
+
+### v18 — 2026-05-03
+
+Added the `2026-05-03 — LiteLLM host-loopback port mapping + pudding-testing env-driven base URLs (AMP-71)` entry to `## Entries` (renumbered from v17 during merge with main). Decision is reversible. Linked to [AMP-71](https://linear.app/amplifiedpartners/issue/AMP-71/) and PR #38. Manifest pointer references `02_build/INFRASTRUCTURE.md` v4.
+
+Signed-by: Devon-a9a7 | 2026-05-03 | devin-a9a78d0c72d9491aa3a70b18cb741936
+
+### v17 — 2026-05-03
+
+Added the `2026-05-03 — Ollama port-mapping fix on Beast (AMP-46)` entry to `## Entries` (renumbered from v16 during merge with main; main now holds v16 = CODEOWNERS PR #49). Decision is reversible. Linked to [AMP-46](https://linear.app/amplifiedpartners/issue/AMP-46/beast-ops-fix-ollama-container-port-mapping) and PR #32. Manifest pointer now references `02_build/INFRASTRUCTURE.md` v3.
+
+Signed-by: Devon-a9a7 | 2026-05-03 | devin-a9a78d0c72d9491aa3a70b18cb741936
+
+### v16 — 2026-05-05
+
+Recorded retroactively. The `2026-05-05 — CODEOWNERS added to clean-build (governance enforcement via GitHub)` entry shipped on `main` via PR #49 with a frontmatter version bump to v16 but no changelog entry; preserved here so the audit trail stays complete. Linked to PR #49. Manifest pointer references `00_authority/MANIFEST.md` v51.
+
+Signed-by: Devon-a9a7 | 2026-05-05 | devin-a9a78d0c72d9491aa3a70b18cb741936
+
+### v15 — 2026-05-03
+
+Added two entries to `## Entries`: `2026-05-03 — cost-tools (token_proxy.py) deployed on Beast and indexed in spine` and `2026-05-03 — Agent routing rule established (AGENT_ROUTING.md)`. Recorded retroactively in v17 (originally drafted as v16) because the v15 bump shipped on `main` (PR #39, AMP-28) without a changelog entry — preserved here so the audit trail is complete.
+
+Signed-by: Devon-a9a7 | 2026-05-03 | devin-a9a78d0c72d9491aa3a70b18cb741936
+
+### v14 — 2026-05-03
+
+Added the `2026-05-03 — Public-data validation framework + ProfServices pilot (AMP-67)` entry to `## Entries`. Recorded retroactively in v17 (originally drafted as v16) because the v14 bump shipped on `main` (PR #35) without a changelog entry — preserved here so the audit trail starts at the first observed bump.
+
+Signed-by: Devon-a9a7 | 2026-05-03 | devin-a9a78d0c72d9491aa3a70b18cb741936

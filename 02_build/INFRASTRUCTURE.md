@@ -1,11 +1,13 @@
 ---
 title: Infrastructure manifest — Amplified Partners Core Server
-date: 2026-05-03
-version: 2
+date: 2026-05-04
+version: 5
 status: authoritative now
 signed-by:
   - Devon | 2026-04-30 | devin-66aa3ce48c7e407f8ad9bf066541b604
   - Devon-6ca5 | 2026-05-03 | devin-6ca57553eefe4806b613070325964703
+  - Devon-a9a7 | 2026-05-03 | devin-a9a78d0c72d9491aa3a70b18cb741936
+  - Devon-a9a7 | 2026-05-04 | devin-a9a78d0c72d9491aa3a70b18cb741936
 ---
 
 <!-- markdownlint-disable-file MD013 -->
@@ -61,8 +63,8 @@ These are shared infrastructure that other services depend on.
 
 | Container | Image | Status | Purpose |
 |-----------|-------|--------|---------|
-| **ollama** | `ollama/ollama:latest` | Running | Local LLM inference server. Hosts llama3.1-8b and other models. Internal port 11434. |
-| **litellm** | `ghcr.io/berriai/litellm:main-latest` | Running | LLM proxy — unified API for local (Ollama) and remote (OpenAI, Anthropic) models. Internal port 4000. Routes by `simple-shuffle` with failover chains; **does not** classify by cost. |
+| **ollama** | `ollama/ollama:latest` | Running | Local LLM inference server. Hosts llama3.1-8b/70b, qwen3-coder-30b, nomic-embed-text. Internal port 11434 on `amplified-net`. Host-loopback bind `127.0.0.1:11434` (added 2026-05-03 per AMP-46 — for Beast-side scripts). Public HTTPS via Traefik at `ollama.beast.amplifiedpartners.ai`. |
+| **litellm** | `ghcr.io/berriai/litellm:main-latest` | Running | LLM proxy — unified API for local (Ollama) and remote (Anthropic, OpenAI, Moonshot, DeepSeek, xAI) models. Internal port 4000 on `amplified-net`. Host-loopback bind `127.0.0.1:4000` (added 2026-05-03 per AMP-71). Public HTTPS via Traefik at `litellm.beast.amplifiedpartners.ai`. Routes by `simple-shuffle` with failover chains; **does not** classify by cost. Secrets (master key, Postgres URL, five provider API keys) live in `/opt/amplified/apps/litellm/.env` (mode 600, root-owned, gitignored) — referenced via `env_file:` (added 2026-05-04 per AMP-72). Compose mirrored at `02_build/compose/litellm/docker-compose.yml`. |
 | **token-proxy** | `amplified/token-proxy:latest` (built locally from `Amplified-Partners/cost-tools`) | Running (healthy) | Anthropic-only reverse proxy. Sonnet→Haiku model-layer routing on extractive/classification prompts; prompt caching; semantic similarity cache (Qdrant `llm_cache`, 0.95, 24h TTL); native context compaction; daily $100 budget circuit-breaker; per-agent cost log. Container port 8088 (host-bound to `127.0.0.1:8088` for diagnostics; agents reach it via DNS name `token-proxy:8088` on `amplified-net`). Compose file: `/opt/amplified/apps/cost-tools/docker-compose.yml`. RUNBOOK: `cost-tools/RUNBOOK.md`. Linear: AMP-28. |
 | **langfuse** | `langfuse/langfuse:latest` | Running | LLM observability — traces, costs, prompt versioning. |
 
@@ -183,9 +185,9 @@ Source: `/root/cove-repo/infrastructure/`
 | Marketing | `/opt/amplified/apps/marketing/docker-compose.marketing.yml` | amplified-marketing-engine |
 | Kaizen | `/opt/amplified/apps/kaizen/docker-compose.yml` | kaizen-optimizer |
 | Enforcer | `/opt/amplified/apps/enforcer/docker-compose.yml` | enforcer |
-| LiteLLM | `/opt/amplified/apps/litellm/docker-compose.yml` | litellm |
+| LiteLLM | `/opt/amplified/apps/litellm/docker-compose.yml` (mirror: `02_build/compose/litellm/docker-compose.yml`) | litellm |
 | Langfuse | `/opt/amplified/apps/langfuse/docker-compose.yml` | langfuse, minio-init |
-| Ollama | `/opt/amplified/apps/ollama/docker-compose.yml` | ollama |
+| Ollama | `/opt/amplified/apps/ollama/docker-compose.yml` (mirror: `02_build/compose/ollama/docker-compose.yml`) | ollama |
 | SearXNG | `/opt/amplified/apps/searxng/docker-compose.yml` | searxng |
 | OpenClaw Agents | `/opt/amplified/apps/openclaw-agents/docker-compose.yml` | openclaw-agents |
 | Knowledge MCP | `/opt/amplified/apps/amplified-knowledge-mcp/docker-compose.yml` | amplified-knowledge-mcp |
@@ -202,6 +204,46 @@ Source: `/root/cove-repo/infrastructure/`
 ---
 
 ## Changelog
+
+### v5 — 2026-05-04
+
+LiteLLM row updated to reflect [AMP-72](https://linear.app/amplifiedpartners/issue/AMP-72/) fix:
+
+- Plaintext secrets in `/opt/amplified/apps/litellm/docker-compose.yml` (master key, Postgres URL with embedded password, and five provider API keys) moved to a sibling `.env` file (mode 600, root-owned, gitignored). Compose now references via `env_file: - .env`.
+- Existing `/opt/amplified/secrets/rotation/rotate-keys.sh` updated to also write the new `.env` (it already updates other `.env` files for the cove-orchestrator stack); next monthly rotation (2026-06-01) will pick up the new path automatically.
+- Compose now mirror-eligible: added `02_build/compose/litellm/docker-compose.yml` + README following the AMP-46 Ollama precedent.
+- Updated the **Compose file locations** table to point to the new mirror.
+
+Verified end-to-end after the migration: all three reach paths (host loopback, in-net Docker DNS, Traefik public) return 200 on `/health/liveliness`. End-to-end provider smoke test against `/chat/completions`: 5 of 6 providers return PONG (Anthropic, Moonshot, DeepSeek, xAI, local/Ollama). OpenAI returns `AuthenticationError: Incorrect API key` — verified pre-existing (the same key value in the old inline-secrets compose was already invalid; AMP-72 migration did not change a byte). Surfaced for Ewan separately; not blocking.
+
+Signed-by: Devon-a9a7 | 2026-05-04 | devin-a9a78d0c72d9491aa3a70b18cb741936
+
+### v4 — 2026-05-03
+
+LiteLLM row updated to reflect [AMP-71](https://linear.app/amplifiedpartners/issue/AMP-71/) fix (sibling of AMP-46):
+
+- Added host-loopback bind `127.0.0.1:4000` (so Beast-side scripts can reach LiteLLM at the canonical loopback address instead of churning bridge IPs).
+- Made the existing public Traefik route (`litellm.beast.amplifiedpartners.ai`) explicit — was previously omitted.
+- Listed the full provider set the proxy fronts (Anthropic, OpenAI, Moonshot, DeepSeek, xAI in addition to Ollama) instead of just OpenAI/Anthropic.
+- Preserved the AMP-28 routing clarification (`simple-shuffle` with failover chains; does not classify by cost) on the same row.
+- LiteLLM compose **not** mirrored into the repo because the live file embeds plaintext API keys for five providers plus the LiteLLM master key and a Postgres URL with embedded password — see [AMP-72](https://linear.app/amplifiedpartners/issue/AMP-72/) for the secrets-hardening follow-up.
+
+Verified end-to-end: host loopback, in-net Docker DNS, and Traefik public route all return 200 on `/health/liveliness`.
+
+Signed-by: Devon-a9a7 | 2026-05-03 | devin-a9a78d0c72d9491aa3a70b18cb741936
+
+### v3 — 2026-05-03
+
+Ollama row updated to reflect AMP-46 fix:
+
+- Added host-loopback bind `127.0.0.1:11434` (so Beast-side scripts can reach Ollama at the canonical loopback address instead of churning bridge IPs).
+- Made the existing public Traefik route (`ollama.beast.amplifiedpartners.ai`) explicit — was previously omitted from this manifest.
+- Listed the full set of currently-loaded models (llama3.1-8b/70b, qwen3-coder-30b, nomic-embed-text) instead of just llama3.1-8b.
+- Added pointer to the in-repo compose mirror at `02_build/compose/ollama/docker-compose.yml`.
+
+Verified end-to-end: host loopback, in-net Docker DNS, and Traefik public route all return 200.
+
+Signed-by: Devon-a9a7 | 2026-05-03 | devin-a9a78d0c72d9491aa3a70b18cb741936
 
 ### v2 — 2026-05-03
 

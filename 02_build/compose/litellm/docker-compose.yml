@@ -1,0 +1,38 @@
+# Authored by Devon-a9a7 | 2026-05-04 | AMP-72 plaintext secrets moved to .env
+# Beast source-of-truth: /opt/amplified/apps/litellm/docker-compose.yml.
+# Mirror-eligible after AMP-72: this file no longer contains secret values; secrets live in `.env` (gitignored, mode 600, root).
+# Reversibility: see docker-compose.yml.bak.20260504-amp72 + .env.bak.20260504-amp72 in this directory.
+services:
+  litellm:
+    image: ghcr.io/berriai/litellm:main-latest
+    container_name: litellm
+    ports:
+      - "127.0.0.1:4000:4000"
+    restart: unless-stopped
+    volumes:
+      - ./litellm_config.yaml:/app/config.yaml
+    env_file:
+      - .env
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    command:
+      - "--config"
+      - "/app/config.yaml"
+      - "--port"
+      - "4000"
+    networks:
+      - amplified-net
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.litellm.rule=Host(`litellm.beast.amplifiedpartners.ai`)"
+      - "traefik.http.routers.litellm.tls.certresolver=letsencrypt"
+      - "traefik.http.services.litellm.loadbalancer.server.port=4000"
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+
+networks:
+  amplified-net:
+    external: true
