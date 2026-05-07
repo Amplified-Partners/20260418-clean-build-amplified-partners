@@ -1,7 +1,7 @@
 ---
 title: Taxonomy — Amplified Partners entity definitions and agent roles
-date: 2026-05-03
-version: 3
+date: 2026-05-07
+version: 4
 status: draft
 ---
 
@@ -30,7 +30,7 @@ This file defines **entities, agents, and locked terminology**. It does **not** 
 | Entity | Type | What it is | What it is not |
 |--------|------|------------|----------------|
 | **Amplified Partners** | Umbrella / parent | The business. The brand. The operating entity. | A product. A legal subdivision (yet). |
-| **Amplified Core** | Infrastructure | The Hetzner AX162-R server (`amplified-core`, `135.181.161.131`). The physical compute home. FalkorDB, Qdrant, LLM inference, marketing engine. | A team, a product, or a department. Strictly infrastructure. |
+| **Amplified Core** | Infrastructure | The Hetzner AX162-R server (`amplified-core`, `135.181.161.131`). The physical compute home. See `00_authority/CANONICAL_ESTATE.md` for full service topology. | A team, a product, or a department. Strictly infrastructure. |
 | **Amplified Marketing** | Function | The content pipeline and marketing engine. Runs on the Core. Produces social, GMB, LinkedIn content. Evaluated by Bob/Lisa/Marcus synthetic avatars. | The marketing *team* or strategy. The engine that executes the strategy. |
 | **Amplified Central Ops** | Function | AI-native governance layer. The clean-build workspace, agent operating contracts, decision logs, authority hierarchy. The spine of how the business runs. | A tech team. Not code. Not infrastructure. The rules and governance that infrastructure runs under. |
 | **Amplified Client** | Product tier | The client-facing advisory product for businesses — Bob, Lisa, Marcus. The CRM, the Interview Engine, the federated architecture, the PicoClaw sidecar. | Internal tooling. Does not include personal/consumer products. |
@@ -51,12 +51,19 @@ The operating model: each agent is self-contained. Projects are independent. Coo
 
 | Agent | Name | Core responsibility | Access scope | Reports to |
 |-------|------|---------------------|--------------|------------|
-| **Devin** | Devon | Infrastructure & systems coordinator. The only agent who writes code to Amplified Core or any production system. Maintains GitHub. Keeps repos clean, cohesive, and canonical. Deploys updates. Sets schedules. Makes everyone else's work better by keeping the foundation solid. | Core (SSH), GitHub, Linear, Slack | OpenClaw (status updates) → Ewan (escalations) |
-| **OpenClaw** | Sam / Clawd / Cassian | Partner and coordinator. Lives on Ewan's Mac. Reads vault, processes voice notes, talks to Ewan via Telegram/WhatsApp/Slack. Investigates process failures (not people failures). Maintains shared state. | Local filesystem, all channels, vault, all repos (read) | Ewan directly |
-| **Cursor** | — | Builder. Produces code in clean-build workspace. Outputs to GitHub. Does not deploy directly — deployment goes through Devon. | clean-build workspace, GitHub (write to own branches) | Devon (for deployment), Ewan (for direction) |
-| **Antigravity / AG** | — | Business Arbiter and COO. Strategic decisions for the firm. Does not direct agent cognition — directs the business. | Strategic review | Ewan |
-| **Perplexity** | Comet (in browser) | Researcher. External research, synthesis, brainstorm inputs. | External web | Ewan / whoever runs the session |
-| **Qwen** | — | Hive mind. Escalation routing. Collective knowledge base. Novel decisions route here when no agent can own them. | Via clean-build escalation path | — |
+| **Antigravity / AG** | — | COO and Business Arbiter. Strategic decisions for the firm. Directs the business, not agent cognition. Primary author of constitutional and architectural documents. | Full (SSH to Beast), all repos, Cursor (M5) | Ewan |
+| **Devin** | Devon | Infrastructure & systems coordinator. Writes code to Amplified Core and production systems. Maintains GitHub. Keeps repos clean, cohesive, and canonical. Deploys updates. Sets schedules. | Core (SSH), GitHub, Linear, Slack | Ewan |
+| **Perplexity** | Computer | Researcher and enterprise intelligence. External research, synthesis, brainstorm inputs. Strategic planning support. | External web, Linear, GitHub | Ewan |
+
+**Retired agents** (no longer in the active roster):
+
+| Agent | Status |
+|-------|--------|
+| OpenClaw / Sam / Clawd / Cassian | Retired. Container (`openclaw-agents`) remains on Beast but agent is decommissioned. |
+| Cursor (standalone) | Subsumed into Antigravity's toolchain (Cursor is the IDE, not a separate agent). |
+| Qwen | Retired from escalation routing role. |
+| Kimmy | Status to be confirmed by Antigravity. |
+| Eli | Retired. |
 
 ---
 
@@ -67,10 +74,10 @@ The operating model is **isolation with visibility**, not orchestration.
 - Each agent works in a self-contained project. No real-time coordination needed.
 - Every agent reads `ground-truth` (the portable spine) before acting — so principles and state are shared.
 - Every agent writes a handover to `STATUS.md` in `clean-build` when they finish significant work.
-- **Devon** is the only agent who touches Amplified Core or production GitHub. Others write to their own branches; Devon integrates.
-- **OpenClaw** reads `STATUS.md`, investigates if a process is failing, writes findings back. If infrastructure changes are needed, OpenClaw signals Devon — Devon implements.
-- **Slack** is for asynchronous partner communication. OpenClaw communicates there as a partner.
+- **All agents have Beast access.** No "I don't have access" as a reason to stop. See `00_authority/CANONICAL_ESTATE.md` Rule 5.
 - **Linear** is the record. Each department/function has its own project. Independent. Status visible to all.
+- **GitHub** is for code and governance. PRs for changes, reviews for quality.
+- Draft→Sync→Rebuild→Execute protocol is absolute. See `00_authority/CANONICAL_ESTATE.md` Rule 6.
 
 The principle: one person does one thing. Clean boundaries. No stepping on each other. The STATUS.md is the handshake point — versioned, structured, no ambiguity about who said what and when.
 
@@ -80,7 +87,7 @@ The principle: one person does one thing. Clean boundaries. No stepping on each 
 
 | Term | Canonical meaning | Do not confuse with |
 |------|------------------|---------------------|
-| **the Core** | Hetzner AX162-R server, `amplified-core`, `135.181.161.131` | "Core" as in "core product" or "core team" |
+| **the Core / Beast** | Hetzner AX162-R server, `amplified-core`, `135.181.161.131`. Full topology: `00_authority/CANONICAL_ESTATE.md` | "Core" as in "core product" or "core team" |
 | **the vault** | `/opt/amplified/vault/` on the Core — 4,891 files, 7M words, 30 folders | real-vault (local Obsidian on the Mac) |
 | **real-vault** | `/Users/ewanbramley/Manual Library/real-vault/` — local Obsidian vault | the Core vault |
 | **clean-build** | The governed agent workspace at `/Users/ewanbramley/AG/clean-build/` and `Amplified-Partners/20260417-clean-build-amplified-partners` | The Core. Not infrastructure — governance. |
@@ -92,7 +99,8 @@ The principle: one person does one thing. Clean boundaries. No stepping on each 
 | **Pudding** | The cross-client anonymised discovery technique | A specific tool or library. It is a methodology. |
 | **PicoClaw** | Beelink N150 mini PC placed physically on-site at Tier 3+ clients | The Core. Client-side hardware, not central infrastructure. |
 | **Devon** | Devin's name within the Amplified Partners ecosystem | Any other agent |
-| **Sam / Clawd / Cassian** | OpenClaw's names within the ecosystem (all three are aliases for the same agent; Ewan uses them interchangeably in chat and knowledge notes) | Devon |
+| **Computer** | Perplexity's name within the ecosystem | Other agents |
+| **Sam / Clawd / Cassian / OpenClaw** | Retired agent's names (all aliases for the same agent). Historically: partner and coordinator on Ewan's Mac. Now decommissioned. | Devon |
 
 ---
 
@@ -109,6 +117,16 @@ The principle: one person does one thing. Clean boundaries. No stepping on each 
 ---
 
 ## Changelog
+
+### v4 — 2026-05-07
+
+- **Agent roster updated** per Ewan's instruction (2026-05-07): active roster is now Antigravity, Devon, Perplexity (Computer). Retired agents moved to a separate table: OpenClaw/Sam/Clawd/Cassian, Cursor (standalone), Qwen, Kimmy, Eli.
+- Added pointer to `00_authority/CANONICAL_ESTATE.md` in the Amplified Core row and "the Core" terminology entry.
+- Updated operating model section: removed references to retired agents, added Beast access rule and Draft→Sync→Rebuild→Execute protocol references.
+- Added **Computer** to locked terminology table.
+- Source: AMP-180.
+
+Signed-by: Devon-f473 | 2026-05-07 | session devin-f473301112514d75be796be926a54923
 
 ### v3 — 2026-05-03
 

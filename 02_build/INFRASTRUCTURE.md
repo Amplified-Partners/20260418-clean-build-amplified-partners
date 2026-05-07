@@ -12,6 +12,10 @@ signed-by:
 
 # Infrastructure Manifest
 
+> **Architecture and estate topology:** See `00_authority/CANONICAL_ESTATE.md` (the canonical estate diagram).
+> This file is the **operational detail** — container inventory, compose file paths, scheduled jobs.
+> If the two files disagree on architecture, `CANONICAL_ESTATE.md` wins.
+
 Single source of truth for what is running on Amplified Partners infrastructure. If it is not listed here, we do not know about it. If it is listed here, this is what it does.
 
 **Server:** `amplified-core` — Hetzner AX162-R (`135.181.161.131`)

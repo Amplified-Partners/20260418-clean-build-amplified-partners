@@ -1,7 +1,7 @@
 ---
 title: Governed workspace manifest (authoritative inventory)
 date: 2026-05-07
-version: 55
+version: 56
 status: draft
 ---
 
@@ -79,7 +79,8 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
 - `00_authority/DECISION_LOG.md`
 - `00_authority/PR_WORKFLOW.md` (branch protection + Linear linkage + review authority for active repos; AMP-70)
 - `STATUS.md` (operations status board — async handshake between Devon and OpenClaw; versioned handoffs, no chat)
-- `02_build/INFRASTRUCTURE.md` (canonical infrastructure manifest — single source of truth for all 40 containers, services, scheduled jobs, and server specs on Amplified Core)
+- `00_authority/CANONICAL_ESTATE.md` (canonical estate diagram and infrastructure map — single source of truth for the physical estate architecture, service topology, and agent access rules on Beast. All other docs point here.)
+- `02_build/INFRASTRUCTURE.md` (operational infrastructure detail — container inventory, compose file locations, scheduled jobs. Subordinate to `CANONICAL_ESTATE.md` for architecture.)
 - `.github/CODEOWNERS` (GitHub CODEOWNERS — requires `@ewanbramley` review for `00_authority/**` and `01_truth/**` changes; no default owner)
 - `.cursor/rules/stateless-handover-kaizen.mdc` `[LOGIC TO BE CONFIRMED]` (mechanical enforcement of existing handover policy; not a separate policy spine)
 - `.cursor/hooks.json` `[LOGIC TO BE CONFIRMED]` (**No hooks** — `"hooks": {}`. **TESTING NEED:** reinstatement gate → `.cursor/HOOKS_TESTING_NEED.md`; history → `03_shadow/2026-04-16_stop-hook_followup-checklist-loop_bug-report.md` § Final resolution)
@@ -176,12 +177,20 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
 
 ## Changelog
 
+### v56 — 2026-05-07
+
+- Added `00_authority/CANONICAL_ESTATE.md` to **Authoritative now**: canonical estate diagram — single source of truth for Beast architecture, service topology, agent access. Created from Antigravity's validated Mermaid diagram + Computer's rules + Brain framing. All drifting docs now point here instead of describing the estate themselves.
+- Updated `02_build/INFRASTRUCTURE.md` description: marked subordinate to `CANONICAL_ESTATE.md` for architecture; retained as operational detail doc.
+- Source: AMP-180 (Canonical Estate — one diagram, one reality, everything on Beast).
+- Note: rebased past v55 (AMP-183, Devon-7019); version bumped 55→56 per rebase pattern.
+
+Signed-by: Devon-f473 | 2026-05-07 | session devin-f473301112514d75be796be926a54923
+
 ### v55 — 2026-05-07
 
 - AMP-183: Promote gold from Perplexity process corpus (133-file scan by Kit on M5). Three truth-tier candidates added under **Candidate authority**: `01_truth/processes/2026-03_pudding-validation-methodology_v2.1.md` (1,371 lines — PUDDING validation enforcement), `01_truth/processes/2026-03_sops-slas-business-process-documentation_v1.md` (872 lines — SOP/SLA framework), `01_truth/schemas/2026-03_framework-resolution_apqc-pdca-bpmn_v1.md` (canonical framework stack). One build artifact: `02_build/cove-orchestrator/agents/prompts/code-reviewer-dispatch.md`. One infrastructure file: `02_build/cove-orchestrator/temporal/activities/ingestion_activities.py` (Temporal ingestion pipeline for Beast). All truth-tier files carry transfer headers per `PARTNER_TRANSFER_INSTRUCTIONS.md`. Decision recorded at `00_authority/DECISION_LOG.md` v20.
 
 Signed-by: Devon-7019 | 2026-05-07 | devin-70195a44bb234dd985245a9c88f0ba01
-
 ### v54 — 2026-05-06
 
 - AMP-70 follow-up. `Amplified-Partners/beast-code-export` was archived on 2026-05-04 (returns `Repository was archived so is read-only` on push and on PR-merge API). Dropped from the active-repos scope of `00_authority/PR_WORKFLOW.md` (now at v2) and from `02_build/scripts/apply_branch_protection.py` `REPOS`. Branch protection applied 2026-05-06 to the three remaining active repos (`clean-build`, `ground-truth`, `crm`) by `Devon-4330` using `devi_org_github`. The `beast-code-export` PR #2 cannot be closed — the archived repo rejects PR state changes — and remains open as a tombstone. Decision recorded at `00_authority/DECISION_LOG.md` v19 (2026-05-06 entry). Source: AMP-70.

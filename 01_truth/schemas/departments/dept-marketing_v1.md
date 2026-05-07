@@ -41,7 +41,7 @@ signed_by: "Devon, 2026-04-25, devin-992682c244cf444f91e0a516498afbfd"
 ## 1. The 14-Agent Marketing Pipeline
 
 ### Overview
-The marketing pipeline is a 14-specialised-agent system operating on The Beast server (Hetzner AX162-R). It produces **15–25 pieces of content daily** across 6+ platforms.
+The marketing pipeline is a 14-specialised-agent system operating on The Beast server (see `00_authority/CANONICAL_ESTATE.md` for full estate topology). It produces **15–25 pieces of content daily** across 6+ platforms.
 
 ### What We Know
 
