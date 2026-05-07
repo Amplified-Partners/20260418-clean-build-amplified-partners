@@ -1,7 +1,7 @@
 ---
 title: Governed workspace manifest (authoritative inventory)
 date: 2026-05-07
-version: 55
+version: 56
 status: draft
 ---
 
@@ -70,7 +70,7 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
 - `00_authority/PROJECT_INTENT.md`
 - `00_authority/REMIT_PARTNER_CURSOR.md`
 - `00_authority/PARTNER_TRANSFER_INSTRUCTIONS.md`
-- `00_authority/PRINCIPLES.md` `[LOGIC TO BE CONFIRMED]` (norms downstream of **Absolute** in root `AGENTS.md`; `anchor_lineage: 35` in file frontmatter — see § Provenance and versioning there)
+- ~~`00_authority/PRINCIPLES.md`~~ — **Removed from disk** 2026-05-05 by Antigravity (`e4b6e38`): promoted to the Canonical Portable Spine in `Amplified-Partners/ground-truth`. Cross-references in `AGENTS.md` updated to point to the Portable Spine. Entry retained here as provenance record.
 - `00_authority/SIGNATURES.md` (every AI signs committed work; Radical Attribution applied mechanically; agent chooses format)
 - `00_authority/USE_IT_OR_CUT_IT.md` (sounds good + built + unused = cut; remediation rule for bloat; archive exempt)
 - `00_authority/OPINION_CONFIDENCE.md` (opinions labelled + confidence numbered; tiered thresholds 50% / 85% / 95% by reversibility)
@@ -81,7 +81,7 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
 - `STATUS.md` (operations status board — async handshake between Devon and OpenClaw; versioned handoffs, no chat)
 - `02_build/INFRASTRUCTURE.md` (canonical infrastructure manifest — single source of truth for all 40 containers, services, scheduled jobs, and server specs on Amplified Core)
 - `.github/CODEOWNERS` (GitHub CODEOWNERS — requires `@ewanbramley` review for `00_authority/**` and `01_truth/**` changes; no default owner)
-- `.cursor/rules/stateless-handover-kaizen.mdc` `[LOGIC TO BE CONFIRMED]` (mechanical enforcement of existing handover policy; not a separate policy spine)
+- ~~`.cursor/rules/stateless-handover-kaizen.mdc`~~ — **Never committed to the repository.** Referenced in changelog entries v26/v28/v29/v30/v31 but no git history exists. Entry retained here as provenance record; file may have existed locally in Cursor but was never pushed.
 - `.cursor/hooks.json` `[LOGIC TO BE CONFIRMED]` (**No hooks** — `"hooks": {}`. **TESTING NEED:** reinstatement gate → `.cursor/HOOKS_TESTING_NEED.md`; history → `03_shadow/2026-04-16_stop-hook_followup-checklist-loop_bug-report.md` § Final resolution)
 - `.cursor/hooks/stateless-handover-stop.py` `[LOGIC TO BE CONFIRMED]` (**Dormant / testing only** — **not invoked** while `hooks` is empty; do not treat as enforcement)
 
@@ -176,12 +176,21 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
 
 ## Changelog
 
+### v56 — 2026-05-07
+
+- **Dead reference cleanup (AMP-175).** Two entries in § Authoritative now marked as removed with provenance:
+  - `00_authority/PRINCIPLES.md` — removed from disk 2026-05-05 by Antigravity (commit `e4b6e38`, "promoted to Canonical PORTABLE-SPINE"). Cross-references in root `AGENTS.md` (lines 23, 100) updated to point to the Portable Spine in `Amplified-Partners/ground-truth`. Entry struck through in manifest; provenance retained.
+  - `.cursor/rules/stateless-handover-kaizen.mdc` — never committed to the repository. Referenced in changelog entries v26/v28/v29/v30/v31 as if present, but `git log --all -- .cursor/rules/stateless-handover-kaizen.mdc` returns zero commits. Entry struck through; provenance retained.
+- Decision recorded at `00_authority/DECISION_LOG.md` v21. Source: AMP-175 infrastructure health sweep.
+- **Version note:** Originally v55; bumped to v56 after rebase — main already holds v55 (AMP-183, Devon-7019).
+
+Signed-by: Devon-9614 | 2026-05-07 | session devin-9614ace354f5453cb56038df2de263c5
+
 ### v55 — 2026-05-07
 
 - AMP-183: Promote gold from Perplexity process corpus (133-file scan by Kit on M5). Three truth-tier candidates added under **Candidate authority**: `01_truth/processes/2026-03_pudding-validation-methodology_v2.1.md` (1,371 lines — PUDDING validation enforcement), `01_truth/processes/2026-03_sops-slas-business-process-documentation_v1.md` (872 lines — SOP/SLA framework), `01_truth/schemas/2026-03_framework-resolution_apqc-pdca-bpmn_v1.md` (canonical framework stack). One build artifact: `02_build/cove-orchestrator/agents/prompts/code-reviewer-dispatch.md`. One infrastructure file: `02_build/cove-orchestrator/temporal/activities/ingestion_activities.py` (Temporal ingestion pipeline for Beast). All truth-tier files carry transfer headers per `PARTNER_TRANSFER_INSTRUCTIONS.md`. Decision recorded at `00_authority/DECISION_LOG.md` v20.
 
 Signed-by: Devon-7019 | 2026-05-07 | devin-70195a44bb234dd985245a9c88f0ba01
-
 ### v54 — 2026-05-06
 
 - AMP-70 follow-up. `Amplified-Partners/beast-code-export` was archived on 2026-05-04 (returns `Repository was archived so is read-only` on push and on PR-merge API). Dropped from the active-repos scope of `00_authority/PR_WORKFLOW.md` (now at v2) and from `02_build/scripts/apply_branch_protection.py` `REPOS`. Branch protection applied 2026-05-06 to the three remaining active repos (`clean-build`, `ground-truth`, `crm`) by `Devon-4330` using `devi_org_github`. The `beast-code-export` PR #2 cannot be closed — the archived repo rejects PR state changes — and remains open as a tombstone. Decision recorded at `00_authority/DECISION_LOG.md` v19 (2026-05-06 entry). Source: AMP-70.

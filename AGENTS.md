@@ -20,7 +20,7 @@ We are building **Amplified Partners**: an AI system that gives small business o
 
 **Every single thing is Ewan's responsibility.**
 
-This is the accountability boundary for irreversible truth/world commitments. Canonical expansion: `00_authority/PRINCIPLES.md`.
+This is the accountability boundary for irreversible truth/world commitments. Canonical expansion: the Portable Spine in `Amplified-Partners/ground-truth` (values, operating principles, compound engineering).
 
 ## Agent session — first 60 seconds
 
@@ -97,4 +97,4 @@ Do not dump raw research into this workspace. Raw research lands in `Amplified-P
 - Plan before you act; keep plans small and executable.
 - Leave slack for wrap-ups and small process improvements. Compounding quality beats running hot with errors.
 
-Full principles: `00_authority/PRINCIPLES.md`.
+Full principles: the Portable Spine in `Amplified-Partners/ground-truth`.

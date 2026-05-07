@@ -1,7 +1,7 @@
 ---
 title: Decision log
 date: 2026-05-07
-version: 20
+version: 21
 status: draft
 ---
 
@@ -13,6 +13,17 @@ One entry per decision. Keep it short. Link out to supporting docs.
 
 ## Entries
 
+### 2026-05-07 — AMP-175: Dead reference cleanup in authority spine
+
+- **Decision**: Remove two dead entries from `00_authority/MANIFEST.md` § Authoritative now and update cross-references in `AGENTS.md`. Both entries are struck through with provenance retained (not deleted) so the audit trail is preserved.
+  1. `00_authority/PRINCIPLES.md` — removed from disk 2026-05-05 by Antigravity (commit `e4b6e38`, "promoted to Canonical PORTABLE-SPINE in `Amplified-Partners/ground-truth`"). Two references in `AGENTS.md` (lines 23, 100) redirected to point to the Portable Spine.
+  2. `.cursor/rules/stateless-handover-kaizen.mdc` — never committed to the repository. `git log --all` returns zero commits. Referenced in MANIFEST changelog entries v26/v28/v29/v30/v31 as if present but the file only ever existed locally in Cursor (if at all).
+- **Why**: AMP-175 infrastructure health sweep identified these as dead references that break the first-60-seconds agent onboarding protocol (agents read MANIFEST, follow links, hit 404). Per `00_authority/USE_IT_OR_CUT_IT.md`, dead references are cut. Provenance is retained in the manifest entry (struck through, not deleted) so future agents understand the history.
+- **Where encoded**: `00_authority/MANIFEST.md` v56; `AGENTS.md` (lines 23, 100); this entry.
+- **Version note:** Originally DECISION_LOG v20 / MANIFEST v55; bumped to v21/v56 after rebase — main already holds v20/v55 (AMP-183, Devon-7019).
+- **Status**: active.
+- **Signed-by**: Devon-9614 | 2026-05-07 | session devin-9614ace354f5453cb56038df2de263c5
+
 ### 2026-05-07 — AMP-183: Promote gold from Perplexity process corpus to clean-build
 
 - **Decision**: Ingest 4 high-value documents extracted by Kit (Devin Terminal M5) from a 133-file Perplexity process corpus scan into clean-build. Three documents promoted to `01_truth/` as `[LOGIC TO BE CONFIRMED]` candidates: PUDDING Validation Methodology v2.1 (1,371 lines), SOPs/SLAs/Business Process Documentation (872 lines), Framework Resolution APQC/PDCA/BPMN (45 lines). One code-reviewer dispatch prompt placed in `02_build/cove-orchestrator/agents/prompts/`. One Temporal ingestion pipeline file placed in `02_build/cove-orchestrator/temporal/activities/`. Cherry-picked from the `kit/AMP-183-perplexity-gold-promotion` branch (commits `4b2edea`, `ad3e35c`) onto a clean branch from current main. Transfer headers added per `PARTNER_TRANSFER_INSTRUCTIONS.md`.
@@ -20,7 +31,6 @@ One entry per decision. Keep it short. Link out to supporting docs.
 - **Where encoded**: `01_truth/processes/2026-03_pudding-validation-methodology_v2.1.md`, `01_truth/processes/2026-03_sops-slas-business-process-documentation_v1.md`, `01_truth/schemas/2026-03_framework-resolution_apqc-pdca-bpmn_v1.md`, `02_build/cove-orchestrator/agents/prompts/code-reviewer-dispatch.md`, `02_build/cove-orchestrator/temporal/activities/ingestion_activities.py`, `00_authority/MANIFEST.md` v55.
 - **Status**: candidate (pending Ewan review via PR).
 - **Signed-by**: Devon-7019 | 2026-05-07 | devin-70195a44bb234dd985245a9c88f0ba01
-
 ### 2026-05-06 — AMP-70 follow-up: drop archived `beast-code-export` from active-repo scope
 
 - **Decision**: Remove `Amplified-Partners/beast-code-export` from the AMP-70 active-repos scope. The repo was archived on 2026-05-04 and now returns `Repository was archived so is read-only` on push and on PR-merge / PR-state API calls. Branch protection is therefore moot for this repo. PR #2 (the AMP-70 mirror PR opened against this repo on 2026-05-03) cannot be merged or closed via API — it remains open as a tombstone. Authoritative active-repos list is now three: `clean-build`, `ground-truth`, `crm`.

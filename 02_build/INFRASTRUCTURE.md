@@ -1,7 +1,7 @@
 ---
 title: Infrastructure manifest — Amplified Partners Core Server
-date: 2026-05-03
-version: 2
+date: 2026-05-07
+version: 3
 status: authoritative now
 signed-by:
   - Devon | 2026-04-30 | devin-66aa3ce48c7e407f8ad9bf066541b604
@@ -62,7 +62,7 @@ These are shared infrastructure that other services depend on.
 | Container | Image | Status | Purpose |
 |-----------|-------|--------|---------|
 | **ollama** | `ollama/ollama:latest` | Running | Local LLM inference server. Hosts llama3.1-8b and other models. Internal port 11434. |
-| **litellm** | `ghcr.io/berriai/litellm:main-latest` | Running | LLM proxy — unified API for local (Ollama) and remote (OpenAI, Anthropic) models. Internal port 4000. Routes by `simple-shuffle` with failover chains; **does not** classify by cost. |
+| **litellm** | `ghcr.io/berriai/litellm:main-latest` | Running | LLM proxy — unified API for local (Ollama) and remote (OpenAI, Anthropic) models. Internal port 4000. Routes by `simple-shuffle` with failover chains; **does not** classify by cost. **Degraded 2026-05-06 (AMP-142):** OpenAI returns 401, Anthropic billing exhausted, Moonshot returns 401. Only Ollama (local) and DeepSeek remain functional. Fallback chains at risk. |
 | **token-proxy** | `amplified/token-proxy:latest` (built locally from `Amplified-Partners/cost-tools`) | Running (healthy) | Anthropic-only reverse proxy. Sonnet→Haiku model-layer routing on extractive/classification prompts; prompt caching; semantic similarity cache (Qdrant `llm_cache`, 0.95, 24h TTL); native context compaction; daily $100 budget circuit-breaker; per-agent cost log. Container port 8088 (host-bound to `127.0.0.1:8088` for diagnostics; agents reach it via DNS name `token-proxy:8088` on `amplified-net`). Compose file: `/opt/amplified/apps/cost-tools/docker-compose.yml`. RUNBOOK: `cost-tools/RUNBOOK.md`. Linear: AMP-28. |
 | **langfuse** | `langfuse/langfuse:latest` | Running | LLM observability — traces, costs, prompt versioning. |
 
@@ -82,7 +82,7 @@ Reversal: unset the env var. 30 seconds, no restart of the proxy needed.
 
 | Container | Image | Status | Purpose |
 |-----------|-------|--------|---------|
-| **falkordb** | `falkordb/falkordb:latest` | Running | Graph database. 9,000 nodes across 4 graphs. Stores entity relationships from vault content. Internal port 6379. |
+| **falkordb** | `falkordb/falkordb:latest` | Running | Graph database. 9,000 nodes across 4 graphs. Stores entity relationships from vault content. Internal port 6379. Stability fix applied 2026-05-06 (AMP-128): compose `mem_reservation`, `sysctl vm.overcommit_memory=1`, UNWIND-batched labeller to prevent OOM recycling. |
 | **qdrant** | `qdrant/qdrant:latest` | Running | Vector database. 57,434 embeddings (384-dim). Semantic search over vault content. Internal ports 6333-6334. |
 | **clickhouse** | `clickhouse/clickhouse-server:latest` | Running | Columnar analytics database. Internal ports 8123 (HTTP), 9000 (native). |
 | **searxng** | `searxng/searxng:latest` | Running | Metasearch engine for research agents. Internal port 8080. |
@@ -94,6 +94,7 @@ Source: `/opt/amplified-machine/` — `docker-compose.yml` + `docker-compose.ser
 | Container | Image | Status | Route | Purpose |
 |-----------|-------|--------|-------|---------|
 | **amplified-core** | `amplified-machine-amplified-core` | Running (healthy) | `api.amplifiedpartners.ai/` | Main API gateway. Vault ingestion, knowledge graph queries, orchestration. Memory limit 2 GB. |
+| **amplified-crm-dev** | `amplified-machine-amplified-crm-dev` | **Running** | — | CRM development instance. Was crash-looping (Exited(3), `ModuleNotFoundError: pydantic_settings`) 2026-05-06; fixed via AMP-160 (dependency install). |
 | **amplified-worker** | `amplified-machine-amplified-worker` | Running | — | Background worker for async tasks (indexing, embeddings, heavy processing). Memory limit 4 GB. Depends on amplified-core healthy. |
 | **finance-engine** | `amplified-machine-finance-engine` | Running (healthy) | `/api/v1/finance` | Financial analytics — CLV, cash flow, valuation scoring. Port 8700. |
 | **ch-pipeline** | `amplified-machine-ch-pipeline` | **Paused** | `/api/v1/ch` | Companies House new-company registration pipeline. Monitors CH API for newly registered UK companies. **Original intent: offer three months free to brand-new companies as go-to-market channel.** Data preserved: 9,740 filings from 9,707 companies (BS dates 2019-03-31 → 2026-03-11). Paused 2026-04-30 by Ewan — not ready for production use yet. Port 8750. |
@@ -202,6 +203,16 @@ Source: `/root/cove-repo/infrastructure/`
 ---
 
 ## Changelog
+
+### v3 — 2026-05-07
+
+- **AMP-175 health sweep updates:**
+  - Added **amplified-crm-dev** container row under § Amplified Machine: was crash-looping (Exited(3), `ModuleNotFoundError: pydantic_settings`); fixed via AMP-160.
+  - Updated **falkordb** row: stability fix applied 2026-05-06 (AMP-128) — compose `mem_reservation`, `sysctl vm.overcommit_memory=1`, UNWIND-batched labeller.
+  - Updated **litellm** row with degradation notice: OpenAI 401, Anthropic billing exhausted, Moonshot 401 (AMP-142). Only Ollama + DeepSeek functional.
+- No container count change (still 40 in manifest; amplified-crm-dev was already running but undocumented).
+
+Signed-by: Devon-9614 | 2026-05-07 | session devin-9614ace354f5453cb56038df2de263c5
 
 ### v2 — 2026-05-03
 
