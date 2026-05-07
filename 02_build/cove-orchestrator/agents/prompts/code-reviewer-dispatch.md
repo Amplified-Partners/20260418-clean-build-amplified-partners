@@ -1,3 +1,7 @@
+<!-- Source: Perplexity process corpus (amplified_process_corpus_linear_20260507) -->
+<!-- Promoted-by: Devon-7019 | 2026-05-07 | devin-70195a44bb234dd985245a9c88f0ba01 -->
+<!-- Extracted-by: Kit | 2026-05-07 | Devin Terminal M5 -->
+
 # Code Quality Reviewer Prompt Template
 
 Use this template when dispatching a code quality reviewer subagent.

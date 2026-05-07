@@ -1,7 +1,7 @@
 ---
 title: Decision log
-date: 2026-05-06
-version: 19
+date: 2026-05-07
+version: 20
 status: draft
 ---
 
@@ -12,6 +12,14 @@ status: draft
 One entry per decision. Keep it short. Link out to supporting docs.
 
 ## Entries
+
+### 2026-05-07 — AMP-183: Promote gold from Perplexity process corpus to clean-build
+
+- **Decision**: Ingest 4 high-value documents extracted by Kit (Devin Terminal M5) from a 133-file Perplexity process corpus scan into clean-build. Three documents promoted to `01_truth/` as `[LOGIC TO BE CONFIRMED]` candidates: PUDDING Validation Methodology v2.1 (1,371 lines), SOPs/SLAs/Business Process Documentation (872 lines), Framework Resolution APQC/PDCA/BPMN (45 lines). One code-reviewer dispatch prompt placed in `02_build/cove-orchestrator/agents/prompts/`. One Temporal ingestion pipeline file placed in `02_build/cove-orchestrator/temporal/activities/`. Cherry-picked from the `kit/AMP-183-perplexity-gold-promotion` branch (commits `4b2edea`, `ad3e35c`) onto a clean branch from current main. Transfer headers added per `PARTNER_TRANSFER_INSTRUCTIONS.md`.
+- **Why**: AMP-183 directed extraction of valuable process/methodology content from the Perplexity research corpus. Kit on M5 performed the 133-file scan and identified these 4 as gold. The original branch had diverged significantly from main (based on pre-consolidation history), so cherry-pick onto clean main was chosen over rebase. OPINION 90% — reversible, no customer impact.
+- **Where encoded**: `01_truth/processes/2026-03_pudding-validation-methodology_v2.1.md`, `01_truth/processes/2026-03_sops-slas-business-process-documentation_v1.md`, `01_truth/schemas/2026-03_framework-resolution_apqc-pdca-bpmn_v1.md`, `02_build/cove-orchestrator/agents/prompts/code-reviewer-dispatch.md`, `02_build/cove-orchestrator/temporal/activities/ingestion_activities.py`, `00_authority/MANIFEST.md` v55.
+- **Status**: candidate (pending Ewan review via PR).
+- **Signed-by**: Devon-7019 | 2026-05-07 | devin-70195a44bb234dd985245a9c88f0ba01
 
 ### 2026-05-06 — AMP-70 follow-up: drop archived `beast-code-export` from active-repo scope
 
@@ -394,6 +402,12 @@ One entry per decision. Keep it short. Link out to supporting docs.
 - **Status**: active
 
 ## Changelog
+
+### v20 — 2026-05-07
+
+- Added 2026-05-07 entry: AMP-183 Perplexity process corpus gold promotion. Records ingestion of 4 documents from Kit's 133-file corpus scan into clean-build truth and build tiers. Three truth candidates, one build prompt, one Temporal pipeline file. MANIFEST bumped to v55.
+
+Signed-by: Devon-7019 | 2026-05-07 | devin-70195a44bb234dd985245a9c88f0ba01
 
 ### v16 — 2026-05-03
 

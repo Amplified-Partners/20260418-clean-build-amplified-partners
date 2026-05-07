@@ -1,7 +1,7 @@
 ---
 title: Governed workspace manifest (authoritative inventory)
-date: 2026-05-06
-version: 54
+date: 2026-05-07
+version: 55
 status: draft
 ---
 
@@ -107,8 +107,11 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
   - `01_truth/processes/2026-04_research-on-research_bootstrap-remit_v1.md` `[LOGIC TO BE CONFIRMED]`
   - `01_truth/processes/2026-04_stateless-handover_neutrality-clause_v1.md` `[LOGIC TO BE CONFIRMED]` (candidate addendum to the job-wrapup SOP; neutrality rule for stateless handovers; authoritative `00_authority/OPINION_CONFIDENCE.md` references this file)
   - `01_truth/processes/2026-05_pr-workflow_branch-protection_sop_v1.md` `[LOGIC TO BE CONFIRMED]` (PR workflow + branch-protection operating SOP; parent rule: `00_authority/PR_WORKFLOW.md`; AMP-70)
+  - `01_truth/processes/2026-03_pudding-validation-methodology_v2.1.md` `[LOGIC TO BE CONFIRMED]` (1,371 lines — PUDDING validation methodology: 4 immutable rules, 11 rubrics, 10 enforcer roles, 12 analytical lenses; source: Perplexity process corpus; AMP-183)
+  - `01_truth/processes/2026-03_sops-slas-business-process-documentation_v1.md` `[LOGIC TO BE CONFIRMED]` (872 lines — world-class SOP design framework, SLA architecture, AI-assisted SOP engine; source: Perplexity process corpus; AMP-183)
 - `01_truth/schemas/` `[LOGIC TO BE CONFIRMED]` (schema contracts to be populated)
   - `01_truth/schemas/README.md` `[LOGIC TO BE CONFIRMED]` (folder purpose stub)
+  - `01_truth/schemas/2026-03_framework-resolution_apqc-pdca-bpmn_v1.md` `[LOGIC TO BE CONFIRMED]` (canonical framework stack decision: APQC PCF → BPMN → DMN → CMMN → PDCA/DMAIC → ISO 9001; source: Perplexity process corpus; AMP-183)
   - `01_truth/schemas/2026-05_public-data-validation_v1.md` `[LOGIC TO BE CONFIRMED]` (public-data verdict schema: 3-band PROVEN/PLAUSIBLE/DISPROVEN + BLOCKED gap-marker; additive `VALIDATION:` field on catalogue; reference impl at `02_build/validators/`)
 - `00_authority/AGENT_ROUTING.md` `[LOGIC TO BE CONFIRMED]` (agent-layer routing — which agent runs which task; stacks on top of `cost-tools/token_proxy.py` model-layer routing; eight rules; AMP-28; status: candidate — pending Ewan review per `DECISION_LOG.md`)
 - `01_truth/interfaces/` `[LOGIC TO BE CONFIRMED]` (API contracts to be populated)
@@ -172,6 +175,12 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
     - `P10-kill-switch-master-reference.md` `[NON-AUTHORITATIVE]` (510 lines — binary shutdown architecture)
 
 ## Changelog
+
+### v55 — 2026-05-07
+
+- AMP-183: Promote gold from Perplexity process corpus (133-file scan by Kit on M5). Three truth-tier candidates added under **Candidate authority**: `01_truth/processes/2026-03_pudding-validation-methodology_v2.1.md` (1,371 lines — PUDDING validation enforcement), `01_truth/processes/2026-03_sops-slas-business-process-documentation_v1.md` (872 lines — SOP/SLA framework), `01_truth/schemas/2026-03_framework-resolution_apqc-pdca-bpmn_v1.md` (canonical framework stack). One build artifact: `02_build/cove-orchestrator/agents/prompts/code-reviewer-dispatch.md`. One infrastructure file: `02_build/cove-orchestrator/temporal/activities/ingestion_activities.py` (Temporal ingestion pipeline for Beast). All truth-tier files carry transfer headers per `PARTNER_TRANSFER_INSTRUCTIONS.md`. Decision recorded at `00_authority/DECISION_LOG.md` v20.
+
+Signed-by: Devon-7019 | 2026-05-07 | devin-70195a44bb234dd985245a9c88f0ba01
 
 ### v54 — 2026-05-06
 

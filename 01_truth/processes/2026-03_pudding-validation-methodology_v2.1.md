@@ -1,9 +1,16 @@
+<!-- Transfer header (PARTNER_TRANSFER_INSTRUCTIONS §1) -->
+<!-- Status: [LOGIC TO BE CONFIRMED] -->
+<!-- Sanitisation: done — no PII found; research/methodology content only -->
+<!-- Source: Perplexity process corpus (amplified_process_corpus_linear_20260507) -->
+<!-- Promoted-by: Devon-7019 | 2026-05-07 | devin-70195a44bb234dd985245a9c88f0ba01 -->
+<!-- Extracted-by: Kit | 2026-05-07 | Devin Terminal M5 -->
+
 # PUDDING 2026 — Validation Methodology v2.1
 ## Mandatory. Enforced. Benchmarked. Checked at Every Stage. No Exceptions.
 
 **Date**: 2026-03-17
 **Version**: 2.1 — rubric & benchmark enforcement wired into every gate
-**Status**: Draft — ready for implementation
+**Status**: Draft — ready for implementation `[LOGIC TO BE CONFIRMED]`
 **PUDDING Label**: `C.>.5.p` — Constraint, Tipping, System-scale, Permanent
 **Attribution**: Ewan Bramley (originator, directive, mandatory enforcement requirement) × Perplexity AI (researcher, formaliser)
 **LBD Attribution**: Swanson (1986) ABC Model
