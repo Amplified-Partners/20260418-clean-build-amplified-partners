@@ -1,0 +1,5 @@
+# APDS Labeller v3.0 dependencies (AMP-173)
+# Install: pip install -r requirements.txt
+
+redis>=4.0.0
+httpx>=0.25.0
