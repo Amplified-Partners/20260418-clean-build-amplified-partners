@@ -1,0 +1,28 @@
+[project]
+name = "beast-control-mcp"
+version = "0.1.0"
+description = "Beast infrastructure control surface — allowlisted MCP tools for inspection, classification, and safe operation of Beast services."
+requires-python = ">=3.11"
+dependencies = [
+    "mcp[cli]>=1.8.0",
+    "docker>=7.0.0",
+    "psycopg2-binary>=2.9.0",
+    "redis>=5.0.0",
+    "qdrant-client>=1.9.0",
+    "httpx>=0.27.0",
+    "pydantic>=2.0.0",
+    "uvicorn>=0.30.0",
+    "starlette>=0.38.0",
+]
+
+[project.scripts]
+beast-control-mcp = "beast_control_mcp.server:main"
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]
+
+# Signed-by: Devon-f055 | 2026-05-07 | session devin-f055293582074f98b4c1ed6f77732b26

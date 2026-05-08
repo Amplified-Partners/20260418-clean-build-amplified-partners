@@ -1,0 +1,58 @@
+# Beast Control MCP — docker-compose for Beast deployment.
+# The MCP is not the Brain. The MCP is the torch.
+#
+# Signed-by: Devon-f055 | 2026-05-07 | session devin-f055293582074f98b4c1ed6f77732b26
+
+services:
+  beast-control-mcp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: beast-control-mcp
+    restart: unless-stopped
+    environment:
+      - BEAST_MCP_TRANSPORT=sse
+      - BEAST_MCP_PORT=8400
+      - BEAST_MCP_HOST=0.0.0.0
+      - BEAST_MCP_AUTH_TOKEN=${BEAST_MCP_AUTH_TOKEN:-}
+      # Postgres on Beast host
+      - POSTGRES_HOST=host.docker.internal
+      - POSTGRES_PORT=5434
+      - POSTGRES_USER=${POSTGRES_USER:-amplified}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-}
+      - POSTGRES_DEFAULT_DB=amplified_main
+      # FalkorDB on Beast host
+      - FALKORDB_HOST=host.docker.internal
+      - FALKORDB_PORT=6380
+      # Qdrant on Beast host
+      - QDRANT_HOST=host.docker.internal
+      - QDRANT_PORT=6333
+      # Audit
+      - AUDIT_DIR=/opt/amplified/audits
+      - AUDIT_LOG_PATH=/opt/amplified/audits/tool_calls.jsonl
+    volumes:
+      # Docker socket for container inspection
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      # Read-only access to Beast filesystem
+      - /opt/amplified:/opt/amplified:ro
+      - /opt/amplified-machine:/opt/amplified-machine:ro
+      - /var/log:/var/log:ro
+      - /etc/cron.d:/etc/cron.d:ro
+      - /etc/crontab:/etc/crontab:ro
+      - /etc/systemd/system:/etc/systemd/system:ro
+      # Writable: audit output
+      - /opt/amplified/audits:/opt/amplified/audits
+      - /opt/amplified/migration-bundles:/opt/amplified/migration-bundles
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - amplified-net
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.beast-control.rule=Host(`beast-control.beast.amplifiedpartners.ai`)"
+      - "traefik.http.routers.beast-control.tls.certresolver=letsencrypt"
+      - "traefik.http.services.beast-control.loadbalancer.server.port=8400"
+
+networks:
+  amplified-net:
+    external: true
