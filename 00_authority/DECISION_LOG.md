@@ -1,7 +1,7 @@
 ---
 title: Decision log
-date: 2026-05-07
-version: 20
+date: 2026-05-08
+version: 21
 status: draft
 ---
 
@@ -12,6 +12,14 @@ status: draft
 One entry per decision. Keep it short. Link out to supporting docs.
 
 ## Entries
+
+### 2026-05-08 — Canonical data architecture: PostgreSQL + Apache AGE + pgvector (HNSW) replaces FalkorDB + Qdrant
+
+- **Decision**: Establish PostgreSQL + Apache AGE (graph) + pgvector with HNSW indexing (vector) as the canonical data layer for Amplified Partners. FalkorDB and Qdrant are deprecated — no new work should target them. Created `00_authority/DATA_ARCHITECTURE.md` v1 as the single source of truth for all data-layer decisions. Added deprecation notices to `02_build/INFRASTRUCTURE.md` v3 (FalkorDB/Qdrant rows marked deprecated, deprecation banner added) and `00_authority/TAXONOMY.md` v4 (Amplified Core entity description updated). Terminology locked: "the Russian maths" = HNSW algorithm by Malkov & Yashunin (2016).
+- **Why**: FalkorDB and Qdrant are bust (stability issues documented in AMP-141, AMP-139, clean-build PRs #54/#55). PostgreSQL is robust, battle-tested, and consolidates three capabilities (relational + graph + vector) into one process. Agents and team members were using outdated terminology causing confusion — this was drift from lack of information, not negligence. Ewan directed the terminology fix on 2026-05-08. OPINION 95% — irreversible documentation decision, but reversible in the sense that the canonical doc can be updated if architecture changes again.
+- **Where encoded**: `00_authority/DATA_ARCHITECTURE.md` v1 (new canonical doc); `02_build/INFRASTRUCTURE.md` v3 (deprecation notices); `00_authority/TAXONOMY.md` v4 (entity description updated); `00_authority/MANIFEST.md` v56 (indexed under Authoritative now); Devin org-level knowledge note (updated).
+- **Status**: active.
+- **Signed-by**: Devon-973e | 2026-05-08 | devin-973ed35fae1b4b44a52594bcb53b3f0a
 
 ### 2026-05-07 — AMP-183: Promote gold from Perplexity process corpus to clean-build
 

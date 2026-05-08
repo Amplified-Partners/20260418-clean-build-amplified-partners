@@ -1,11 +1,12 @@
 ---
 title: Infrastructure manifest — Amplified Partners Core Server
-date: 2026-05-03
-version: 2
+date: 2026-05-08
+version: 3
 status: authoritative now
 signed-by:
   - Devon | 2026-04-30 | devin-66aa3ce48c7e407f8ad9bf066541b604
   - Devon-6ca5 | 2026-05-03 | devin-6ca57553eefe4806b613070325964703
+  - Devon-973e | 2026-05-08 | devin-973ed35fae1b4b44a52594bcb53b3f0a
 ---
 
 <!-- markdownlint-disable-file MD013 -->
@@ -80,10 +81,12 @@ Reversal: unset the env var. 30 seconds, no restart of the proxy needed.
 
 ## Knowledge and search
 
+> **⚠️ DEPRECATION (2026-05-08):** FalkorDB and Qdrant are deprecated. The canonical data layer is now PostgreSQL + Apache AGE (graph) + pgvector/HNSW (vector). See `00_authority/DATA_ARCHITECTURE.md` for the authoritative architecture. The rows below reflect current Beast state (containers still present) but no new work should target these services.
+
 | Container | Image | Status | Purpose |
 |-----------|-------|--------|---------|
-| **falkordb** | `falkordb/falkordb:latest` | Running | Graph database. 9,000 nodes across 4 graphs. Stores entity relationships from vault content. Internal port 6379. |
-| **qdrant** | `qdrant/qdrant:latest` | Running | Vector database. 57,434 embeddings (384-dim). Semantic search over vault content. Internal ports 6333-6334. |
+| **falkordb** | `falkordb/falkordb:latest` | **Deprecated** | ~~Graph database.~~ 9,000 nodes across 4 graphs. Being migrated to PostgreSQL + Apache AGE. Internal port 6379. |
+| **qdrant** | `qdrant/qdrant:latest` | **Deprecated** | ~~Vector database.~~ 57,434 embeddings (384-dim). Being migrated to PostgreSQL + pgvector (HNSW). Internal ports 6333-6334. |
 | **clickhouse** | `clickhouse/clickhouse-server:latest` | Running | Columnar analytics database. Internal ports 8123 (HTTP), 9000 (native). |
 | **searxng** | `searxng/searxng:latest` | Running | Metasearch engine for research agents. Internal port 8080. |
 
@@ -145,7 +148,7 @@ Source: `/root/cove-repo/infrastructure/`
 
 | Container | Image | Status | Purpose |
 |-----------|-------|--------|---------|
-| **amplified-voice-agent** | `amplified-voice-agent-voice-agent` | Running | Voice AI agent. Currently wired: Twilio (+441917433558), Deepgram STT, Anthropic conversation, FalkorDB knowledge. Port 8080 exposed to host. Routes to `voice.beast.amplifiedpartners.ai`. Source: `/opt/amplified-voice-agent/` |
+| **amplified-voice-agent** | `amplified-voice-agent-voice-agent` | Running | Voice AI agent. Currently wired: Twilio (+441917433558), Deepgram STT, Anthropic conversation, ~~FalkorDB~~ knowledge (migrating to PostgreSQL + AGE). Port 8080 exposed to host. Routes to `voice.beast.amplifiedpartners.ai`. Source: `/opt/amplified-voice-agent/` |
 | **xai-phone-agent** | `xai-phone-agent-xai-phone-agent` | Running | xAI/Grok voice experiment (voice: "Sal"). No Twilio — uses xAI native voice API. Routes to `phone.beast.amplifiedpartners.ai`. Source: `/opt/xai-phone-agent/` |
 | **voice-pipeline** | `voice-pipeline-voice-pipeline` | **Stopped** | Voice processing pipeline (Deepgram + LiteLLM + Redis). Exited 6 weeks ago. Source: `/root/services/voice-pipeline/` |
 
@@ -195,13 +198,23 @@ Source: `/root/cove-repo/infrastructure/`
 | Voice Pipeline | `/root/services/voice-pipeline/docker-compose.yml` | voice-pipeline |
 | xAI Phone Agent | `/opt/xai-phone-agent/docker-compose.yml` | xai-phone-agent |
 | Nexus Dashboard | `/opt/nexus/dashboard/docker-compose.yml` | nexus-dashboard |
-| Base infra | `/opt/amplified/docker-compose.yml` | postgres, redis, falkordb, qdrant, clickhouse, minio, portainer, amplified-code-server |
+| Base infra | `/opt/amplified/docker-compose.yml` | postgres, redis, ~~falkordb~~ (deprecated), ~~qdrant~~ (deprecated), clickhouse, minio, portainer, amplified-code-server |
 | Cost-tools (token-proxy) | `/opt/amplified/apps/cost-tools/docker-compose.yml` | token-proxy |
 | _(standalone)_ | `docker run` | watchtower |
 
 ---
 
 ## Changelog
+
+### v3 — 2026-05-08
+
+- Marked **falkordb** and **qdrant** as **Deprecated** under § Knowledge and search. Added deprecation banner pointing to `00_authority/DATA_ARCHITECTURE.md`.
+- Updated voice-agent row to note FalkorDB knowledge dependency is migrating to PostgreSQL + AGE.
+- Marked falkordb and qdrant as deprecated in § Compose file locations table.
+- No containers removed — deprecation is a logical marker; physical removal is a separate ops task.
+- Frontmatter `version` bumped to v3, `date` to 2026-05-08.
+
+Signed-by: Devon-973e | 2026-05-08 | devin-973ed35fae1b4b44a52594bcb53b3f0a
 
 ### v2 — 2026-05-03
 

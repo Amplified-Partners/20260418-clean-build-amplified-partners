@@ -1,7 +1,7 @@
 ---
 title: Governed workspace manifest (authoritative inventory)
-date: 2026-05-07
-version: 55
+date: 2026-05-08
+version: 56
 status: draft
 ---
 
@@ -79,6 +79,7 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
 - `00_authority/DECISION_LOG.md`
 - `00_authority/PR_WORKFLOW.md` (branch protection + Linear linkage + review authority for active repos; AMP-70)
 - `STATUS.md` (operations status board — async handshake between Devon and OpenClaw; versioned handoffs, no chat)
+- `00_authority/DATA_ARCHITECTURE.md` (canonical data layer — PostgreSQL + Apache AGE graph + pgvector/HNSW vector; deprecates FalkorDB and Qdrant; locks terminology including "the Russian maths" = HNSW algorithm)
 - `02_build/INFRASTRUCTURE.md` (canonical infrastructure manifest — single source of truth for all 40 containers, services, scheduled jobs, and server specs on Amplified Core)
 - `.github/CODEOWNERS` (GitHub CODEOWNERS — requires `@ewanbramley` review for `00_authority/**` and `01_truth/**` changes; no default owner)
 - `.cursor/rules/stateless-handover-kaizen.mdc` `[LOGIC TO BE CONFIRMED]` (mechanical enforcement of existing handover policy; not a separate policy spine)
@@ -175,6 +176,12 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
     - `P10-kill-switch-master-reference.md` `[NON-AUTHORITATIVE]` (510 lines — binary shutdown architecture)
 
 ## Changelog
+
+### v56 — 2026-05-08
+
+- Added `00_authority/DATA_ARCHITECTURE.md` to **Authoritative now**. This is the canonical data-layer document establishing PostgreSQL + Apache AGE (graph) + pgvector with HNSW indexing (vector) as the single authoritative stack. Deprecates FalkorDB and Qdrant. Locks terminology: "the Russian maths" = HNSW algorithm by Malkov & Yashunin. Decision recorded at `00_authority/DECISION_LOG.md` v21.
+
+Signed-by: Devon-973e | 2026-05-08 | devin-973ed35fae1b4b44a52594bcb53b3f0a
 
 ### v55 — 2026-05-07
 

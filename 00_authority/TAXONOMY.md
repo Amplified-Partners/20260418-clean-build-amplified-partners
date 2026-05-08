@@ -1,7 +1,7 @@
 ---
 title: Taxonomy — Amplified Partners entity definitions and agent roles
-date: 2026-05-03
-version: 3
+date: 2026-05-08
+version: 4
 status: draft
 ---
 
@@ -30,7 +30,7 @@ This file defines **entities, agents, and locked terminology**. It does **not** 
 | Entity | Type | What it is | What it is not |
 |--------|------|------------|----------------|
 | **Amplified Partners** | Umbrella / parent | The business. The brand. The operating entity. | A product. A legal subdivision (yet). |
-| **Amplified Core** | Infrastructure | The Hetzner AX162-R server (`amplified-core`, `135.181.161.131`). The physical compute home. FalkorDB, Qdrant, LLM inference, marketing engine. | A team, a product, or a department. Strictly infrastructure. |
+| **Amplified Core** | Infrastructure | The Hetzner AX162-R server (`amplified-core`, `135.181.161.131`). The physical compute home. PostgreSQL (+ Apache AGE graph + pgvector/HNSW vector), LLM inference, marketing engine. ~~FalkorDB, Qdrant~~ deprecated — see `00_authority/DATA_ARCHITECTURE.md`. | A team, a product, or a department. Strictly infrastructure. |
 | **Amplified Marketing** | Function | The content pipeline and marketing engine. Runs on the Core. Produces social, GMB, LinkedIn content. Evaluated by Bob/Lisa/Marcus synthetic avatars. | The marketing *team* or strategy. The engine that executes the strategy. |
 | **Amplified Central Ops** | Function | AI-native governance layer. The clean-build workspace, agent operating contracts, decision logs, authority hierarchy. The spine of how the business runs. | A tech team. Not code. Not infrastructure. The rules and governance that infrastructure runs under. |
 | **Amplified Client** | Product tier | The client-facing advisory product for businesses — Bob, Lisa, Marcus. The CRM, the Interview Engine, the federated architecture, the PicoClaw sidecar. | Internal tooling. Does not include personal/consumer products. |
@@ -109,6 +109,13 @@ The principle: one person does one thing. Clean boundaries. No stepping on each 
 ---
 
 ## Changelog
+
+### v4 — 2026-05-08
+
+- Updated **Amplified Core** company-structure row: replaced "FalkorDB, Qdrant" with "PostgreSQL (+ Apache AGE graph + pgvector/HNSW vector)" and marked old services as deprecated with cross-reference to `00_authority/DATA_ARCHITECTURE.md`.
+- Frontmatter `version` bumped to v4, `date` to 2026-05-08.
+
+Signed-by: Devon-973e | 2026-05-08 | devin-973ed35fae1b4b44a52594bcb53b3f0a
 
 ### v3 — 2026-05-03
 
