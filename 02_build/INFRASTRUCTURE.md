@@ -1,11 +1,12 @@
 ---
 title: Infrastructure manifest — Amplified Partners Core Server
-date: 2026-05-03
-version: 2
+date: 2026-05-09
+version: 3
 status: authoritative now
 signed-by:
   - Devon | 2026-04-30 | devin-66aa3ce48c7e407f8ad9bf066541b604
   - Devon-6ca5 | 2026-05-03 | devin-6ca57553eefe4806b613070325964703
+  - Devon-bb9c | 2026-05-09 | devin-bb9c2942d13c40ba8842b1117f72efda
 ---
 
 <!-- markdownlint-disable-file MD013 -->
@@ -187,9 +188,10 @@ Source: `/root/cove-repo/infrastructure/`
 | Langfuse | `/opt/amplified/apps/langfuse/docker-compose.yml` | langfuse, minio-init |
 | Ollama | `/opt/amplified/apps/ollama/docker-compose.yml` | ollama |
 | SearXNG | `/opt/amplified/apps/searxng/docker-compose.yml` | searxng |
-| OpenClaw Agents | `/opt/amplified/apps/openclaw-agents/docker-compose.yml` | openclaw-agents |
+| OpenClaw Agents | `/opt/amplified/apps/openclaw-agents/docker-compose.yml` | openclaw-agents | **GitHub ref:** `clean-build/02_build/openclaw-agents/docker-compose.yml` |
 | Knowledge MCP | `/opt/amplified/apps/amplified-knowledge-mcp/docker-compose.yml` | amplified-knowledge-mcp |
-| Cove (primary) | `/root/cove-repo/infrastructure/docker-compose.yml` | cove-api, cove-translator, cove-temporal, cove-temporal-ui, cove-postgres, cove-worker-* |
+| Brain MCP | `/opt/amplified/apps/brain-mcp/docker-compose.yml` | amplified-brain-mcp, amplified-brain-mcp-writer | **GitHub ref:** `clean-build/02_build/brain-migration/docker-compose.yml` |
+| Cove (primary) | `/root/cove-repo/infrastructure/docker-compose.yml` | cove-api, cove-translator, cove-temporal, cove-temporal-ui, cove-postgres, cove-worker-* | **GitHub ref:** `clean-build/02_build/cove-orchestrator/docker/docker-compose.cove-primary.yml` |
 | Cove (orchestrator) | `/opt/amplified/agent-stack/cove-orchestrator/docker/docker-compose.yml` | docker-postgres-1, docker-temporal-1 |
 | Voice Agent | `/opt/amplified-voice-agent/docker-compose.yml` | amplified-voice-agent |
 | Voice Pipeline | `/root/services/voice-pipeline/docker-compose.yml` | voice-pipeline |
@@ -202,6 +204,16 @@ Source: `/root/cove-repo/infrastructure/`
 ---
 
 ## Changelog
+
+### v3 — 2026-05-09
+
+- Added **Brain MCP** row to compose file locations (`02_build/brain-migration/docker-compose.yml`). Traefik route: `brain.beast.amplifiedpartners.ai` (AMP-194).
+- Added **GitHub ref** column to OpenClaw Agents, Brain MCP, and Cove (primary) rows — these services previously had compose files only on Beast with no version-controlled reference.
+- Added `docker-compose.cove-primary.yml` as reference copy of the primary Cove stack (cove-api, cove-translator, workers). Ports bound to `127.0.0.1` per AMP-289 hardening.
+- Added `02_build/openclaw-agents/docker-compose.yml` as reference copy. Port 8100 bound to `127.0.0.1`.
+- Bound all ports in `02_build/cove-orchestrator/docker/docker-compose.yml` to `127.0.0.1` (postgres 5432, temporal 7233, temporal-ui 8080, polish-gate 8090, litellm 4000, langfuse 3000). AMP-289.
+
+Signed-by: Devon-bb9c | 2026-05-09 | devin-bb9c2942d13c40ba8842b1117f72efda
 
 ### v2 — 2026-05-03
 

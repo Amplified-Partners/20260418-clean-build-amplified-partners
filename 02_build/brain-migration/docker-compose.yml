@@ -1,0 +1,75 @@
+# Amplified Brain MCP — Docker Compose for Beast deployment
+# Exposes the Brain MCP (read-only) to external partners (Perplexity, Comet)
+# via Traefik at brain.beast.amplifiedpartners.ai with bearer token auth.
+#
+# Write endpoint (:8091) stays internal-only — no Traefik route, no host port.
+#
+# Usage:
+#   docker compose up -d
+#
+# Prerequisites:
+#   - amplified-net Docker network exists
+#   - cove-postgres running with amplified_brain database
+#   - /opt/amplified/secrets/brain_mcp_bearer_token.txt contains the shared secret
+#
+# Linear: AMP-194
+# Signed-by: Devon-bb9c | 2026-05-09 | devin-bb9c2942d13c40ba8842b1117f72efda
+
+services:
+  amplified-brain-mcp:
+    build: .
+    container_name: amplified-brain-mcp
+    restart: unless-stopped
+    environment:
+      DB_HOST: cove-postgres
+      DB_PORT: "5432"
+      DB_NAME: amplified_brain
+      DB_USER: brain_reader
+      DB_PASSWORD: ${BRAIN_READER_PASSWORD:-}
+      ALLOW_WRITES: "false"
+      SERVER_PORT: "8090"
+    networks:
+      - amplified-net
+    labels:
+      - "traefik.enable=true"
+      # Read-only MCP — HTTPS via Let's Encrypt
+      - "traefik.http.routers.brain-mcp.rule=Host(`brain.beast.amplifiedpartners.ai`)"
+      - "traefik.http.routers.brain-mcp.entrypoints=websecure"
+      - "traefik.http.routers.brain-mcp.tls.certresolver=letsencrypt"
+      - "traefik.http.services.brain-mcp.loadbalancer.server.port=8090"
+      # Bearer token auth middleware
+      - "traefik.http.routers.brain-mcp.middlewares=brain-mcp-auth"
+      - "traefik.http.middlewares.brain-mcp-auth.headers.customrequestheaders.X-Require-Auth=true"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8090/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+
+  amplified-brain-mcp-writer:
+    build: .
+    container_name: amplified-brain-mcp-writer
+    restart: unless-stopped
+    environment:
+      DB_HOST: cove-postgres
+      DB_PORT: "5432"
+      DB_NAME: amplified_brain
+      DB_USER: brain_writer
+      DB_PASSWORD: ${BRAIN_WRITER_PASSWORD:-}
+      ALLOW_WRITES: "true"
+      SERVER_PORT: "8091"
+    networks:
+      - amplified-net
+    # Writer stays internal — no Traefik labels, no host port binding.
+    # Agents reach it as amplified-brain-mcp-writer:8091 on amplified-net.
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8091/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+
+networks:
+  amplified-net:
+    external: true

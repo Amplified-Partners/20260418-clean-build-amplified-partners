@@ -1,0 +1,163 @@
+# Cove Primary Stack — Beast reference compose
+# Tracks the live compose at /root/cove-repo/infrastructure/docker-compose.yml on Beast.
+#
+# This file exists because the primary Cove stack has no GitHub repo.
+# It documents the INTENDED state after AMP-289 hardening (2026-05-09).
+#
+# Services: cove-api, cove-translator, cove-postgres, cove-temporal,
+#           cove-temporal-ui, cove-worker (x4)
+#
+# Ports bound to 127.0.0.1 — matches live state applied 2026-05-09 (AMP-289).
+#
+# NOTE: This is a REFERENCE copy. The live compose on Beast is the source
+# of truth until the cove infrastructure is properly versioned in GitHub.
+#
+# Signed-by: Devon-bb9c | 2026-05-09 | devin-bb9c2942d13c40ba8842b1117f72efda
+
+services:
+  cove-api:
+    image: cove-api:latest
+    container_name: cove-api
+    restart: unless-stopped
+    environment:
+      TEMPORAL_ADDRESS: cove-temporal:7233
+      POSTGRES_DSN: ${COVE_POSTGRES_DSN:-postgresql://cove:${POSTGRES_PASSWORD}@cove-postgres:5432/cove}
+    ports:
+      - "127.0.0.1:8081:8081"
+    networks:
+      - amplified-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  cove-translator:
+    image: cove-translator:latest
+    container_name: cove-translator
+    restart: unless-stopped
+    environment:
+      TEMPORAL_ADDRESS: cove-temporal:7233
+      POSTGRES_DSN: ${COVE_POSTGRES_DSN:-postgresql://cove:${POSTGRES_PASSWORD}@cove-postgres:5432/cove}
+    ports:
+      - "127.0.0.1:8092:8090"
+    networks:
+      - amplified-net
+
+  cove-postgres:
+    image: timescale/timescaledb-ha:pg15-latest
+    container_name: cove-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: cove
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-}
+      POSTGRES_DB: cove
+    ports:
+      - "127.0.0.1:5433:5432"
+    volumes:
+      - cove-postgres-data:/home/postgres/pgdata/data
+    networks:
+      - amplified-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cove"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  cove-temporal:
+    image: temporalio/auto-setup:latest
+    container_name: cove-temporal
+    restart: unless-stopped
+    depends_on:
+      cove-postgres:
+        condition: service_healthy
+    environment:
+      DB: postgres12
+      DB_PORT: 5432
+      POSTGRES_USER: cove
+      POSTGRES_PWD: ${POSTGRES_PASSWORD:-}
+      POSTGRES_SEEDS: cove-postgres
+    ports:
+      - "127.0.0.1:7233:7233"
+    networks:
+      - amplified-net
+
+  cove-temporal-ui:
+    image: temporalio/ui:latest
+    container_name: cove-temporal-ui
+    restart: unless-stopped
+    depends_on:
+      - cove-temporal
+    environment:
+      TEMPORAL_ADDRESS: cove-temporal:7233
+    ports:
+      - "127.0.0.1:8233:8080"
+    networks:
+      - amplified-net
+
+  cove-worker:
+    image: cove-worker:latest
+    container_name: cove-worker
+    restart: unless-stopped
+    depends_on:
+      - cove-temporal
+    environment:
+      TEMPORAL_ADDRESS: cove-temporal:7233
+      POSTGRES_DSN: ${COVE_POSTGRES_DSN:-postgresql://cove:${POSTGRES_PASSWORD}@cove-postgres:5432/cove}
+    networks:
+      - amplified-net
+
+  cove-worker-alpha:
+    image: cove-worker:latest
+    container_name: cove-worker-alpha
+    restart: unless-stopped
+    depends_on:
+      - cove-temporal
+    environment:
+      TEMPORAL_ADDRESS: cove-temporal:7233
+      POSTGRES_DSN: ${COVE_POSTGRES_DSN:-postgresql://cove:${POSTGRES_PASSWORD}@cove-postgres:5432/cove}
+    networks:
+      - amplified-net
+
+  cove-worker-bravo:
+    image: cove-worker:latest
+    container_name: cove-worker-bravo
+    restart: unless-stopped
+    depends_on:
+      - cove-temporal
+    environment:
+      TEMPORAL_ADDRESS: cove-temporal:7233
+      POSTGRES_DSN: ${COVE_POSTGRES_DSN:-postgresql://cove:${POSTGRES_PASSWORD}@cove-postgres:5432/cove}
+    networks:
+      - amplified-net
+
+  cove-worker-charlie:
+    image: cove-worker:latest
+    container_name: cove-worker-charlie
+    restart: unless-stopped
+    depends_on:
+      - cove-temporal
+    environment:
+      TEMPORAL_ADDRESS: cove-temporal:7233
+      POSTGRES_DSN: ${COVE_POSTGRES_DSN:-postgresql://cove:${POSTGRES_PASSWORD}@cove-postgres:5432/cove}
+    networks:
+      - amplified-net
+
+  cove-worker-delta:
+    image: cove-worker:latest
+    container_name: cove-worker-delta
+    restart: unless-stopped
+    depends_on:
+      - cove-temporal
+    environment:
+      TEMPORAL_ADDRESS: cove-temporal:7233
+      POSTGRES_DSN: ${COVE_POSTGRES_DSN:-postgresql://cove:${POSTGRES_PASSWORD}@cove-postgres:5432/cove}
+    networks:
+      - amplified-net
+
+volumes:
+  cove-postgres-data:
+
+networks:
+  amplified-net:
+    external: true
