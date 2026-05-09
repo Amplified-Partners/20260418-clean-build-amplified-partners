@@ -12,7 +12,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-cove_dev_2026}
       POSTGRES_DB: cove
     ports:
-      - "5432:5432"
+      - "127.0.0.1:5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ../db/migrations:/docker-entrypoint-initdb.d
@@ -37,7 +37,7 @@ services:
       POSTGRES_SEEDS: postgres
       DYNAMIC_CONFIG_FILE_PATH: /etc/temporal/dynamic_config.yml
     ports:
-      - "7233:7233"  # gRPC
+      - "127.0.0.1:7233:7233"  # gRPC
     volumes:
       - ./temporal-dynamic-config.yml:/etc/temporal/dynamic_config.yml
 
@@ -51,7 +51,7 @@ services:
       TEMPORAL_ADDRESS: temporal:7233
       TEMPORAL_CORS_ORIGINS: http://localhost:3000
     ports:
-      - "8080:8080"
+      - "127.0.0.1:8080:8080"
 
   # ─── Temporal Worker (our Python code) ───────────────────────────────
   temporal-worker:
@@ -98,7 +98,7 @@ services:
       POLISH_GATE_RULES_PATH: ${POLISH_GATE_RULES_PATH:-/opt/visual-polish-system/principles/rules/core.rules.json}
       POLISH_GATE_REFERENCES_DIR: ${POLISH_GATE_REFERENCES_DIR:-}
     ports:
-      - "${COVE_POLISH_GATE_PORT:-8090}:8090"
+      - "127.0.0.1:${COVE_POLISH_GATE_PORT:-8090}:8090"
     volumes:
       - ../api:/app/api
       - ../temporal:/app/temporal
@@ -108,7 +108,7 @@ services:
     image: ghcr.io/berriai/litellm:main-latest
     restart: unless-stopped
     ports:
-      - "4000:4000"
+      - "127.0.0.1:4000:4000"
     volumes:
       - ./litellm-config.yml:/app/config.yaml
     command: ["--config", "/app/config.yaml"]
@@ -126,7 +126,7 @@ services:
       NEXTAUTH_URL: http://localhost:3000
       SALT: ${LANGFUSE_SALT:-changeme-in-production}
     ports:
-      - "3000:3000"
+      - "127.0.0.1:3000:3000"
 
   # ─── NightScout (Intelligence Pipeline) ────────────────────────────
   nightscout:

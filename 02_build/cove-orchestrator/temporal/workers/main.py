@@ -14,6 +14,7 @@ from temporalio.worker import Worker
 
 from temporal.workflows.build_workflow import ProjectBuildWorkflow
 from temporal.workflows.polish_gate_workflow import PolishGateWorkflow
+from temporal.workflows.apds_ingestion_workflow import APDSIngestionWorkflow
 from temporal.activities.agent_activities import (
     run_agent,
     request_approval,
@@ -29,6 +30,13 @@ from temporal.activities.polish_activities import (
     post_pr_comment,
     langfuse_log_polish_score,
 )
+from temporal.activities.ingestion_activities import (
+    run_unified_ingestion,
+    run_pudding_extraction,
+    write_to_memory_stores,
+    log_pipeline_run,
+)
+from temporal.workers.schedule_starter import register_apds_schedule
 
 TEMPORAL_ADDRESS = os.getenv("TEMPORAL_ADDRESS", "localhost:7233")
 TASK_QUEUE = "cove-build-queue"
@@ -42,10 +50,13 @@ async def main():
     client = await Client.connect(TEMPORAL_ADDRESS)
 
     log.info(f"Starting worker on queue: {TASK_QUEUE}")
+    # Register the APDS 10-min schedule (AMP-158, idempotent)
+    await register_apds_schedule(client)
+
     worker = Worker(
         client,
         task_queue=TASK_QUEUE,
-        workflows=[ProjectBuildWorkflow, PolishGateWorkflow],
+        workflows=[ProjectBuildWorkflow, PolishGateWorkflow, APDSIngestionWorkflow],
         activities=[
             run_agent,
             request_approval,
@@ -58,6 +69,10 @@ async def main():
             evaluate_polish_gate,
             post_pr_comment,
             langfuse_log_polish_score,
+            run_unified_ingestion,
+            run_pudding_extraction,
+            write_to_memory_stores,
+            log_pipeline_run,
         ],
     )
     await worker.run()

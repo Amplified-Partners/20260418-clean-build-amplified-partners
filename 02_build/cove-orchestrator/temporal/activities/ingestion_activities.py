@@ -4,16 +4,25 @@ Wraps the unified ingestion pipeline + PUDDING extractor + memory store writer
 into Temporal activities that can be orchestrated by a workflow.
 
 These activities run on Beast (triggered via the worker container) and connect
-to the local Ollama fleet, Qdrant, and FalkorDB.
+to the local Ollama fleet and the amplified_brain PostgreSQL database
+(pgvector/HNSW for vectors, entities+relationships tables for graph).
+
+Canonical data layer: PostgreSQL + pgvector (HNSW) + relational graph.
+FalkorDB and Qdrant are deprecated — see 00_authority/DATA_ARCHITECTURE.md.
+
+Signed-by: Devon-c329 | 2026-05-09 | devin-c3297c6e5f464d8fb6d912403b7cc3e6
+Based-on: Devon-a4e2 | devin-a4e23461f626488aaf493c55d0c87924
 """
 
 from __future__ import annotations
 
+import hashlib
 import json
 import logging
 import os
 import subprocess
 import sys
+import uuid as _uuid
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
@@ -36,9 +45,13 @@ SEEN_HASHES = STORE_B_CLEAN / "seen_hashes.json"
 OLLAMA_URL = os.getenv("OLLAMA_URL", "http://172.18.0.3:11434/api/generate")
 OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "llama3.1:8b")
 
-# ── Vector + Graph DBs (Beast internal) ─────────────────────────────
-QDRANT_URL = os.getenv("QDRANT_URL", "http://qdrant:6333")
-FALKORDB_URL = os.getenv("FALKORDB_URL", "redis://falkordb:6379")
+# ── PostgreSQL amplified_brain (Beast internal) ──────────────────────
+# Canonical data layer: pgvector/HNSW for vectors, relational tables for graph.
+# See 00_authority/DATA_ARCHITECTURE.md.
+BRAIN_DSN = os.getenv(
+    "BRAIN_DSN",
+    "postgresql://brain_writer@cove-postgres:5432/amplified_brain",
+)
 
 
 # ═════════════════════════════════════════════════════════════════════
@@ -87,21 +100,18 @@ class PuddingResult:
 
 @dataclass
 class MemoryStoreInput:
-    """Input for writing to FalkorDB + Qdrant."""
+    """Input for writing to amplified_brain PostgreSQL (pgvector + relational graph)."""
     source_dir: str = str(STORE_B_CLEAN)
-    qdrant_url: str = QDRANT_URL
-    falkordb_url: str = FALKORDB_URL
-    qdrant_collection: str = "business_knowledge"
-    falkordb_graph: str = "kg_pudding_discovery"
+    brain_dsn: str = BRAIN_DSN
     batch_size: int = 100
 
 
 @dataclass
 class MemoryStoreResult:
-    """Result from writing to memory stores."""
+    """Result from writing to amplified_brain PostgreSQL."""
     success: bool
-    qdrant_upserts: int = 0
-    falkordb_writes: int = 0
+    pg_vectors: int = 0
+    pg_entities: int = 0
     errors: int = 0
     error: str | None = None
 
@@ -426,16 +436,19 @@ async def run_pudding_extraction(input: PuddingInput) -> PuddingResult:
 
 @activity.defn(name="write_to_memory_stores")
 async def write_to_memory_stores(input: MemoryStoreInput) -> MemoryStoreResult:
-    """Write PUDDING-labelled files into FalkorDB (graph) and Qdrant (vectors).
+    """Write PUDDING-labelled files into amplified_brain PostgreSQL.
 
     Reads files that have PUDDING frontmatter, extracts taxonomy data,
-    and upserts into both memory stores.
+    and upserts into knowledge_vectors (pgvector/HNSW) and entities tables.
+
+    Canonical data layer — see 00_authority/DATA_ARCHITECTURE.md.
     """
-    import httpx
+    import asyncpg
+    import yaml
 
     activity.logger.info(
         f"Memory store write: source={input.source_dir}, "
-        f"qdrant={input.qdrant_url}, falkordb={input.falkordb_url}"
+        f"dsn=***@{input.brain_dsn.split('@')[-1] if '@' in input.brain_dsn else 'localhost'}"
     )
 
     source = Path(input.source_dir)
@@ -445,8 +458,8 @@ async def write_to_memory_stores(input: MemoryStoreInput) -> MemoryStoreResult:
             error=f"Source directory not found: {source}",
         )
 
-    qdrant_upserts = 0
-    falkordb_writes = 0
+    pg_vectors = 0
+    pg_entities = 0
     errors = 0
 
     # ── Collect PUDDING-labelled files ────────────────────────────
@@ -461,99 +474,139 @@ async def write_to_memory_stores(input: MemoryStoreInput) -> MemoryStoreResult:
 
     activity.logger.info(f"Found {len(labelled_files)} PUDDING-labelled files")
 
-    # ── Process in batches ────────────────────────────────────────
-    for i in range(0, len(labelled_files), input.batch_size):
-        batch = labelled_files[i : i + input.batch_size]
-        points: list[dict] = []
+    if not labelled_files:
+        return MemoryStoreResult(success=True)
 
-        for fp in batch:
-            try:
-                content = fp.read_text(encoding="utf-8", errors="ignore")
-                
-                # Extract frontmatter fields
-                import yaml
-                fm: dict[str, Any] = {"file": str(fp)}
-                if content.startswith("---"):
-                    parts = content.split("---", 2)
-                    if len(parts) >= 3:
-                        try:
-                            parsed_fm = yaml.safe_load(parts[1])
-                            if isinstance(parsed_fm, dict):
-                                fm.update(parsed_fm)
-                        except Exception as e:
-                            activity.logger.warning(f"Failed to parse YAML for {fp.name}: {e}")
+    # ── Connect to amplified_brain ────────────────────────────────
+    try:
+        conn = await asyncpg.connect(input.brain_dsn)
+    except Exception as e:
+        return MemoryStoreResult(
+            success=False,
+            error=f"PostgreSQL connection failed: {e}",
+        )
 
-                # ── Upsert to Qdrant ──────────────────────────
-                # Safely extract from PUDDING 2026 taxonomy schema
-                concepts = fm.get("concepts", [])
-                concept_names = [c.get("name") for c in concepts if isinstance(c, dict) and c.get("name")]
-                
-                domains = fm.get("domains", [])
-                domain_names = [d.get("name") for d in domains if isinstance(d, dict) and d.get("name")]
-                
-                payload = {
-                    "source": str(fp),
-                    "title": fp.stem,
-                    "taxonomy_version": fm.get("taxonomy_version", "unknown"),
-                    "concepts": concept_names,
-                    "domains": domain_names,
-                    "visibility_zone": "INTERNAL_KB",
-                    "pudding_label": f"{len(concepts)}_concepts",
-                    "facets": {
+    try:
+        # ── Process in batches ────────────────────────────────────
+        for i in range(0, len(labelled_files), input.batch_size):
+            batch = labelled_files[i : i + input.batch_size]
+
+            for fp in batch:
+                try:
+                    content = fp.read_text(encoding="utf-8", errors="ignore")
+
+                    # Extract frontmatter fields
+                    fm: dict[str, Any] = {"file": str(fp)}
+                    if content.startswith("---"):
+                        parts = content.split("---", 2)
+                        if len(parts) >= 3:
+                            try:
+                                parsed_fm = yaml.safe_load(parts[1])
+                                if isinstance(parsed_fm, dict):
+                                    fm.update(parsed_fm)
+                            except Exception as e:
+                                activity.logger.warning(
+                                    f"Failed to parse YAML for {fp.name}: {e}"
+                                )
+
+                    # Extract PUDDING taxonomy fields
+                    concepts = fm.get("concepts", [])
+                    concept_names = [
+                        c.get("name")
+                        for c in concepts
+                        if isinstance(c, dict) and c.get("name")
+                    ]
+                    domains = fm.get("domains", [])
+                    domain_names = [
+                        d.get("name")
+                        for d in domains
+                        if isinstance(d, dict) and d.get("name")
+                    ]
+                    doc_type = fm.get("type", "unknown")
+
+                    # Deterministic ID from file path
+                    file_hash = hashlib.sha256(str(fp).encode()).hexdigest()
+                    vec_id = _uuid.UUID(file_hash[:32])
+
+                    # ── Upsert knowledge_vectors row ──────────────
+                    metadata = {
+                        "taxonomy_version": fm.get("taxonomy_version", "unknown"),
+                        "concepts": concept_names,
+                        "domains": domain_names,
+                        "doc_type": doc_type,
                         "has_recipes": bool(fm.get("recipes")),
                         "has_signals": bool(fm.get("signals")),
                         "source_count": len(fm.get("sources", [])),
-                    },
-                    "content_snippet": content[:1000],
-                }
+                    }
 
-                # Generate a deterministic point ID from the file path
-                import hashlib
-
-                point_id = hashlib.md5(str(fp).encode()).hexdigest()
-
-                # Use a zero-vector as placeholder (real embedding needs sentence-transformers)
-                points.append({
-                    "id": point_id,
-                    "vector": [0.0] * 384,  # placeholder dimension
-                    "payload": payload,
-                })
-
-            except Exception as e:
-                errors += 1
-                activity.logger.warning(f"Memory write prep failed for {fp.name}: {e}")
-
-        # ── Batch upsert to Qdrant ────────────────────────────────
-        if points:
-            try:
-                async with httpx.AsyncClient() as client:
-                    resp = await client.put(
-                        f"{input.qdrant_url}/collections/{input.qdrant_collection}/points",
-                        json={"points": points},
-                        timeout=30.0,
+                    await conn.execute(
+                        """INSERT INTO knowledge_vectors
+                           (id, content, source, source_type, metadata)
+                        VALUES ($1, $2, $3, $4, $5::jsonb)
+                        ON CONFLICT (id) DO UPDATE SET
+                           content = EXCLUDED.content,
+                           metadata = EXCLUDED.metadata,
+                           updated_at = now()""",
+                        vec_id,
+                        content[:4000],
+                        str(fp),
+                        doc_type,
+                        json.dumps(metadata),
                     )
-                    if resp.status_code == 200:
-                        qdrant_upserts += len(points)
-                    else:
-                        activity.logger.warning(
-                            f"Qdrant upsert failed: {resp.status_code} {resp.text[:200]}"
-                        )
-                        errors += 1
-            except Exception as e:
-                errors += 1
-                activity.logger.warning(f"Qdrant batch failed: {e}")
+                    pg_vectors += 1
 
-        falkordb_writes += len(points)
+                    # ── Upsert entity per concept ─────────────────
+                    for concept in concepts:
+                        if not isinstance(concept, dict) or not concept.get("name"):
+                            continue
+                        ent_id = _uuid.UUID(
+                            hashlib.sha256(concept["name"].encode()).hexdigest()[:32]
+                        )
+                        props = {
+                            "pudding_code": concept.get("pudding_code", ""),
+                            "description": concept.get("description", ""),
+                            "confidence": concept.get("confidence", 0.0),
+                            "source_file": str(fp),
+                        }
+                        await conn.execute(
+                            """INSERT INTO entities
+                               (id, name, entity_type, summary, properties)
+                            VALUES ($1, $2, $3, $4, $5::jsonb)
+                            ON CONFLICT (id) DO UPDATE SET
+                               properties = entities.properties || EXCLUDED.properties,
+                               updated_at = now()""",
+                            ent_id,
+                            concept["name"],
+                            "concept",
+                            concept.get("description", ""),
+                            json.dumps(props),
+                        )
+                        pg_entities += 1
+
+                except Exception as e:
+                    errors += 1
+                    activity.logger.warning(
+                        f"Memory write failed for {fp.name}: {e}"
+                    )
+
+            activity.logger.info(
+                f"Batch {i // input.batch_size + 1}: "
+                f"vectors={pg_vectors}, entities={pg_entities}, "
+                f"errors={errors}"
+            )
+
+    finally:
+        await conn.close()
 
     activity.logger.info(
-        f"Memory store complete: {qdrant_upserts} Qdrant, "
-        f"{falkordb_writes} FalkorDB candidates, {errors} errors"
+        f"Memory store complete: {pg_vectors} vectors, "
+        f"{pg_entities} entities, {errors} errors"
     )
 
     return MemoryStoreResult(
         success=errors == 0,
-        qdrant_upserts=qdrant_upserts,
-        falkordb_writes=falkordb_writes,
+        pg_vectors=pg_vectors,
+        pg_entities=pg_entities,
         errors=errors,
         error=f"{errors} write failures" if errors else None,
     )
@@ -568,14 +621,14 @@ async def log_pipeline_run(run: PipelineRun) -> None:
     """Log a pipeline run to PostgreSQL for observability."""
     import asyncpg
 
-    dsn = os.getenv("POSTGRES_DSN", "postgresql://cove:cove@localhost:5432/cove")
+    dsn = os.getenv("BRAIN_DSN", BRAIN_DSN)
     conn = await asyncpg.connect(dsn)
     try:
         await conn.execute(
             """INSERT INTO pipeline_runs
             (run_id, started_at, ingestion_new_files, ingestion_total_unique,
              ingestion_elapsed, pudding_labelled, pudding_skipped, pudding_errors,
-             memory_qdrant_upserts, memory_falkordb_writes, memory_errors,
+             memory_pg_vectors, memory_pg_entities, memory_errors,
              completed_at, status)
             VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)
             ON CONFLICT (run_id) DO UPDATE SET
@@ -588,8 +641,8 @@ async def log_pipeline_run(run: PipelineRun) -> None:
             run.pudding.labelled if run.pudding else 0,
             run.pudding.skipped if run.pudding else 0,
             run.pudding.errors if run.pudding else 0,
-            run.memory_store.qdrant_upserts if run.memory_store else 0,
-            run.memory_store.falkordb_writes if run.memory_store else 0,
+            run.memory_store.pg_vectors if run.memory_store else 0,
+            run.memory_store.pg_entities if run.memory_store else 0,
             run.memory_store.errors if run.memory_store else 0,
             run.completed_at,
             run.status,
