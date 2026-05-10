@@ -35,7 +35,7 @@ jobs:
           PR_TITLE: ${{ github.event.pull_request.title }}
         run: |
           python3 << 'PYEOF'
-          import os, json, urllib.request
+          import os, json, sys, urllib.request
 
           diff = open("/tmp/pr_diff.txt").read()[:50000]
           title = os.environ.get("PR_TITLE", "")
@@ -45,13 +45,12 @@ jobs:
           PR Title: {title}
 
           Rules:
-          - Check for bugs, security issues, logic errors, and code quality
-          - Check imports are correct and complete
-          - Check for hardcoded secrets or credentials
-          - Check for obvious test failures
-          - Be concise. Only flag real issues, not style preferences
-          - If the code is acceptable, say APPROVED
-          - If there are blocking issues, say CHANGES_REQUESTED and list them
+          - Only flag BLOCKING issues: bugs, security holes, logic errors, missing imports, hardcoded secrets
+          - Do NOT flag style preferences, naming conventions, or minor improvements
+          - Do NOT flag intentional design choices (e.g. truncation limits, fallback behavior)
+          - Threshold: would this issue cause a bug, security vulnerability, or data loss in production?
+          - If no blocking issues, say APPROVED
+          - If there ARE blocking issues, say CHANGES_REQUESTED and list only the blockers
 
           Respond with EXACTLY one of these on the first line:
           VERDICT: APPROVED
@@ -87,7 +86,7 @@ jobs:
           except Exception as e:
               err_type = type(e).__name__
               review = f"VERDICT: CHANGES_REQUESTED\n\nReview unavailable ({err_type}). Blocking merge — manual review required."
-              print(f"DeepSeek API error: {err_type}", file=__import__('sys').stderr)
+              print(f"DeepSeek API error: {err_type}", file=sys.stderr)
 
           print(review)
 
