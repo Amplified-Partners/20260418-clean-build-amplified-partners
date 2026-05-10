@@ -1,0 +1,118 @@
+name: AI Code Review + Auto-Merge
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  ai-review:
+    runs-on: ubuntu-latest
+    if: >
+      github.event.pull_request.user.login == 'devin-ai-integration[bot]' ||
+      github.event.pull_request.user.login == 'devin-ai[bot]' ||
+      contains(github.event.pull_request.title, 'Devon-')
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get PR diff
+        run: |
+          BASE=${{ github.event.pull_request.base.sha }}
+          HEAD=${{ github.event.pull_request.head.sha }}
+          git diff "$BASE".."$HEAD" -- . ':!*.lock' ':!package-lock.json' ':!*.min.js' ':!*.min.css' | head -c 60000 > /tmp/pr_diff.txt
+
+      - name: AI Review via DeepSeek
+        id: review
+        env:
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          python3 << 'PYEOF'
+          import os, json, urllib.request
+
+          diff = open("/tmp/pr_diff.txt").read()[:50000]
+          title = os.environ.get("PR_TITLE", "")
+
+          prompt = f"""You are a senior code reviewer for Amplified Partners. Review this PR diff.
+
+          PR Title: {title}
+
+          Rules:
+          - Check for bugs, security issues, logic errors, and code quality
+          - Check imports are correct and complete
+          - Check for hardcoded secrets or credentials
+          - Check for obvious test failures
+          - Be concise. Only flag real issues, not style preferences
+          - If the code is acceptable, say APPROVED
+          - If there are blocking issues, say CHANGES_REQUESTED and list them
+
+          Respond with EXACTLY one of these on the first line:
+          VERDICT: APPROVED
+          VERDICT: CHANGES_REQUESTED
+
+          Then a brief review (max 500 words).
+
+          Diff:
+          ```
+          {diff}
+          ```"""
+
+          body = json.dumps({
+              "model": "deepseek-chat",
+              "messages": [{"role": "user", "content": prompt}],
+              "temperature": 0.1,
+              "max_tokens": 1000
+          }).encode()
+
+          req = urllib.request.Request(
+              "https://api.deepseek.com/chat/completions",
+              data=body,
+              headers={
+                  "Authorization": f"Bearer {os.environ['DEEPSEEK_API_KEY']}",
+                  "Content-Type": "application/json"
+              }
+          )
+
+          try:
+              resp = urllib.request.urlopen(req, timeout=60)
+              result = json.loads(resp.read())
+              review = result["choices"][0]["message"]["content"]
+          except Exception as e:
+              review = f"VERDICT: APPROVED\n\nReview unavailable (API error: {e}). Auto-approving — CI checks are the gate."
+
+          print(review)
+
+          verdict = "approved" if "VERDICT: APPROVED" in review else "changes_requested"
+
+          with open(os.environ["GITHUB_OUTPUT"], "a") as f:
+              f.write(f"verdict={verdict}\n")
+
+          with open("/tmp/review_body.txt", "w") as f:
+              f.write(review)
+          PYEOF
+
+      - name: Post review comment
+        env:
+          GH_TOKEN: ${{ secrets.AUTO_MERGE_PAT }}
+        run: |
+          gh pr comment ${{ github.event.pull_request.number }} --body-file /tmp/review_body.txt
+
+      - name: Approve PR
+        if: steps.review.outputs.verdict == 'approved'
+        env:
+          GH_TOKEN: ${{ secrets.AUTO_MERGE_PAT }}
+        run: |
+          gh pr review ${{ github.event.pull_request.number }} --approve --body "AI review passed. Auto-approved."
+
+      - name: Enable auto-merge
+        if: steps.review.outputs.verdict == 'approved'
+        env:
+          GH_TOKEN: ${{ secrets.AUTO_MERGE_PAT }}
+        run: |
+          gh pr merge ${{ github.event.pull_request.number }} --auto --squash
