@@ -2,6 +2,15 @@
 
 Migration scripts for consolidating FalkorDB (graph) and Qdrant (vector) into unified Postgres with pgvector.
 
+> **AMP-302 (2026-05-11): legacy writers frozen.** The scripts in this
+> directory are one-shot ETL utilities. The canonical writer is the
+> Temporal activity `write_to_memory_stores` in
+> `02_build/cove-orchestrator/temporal/activities/ingestion_activities.py`.
+> Re-running anything here requires the documented migration
+> protocol — see [`RUNBOOK_LEGACY_FREEZE.md`](./RUNBOOK_LEGACY_FREEZE.md).
+> See also the after-action template at
+> `02_build/cove-orchestrator/docs/COMPOUND_ENGINEERING_AFTER_ACTION_TEMPLATE.md`.
+
 ## What was migrated
 
 | Source | Target Table | Count |

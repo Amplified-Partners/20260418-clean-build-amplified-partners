@@ -22,6 +22,8 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 from sse_starlette.sse import EventSourceResponse
 
+from brain_mcp_write_guard import resolve_writes_allowed
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("brain-mcp")
 
@@ -30,8 +32,30 @@ DB_PORT = int(os.environ.get("DB_PORT", "5432"))
 DB_NAME = os.environ.get("DB_NAME", "amplified_brain")
 DB_USER = os.environ.get("DB_USER", "brain_reader")
 DB_PASSWORD = os.environ.get("DB_PASSWORD", "")
-ALLOW_WRITES = os.environ.get("ALLOW_WRITES", "false").lower() in ("true", "1", "yes")
+_ALLOW_WRITES_RAW = os.environ.get("ALLOW_WRITES", "false").lower() in ("true", "1", "yes")
 SERVER_PORT = int(os.environ.get("SERVER_PORT", "8080"))
+
+# AMP-302: brain_mcp_server is a side door — when ALLOW_WRITES=true it
+# exposes INSERT/UPDATE/DELETE tools over HTTP, with no manifest, no
+# provenance, and no Temporal workflow. The canonical writer is the
+# Temporal `write_to_memory_stores` activity. The resolver below
+# implements fail-closed semantics so that setting ALLOW_WRITES=true on
+# its own no longer enables the side door — see
+# `brain_mcp_write_guard.resolve_writes_allowed` for the contract.
+_write_resolution = resolve_writes_allowed(
+    allow_writes_raw=_ALLOW_WRITES_RAW,
+    db_name=DB_NAME,
+    write_ack=os.environ.get("BRAIN_MCP_WRITE_ACK", "").strip(),
+    target_is_staging=(
+        os.environ.get("BRAIN_MCP_TARGET_IS_STAGING", "").lower()
+        in ("true", "1", "yes")
+    ),
+)
+if _ALLOW_WRITES_RAW and not _write_resolution.allowed:
+    logger.error("Legacy MCP write side door refused: %s", _write_resolution.reason)
+elif _write_resolution.allowed:
+    logger.warning("Legacy MCP write side door: %s", _write_resolution.reason)
+ALLOW_WRITES = _write_resolution.allowed
 
 pool: asyncpg.Pool = None
 

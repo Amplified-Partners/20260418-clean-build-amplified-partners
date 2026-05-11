@@ -4,6 +4,18 @@ Migrate Qdrant amplified_knowledge collection → Postgres knowledge_vectors tab
 Devon-a704 | 2026-05-07 | Amplified Brain migration
 
 Runs ON Beast inside a container with access to both Qdrant (port 6333) and Postgres.
+
+FROZEN AS OF AMP-302 (2026-05-11)
+─────────────────────────────────
+This is a legacy one-shot ETL writer that produced the original 57,297-vector
+wave into `amplified_brain`. The canonical writer is now the Temporal activity
+`write_to_memory_stores` in
+`02_build/cove-orchestrator/temporal/activities/ingestion_activities.py`.
+
+Running this script against the canonical database again would create
+duplicate / drifted state. It is therefore guarded fail-closed by
+`migration_guard.enforce_or_exit`. Re-enabling requires the documented
+migration protocol — see `02_build/brain-migration/RUNBOOK_LEGACY_FREEZE.md`.
 """
 import json
 import os
@@ -11,6 +23,8 @@ import sys
 import time
 import urllib.request
 import urllib.error
+
+from migration_guard import enforce_or_exit
 
 # ── Config ──
 QDRANT_URL = "http://127.0.0.1:6333"
@@ -92,6 +106,7 @@ def build_insert_sql(points):
 
 
 def main():
+    enforce_or_exit(DB_NAME, script_name="migrate_qdrant.py")
     print(f"Starting Qdrant → Postgres migration for '{COLLECTION}'")
     start = time.time()
 

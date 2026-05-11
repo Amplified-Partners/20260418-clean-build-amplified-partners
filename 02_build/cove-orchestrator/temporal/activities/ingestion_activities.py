@@ -442,6 +442,32 @@ async def write_to_memory_stores(input: MemoryStoreInput) -> MemoryStoreResult:
     and upserts into knowledge_vectors (pgvector/HNSW) and entities tables.
 
     Canonical data layer — see 00_authority/DATA_ARCHITECTURE.md.
+
+    CANONICAL WRITER (AMP-302 v0.3 manifest-first semantics)
+    ────────────────────────────────────────────────────────
+    This activity is the ONLY supported writer into the canonical
+    `amplified_brain` PostgreSQL store. All other writers in the repo
+    (`02_build/brain-migration/migrate_qdrant.py`,
+    `migrate_falkordb.py`, `brain_mcp_server.py` write tools, and any
+    out-of-tree `memory_writer.py` under `/opt/amplified/`) are FROZEN
+    and guarded fail-closed by `migration_guard`.
+
+    Manifest-first invariants this writer must preserve:
+    1. Every row written carries `metadata.taxonomy_version` (PUDDING
+       frontmatter) so the row's provenance is traceable to the
+       extractor version that produced it.
+    2. `vec_id` and `ent_id` are deterministic hashes of stable inputs
+       (file path / concept name) — re-runs upsert, never duplicate.
+    3. ON CONFLICT clauses are explicit; no `DELETE` precedes the
+       upsert. (Compare with the legacy `migrate_falkordb.py`, which
+       wipes the tables before COPY.)
+    4. Writes happen only inside an activity (Temporal workflow), so
+       every write is observable in `pipeline_runs` via the
+       `log_pipeline_run` activity.
+
+    See `02_build/brain-migration/RUNBOOK_LEGACY_FREEZE.md` for the
+    operating rules and `02_build/cove-orchestrator/docs/COMPOUND_ENGINEERING_AFTER_ACTION_TEMPLATE.md`
+    for how to record the after-action of every ingestion run.
     """
     import asyncpg
     import yaml

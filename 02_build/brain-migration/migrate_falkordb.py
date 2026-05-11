@@ -5,6 +5,18 @@ Devon-a704 | 2026-05-07 | Amplified Brain migration v3
 
 Uses redis-py for proper structured data extraction (handles multiline content).
 Uses CSV COPY for bulk loading into Postgres.
+
+FROZEN AS OF AMP-302 (2026-05-11)
+─────────────────────────────────
+This script does bulk CSV COPY into entities/episodes/relationships and
+performs destructive `DELETE FROM ...` against the canonical
+`amplified_brain` database using superuser-style access. The canonical
+writer is now the Temporal `write_to_memory_stores` activity which uses
+manifest-first semantics and the `brain_writer` role only.
+
+This script is guarded fail-closed by `migration_guard.enforce_or_exit`.
+Re-running requires the documented migration protocol — see
+`02_build/brain-migration/RUNBOOK_LEGACY_FREEZE.md`.
 """
 import csv
 import json
@@ -13,7 +25,8 @@ import sys
 import time
 import uuid
 import os
-import redis
+
+from migration_guard import enforce_or_exit
 
 PG_CONTAINER = "cove-postgres"
 DB_NAME = "amplified_brain"
@@ -123,12 +136,15 @@ def copy_csv(csv_path, table, columns, user=DB_USER):
 
 
 def main():
+    enforce_or_exit(DB_NAME, script_name="migrate_falkordb.py")
+    import redis  # Imported here so the guard runs before optional deps load.
+
     print("=" * 60)
     print("FalkorDB → Postgres Migration v3 (redis-py + CSV COPY)")
     print("Devon-a704 | 2026-05-07")
     print("=" * 60)
     start = time.time()
-    
+
     # Connect to FalkorDB
     r = redis.Redis(host="127.0.0.1", port=6379, decode_responses=False)
     r.ping()
