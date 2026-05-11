@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#1a1a2e">
+<title>{{ sheet.title | e }} — {{ sheet.date | e }}</title>
+<style>{{ critical_css }}</style>
+</head>
+<body>
+
+<header class="brief-header">
+  <p class="brief-date" aria-label="Brief date">{{ sheet.date | e }}</p>
+  <h1 class="brief-title">{{ sheet.title | e }}</h1>
+</header>
+
+<section class="brief-headline" aria-label="Headline summary">
+  <p>{{ sheet.headline | e }}</p>
+</section>
+
+<main class="brief-sections" aria-label="Detail sections">
+  {% for section in sheet.sections %}
+  <details class="brief-card">
+    <summary>
+      <span class="brief-card-icon" aria-hidden="true">{{ section.icon }}</span>
+      <span class="brief-card-header">
+        <span class="brief-card-title">{{ section.title | e }}</span>
+        <span class="brief-card-summary">{{ section.summary | e }}</span>
+      </span>
+    </summary>
+    <div class="brief-card-body">{{ section.details }}</div>
+  </details>
+  {% endfor %}
+</main>
+
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<form class="composer" id="composer" aria-label="Reply to brief">
+  <input type="hidden" name="token" value="{{ token | e }}">
+  <input type="hidden" name="sheet_id" value="{{ sheet.sheet_id | e }}">
+
+  <button type="button" class="composer-emoji" data-emoji="👍" aria-label="Thumbs up reaction" aria-pressed="false">👍</button>
+  <button type="button" class="composer-emoji" data-emoji="⚠️" aria-label="Warning reaction" aria-pressed="false">⚠️</button>
+  <button type="button" class="composer-emoji" data-emoji="❓" aria-label="Question reaction" aria-pressed="false">❓</button>
+
+  <input
+    type="text"
+    class="composer-input"
+    name="comment"
+    placeholder="Add a note…"
+    autocomplete="off"
+    maxlength="280"
+    aria-label="Comment">
+  <button type="submit" class="composer-send" aria-label="Send reply">Send</button>
+</form>
+
+<script>
+(function(){
+  "use strict";
+
+  var API="/api/v1/sheets/"+encodeURIComponent(
+    document.querySelector("[name=sheet_id]").value
+  )+"/reply";
+  var TOKEN=document.querySelector("[name=token]").value;
+  var toastEl=document.getElementById("toast");
+  var toastTimer;
+
+  function toast(msg){
+    clearTimeout(toastTimer);
+    toastEl.textContent=msg;
+    toastEl.classList.add("show");
+    toastTimer=setTimeout(function(){toastEl.classList.remove("show")},2200);
+  }
+
+  function send(body){
+    return fetch(API,{
+      method:"POST",
+      headers:{"Content-Type":"application/json","Authorization":"Bearer "+TOKEN},
+      body:JSON.stringify(body)
+    }).then(function(r){
+      if(!r.ok) throw new Error(r.status);
+      return r.json();
+    });
+  }
+
+  /* Emoji buttons */
+  var emojis=document.querySelectorAll(".composer-emoji");
+  for(var i=0;i<emojis.length;i++){
+    emojis[i].addEventListener("click",function(){
+      var btn=this;
+      var emoji=btn.getAttribute("data-emoji");
+      btn.setAttribute("aria-pressed","true");
+      send({type:"emoji_reaction",content:emoji}).then(function(){
+        toast("Sent "+emoji);
+      }).catch(function(){
+        toast("Failed — try again");
+      }).finally(function(){
+        setTimeout(function(){btn.setAttribute("aria-pressed","false")},600);
+      });
+    });
+  }
+
+  /* Comment form */
+  document.getElementById("composer").addEventListener("submit",function(e){
+    e.preventDefault();
+    var input=this.querySelector("[name=comment]");
+    var text=input.value.trim();
+    if(!text) return;
+    send({type:"human_comment",content:text}).then(function(){
+      input.value="";
+      toast("Sent ✓");
+    }).catch(function(){
+      toast("Failed — try again");
+    });
+  });
+})();
+</script>
+
+</body>
+</html>
