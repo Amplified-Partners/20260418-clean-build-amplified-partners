@@ -216,6 +216,42 @@ def test_empty_source_root(tmp_path: Path) -> None:
     assert summary.predicted_db_rows["audit_log"] == 0
 
 
+def test_dotfiles_and_dotdirs_are_excluded(tmp_path: Path) -> None:
+    """Regression for AMP-303 QA finding B1.
+
+    `p.name.startswith(".")` alone only catches dot-prefixed leaf names; nested
+    dot directories like `.git/`, `.obsidian/`, `.DS_Store/` would leak their
+    contents into the canonical manifest on the first Beast run. Filter must
+    walk every path part.
+    """
+    root = tmp_path / "store_b_clean"
+    (root / ".git").mkdir(parents=True)
+    (root / ".obsidian" / "nested").mkdir(parents=True)
+    (root / ".DS_Store").mkdir()
+    (root / "visible_dir").mkdir()
+    (root / ".git" / "HEAD").write_text("ref: refs/heads/main\n", encoding="utf-8")
+    (root / ".obsidian" / "config.md").write_text("# obsidian\n", encoding="utf-8")
+    (root / ".obsidian" / "nested" / "deep.md").write_text("# deep\n", encoding="utf-8")
+    (root / ".DS_Store" / "blob").write_text("noise\n", encoding="utf-8")
+    (root / ".hidden_top.md").write_text("# hidden\n", encoding="utf-8")
+    (root / "visible_dir" / "doc.md").write_text("# visible\n", encoding="utf-8")
+    (root / "top.md").write_text("# top\n", encoding="utf-8")
+
+    out = tmp_path / "manifest.jsonl"
+    summary = generate_manifest(
+        source_root=root, output_path=out, run_id="dot-run", dry_run=False
+    )
+
+    assert summary.file_count == 2, (
+        f"expected only visible files; got {summary.file_count}"
+    )
+    records = [json.loads(line) for line in out.read_text().splitlines()]
+    paths = {r["file_path"] for r in records}
+    assert paths == {"top.md", "visible_dir/doc.md"}
+    for path in paths:
+        assert not any(part.startswith(".") for part in path.split("/"))
+
+
 def test_generator_class_matches_function(corpus: Path, tmp_path: Path) -> None:
     out_fn = tmp_path / "fn.jsonl"
     out_cls = tmp_path / "cls.jsonl"

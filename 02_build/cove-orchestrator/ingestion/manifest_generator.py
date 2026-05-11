@@ -220,7 +220,12 @@ class ManifestGenerator:
         for p in sorted(self.source_root.rglob("*")):
             if not p.is_file():
                 continue
-            if p.name.startswith("."):
+            # Exclude any path with a dot-prefixed component (dotfile or
+            # dotdir). `p.name.startswith(".")` alone misses `.git/HEAD`,
+            # `.obsidian/config.md`, etc. — those would otherwise leak into
+            # the canonical manifest on the first Beast run.
+            rel_parts = p.relative_to(self.source_root).parts
+            if any(part.startswith(".") for part in rel_parts):
                 continue
             yield p
 
