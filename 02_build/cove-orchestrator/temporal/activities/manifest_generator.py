@@ -106,6 +106,8 @@ def chunk_by_heading(content: str, max_chars: int = MAX_CHUNK_CHARS) -> list[dic
     Returns list of {text, heading, line_start, line_end, chunk_type}.
     Line numbers are 1-based.
     """
+    if not content.strip():
+        return []
     lines = content.split("\n")
     segments: list[dict] = []
     current_heading = "(top-level)"
