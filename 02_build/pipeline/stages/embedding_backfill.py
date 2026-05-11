@@ -22,11 +22,14 @@ from __future__ import annotations
 
 import argparse
 import asyncio
+import json
 import logging
 import os
 import sys
 import time
 from dataclasses import dataclass
+
+import asyncpg
 
 logging.basicConfig(
     level=logging.INFO,
@@ -42,7 +45,7 @@ DEFAULT_DSN = os.getenv(
 MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
 EMBEDDING_DIM = 384
 DEFAULT_BATCH_SIZE = 100
-SIGNED_BY = "Devon-be18-child-embed"
+SIGNED_BY = os.getenv("BACKFILL_SIGNED_BY", "cove-embedding-backfill")
 
 
 @dataclass
@@ -87,37 +90,39 @@ async def count_null_embeddings(conn) -> int:
     return row["n"]
 
 
-async def fetch_batch(conn, batch_size: int, offset: int) -> list:
-    """Fetch a batch of rows with NULL embeddings, ordered by ingested_at."""
+async def fetch_batch(conn, batch_size: int) -> list:
+    """Fetch a batch of rows with NULL embeddings and non-empty content."""
     return await conn.fetch(
         """SELECT id, content
            FROM knowledge_vectors
            WHERE embedding IS NULL
+             AND content IS NOT NULL
+             AND content != ''
            ORDER BY ingested_at ASC
-           LIMIT $1 OFFSET $2""",
+           LIMIT $1""",
         batch_size,
-        offset,
     )
 
 
 async def update_embeddings(conn, rows_and_vectors: list[tuple]) -> int:
-    """Batch-update embeddings using a prepared statement.
+    """Batch-update embeddings inside a transaction.
 
     Each tuple is (embedding_str, row_id).
     Returns count of rows updated.
     """
-    updated = 0
-    for emb_str, row_id in rows_and_vectors:
-        await conn.execute(
-            """UPDATE knowledge_vectors
-               SET embedding = $1::vector,
-                   updated_at = now()
-               WHERE id = $2""",
-            emb_str,
-            row_id,
-        )
-        updated += 1
-    return updated
+    async with conn.transaction():
+        updated = 0
+        for emb_str, row_id in rows_and_vectors:
+            await conn.execute(
+                """UPDATE knowledge_vectors
+                   SET embedding = $1::vector,
+                       updated_at = now()
+                   WHERE id = $2""",
+                emb_str,
+                row_id,
+            )
+            updated += 1
+        return updated
 
 
 def encode_batch(model, texts: list[str]) -> list[list[float]]:
@@ -132,8 +137,6 @@ async def run_backfill(
     dry_run: bool,
 ) -> BackfillStats:
     """Main backfill loop."""
-    import asyncpg
-
     stats = BackfillStats()
     t0 = time.monotonic()
 
@@ -153,8 +156,25 @@ async def run_backfill(
             logger.info("Nothing to backfill — all rows have embeddings.")
             return stats
 
+        # Count empty-content rows separately
+        empty_row = await conn.fetchrow(
+            """SELECT count(*) AS n FROM knowledge_vectors
+               WHERE embedding IS NULL
+                 AND (content IS NULL OR content = '')"""
+        )
+        stats.skipped = empty_row["n"]
+        if stats.skipped > 0:
+            logger.info(
+                "Skipping %d rows with empty content (will not embed).",
+                stats.skipped,
+            )
+
         if dry_run:
-            logger.info("DRY RUN — would process %d rows. Exiting.", stats.total_null)
+            logger.info(
+                "DRY RUN — would process %d rows (%d skipped). Exiting.",
+                stats.total_null - stats.skipped,
+                stats.skipped,
+            )
             return stats
 
         model = load_model()
@@ -162,11 +182,10 @@ async def run_backfill(
         batch_num = 0
 
         while True:
-            # Always fetch from offset 0: updated rows drop out of the
-            # WHERE embedding IS NULL filter, so the next page surfaces
-            # automatically.  A progress guard below prevents infinite
-            # loops on unfillable (empty-content) rows.
-            rows = await fetch_batch(conn, batch_size, offset=0)
+            # Fetch from offset 0: updated rows drop out of the
+            # WHERE filter, so the next page surfaces automatically.
+            # Empty-content rows are excluded by the query.
+            rows = await fetch_batch(conn, batch_size)
             if not rows:
                 break
 
@@ -175,23 +194,8 @@ async def run_backfill(
             row_ids = []
 
             for row in rows:
-                content = (row["content"] or "").strip()
-                if not content:
-                    stats.skipped += 1
-                    continue
-                texts.append(content[:2048])
+                texts.append((row["content"] or "").strip()[:2048])
                 row_ids.append(row["id"])
-
-            if not texts:
-                # Entire batch is empty-content rows that will never
-                # gain embeddings — stop to avoid an infinite loop.
-                logger.warning(
-                    "Batch %d: all %d rows have empty content — "
-                    "stopping to avoid infinite loop.",
-                    batch_num,
-                    len(rows),
-                )
-                break
 
             try:
                 vectors = encode_batch(model, texts)
@@ -224,8 +228,6 @@ async def run_backfill(
 
         # Audit log entry
         try:
-            import json
-
             await conn.execute(
                 """INSERT INTO audit_log
                    (actor, action, resource_type, resource_id, details)
