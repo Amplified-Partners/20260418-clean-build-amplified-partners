@@ -26,6 +26,22 @@ ALTER TABLE IF EXISTS relationships
 ALTER TABLE IF EXISTS episodes
     RENAME TO episodes_legacy_2026_05_10;
 
+-- Rename legacy indexes to avoid name collisions with canonical tables
+-- (discovered during live migration on Beast — Devon-be18 | 2026-05-11)
+ALTER INDEX IF EXISTS idx_knowledge_vectors_embedding RENAME TO idx_knowledge_vectors_embedding_legacy;
+ALTER INDEX IF EXISTS idx_knowledge_vectors_metadata RENAME TO idx_knowledge_vectors_metadata_legacy;
+ALTER INDEX IF EXISTS idx_knowledge_vectors_source_type RENAME TO idx_knowledge_vectors_source_type_legacy;
+ALTER INDEX IF EXISTS idx_entities_type RENAME TO idx_entities_type_legacy;
+ALTER INDEX IF EXISTS idx_entities_name RENAME TO idx_entities_name_legacy;
+ALTER INDEX IF EXISTS idx_entities_embedding RENAME TO idx_entities_embedding_legacy;
+ALTER INDEX IF EXISTS idx_entities_properties RENAME TO idx_entities_properties_legacy;
+ALTER INDEX IF EXISTS idx_relationships_source RENAME TO idx_relationships_source_legacy;
+ALTER INDEX IF EXISTS idx_relationships_target RENAME TO idx_relationships_target_legacy;
+ALTER INDEX IF EXISTS idx_relationships_type RENAME TO idx_relationships_type_legacy;
+ALTER INDEX IF EXISTS idx_relationships_embedding RENAME TO idx_relationships_embedding_legacy;
+ALTER INDEX IF EXISTS idx_episodes_created RENAME TO idx_episodes_created_legacy;
+ALTER INDEX IF EXISTS idx_episodes_source_type RENAME TO idx_episodes_source_type_legacy;
+
 -- ═══════════════════════════════════════════════════════════════════════
 -- 2. Canonical tables — full provenance, manifest-backed
 -- ═══════════════════════════════════════════════════════════════════════
