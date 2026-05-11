@@ -159,10 +159,13 @@ async def run_backfill(
 
         model = load_model()
 
-        offset = 0
         batch_num = 0
 
         while True:
+            # Always fetch from offset 0: updated rows drop out of the
+            # WHERE embedding IS NULL filter, so the next page surfaces
+            # automatically.  A progress guard below prevents infinite
+            # loops on unfillable (empty-content) rows.
             rows = await fetch_batch(conn, batch_size, offset=0)
             if not rows:
                 break
@@ -180,16 +183,22 @@ async def run_backfill(
                 row_ids.append(row["id"])
 
             if not texts:
-                offset += batch_size
-                continue
+                # Entire batch is empty-content rows that will never
+                # gain embeddings — stop to avoid an infinite loop.
+                logger.warning(
+                    "Batch %d: all %d rows have empty content — "
+                    "stopping to avoid infinite loop.",
+                    batch_num,
+                    len(rows),
+                )
+                break
 
             try:
                 vectors = encode_batch(model, texts)
             except Exception as exc:
                 logger.error("Encoding failed on batch %d: %s", batch_num, exc)
                 stats.errors += len(texts)
-                offset += batch_size
-                continue
+                break
 
             pairs = []
             for row_id, vec in zip(row_ids, vectors):
@@ -202,6 +211,7 @@ async def run_backfill(
             except Exception as exc:
                 logger.error("DB update failed on batch %d: %s", batch_num, exc)
                 stats.errors += len(pairs)
+                break
 
             remaining = stats.total_null - stats.updated - stats.skipped - stats.errors
             logger.info(
