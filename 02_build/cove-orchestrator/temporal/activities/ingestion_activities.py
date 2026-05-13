@@ -436,13 +436,21 @@ async def run_pudding_extraction(input: PuddingInput) -> PuddingResult:
 
 @activity.defn(name="write_to_memory_stores")
 async def write_to_memory_stores(input: MemoryStoreInput) -> MemoryStoreResult:
-    """Write PUDDING-labelled files into amplified_brain PostgreSQL.
+    """DEPRECATED by AMP-302 — use canonical_writer.write_canonical_vectors instead.
 
-    Reads files that have PUDDING frontmatter, extracts taxonomy data,
-    and upserts into knowledge_vectors (pgvector/HNSW) and entities tables.
+    This activity bypasses the manifest layer and writes without full provenance.
+    Kept for backward compatibility but raises on execution.
 
     Canonical data layer — see 00_authority/DATA_ARCHITECTURE.md.
+    Replacement — see canonical_writer.py (AMP-302 Ticket 3).
+
+    Deprecated-by: Devon-0de2 | 2026-05-11 | AMP-302
     """
+    raise RuntimeError(
+        "DEPRECATED: write_to_memory_stores retired by AMP-302. "
+        "Use canonical_writer.write_canonical_vectors instead. "
+        "All writes must go through the manifest-first canonical pipeline."
+    )
     import asyncpg
     import yaml
 

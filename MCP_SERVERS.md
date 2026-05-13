@@ -4,7 +4,7 @@
 
 This repo carries a root-level `mcp-servers.json` so the AI agents working in
 `clean-build` from the **operator's local IDEs** (not Devin) can attach to the
-[GitKraken MCP Server][gk-mcp].
+[GitKraken MCP Server][gk-mcp] and the [Perplexity MCP Server][pplx-mcp].
 
 ## Who consumes this file
 
@@ -57,6 +57,61 @@ After that, an agent loading `mcp-servers.json` will spawn `gk mcp` over stdio
 and have access to the GitKraken MCP toolset (Git ops, GitHub / GitLab / Jira
 / Azure DevOps integration, PR + issue automation).
 
+## Perplexity — real-time web research
+
+The `perplexity` entry uses the official [`@perplexity-ai/mcp-server`][pplx-npm]
+package (v0.9.0, MIT, actively maintained). It gives any MCP-compatible agent
+access to three tools:
+
+| Tool | What it does |
+|------|--------------|
+| `perplexity_search` | Direct web search via the Perplexity Search API — ranked results with metadata. |
+| `perplexity_ask` | Conversational AI with real-time web search (Sonar Pro model). |
+| `perplexity_reason` | Deep reasoning with web grounding for complex multi-step questions. |
+
+### Prerequisites
+
+1. **Node.js** (v18+) must be available — `npx` spawns the server on demand.
+2. Set the `PERPLEXITY_API_KEY` environment variable before launching the IDE:
+
+   ```bash
+   export PERPLEXITY_API_KEY="pplx-..."   # macOS / Linux
+   ```
+
+   Generate a key at <https://docs.perplexity.ai/home>.
+
+3. The `mcp-servers.json` entry references `${PERPLEXITY_API_KEY}` so the
+   actual secret stays out of the repo.
+
+### Verification
+
+Ask the agent:
+
+> Search the web for the latest MCP specification version.
+
+A working install shows a tool-approval request for `perplexity_search`.
+
+### Alternative: lighter reference server
+
+If only `perplexity_ask` is needed (no search, no reasoning), swap the entry:
+
+```json
+{
+  "mcpServers": {
+    "perplexity": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-perplexity-ask"],
+      "env": {
+        "PERPLEXITY_API_KEY": "${PERPLEXITY_API_KEY}"
+      }
+    }
+  }
+}
+```
+
+This uses the MCP reference implementation — simpler, fewer dependencies,
+but only exposes `perplexity_ask`.
+
 ## npx fallback (only if `gk` is not on `PATH`)
 
 If a target environment cannot install `gk` globally, swap the entry for:
@@ -100,8 +155,8 @@ follow-up.
 
 - **Authority class:** none. This is a tooling config, not a policy artefact.
   Not indexed in `00_authority/MANIFEST.md` per its scoping rules.
-- **Reversibility:** trivially reversible — delete the file and the JSON, the
-  agents fall back to builtin git tooling.
+- **Reversibility:** trivially reversible — delete an entry from the JSON and
+  the agents fall back to their builtin equivalents.
 
 ## References
 
@@ -109,13 +164,18 @@ follow-up.
   sibling).
 - AMP-22 (parent context, GitKraken's role in the GitHub interface):
   <https://linear.app/amplifiedpartners/issue/AMP-22>
-- AMP-23 (this implementation):
+- AMP-23 (GitKraken implementation):
   <https://linear.app/amplifiedpartners/issue/AMP-23>
 - GitKraken MCP getting started: <https://help.gitkraken.com/mcp/mcp-getting-started/>
 - GitKraken CLI repo: <https://github.com/gitkraken/gk-cli>
+- Perplexity MCP server guide: <https://docs.perplexity.ai/guides/mcp-server>
+- Perplexity MCP server repo: <https://github.com/perplexityai/modelcontextprotocol>
+- Antigravity MCP integration: <https://antigravity.google/docs/mcp>
 
 [gk-mcp]: https://help.gitkraken.com/mcp/mcp-getting-started/
 [gk-npm]: https://www.npmjs.com/package/@gitkraken/gk
+[pplx-mcp]: https://docs.perplexity.ai/guides/mcp-server
+[pplx-npm]: https://www.npmjs.com/package/@perplexity-ai/mcp-server
 
 ---
 
@@ -124,3 +184,9 @@ Authored by,
 **Devon**
 Devin session `1fa14abfb7f9437b8b10af9fca30a355`
 2026-05-04
+
+Perplexity MCP entry added by,
+
+**Devon-3388**
+Devin session `3388c25d026c4e0a8fe6ddd260f08e25`
+2026-05-12

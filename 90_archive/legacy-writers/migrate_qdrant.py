@@ -1,10 +1,21 @@
 #!/usr/bin/env python3
 """
+LEGACY — DO NOT RUN against canonical amplified_brain.
+Archived by AMP-302. One-shot ETL from Qdrant, completed 2026-05-07.
+Original: 02_build/brain-migration/migrate_qdrant.py
+
 Migrate Qdrant amplified_knowledge collection → Postgres knowledge_vectors table.
 Devon-a704 | 2026-05-07 | Amplified Brain migration
+Archived-by: Devon-0de2 | 2026-05-11 | AMP-302
 
 Runs ON Beast inside a container with access to both Qdrant (port 6333) and Postgres.
 """
+
+raise RuntimeError(
+    "LEGACY WRITER — archived by AMP-302. "
+    "Do not run against canonical amplified_brain. "
+    "Use the canonical ingestion pipeline (v0.3) instead."
+)
 import json
 import os
 import sys

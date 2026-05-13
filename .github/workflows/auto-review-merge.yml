@@ -1,0 +1,140 @@
+name: AI Code Review + Auto-Merge
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  ai-review:
+    runs-on: ubuntu-latest
+    if: >
+      github.event.pull_request.user.login == 'devin-ai-integration[bot]' ||
+      github.event.pull_request.user.login == 'devin-ai[bot]' ||
+      contains(github.event.pull_request.title, 'Devon-')
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get PR diff
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          git diff "$BASE_SHA".."$HEAD_SHA" -- . ':!*.lock' ':!package-lock.json' ':!*.min.js' ':!*.min.css' | head -c 60000 > /tmp/pr_diff.txt
+
+      - name: AI Review via DeepSeek
+        id: review
+        env:
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          python3 << 'PYEOF'
+          import os, json, sys, urllib.request
+
+          diff = open("/tmp/pr_diff.txt").read()[:50000]
+          title = os.environ.get("PR_TITLE", "")
+
+          prompt = f"""You are a senior code reviewer for Amplified Partners. Review this PR diff.
+
+          PR Title: {title}
+
+          Rules:
+          - Only flag BLOCKING issues: bugs, security holes, logic errors, missing imports, hardcoded secrets
+          - Do NOT flag style preferences, naming conventions, or minor improvements
+          - Do NOT flag intentional design choices (e.g. truncation limits, fallback behavior)
+          - Threshold: would this issue cause a bug, security vulnerability, or data loss in production?
+          - If no blocking issues, say APPROVED
+          - If there ARE blocking issues, say CHANGES_REQUESTED and list only the blockers
+
+          Respond with EXACTLY one of these on the first line:
+          VERDICT: APPROVED
+          VERDICT: CHANGES_REQUESTED
+
+          Then a brief review (max 500 words).
+
+          Diff:
+          ```
+          {diff}
+          ```"""
+
+          body = json.dumps({
+              "model": "deepseek-chat",
+              "messages": [{"role": "user", "content": prompt}],
+              "temperature": 0.1,
+              "max_tokens": 1000
+          }).encode()
+
+          req = urllib.request.Request(
+              "https://api.deepseek.com/chat/completions",
+              data=body,
+              headers={
+                  "Authorization": f"Bearer {os.environ['DEEPSEEK_API_KEY']}",
+                  "Content-Type": "application/json"
+              }
+          )
+
+          try:
+              resp = urllib.request.urlopen(req, timeout=60)
+              result = json.loads(resp.read())
+              review = result["choices"][0]["message"]["content"]
+          except Exception as e:
+              err_type = type(e).__name__
+              review = f"VERDICT: CHANGES_REQUESTED\n\nReview unavailable ({err_type}). Blocking merge — manual review required."
+              print(f"DeepSeek API error: {err_type}", file=sys.stderr)
+
+          print(review)
+
+          verdict = "approved" if "VERDICT: APPROVED" in review else "changes_requested"
+
+          with open(os.environ["GITHUB_OUTPUT"], "a") as f:
+              f.write(f"verdict={verdict}\n")
+
+          with open("/tmp/review_body.txt", "w") as f:
+              f.write(review)
+          PYEOF
+
+      - name: Post review comment
+        env:
+          GH_TOKEN: ${{ secrets.AUTO_MERGE_PAT }}
+        run: |
+          gh pr comment ${{ github.event.pull_request.number }} --body-file /tmp/review_body.txt
+
+      - name: Check for authority-file changes
+        id: authority_check
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          if git diff --name-only "$BASE_SHA".."$HEAD_SHA" | grep -q '^00_authority/'; then
+            echo "touches_authority=true" >> "$GITHUB_OUTPUT"
+            echo "⚠️ PR touches 00_authority/ — auto-merge BLOCKED. Requires manual review."
+          else
+            echo "touches_authority=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Approve PR
+        if: steps.review.outputs.verdict == 'approved' && steps.authority_check.outputs.touches_authority == 'false'
+        env:
+          GH_TOKEN: ${{ secrets.AUTO_MERGE_PAT }}
+        run: |
+          gh pr review ${{ github.event.pull_request.number }} --approve --body "AI review passed. Auto-approved."
+
+      - name: Enable auto-merge
+        if: steps.review.outputs.verdict == 'approved' && steps.authority_check.outputs.touches_authority == 'false'
+        env:
+          GH_TOKEN: ${{ secrets.AUTO_MERGE_PAT }}
+        run: |
+          gh pr merge ${{ github.event.pull_request.number }} --auto --squash
+
+      - name: Block authority changes
+        if: steps.authority_check.outputs.touches_authority == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.AUTO_MERGE_PAT }}
+        run: |
+          gh pr comment ${{ github.event.pull_request.number }} --body "⚠️ **Authority file change detected.** This PR touches \`00_authority/\` and cannot be auto-merged. Manual review required per governance rules."

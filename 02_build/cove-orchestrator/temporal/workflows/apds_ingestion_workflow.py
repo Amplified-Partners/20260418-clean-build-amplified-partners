@@ -4,18 +4,20 @@ Architect directive (Ewan Bramley): APDS ingestion pipeline runs on a
 **10-minute cadence** (``*/10 * * * *``). This schedule is hardcoded here
 and registered on worker boot.
 
-Pipeline stages (sequential):
+Pipeline stages (sequential, v0.3 — AMP-302):
 
-    1. run_unified_ingestion   — dedup raw files into store_b_clean
-    2. run_pudding_extraction  — PUDDING taxonomy labelling via Claude Haiku
-    3. write_to_memory_stores  — upsert into amplified_brain PostgreSQL
-    4. log_pipeline_run        — observability record to pipeline_runs table
+    1. run_unified_ingestion     — dedup raw files into store_b_clean
+    2. run_pudding_extraction    — PUDDING taxonomy labelling via Claude Haiku
+    3. generate_manifest         — disk → deterministic JSONL manifest
+    4. write_canonical_vectors   — manifest → canonical knowledge_vectors
+    5. log_pipeline_run          — observability record to pipeline_runs table
 
 The workflow is designed to be started by a Temporal Schedule with a
 10-minute interval. The ``APDSScheduleStarter`` helper registers that
 schedule on first boot; subsequent worker restarts are idempotent.
 
 Signed-by: Devon-ad8f | 2026-05-09 | devin-ad8f2a94b2ca4d9a8e7690fcec0c11bb
+Modified-by: Devon-0de2 | 2026-05-11 | AMP-302 — manifest-first canonical pipeline
 """
 
 from __future__ import annotations
@@ -31,12 +33,18 @@ with workflow.unsafe.imports_passed_through():
     from temporal.activities.ingestion_activities import (
         IngestionInput,
         PuddingInput,
-        MemoryStoreInput,
         PipelineRun,
         run_unified_ingestion,
         run_pudding_extraction,
-        write_to_memory_stores,
         log_pipeline_run,
+    )
+    from temporal.activities.manifest_generator import (
+        ManifestInput,
+        generate_manifest,
+    )
+    from temporal.activities.canonical_writer import (
+        CanonicalWriterInput,
+        write_canonical_vectors,
     )
 
 # ── Schedule constants (Architect directive, AMP-158) ─────────────────
@@ -71,12 +79,15 @@ class APDSIngestionResult:
 
 @workflow.defn(name="apds_ingestion")
 class APDSIngestionWorkflow:
-    """Full APDS pipeline: ingest -> label -> store -> log.
+    """Full APDS pipeline: ingest -> label -> manifest -> canonical write -> log.
 
     Runs on a 10-minute Temporal Schedule (``*/10 * * * *``).
     Each stage is a separate Temporal activity with its own retry policy.
-    If ingestion finds zero new files, PUDDING extraction and memory
-    writes are skipped (idempotent no-op).
+    If ingestion finds zero new files, PUDDING extraction, manifest, and
+    canonical writes are skipped (idempotent no-op).
+
+    v0.3 (AMP-302): write_to_memory_stores replaced by generate_manifest +
+    write_canonical_vectors. Every DB row now joins to a manifest line.
     """
 
     @workflow.run
@@ -167,21 +178,21 @@ class APDSIngestionWorkflow:
                 error=f"PUDDING extraction failed: {e}",
             )
 
-        # ── Stage 3: Memory Store Write ───────────────────────────────
+        # ── Stage 3: Manifest Generation (AMP-302) ────────────────────
         try:
-            memory = await workflow.execute_activity(
-                write_to_memory_stores,
+            manifest = await workflow.execute_activity(
+                generate_manifest,
                 args=[
-                    MemoryStoreInput(
-                        source_dir=ingestion.clean_archive,
+                    ManifestInput(
+                        run_id=run_id,
+                        source_root=ingestion.clean_archive,
                     )
                 ],
-                start_to_close_timeout=timedelta(minutes=15),
+                start_to_close_timeout=timedelta(minutes=10),
                 retry_policy=retry,
             )
-            pipeline.memory_store = memory
         except Exception as e:
-            pipeline.status = "failed_memory"
+            pipeline.status = "failed_manifest"
             pipeline.completed_at = workflow.now().isoformat()
             await self._log_run(pipeline)
             return APDSIngestionResult(
@@ -190,10 +201,50 @@ class APDSIngestionWorkflow:
                 ingestion_new=ingestion.new_files,
                 ingestion_total=ingestion.total_unique,
                 pudding_labelled=pudding.labelled if pudding else 0,
-                error=f"Memory store write failed: {e}",
+                error=f"Manifest generation failed: {e}",
             )
 
-        # ── Stage 4: Log & Return ─────────────────────────────────────
+        if not manifest.success:
+            pipeline.status = "failed_manifest"
+            pipeline.completed_at = workflow.now().isoformat()
+            await self._log_run(pipeline)
+            return APDSIngestionResult(
+                run_id=run_id,
+                success=False,
+                ingestion_new=ingestion.new_files,
+                ingestion_total=ingestion.total_unique,
+                pudding_labelled=pudding.labelled if pudding else 0,
+                error=manifest.error or "Manifest generation returned success=False",
+            )
+
+        # ── Stage 4: Canonical Writer (AMP-302) ───────────────────────
+        try:
+            canonical = await workflow.execute_activity(
+                write_canonical_vectors,
+                args=[
+                    CanonicalWriterInput(
+                        run_id=run_id,
+                        manifest_path=manifest.manifest_path,
+                        manifest_hash=manifest.manifest_hash,
+                    )
+                ],
+                start_to_close_timeout=timedelta(minutes=15),
+                retry_policy=retry,
+            )
+        except Exception as e:
+            pipeline.status = "failed_canonical_write"
+            pipeline.completed_at = workflow.now().isoformat()
+            await self._log_run(pipeline)
+            return APDSIngestionResult(
+                run_id=run_id,
+                success=False,
+                ingestion_new=ingestion.new_files,
+                ingestion_total=ingestion.total_unique,
+                pudding_labelled=pudding.labelled if pudding else 0,
+                error=f"Canonical write failed: {e}",
+            )
+
+        # ── Stage 5: Log & Return ─────────────────────────────────────
         pipeline.status = "completed"
         pipeline.completed_at = workflow.now().isoformat()
         await self._log_run(pipeline)
@@ -204,8 +255,8 @@ class APDSIngestionWorkflow:
             ingestion_new=ingestion.new_files,
             ingestion_total=ingestion.total_unique,
             pudding_labelled=pudding.labelled if pudding else 0,
-            memory_vectors=memory.pg_vectors if memory else 0,
-            memory_entities=memory.pg_entities if memory else 0,
+            memory_vectors=canonical.rows_written if canonical else 0,
+            memory_entities=0,
         )
 
     async def _log_run(self, pipeline: PipelineRun) -> None:

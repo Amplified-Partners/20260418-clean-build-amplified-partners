@@ -1,11 +1,22 @@
 #!/usr/bin/env python3
 """
+LEGACY — DO NOT RUN against canonical amplified_brain.
+Archived by AMP-302. One-shot ETL from FalkorDB, completed 2026-05-07.
+Original: 02_build/brain-migration/migrate_falkordb.py
+
 Migrate FalkorDB graph data → Postgres via Python redis client + CSV COPY.
 Devon-a704 | 2026-05-07 | Amplified Brain migration v3
+Archived-by: Devon-0de2 | 2026-05-11 | AMP-302
 
 Uses redis-py for proper structured data extraction (handles multiline content).
 Uses CSV COPY for bulk loading into Postgres.
 """
+
+raise RuntimeError(
+    "LEGACY WRITER — archived by AMP-302. "
+    "Do not run against canonical amplified_brain. "
+    "Use the canonical ingestion pipeline (v0.3) instead."
+)
 import csv
 import json
 import subprocess

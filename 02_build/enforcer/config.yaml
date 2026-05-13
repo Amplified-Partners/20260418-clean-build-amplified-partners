@@ -20,12 +20,6 @@ enforcer:
 
 # Database connectivity configuration
 databases:
-  falkordb:
-    host: falkordb
-    port: 6379
-    type: redis-module
-    description: "FalkorDB graph database (Redis module)"
-  
   postgres:
     host: postgres
     port: 5432
@@ -38,11 +32,7 @@ databases:
     type: redis
     description: "Redis cache and message broker"
   
-  qdrant:
-    host: qdrant
-    port: 6333
-    type: vector-db
-    description: "Qdrant vector database"
+  # qdrant: deprecated — migrated to pgvector (AMP-330)
 
 # Traefik reverse proxy
 traefik:
@@ -71,10 +61,8 @@ security:
 docker:
   expected_containers:
     - traefik
-    - falkordb
     - postgres
     - redis
-    - qdrant
     - langfuse
     - portainer
   
@@ -85,11 +73,6 @@ docker:
       critical: true
       description: "Reverse proxy and load balancer"
     
-    falkordb:
-      required: true
-      critical: true
-      description: "Knowledge graph database"
-    
     postgres:
       required: true
       critical: true
@@ -99,11 +82,6 @@ docker:
       required: true
       critical: true
       description: "Cache and session store"
-    
-    qdrant:
-      required: true
-      critical: true
-      description: "Vector database for embeddings"
     
     langfuse:
       required: false

@@ -7,6 +7,10 @@ Read-only by default. Write mode enabled via ALLOW_WRITES=true env var.
 
 Devon-a704 | 2026-05-07 | Brain MCP server build
 Devon-a81b | 2026-05-09 | Compound Design REST endpoints + AGE graph (AMP-280)
+Devon-0de2 | 2026-05-11 | AMP-302 — write tools removed, read-only enforced
+
+Write operations retired by AMP-302. All writes go through the canonical
+ingestion pipeline (v0.3). This server is read-only regardless of ALLOW_WRITES.
 """
 
 import os
@@ -14,7 +18,7 @@ import re
 import json
 import logging
 from contextlib import asynccontextmanager
-from typing import Any, Optional
+from typing import Optional
 
 import asyncpg
 from fastapi import FastAPI, Query, Request, Response
@@ -30,7 +34,9 @@ DB_PORT = int(os.environ.get("DB_PORT", "5432"))
 DB_NAME = os.environ.get("DB_NAME", "amplified_brain")
 DB_USER = os.environ.get("DB_USER", "brain_reader")
 DB_PASSWORD = os.environ.get("DB_PASSWORD", "")
-ALLOW_WRITES = os.environ.get("ALLOW_WRITES", "false").lower() in ("true", "1", "yes")
+# AMP-302: writes retired. This server is read-only regardless of env.
+# Legacy env var preserved for backward compat but always evaluates False.
+ALLOW_WRITES = False
 SERVER_PORT = int(os.environ.get("SERVER_PORT", "8080"))
 
 pool: asyncpg.Pool = None
@@ -124,63 +130,8 @@ TOOLS = [
     },
 ]
 
-WRITE_TOOLS = [
-    {
-        "name": "insert_knowledge",
-        "description": "Insert a knowledge vector with content and metadata.",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "content": {"type": "string", "description": "Text content of the knowledge chunk"},
-                "source": {"type": "string", "description": "Source identifier (file path, URL, etc.)"},
-                "metadata": {"type": "object", "description": "Additional metadata (optional)"},
-                "embedding": {"type": "array", "description": "384-dim embedding vector (optional)", "items": {"type": "number"}}
-            },
-            "required": ["content", "source"]
-        }
-    },
-    {
-        "name": "insert_entity",
-        "description": "Insert or update an entity node.",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "name": {"type": "string", "description": "Entity name"},
-                "entity_type": {"type": "string", "description": "Entity type (person, concept, tool, etc.)"},
-                "summary": {"type": "string", "description": "Brief description"},
-                "properties": {"type": "object", "description": "Additional properties (optional)"}
-            },
-            "required": ["name", "entity_type"]
-        }
-    },
-    {
-        "name": "insert_relationship",
-        "description": "Create a relationship between two entities.",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "source_name": {"type": "string", "description": "Source entity name"},
-                "target_name": {"type": "string", "description": "Target entity name"},
-                "relation_type": {"type": "string", "description": "Type of relationship"},
-                "summary": {"type": "string", "description": "Description of the relationship"},
-                "weight": {"type": "number", "description": "Relationship weight 0-1 (default 1.0)"}
-            },
-            "required": ["source_name", "target_name", "relation_type"]
-        }
-    },
-    {
-        "name": "run_write_query",
-        "description": "Run a write SQL query (INSERT/UPDATE/DELETE). Use with care.",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "sql": {"type": "string", "description": "SQL write query"},
-                "params": {"type": "array", "description": "Query parameters", "items": {}}
-            },
-            "required": ["sql"]
-        }
-    },
-]
+# AMP-302: Write tools removed. All writes go through the canonical pipeline.
+WRITE_TOOLS = []
 
 
 async def _init_age_connection(conn):
@@ -489,10 +440,7 @@ HANDLERS = {
     "query_relationships": handle_query_relationships,
     "get_episodes": handle_get_episodes,
     "run_query": handle_run_query,
-    "insert_knowledge": handle_insert_knowledge,
-    "insert_entity": handle_insert_entity,
-    "insert_relationship": handle_insert_relationship,
-    "run_write_query": handle_run_write_query,
+    # AMP-302: write handlers removed — canonical pipeline is the only write path
 }
 
 
