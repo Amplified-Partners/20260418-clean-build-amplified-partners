@@ -1,7 +1,7 @@
 ---
 title: Decision log
-date: 2026-05-10
-version: 21
+date: 2026-05-13
+version: 22
 status: draft
 ---
 
@@ -12,6 +12,14 @@ status: draft
 One entry per decision. Keep it short. Link out to supporting docs.
 
 ## Entries
+
+### 2026-05-13 — Five Rods Auto-Review: replace manual authority-file block with structural Five Rods enforcement
+
+- **Decision**: Rewrite `auto-review-merge.yml` to remove the blanket block on `00_authority/` changes. Replace with a Five Rods compliance review by DeepSeek (independent third-party reviewer). Authority files now get a **stricter** review (explicit Five Rods + governance checks) but auto-merge when approved. Standard PRs get Five Rods + code quality review and auto-merge on pass. The Ulysses Clause is encoded in the review prompt: any change that weakens, bypasses, or removes any of the Five Rods is blocked regardless of author.
+- **Why**: The previous workflow required Ewan (non-coder Architect) to manually click merge on authority file PRs. This put the Architect in the wrong seat — reviewing diffs instead of making decisions. Ewan's decision (2026-05-13): "I don't know what I'm doing. Get a third party in to comment. Nobody can fuck with the five rods. That's what we want DeepSeek doing." The Five Rods become a programmatic gate enforced structurally, not manually. This is more aligned with the governance principles than manual review.
+- **Where encoded**: `.github/workflows/auto-review-merge.yml`, this decision log entry.
+- **Status**: active (Ewan verbal approval recorded in session).
+- **Signed-by**: Devon-79d2 | 2026-05-13 | devin-79d20213bd46403bb635827bf6f047c3
 
 ### 2026-05-10 — Epistemic Status Invariant: reference implementation committed to routing engine
 

@@ -1,4 +1,37 @@
-name: AI Code Review + Auto-Merge
+# Five Rods Auto-Review + Merge
+#
+# Third-party reviewer (DeepSeek) checks every PR against the Five Rods
+# and standard code quality. If it passes, auto-merge. No human diff review.
+#
+# Authority files (00_authority/) get a STRICTER review — the reviewer must
+# explicitly confirm Five Rods compliance. But they still auto-merge on pass.
+# The only thing that blocks a merge is a genuine Five Rods violation or a
+# blocking code defect.
+#
+# The Five Rods (Ewan Bramley, Amplified Partners):
+#   1. Radical Honesty
+#   2. Radical Transparency
+#   3. Radical Attribution
+#   4. Win-Win
+#   5. Ideas Meritocracy
+#
+# Ulysses Clause: if any change weakens, bypasses, or removes these
+# principles, the system must resist it — regardless of who authored it.
+#
+# Devon-79d2 | 2026-05-13 | Governance rewrite per Ewan's decision
+# Supersedes: blanket authority-file block (which put Ewan in the wrong seat)
+#
+# v2 — Devon-79d2 | 2026-05-13 | Expand to all PRs, add AGENTS.md detection,
+#   Copilot handles code quality (native GitHub), DeepSeek handles Five Rods.
+#   DeepSeek API down → Copilot is fallback (review still posted, merge allowed
+#   if Copilot approved separately via ruleset).
+#
+# Reviewer architecture:
+#   Copilot (GitHub native) → code quality, style, bugs (configured via ruleset)
+#   DeepSeek (this workflow)  → Five Rods compliance + blocking defects
+#   Both independent. Substrate diversity. Neither can override the other.
+
+name: Five Rods Auto-Review + Merge
 
 on:
   pull_request:
@@ -11,10 +44,7 @@ permissions:
 jobs:
   ai-review:
     runs-on: ubuntu-latest
-    if: >
-      github.event.pull_request.user.login == 'devin-ai-integration[bot]' ||
-      github.event.pull_request.user.login == 'devin-ai[bot]' ||
-      contains(github.event.pull_request.title, 'Devon-')
+    if: github.event.pull_request.draft == false
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -28,35 +58,99 @@ jobs:
         run: |
           git diff "$BASE_SHA".."$HEAD_SHA" -- . ':!*.lock' ':!package-lock.json' ':!*.min.js' ':!*.min.css' | head -c 60000 > /tmp/pr_diff.txt
 
+      - name: Check for authority-file changes
+        id: authority_check
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          CHANGED_FILES=$(git diff --name-only "$BASE_SHA".."$HEAD_SHA")
+          if echo "$CHANGED_FILES" | grep -qE '^(00_authority/|AGENTS\.md$)'; then
+            echo "touches_authority=true" >> "$GITHUB_OUTPUT"
+            echo "PR touches governance files (00_authority/ or AGENTS.md) — stricter Five Rods review."
+            echo "Authority files changed:"
+            echo "$CHANGED_FILES" | grep -E '^(00_authority/|AGENTS\.md$)' || true
+          else
+            echo "touches_authority=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: AI Review via DeepSeek
         id: review
         env:
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
           PR_TITLE: ${{ github.event.pull_request.title }}
+          TOUCHES_AUTHORITY: ${{ steps.authority_check.outputs.touches_authority }}
         run: |
           python3 << 'PYEOF'
           import os, json, sys, urllib.request
 
           diff = open("/tmp/pr_diff.txt").read()[:50000]
           title = os.environ.get("PR_TITLE", "")
+          touches_authority = os.environ.get("TOUCHES_AUTHORITY", "false") == "true"
 
-          prompt = f"""You are a senior code reviewer for Amplified Partners. Review this PR diff.
+          # Base review criteria — applies to ALL PRs
+          base_rules = """## Code quality (blocking issues only)
+          - Bugs, security holes, logic errors, missing imports, hardcoded secrets
+          - Do NOT flag style preferences, naming conventions, or minor improvements
+          - Do NOT flag intentional design choices
+          - Threshold: would this issue cause a bug, security vulnerability, or data loss?
 
+          ## Five Rods compliance (Amplified Partners constitutional principles)
+          Every change must be congruent with the Five Rods. Check each:
+
+          1. RADICAL HONESTY — Does this change hide, obscure, or misrepresent anything?
+             Does it claim a status it hasn't earned? Does it suppress error reporting?
+          2. RADICAL TRANSPARENCY — Does this change reduce visibility? Does it hide
+             working, remove audit trails, or make the system less inspectable?
+          3. RADICAL ATTRIBUTION — Is all work signed? Are sources cited? Does this
+             remove or weaken attribution of who did what?
+          4. WIN-WIN — Does this change create a zero-sum outcome? Does it advantage
+             one party at the expense of another?
+          5. IDEAS MERITOCRACY — Does this change suppress disagreement, remove the
+             ability to challenge decisions, or create authority without accountability?
+
+          ULYSSES CLAUSE: If ANY change weakens, bypasses, removes, or dilutes any of
+          the Five Rods — regardless of who authored it, including the system architect —
+          you MUST flag it as CHANGES_REQUESTED. This is non-negotiable."""
+
+          # Stricter authority-file rules — additional checks for 00_authority/ changes
+          authority_rules = """
+          ## Authority file additional checks (00_authority/ touched)
+          This PR modifies governance files. Apply STRICTER scrutiny:
+
+          6. Does this change maintain the version bump and changelog entry requirement?
+          7. Does this change maintain bibliography integrity (references point to real things)?
+          8. Does this change preserve the Absolute responsibility anchor (Ewan's accountability)?
+          9. Does this change maintain MANIFEST.md as the sole authority index?
+          10. Does the DECISION_LOG.md have a pointer if this creates new rules?
+          11. Does every committed artefact have a signature?
+
+          If all Five Rods are intact AND the authority checks pass, approve.
+          Authority changes that COMPLY with the Five Rods should be approved — do not
+          block them simply because they touch 00_authority/.""" if touches_authority else ""
+
+          review_type = "AUTHORITY FILE REVIEW (stricter)" if touches_authority else "STANDARD REVIEW"
+
+          prompt = f"""You are an independent third-party code reviewer for Amplified Partners.
+          Your role: enforce the Five Rods (constitutional principles) and catch blocking defects.
+          You are NOT the code author. You are the guard.
+
+          Review type: {review_type}
           PR Title: {title}
 
-          Rules:
-          - Only flag BLOCKING issues: bugs, security holes, logic errors, missing imports, hardcoded secrets
-          - Do NOT flag style preferences, naming conventions, or minor improvements
-          - Do NOT flag intentional design choices (e.g. truncation limits, fallback behavior)
-          - Threshold: would this issue cause a bug, security vulnerability, or data loss in production?
-          - If no blocking issues, say APPROVED
-          - If there ARE blocking issues, say CHANGES_REQUESTED and list only the blockers
+          {base_rules}
+          {authority_rules}
 
           Respond with EXACTLY one of these on the first line:
           VERDICT: APPROVED
           VERDICT: CHANGES_REQUESTED
 
-          Then a brief review (max 500 words).
+          Then your review. Structure:
+          - **Five Rods:** PASS or FAIL (with which rod and why)
+          - **Code quality:** any blocking issues{"" if not touches_authority else chr(10) + "          - **Authority checks:** PASS or FAIL (with which check and why)"}
+          - **Summary:** one sentence
+
+          Max 500 words. Be specific — cite file + line when flagging issues.
 
           Diff:
           ```
@@ -67,7 +161,7 @@ jobs:
               "model": "deepseek-chat",
               "messages": [{"role": "user", "content": prompt}],
               "temperature": 0.1,
-              "max_tokens": 1000
+              "max_tokens": 1500
           }).encode()
 
           req = urllib.request.Request(
@@ -80,23 +174,29 @@ jobs:
           )
 
           try:
-              resp = urllib.request.urlopen(req, timeout=60)
+              resp = urllib.request.urlopen(req, timeout=90)
               result = json.loads(resp.read())
               review = result["choices"][0]["message"]["content"]
           except Exception as e:
               err_type = type(e).__name__
-              review = f"VERDICT: CHANGES_REQUESTED\n\nReview unavailable ({err_type}). Blocking merge — manual review required."
+              review = f"VERDICT: UNAVAILABLE\n\nDeepSeek review unavailable ({err_type}). Copilot review (if configured) is the fallback. This PR will NOT be auto-merged by this workflow — merge manually or wait for Copilot."
               print(f"DeepSeek API error: {err_type}", file=sys.stderr)
 
           print(review)
 
-          verdict = "approved" if "VERDICT: APPROVED" in review else "changes_requested"
+          if "VERDICT: APPROVED" in review:
+              verdict = "approved"
+          elif "VERDICT: UNAVAILABLE" in review:
+              verdict = "unavailable"
+          else:
+              verdict = "changes_requested"
 
           with open(os.environ["GITHUB_OUTPUT"], "a") as f:
               f.write(f"verdict={verdict}\n")
 
           with open("/tmp/review_body.txt", "w") as f:
-              f.write(review)
+              prefix = "🛡️ **Five Rods Authority Review**" if touches_authority else "🔍 **Five Rods Review**"
+              f.write(f"{prefix}\n\n{review}")
           PYEOF
 
       - name: Post review comment
@@ -105,36 +205,38 @@ jobs:
         run: |
           gh pr comment ${{ github.event.pull_request.number }} --body-file /tmp/review_body.txt
 
-      - name: Check for authority-file changes
-        id: authority_check
-        env:
-          BASE_SHA: ${{ github.event.pull_request.base.sha }}
-          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-        run: |
-          if git diff --name-only "$BASE_SHA".."$HEAD_SHA" | grep -q '^00_authority/'; then
-            echo "touches_authority=true" >> "$GITHUB_OUTPUT"
-            echo "⚠️ PR touches 00_authority/ — auto-merge BLOCKED. Requires manual review."
-          else
-            echo "touches_authority=false" >> "$GITHUB_OUTPUT"
-          fi
-
       - name: Approve PR
-        if: steps.review.outputs.verdict == 'approved' && steps.authority_check.outputs.touches_authority == 'false'
+        if: steps.review.outputs.verdict == 'approved'
         env:
           GH_TOKEN: ${{ secrets.AUTO_MERGE_PAT }}
         run: |
-          gh pr review ${{ github.event.pull_request.number }} --approve --body "AI review passed. Auto-approved."
+          if [ "${{ steps.authority_check.outputs.touches_authority }}" == "true" ]; then
+            gh pr review ${{ github.event.pull_request.number }} --approve --body "Five Rods Authority Review: PASSED. All five principles intact. Auto-approved."
+          else
+            gh pr review ${{ github.event.pull_request.number }} --approve --body "Five Rods Review: PASSED. Auto-approved."
+          fi
 
       - name: Enable auto-merge
-        if: steps.review.outputs.verdict == 'approved' && steps.authority_check.outputs.touches_authority == 'false'
+        if: steps.review.outputs.verdict == 'approved'
         env:
           GH_TOKEN: ${{ secrets.AUTO_MERGE_PAT }}
         run: |
           gh pr merge ${{ github.event.pull_request.number }} --auto --squash
 
-      - name: Block authority changes
-        if: steps.authority_check.outputs.touches_authority == 'true'
+      - name: Block on Five Rods violation
+        if: steps.review.outputs.verdict == 'changes_requested'
         env:
           GH_TOKEN: ${{ secrets.AUTO_MERGE_PAT }}
         run: |
-          gh pr comment ${{ github.event.pull_request.number }} --body "⚠️ **Authority file change detected.** This PR touches \`00_authority/\` and cannot be auto-merged. Manual review required per governance rules."
+          if [ "${{ steps.authority_check.outputs.touches_authority }}" == "true" ]; then
+            gh pr comment ${{ github.event.pull_request.number }} --body "⛔ **Five Rods Authority Review: BLOCKED.** This PR touches governance files and the reviewer found issues. See review above. The Five Rods are non-negotiable — fix the flagged issues and push again."
+          else
+            gh pr comment ${{ github.event.pull_request.number }} --body "⛔ **Five Rods Review: BLOCKED.** Reviewer found blocking issues. See review above. Fix and push again."
+          fi
+
+      - name: DeepSeek unavailable notice
+        if: steps.review.outputs.verdict == 'unavailable'
+        env:
+          GH_TOKEN: ${{ secrets.AUTO_MERGE_PAT }}
+        run: |
+          gh pr comment ${{ github.event.pull_request.number }} --body "⚠️ **DeepSeek unavailable.** Five Rods review could not run. Copilot review (if configured via ruleset) is the fallback for code quality. This PR will not auto-merge — merge manually if Copilot review passes, or wait for DeepSeek to come back and re-push."
