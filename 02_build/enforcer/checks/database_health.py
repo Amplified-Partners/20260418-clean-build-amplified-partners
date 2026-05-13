@@ -2,7 +2,6 @@
 # Merged into clean-build/02_build/enforcer/checks/ by Devon (Devin session devin-1bdaf31798874921940598bed17ca9e3), 2026-05-04 (AMP-77)
 """Database connectivity and health checks."""
 
-import asyncio
 import socket
 from dataclasses import dataclass
 from typing import Dict, Any, Tuple
@@ -13,10 +12,6 @@ try:
 except ImportError:
     redis = None
 
-try:
-    import httpx
-except ImportError:
-    httpx = None
 
 
 @dataclass
@@ -55,45 +50,11 @@ async def _check_postgres(host: str, port: int) -> Tuple[bool, str]:
         return False, str(e)
 
 
-async def _check_qdrant(host: str, port: int) -> Tuple[bool, str]:
-    if not httpx:
-        try:
-            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            sock.settimeout(2)
-            result = sock.connect_ex((host, port))
-            sock.close()
-            return result == 0, "port check"
-        except:
-            return False, "port check failed"
-    try:
-        async with httpx.AsyncClient(timeout=2.0) as client:
-            # Try multiple endpoints
-            for endpoint in ["/readyz", "/healthz", "/health", "/"]:
-                try:
-                    response = await client.get(f"http://{host}:{port}{endpoint}")
-                    if response.status_code in (200, 204):
-                        return True, f"OK ({endpoint})"
-                except:
-                    continue
-            # Fallback: port check
-            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            sock.settimeout(2)
-            result = sock.connect_ex((host, port))
-            sock.close()
-            return result == 0, "port reachable"
-    except Exception as e:
-        return False, str(e)
-
-
 async def check_databases(
     postgres_host: str, postgres_port: int,
     redis_host: str, redis_port: int,
 ) -> DatabaseCheckResult:
-    """Check database connectivity.
-
-    FalkorDB and Qdrant removed — migrated to PostgreSQL + AGE + pgvector.
-    See AMP-330, DATA_ARCHITECTURE.md.
-    """
+    """Check database connectivity (PostgreSQL + Redis)."""
     now = datetime.now(timezone.utc)
     checks = {
         "PostgreSQL": _check_postgres(postgres_host, postgres_port),

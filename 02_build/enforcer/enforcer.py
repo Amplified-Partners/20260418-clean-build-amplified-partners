@@ -62,7 +62,7 @@ class EnforcerConfig:
         self.langfuse_host = os.getenv('LANGFUSE_HOST', '')
         self.log_level = os.getenv('LOG_LEVEL', 'INFO')
         
-        # Database hosts (FalkorDB + Qdrant removed — AMP-330)
+        # Database hosts
         self.postgres_host = os.getenv('POSTGRES_HOST', 'postgres')
         self.postgres_port = int(os.getenv('POSTGRES_PORT', '5432'))
         self.redis_host = os.getenv('REDIS_HOST', 'redis')
