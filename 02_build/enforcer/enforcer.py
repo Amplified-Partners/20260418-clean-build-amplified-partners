@@ -62,15 +62,11 @@ class EnforcerConfig:
         self.langfuse_host = os.getenv('LANGFUSE_HOST', '')
         self.log_level = os.getenv('LOG_LEVEL', 'INFO')
         
-        # Database hosts
-        self.falkordb_host = os.getenv('FALKORDB_HOST', 'falkordb')
-        self.falkordb_port = int(os.getenv('FALKORDB_PORT', '6379'))
+        # Database hosts (FalkorDB + Qdrant removed — AMP-330)
         self.postgres_host = os.getenv('POSTGRES_HOST', 'postgres')
         self.postgres_port = int(os.getenv('POSTGRES_PORT', '5432'))
         self.redis_host = os.getenv('REDIS_HOST', 'redis')
         self.redis_port = int(os.getenv('REDIS_PORT', '6379'))
-        self.qdrant_host = os.getenv('QDRANT_HOST', 'qdrant')
-        self.qdrant_port = int(os.getenv('QDRANT_PORT', '6333'))
         
         # Session hygiene
         self.session_state_path = os.getenv(
@@ -87,7 +83,7 @@ class EnforcerConfig:
         # Expected containers (comma-separated)
         self.expected_containers = os.getenv(
             'EXPECTED_CONTAINERS',
-            'traefik,falkordb,postgres,redis,qdrant,langfuse,portainer'
+            'traefik,postgres,redis,langfuse,portainer'
         ).split(',')
 
 
@@ -146,14 +142,10 @@ class EnforcerEngine:
                 'expected_containers': self.config.expected_containers
             }),
             ('database_health', database_health.check_databases, {
-                'falkordb_host': self.config.falkordb_host,
-                'falkordb_port': self.config.falkordb_port,
                 'postgres_host': self.config.postgres_host,
                 'postgres_port': self.config.postgres_port,
                 'redis_host': self.config.redis_host,
                 'redis_port': self.config.redis_port,
-                'qdrant_host': self.config.qdrant_host,
-                'qdrant_port': self.config.qdrant_port,
             }),
             ('traefik_health', traefik_health.check_traefik, {
                 'traefik_host': 'traefik'

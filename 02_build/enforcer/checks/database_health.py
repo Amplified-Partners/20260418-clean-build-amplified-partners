@@ -85,29 +85,19 @@ async def _check_qdrant(host: str, port: int) -> Tuple[bool, str]:
         return False, str(e)
 
 
-async def _check_falkordb(host: str, port: int) -> Tuple[bool, str]:
-    if not redis:
-        return False, "redis-py not installed"
-    try:
-        r = redis.Redis(host=host, port=port, socket_connect_timeout=2, socket_timeout=2, decode_responses=True)
-        r.ping()
-        return True, "OK"
-    except Exception as e:
-        return False, str(e)
-
-
 async def check_databases(
-    falkordb_host: str, falkordb_port: int,
     postgres_host: str, postgres_port: int,
     redis_host: str, redis_port: int,
-    qdrant_host: str, qdrant_port: int,
 ) -> DatabaseCheckResult:
+    """Check database connectivity.
+
+    FalkorDB and Qdrant removed — migrated to PostgreSQL + AGE + pgvector.
+    See AMP-330, DATA_ARCHITECTURE.md.
+    """
     now = datetime.now(timezone.utc)
     checks = {
-        "FalkorDB": _check_falkordb(falkordb_host, falkordb_port),
         "PostgreSQL": _check_postgres(postgres_host, postgres_port),
         "Redis": _check_redis(redis_host, redis_port),
-        "Qdrant": _check_qdrant(qdrant_host, qdrant_port),
     }
     results = {}
     failed = []
