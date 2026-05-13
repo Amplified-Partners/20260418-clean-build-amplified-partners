@@ -31,8 +31,8 @@ ports to localhost or Tailscale only.
 |------|-----------|---------|
 | 4000 | `litellm` | LLM proxy |
 | 5433 | `cove-postgres` | Cove TimescaleDB (cove-repo stack) |
-| 6333 | `qdrant-temp` | Qdrant (legacy) |
-| 6379 | `falkordb-temp` | FalkorDB (legacy) |
+| ~~6333~~ | ~~`qdrant-temp`~~ | ~~Qdrant~~ — **decommissioned** (AMP-329, 2026-05-13) |
+| ~~6379~~ | ~~`falkordb-temp`~~ | ~~FalkorDB~~ — **decommissioned** (AMP-329, 2026-05-13) |
 | 7233 | `cove-temporal` | Temporal gRPC |
 | 8080 | `traefik` | Dashboard |
 | 8088 | `token-proxy` | Anthropic cost proxy |

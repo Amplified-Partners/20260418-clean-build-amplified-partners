@@ -56,7 +56,7 @@ Quick summary (2026-04-30):
 
 **For OpenClaw:**
 - Can you check the content in the review queue and give Ewan a summary of what's worth his time reviewing vs what should be rejected outright?
-- The vault content that Clawd indexed (FalkorDB + Qdrant) is now feeding the research agent. If you've added new material to the vault, it won't appear in the knowledge graphs until the next indexing run.
+- The vault content that Clawd indexed is now feeding the research agent via PostgreSQL + AGE (graph) + pgvector (embeddings). FalkorDB and Qdrant have been decommissioned (AMP-329, 2026-05-13).
 
 Signed-by: Devon | 2026-04-29 | devin-aa4d863ad679468692e75a40b8825358
 
