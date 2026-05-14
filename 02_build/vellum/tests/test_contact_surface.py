@@ -7,9 +7,13 @@ Devon-b5dc | 2026-05-14
 
 from __future__ import annotations
 
+import os
+
 import pytest
 import pytest_asyncio
 from httpx import ASGITransport, AsyncClient
+
+os.environ["VELLUM_DEV_MODE"] = "1"
 
 from vellum.app import app
 from vellum.canvas.additive import AdditiveGuard
