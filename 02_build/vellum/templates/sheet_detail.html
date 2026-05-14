@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}{{ sheet.title }} — Vellum{% endblock %}
+
+{% block content %}
+<div class="sheet-view">
+    <a href="/" class="back-link">&larr; Dashboard</a>
+
+    <header class="sheet-header">
+        <h1>{{ sheet.title }}</h1>
+        <span class="sheet-meta">{{ sheet.mode }} &middot; {{ sheet.created_by }}</span>
+    </header>
+
+    <!-- Entries -->
+    <div id="entries" class="entries"
+         hx-get="/partials/entries/{{ sheet.id }}"
+         hx-trigger="every 10s"
+         hx-swap="innerHTML">
+        {% include "components/entry_list.html" %}
+    </div>
+
+    <!-- Reply interface -->
+    <div class="reply-bar">
+        <div class="emoji-row">
+            <button class="emoji-btn" onclick="sendReply('{{ sheet.id }}', this.textContent)">&#128077;</button>
+            <button class="emoji-btn" onclick="sendReply('{{ sheet.id }}', this.textContent)">&#9888;&#65039;</button>
+            <button class="emoji-btn" onclick="sendReply('{{ sheet.id }}', this.textContent)">&#10067;</button>
+        </div>
+        <form class="reply-form" onsubmit="return submitReply(event, '{{ sheet.id }}')">
+            <input type="text" id="reply-input" name="content" placeholder="Reply..." autocomplete="off">
+            <button type="submit" class="btn-send">Send</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
