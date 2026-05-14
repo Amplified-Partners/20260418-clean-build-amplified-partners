@@ -294,3 +294,86 @@ class TestAPI:
     async def test_sheet_not_found(self, client) -> None:
         resp = await client.get("/api/v1/sheets/nonexistent")
         assert resp.status_code == 404
+
+    @pytest.mark.asyncio
+    async def test_dual_layer_reply_generates_cleaned_prompt(self, client) -> None:
+        gen = await client.post(
+            "/api/v1/sheets/generate",
+            json={"content": "Brief", "title": "Rewrite Test"},
+        )
+        sheet_id = gen.json()["sheet_id"]
+
+        resp = await client.post(
+            f"/api/v1/sheets/{sheet_id}/reply",
+            json={"content": "fix the CI pipeline because it's broken since yesterday", "author": "Ewan"},
+        )
+        data = resp.json()
+        assert data["intent"] == "create_task"
+        assert data["cleaned_entry_id"] is not None
+        assert data["cleaned_text"] is not None
+        assert "Action: fix" in data["cleaned_text"]
+        assert "Subject:" in data["cleaned_text"]
+
+    @pytest.mark.asyncio
+    async def test_emoji_reply_skips_rewrite(self, client) -> None:
+        gen = await client.post(
+            "/api/v1/sheets/generate",
+            json={"content": "Brief", "title": "Emoji No Rewrite"},
+        )
+        sheet_id = gen.json()["sheet_id"]
+
+        resp = await client.post(
+            f"/api/v1/sheets/{sheet_id}/reply",
+            json={"content": "\U0001f44d", "author": "Ewan"},
+        )
+        data = resp.json()
+        assert data["intent"] == "acknowledge"
+        assert data["cleaned_entry_id"] is None
+        assert data["cleaned_text"] is None
+
+
+class TestRewriter:
+    def test_extract_action_fix(self) -> None:
+        from vellum.intent.rewriter import rewrite_to_prompt
+
+        result = rewrite_to_prompt("fix the deployment pipeline now")
+        assert result.action == "fix"
+        assert result.urgency == "high"
+        assert "Action: fix" in result.clean_text
+
+    def test_extract_action_build(self) -> None:
+        from vellum.intent.rewriter import rewrite_to_prompt
+
+        result = rewrite_to_prompt("build a new dashboard for the CRM")
+        assert result.action == "build"
+        assert "Subject:" in result.clean_text
+
+    def test_extract_context_because(self) -> None:
+        from vellum.intent.rewriter import rewrite_to_prompt
+
+        result = rewrite_to_prompt("fix the login page because users are getting 500 errors")
+        assert result.action == "fix"
+        assert "users are getting 500 errors" in result.context
+
+    def test_extract_urgency_low(self) -> None:
+        from vellum.intent.rewriter import rewrite_to_prompt
+
+        result = rewrite_to_prompt("when you can, research the new pgvector indexing options")
+        assert result.urgency == "low"
+
+    def test_empty_input(self) -> None:
+        from vellum.intent.rewriter import rewrite_to_prompt
+
+        result = rewrite_to_prompt("")
+        assert result.action == "none"
+        assert result.clean_text == "[empty input]"
+
+    def test_natural_speech_rewrite(self) -> None:
+        from vellum.intent.rewriter import rewrite_to_prompt
+
+        result = rewrite_to_prompt(
+            "right so I need you to deploy the vellum thing to beast today because ewan wants it live"
+        )
+        assert result.action == "deploy"
+        assert result.urgency == "high"
+        assert "Subject:" in result.clean_text

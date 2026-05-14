@@ -2,14 +2,22 @@
 <div class="entry entry-{{ e.entry_type }}">
     <div class="entry-header">
         <span class="entry-author
-            {% if e.entry_type in ['human_comment', 'emoji_reaction', 'decision'] %}author-human{% else %}author-agent{% endif %}">
+            {% if e.entry_type == 'cleaned_prompt' %}author-rewriter
+            {% elif e.entry_type in ['human_comment', 'emoji_reaction', 'decision'] %}author-human
+            {% else %}author-agent{% endif %}">
             {{ e.author }}
         </span>
         <span class="entry-type-badge">{{ e.entry_type | replace("_", " ") }}</span>
         <span class="entry-time">{{ e.time_ago }}</span>
         <span class="entry-hash" title="{{ e.entry_hash }}">{{ e.entry_hash }}</span>
     </div>
+    {% if e.entry_type == 'cleaned_prompt' %}
+    <div class="entry-body entry-cleaned">
+        <pre class="cleaned-prompt">{{ e.content }}</pre>
+    </div>
+    {% else %}
     <div class="entry-body">{{ e.content }}</div>
+    {% endif %}
     {% if e.metadata %}{% if 'intent' in e.metadata %}
     <div class="entry-intent">
         Intent: <strong>{{ e.metadata['intent'] }}</strong>

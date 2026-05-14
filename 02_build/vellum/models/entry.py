@@ -24,6 +24,7 @@ EntryType = Literal[
     "read_receipt",
     "task_created",
     "brief_summary",
+    "cleaned_prompt",
 ]
 
 
