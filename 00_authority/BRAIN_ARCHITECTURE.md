@@ -1,13 +1,14 @@
 ---
 title: The Amplified Brain — Architecture, Estate, and Operating Map
-date: 2026-05-14
-version: 5
+date: 2026-05-15
+version: 6
 status: authoritative now
 refresh: This document MUST be refreshed every 24–48 hours by a scheduled Devon session.
 supersedes: Linear doc "The Amplified Brain Architecture (Where the Brain Lives)" (c655776f3baa)
 source-materials: Onboarding package (Devon-6098, 2026-05-14), 17-and-3 Principle (Ewan Bramley, 2026-05-14 21:19 BST), AI-is-a-Pudding insight, Systems Design & Three Specs methodology, Ingestion Pipe Rewrite spec, Linear-to-Vellum migration spec, Reflective Loop pattern audit, Perplexity Research (99 verified sources — pipeline metrics, AI council, Kaizen, governance-by-exception, 2026-05-14)
 signed-by:
   - Devon-3386 | 2026-05-14 | devin-338635b0d3cd4a868f1cf7e7fcb8d461
+  - Devon-REFRESH | 2026-05-15 | devin-89e7571c9dda41b89b4ad3148dfb86a1
 ---
 
 <!-- markdownlint-disable-file MD013 -->
@@ -458,7 +459,7 @@ The client-facing product. Gives small business owners their own data so they ca
 | **Stack** | Python/FastAPI backend, Next.js frontend, PostgreSQL |
 | **Core product** | The Founder Interview (7 phases → Business Bible) |
 | **Endpoints** | 50+ REST API endpoints |
-| **Status** | Code in GitHub. NOT yet deployed to Beast. Next milestone: Docker-compose on Beast. |
+| **Status** | Code in GitHub. NOT yet deployed to Beast. Next milestone: Docker-compose on Beast. Five Rods auto-review active (PR #56). Repo-specific `AGENTS.md` added (PR #57). |
 
 Intelligence features: Cash Flow Predictor, Death Spiral Detector, CLV Tracker, Exit Strategy, Quote Follow-Up, Payment Chaser, Service Reminder, Parts Concierge, Portfolio Generator, Bottleneck Finder, Voice Quote Generator.
 
@@ -665,7 +666,7 @@ If it is not in GitHub, it is not real.
 - **Source of truth for code, policy, and schemas.** If it changes source truth, it needs GitHub.
 - **Branch protection** on `clean-build`, `ground-truth`, `crm` — PRs require review.
 - **CODEOWNERS** — `@ewanbramley` required for `00_authority/**` and `01_truth/**` changes.
-- **Five Rods auto-review** — AI code review pipeline on PRs via `.github/workflows/auto-review-merge.yml`.
+- **Five Rods auto-review** — AI code review pipeline on PRs via `.github/workflows/auto-review-merge.yml`. Rolled out to `clean-build`, `crm`, `ground-truth`, `perplexity-research`, `vault`, `portable-spine` (6 repos as of 2026-05-15).
 - **Radical Attribution** — every commit signed with agent session name.
 - **PR standards** — one concept per commit, plan-execution mirror in description, Linear ticket referenced.
 - **⚠️ "Watch the fucking repos."** Repos contain historical artefacts. Not everything in them is current. Check `ground-truth/TERMINOLOGY.md` when names disagree.
@@ -933,6 +934,17 @@ These are not decorative. They are the signal.
 ---
 
 ## Changelog
+
+### v6 — 2026-05-15
+
+- **24h refresh.** No structural architecture changes since v5.
+- § 5 CRM: Five Rods auto-review now active (PR #56). Repo-specific `AGENTS.md` added (PR #57).
+- § 7 GitHub: Five Rods auto-review rolled out to 6 repos across the org (clean-build, crm, ground-truth, perplexity-research, vault, portable-spine).
+- Beast container status: unverified this refresh — SSH key (`beastssh`) rejected by Beast (`Permission denied`). Key may need re-provisioning in `authorized_keys`.
+- Linear: AMP-345 (In Review) APDS PUDDING extraction rewrite FalkorDB→PostgreSQL+AGE+pgvector. AMP-343 (Todo, Urgent) Brief MVP — first heartbeat. AMP-302 (Done) Cove ingestion pipe v0.3.
+- In-flight clean-build PRs: `DATA_ARCHITECTURE.md` + 19-field AI Context Schema, Vellum contact surface (Morning Brief + Correspondence + Simple UI), auto-review self-approval fix.
+
+Signed-by: Devon-REFRESH | 2026-05-15 | devin-89e7571c9dda41b89b4ad3148dfb86a1
 
 ### v5 — 2026-05-14
 
