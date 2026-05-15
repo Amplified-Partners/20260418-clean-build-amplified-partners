@@ -1,7 +1,7 @@
 ---
 title: Decision log
-date: 2026-05-13
-version: 22
+date: 2026-05-15
+version: 23
 status: draft
 ---
 
@@ -12,6 +12,14 @@ status: draft
 One entry per decision. Keep it short. Link out to supporting docs.
 
 ## Entries
+
+### 2026-05-15 — Estate cleanup (45→27 repos) + Business Brain 19-field schema
+
+- **Decision**: Classify all 45 repositories across Amplified-Partners and ewan-dot orgs. Mark 12 repos for deletion (7 ewan-dot stubs + 5 Amplified-Partners stubs), 6 repos for archival, keep 27 active. Create migration scripts for FalkorDB→Apache AGE and Qdrant→pgvector (noting prior AMP-302 bulk migration already moved data to relational tables). Implement 19-field `business_brain_context` schema with transmission layer (19→3, 3→19). Update BRAIN_ARCHITECTURE.md v5→v6 repo map.
+- **Why**: Estate grew organically over 7 months — 45 repos, 3 database engines, 200GB stale local storage. Canonical Data Architecture (2026-05-08) declared PostgreSQL + AGE + pgvector as the single engine. Repo deletions are irreversible — full classification with attribution preservation documented before execution. OPINION 92% — deletions/archives require Ewan sign-off.
+- **Where encoded**: `00_authority/ESTATE-CHAOS-CASE-STUDY-2026-05-15.md`, `02_build/scripts/migrate_falkordb_to_age.py`, `02_build/scripts/migrate_qdrant_to_pgvector.py`, `02_build/scripts/business_brain_schema.py`, `00_authority/BRAIN_ARCHITECTURE.md` v6, `00_authority/MANIFEST.md` v61.
+- **Status**: pending Ewan sign-off (repo deletions are irreversible).
+- **Signed-by**: Devon-8da1 | 2026-05-15 | devin-8da1981ce177481da3fe1d2b40e7fade
 
 ### 2026-05-13 — Five Rods Auto-Review: replace manual authority-file block with structural Five Rods enforcement
 

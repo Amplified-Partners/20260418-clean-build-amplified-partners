@@ -1,7 +1,7 @@
 ---
 title: Governed workspace manifest (authoritative inventory)
-date: 2026-05-14
-version: 60
+date: 2026-05-15
+version: 61
 status: draft
 ---
 
@@ -79,7 +79,8 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
 - `00_authority/DECISION_LOG.md`
 - `00_authority/PR_WORKFLOW.md` (branch protection + Linear linkage + review authority for active repos; AMP-70)
 - `STATUS.md` (operations status board — async handshake between Devon and OpenClaw; versioned handoffs, no chat)
-- `00_authority/BRAIN_ARCHITECTURE.md` (canonical Amplified Brain architecture v5 — Layer 0, Portable Spine, work pipeline, Council governance gate (SAC protocol, heterogeneity, Challenger role), Two-Engine Architecture, 17-and-3 Principle, AI-is-a-Pudding, Vellum (ready), estate map, ingestion pipe, agent roster, Python Logic Canon, Kaizen (surprise heuristic with four-tradition science), pipeline health metrics, research grounding (99 Perplexity sources), fifteen hard constraints + governance-by-exception; Cursor full read/write access; supersedes Linear doc c655776f3baa)
+- `00_authority/ESTATE-CHAOS-CASE-STUDY-2026-05-15.md` (estate cleanup case study — 45→27 repos, repo classification, deletion/archive plan, Canonical Data Architecture migration scope, hidden value discovery; Devon-8da1 2026-05-15)
+- `00_authority/BRAIN_ARCHITECTURE.md` (canonical Amplified Brain architecture v6 — Layer 0, Portable Spine, work pipeline, Council governance gate (SAC protocol, heterogeneity, Challenger role), Two-Engine Architecture, 17-and-3 Principle, AI-is-a-Pudding, Vellum (ready), estate map, ingestion pipe, agent roster, Python Logic Canon, Kaizen (surprise heuristic with four-tradition science), pipeline health metrics, research grounding (99 Perplexity sources), fifteen hard constraints + governance-by-exception; Cursor full read/write access; supersedes Linear doc c655776f3baa)
 - `02_build/INFRASTRUCTURE.md` (canonical infrastructure manifest — single source of truth for all 40 containers, services, scheduled jobs, and server specs on Amplified Core)
 - `.github/CODEOWNERS` (GitHub CODEOWNERS — requires `@ewanbramley` review for `00_authority/**` and `01_truth/**` changes; no default owner)
 - `.cursor/rules/stateless-handover-kaizen.mdc` `[LOGIC TO BE CONFIRMED]` (mechanical enforcement of existing handover policy; not a separate policy spine)
@@ -561,6 +562,13 @@ Signed-by: Keystone (AI) — 2026-04-16
   line reframed as **accountability token** (agent routing), not operator leisure text.
 
 Signed-by: Keystone (AI) — 2026-04-17
+
+### v61 — 2026-05-15
+
+- Indexed `00_authority/ESTATE-CHAOS-CASE-STUDY-2026-05-15.md` (estate cleanup case study).
+- Updated `BRAIN_ARCHITECTURE.md` reference from v5 to v6 (repo map cleaned: 45→27).
+
+Signed-by: Devon-8da1 | 2026-05-15 | devin-8da1981ce177481da3fe1d2b40e7fade
 
 ### v32 — 2026-04-17
 

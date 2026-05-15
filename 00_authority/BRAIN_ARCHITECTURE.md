@@ -1,12 +1,13 @@
 ---
 title: The Amplified Brain — Architecture, Estate, and Operating Map
-date: 2026-05-14
-version: 5
+date: 2026-05-15
+version: 6
 status: authoritative now
 refresh: This document MUST be refreshed every 24–48 hours by a scheduled Devon session.
 supersedes: Linear doc "The Amplified Brain Architecture (Where the Brain Lives)" (c655776f3baa)
 source-materials: Onboarding package (Devon-6098, 2026-05-14), 17-and-3 Principle (Ewan Bramley, 2026-05-14 21:19 BST), AI-is-a-Pudding insight, Systems Design & Three Specs methodology, Ingestion Pipe Rewrite spec, Linear-to-Vellum migration spec, Reflective Loop pattern audit, Perplexity Research (99 verified sources — pipeline metrics, AI council, Kaizen, governance-by-exception, 2026-05-14)
 signed-by:
+  - Devon-8da1 | 2026-05-15 | devin-8da1981ce177481da3fe1d2b40e7fade
   - Devon-3386 | 2026-05-14 | devin-338635b0d3cd4a868f1cf7e7fcb8d461
 ---
 
@@ -612,9 +613,11 @@ If it is not in GitHub, it is not real.
 |----------|-------|
 | **Org** | [`Amplified-Partners`](https://github.com/Amplified-Partners) |
 
-#### Repository map
+#### Repository map (27 active — cleaned 2026-05-15)
 
-**Governance & Spine (read first):**
+Prior estate: 45 repos (38 Amplified-Partners + 7 ewan-dot stubs). Cleanup documented in `00_authority/ESTATE-CHAOS-CASE-STUDY-2026-05-15.md`. Deleted: 7 ewan-dot stubs + 5 Amplified-Partners stubs. Archived: 6 dormant repos.
+
+**Governance & Spine (4):**
 
 | Repo | Purpose | Status |
 |------|---------|--------|
@@ -623,16 +626,15 @@ If it is not in GitHub, it is not real.
 | [`clean-build`](https://github.com/Amplified-Partners/clean-build) | Governed agent workspace (Cursor). Authority rules, specs, build code. `00_authority/` is the policy spine. | Active — Build |
 | [`devon-memory`](https://github.com/Amplified-Partners/devon-memory) | Devon's terminal repo — working memory, baton passes, compound engineering | Active — Agent Memory |
 
-**Core Products:**
+**Core Products (3):**
 
 | Repo | Purpose | Stack | Status |
 |------|---------|-------|--------|
 | [`crm`](https://github.com/Amplified-Partners/crm) | Core CRM product — 50+ endpoints, Business Brain, Interview Engine, Intelligence Engine | Python, FastAPI, Next.js, PostgreSQL | Active — Product |
 | [`covered-ai-v2`](https://github.com/Amplified-Partners/covered-ai-v2) | AI phone answering for UK service businesses (standalone product) | TypeScript, Vapi.ai, Twilio, Railway | Active — Product |
-| [`amplified-site`](https://github.com/Amplified-Partners/amplified-site) | Public-facing website | TypeScript | Active — Product |
-| [`amplified-website`](https://github.com/Amplified-Partners/amplified-website) | Marketing/customer acquisition website | TypeScript | Active — Product |
+| [`amplified-site`](https://github.com/Amplified-Partners/amplified-site) | Public-facing website + visual polish system | TypeScript, React, Express | Active — Product |
 
-**Infrastructure & Tooling:**
+**Infrastructure & Tooling (8):**
 
 | Repo | Purpose | Status |
 |------|---------|--------|
@@ -640,25 +642,44 @@ If it is not in GitHub, it is not real.
 | [`marketing-engine`](https://github.com/Amplified-Partners/marketing-engine) | Automated content pipeline — pillar-to-atom, Kaizen loops, multi-platform publishing | Active — Marketing |
 | [`amplified-knowledge-mcp`](https://github.com/Amplified-Partners/amplified-knowledge-mcp) | MCP server for AI agent access to knowledge graph | Active — Infra |
 | [`anthropic-token-proxy`](https://github.com/Amplified-Partners/anthropic-token-proxy) | Local reverse proxy — prompt caching, semantic caching | Active — Infra |
+| [`cost-tools`](https://github.com/Amplified-Partners/cost-tools) | API cost tracking and optimisation utilities | Active — Infra |
 | [`mission-control`](https://github.com/Amplified-Partners/mission-control) | Enterprise governance dashboard — code review, decision tracking | Active — Dashboard |
-| [`voice-ai`](https://github.com/Amplified-Partners/voice-ai) | Voice processing pipeline | Active |
+| [`enforcer`](https://github.com/Amplified-Partners/enforcer) | Infrastructure health monitoring and compliance | Active — Infra |
+| [`.github`](https://github.com/Amplified-Partners/.github) | Org-level defaults: Copilot instructions, community health | Active — Config |
 
-**Research & Knowledge:**
+**Research & Knowledge (6):**
 
 | Repo | Purpose | Status |
 |------|---------|--------|
 | [`perplexity-research`](https://github.com/Amplified-Partners/perplexity-research) | Research intake from Perplexity — automated governance pipeline | Active — Research |
 | [`vault`](https://github.com/Amplified-Partners/vault) | Curated knowledge store (4,891 markdown files, Obsidian-readable) | Active — Knowledge |
-| [`corpus-raw`](https://github.com/Amplified-Partners/corpus-raw) | Raw research corpus (~10k files). Will migrate to Data Lake | Archive-Pending |
+| [`corpus-raw`](https://github.com/Amplified-Partners/corpus-raw) | Raw research corpus (~10k files) | Active — Data Lake |
 | [`pudding-core`](https://github.com/Amplified-Partners/pudding-core) | Core implementation of the PUDDING technique (Swanson ABC model) | Active — Research |
+| [`pudding-testing`](https://github.com/Amplified-Partners/pudding-testing) | PUDDING test harness — taxonomy validation | Active — Research |
 | [`the-amplified-method`](https://github.com/Amplified-Partners/the-amplified-method) | The Amplified Method — methodology documentation | Active — Docs |
 
-**Agent Infrastructure:**
+**Agent Infrastructure (4):**
 
 | Repo | Purpose | Status |
 |------|---------|--------|
-| [`amplified-hermes-team`](https://github.com/Amplified-Partners/amplified-hermes-team) | Agent orchestration framework — team manager, BATON protocol | Active |
-| [`agent-comms`](https://github.com/Amplified-Partners/agent-comms) | Agent status boards, handover files | Active — Comms |
+| [`agent-comms`](https://github.com/Amplified-Partners/agent-comms) | Agent coordination hub, handover files | Active — Comms |
+| [`openclaw-knowledge`](https://github.com/Amplified-Partners/openclaw-knowledge) | OpenClaw knowledge base for agent team | Active — Knowledge |
+| [`openclaw-claw`](https://github.com/Amplified-Partners/openclaw-claw) | OpenClaw framework — agent deployment, Beast integration | Active — Agent |
+| [`dotfiles`](https://github.com/Amplified-Partners/dotfiles) | Multi-Mac dotfiles for Mirror (Claude on Mac) | Active — Config |
+
+**Other Active (2):**
+
+| Repo | Purpose | Status |
+|------|---------|--------|
+| [`plumb`](https://github.com/Amplified-Partners/plumb) | Plumb agent workspace — truth-checking, drift detection | Active — Agent |
+| [`byker-production`](https://github.com/Amplified-Partners/byker-production) | Orchestration platform for AI-powered code gen / diagnostics | Active — Infra |
+
+**Deleted (12 — pending Ewan sign-off):**
+- ewan-dot org (7 stubs): voice-ai, docs, beautifulgolden, librarian-api, covered-ai-v2, visual-polish-system, the-amplified-method
+- Amplified-Partners stubs (5): amplified-hermes-team, openclaw, beautifulgolden, originals, canonical-candidate
+
+**Archived (6 — pending Ewan sign-off):**
+- amplified-website, voice-ai, visual-polish-system, smb-ai-friction-consultancy, beautiful-and-golden, beast-code-export
 
 #### How we use GitHub
 
@@ -933,6 +954,17 @@ These are not decorative. They are the signal.
 ---
 
 ## Changelog
+
+### v6 — 2026-05-15
+
+- Estate cleanup: repository map updated from ~25 listed repos to 27 active (canonical). Full classification in `00_authority/ESTATE-CHAOS-CASE-STUDY-2026-05-15.md`.
+- 12 repos marked for deletion (7 ewan-dot stubs + 5 Amplified-Partners stubs), 6 for archival — pending Ewan sign-off.
+- Removed `amplified-website` (superseded by `amplified-site`), `voice-ai` (absorbed into CRM), `amplified-hermes-team` (absorbed into agent-comms).
+- Added missing active repos to map: `cost-tools`, `enforcer`, `.github`, `pudding-testing`, `openclaw-knowledge`, `openclaw-claw`, `dotfiles`, `plumb`, `byker-production`.
+- Migration scripts created: `migrate_falkordb_to_age.py`, `migrate_qdrant_to_pgvector.py` in `02_build/scripts/`.
+- 19-field `business_brain_context` schema created with transmission layer (19→3, 3→19) in `02_build/scripts/business_brain_schema.py`.
+
+Signed-by: Devon-8da1 | 2026-05-15 | devin-8da1981ce177481da3fe1d2b40e7fade
 
 ### v5 — 2026-05-14
 
