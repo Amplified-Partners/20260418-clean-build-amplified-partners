@@ -110,6 +110,7 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
   - `01_truth/processes/2026-05_pr-workflow_branch-protection_sop_v1.md` `[LOGIC TO BE CONFIRMED]` (PR workflow + branch-protection operating SOP; parent rule: `00_authority/PR_WORKFLOW.md`; AMP-70)
   - `01_truth/processes/2026-03_pudding-validation-methodology_v2.1.md` `[LOGIC TO BE CONFIRMED]` (1,371 lines — PUDDING validation methodology: 4 immutable rules, 11 rubrics, 10 enforcer roles, 12 analytical lenses; source: Perplexity process corpus; AMP-183)
   - `01_truth/processes/2026-03_sops-slas-business-process-documentation_v1.md` `[LOGIC TO BE CONFIRMED]` (872 lines — world-class SOP design framework, SLA architecture, AI-assisted SOP engine; source: Perplexity process corpus; AMP-183)
+  - `01_truth/processes/ingest-inbox-convention.md` (collaboration drop zone convention — agent file-drop path, naming convention, pipeline flow, rules; AMP-351)
 - `01_truth/schemas/` `[LOGIC TO BE CONFIRMED]` (schema contracts to be populated)
   - `01_truth/schemas/README.md` `[LOGIC TO BE CONFIRMED]` (folder purpose stub)
   - `01_truth/schemas/2026-03_framework-resolution_apqc-pdca-bpmn_v1.md` `[LOGIC TO BE CONFIRMED]` (canonical framework stack decision: APQC PCF → BPMN → DMN → CMMN → PDCA/DMAIC → ISO 9001; source: Perplexity process corpus; AMP-183)

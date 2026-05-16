@@ -44,8 +44,8 @@ disk (ingest-inbox)
 | Requirement | Detail |
 |-------------|--------|
 | PostgreSQL  | `amplified_brain` database on `cove-postgres` (Beast) |
-| Migrations 001–007 | Applied in order. 001 creates `audit_log`, 004 creates `pipeline_runs`, 007 creates canonical tables |
-| Roles | `brain_writer` (INSERT/UPDATE), `brain_reader` (SELECT) — created in migration 005, extended in 007 |
+| Migrations 001–008 | Applied in order. 001 creates `audit_log`, 004 creates `pipeline_runs`, 007 creates canonical tables, 008 enforces write protection audit (AMP-351) |
+| Roles | `brain_writer` (INSERT/UPDATE), `brain_reader` (SELECT) — created in migration 005, extended in 007 + 008 |
 | Extensions | `vector` (pgvector), `uuid-ossp` — created by migration 007 |
 | Drop zone | `/opt/amplified/ingest-inbox/` (agent collaboration drop zone, AMP-351) |
 | Source root | `/opt/amplified/vault/store_b_clean` (clean archive after dedup) |
