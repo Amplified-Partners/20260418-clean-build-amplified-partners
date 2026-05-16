@@ -102,18 +102,20 @@ Beast server: `135.181.161.131` — Hetzner AX162-R, 96 cores, 252 GB RAM, Ubunt
 
 | Service | Container | Compose File | Route | What It Does | Health |
 |---------|-----------|-------------|-------|-------------|--------|
-| **Voice Agent** | `amplified-voice-agent` | `/opt/amplified-voice-agent/docker-compose.yml` | `voice.beast.amplifiedpartners.ai` | Twilio (+441917433558) + Deepgram STT + Anthropic conversation + FalkorDB knowledge. Port 8080. | Running. **Note:** Uses FalkorDB (deprecated) — needs migrating to AGE. |
+| **Voice Agent** | `amplified-voice-agent` | `/opt/amplified-voice-agent/docker-compose.yml` | `voice.beast.amplifiedpartners.ai` | Twilio (+441917433558) + Deepgram STT + Anthropic conversation + FalkorDB knowledge. Port 8080. | Running. **Note:** Was using FalkorDB (now decommissioned, AMP-329). Needs rewiring to PostgreSQL + AGE. |
 | **xAI Phone Agent** | `xai-phone-agent` | `/opt/xai-phone-agent/docker-compose.yml` | `phone.beast.amplifiedpartners.ai` | xAI/Grok voice experiment (voice: "Sal"). Native xAI voice API, no Twilio. | Running |
 
 **Repos:** [`Amplified-Partners/voice-ai`](https://github.com/Amplified-Partners/voice-ai)
 
-### 1.8 Knowledge & Search (Legacy — running but deprecated for new work)
+### 1.8 Knowledge & Search
 
-| Service | Container | Compose File | Port | What It Does | Migration |
-|---------|-----------|-------------|------|-------------|-----------|
-| **FalkorDB** | `falkordb` | `/opt/amplified/docker-compose.yml` | 6379 (internal) | Graph DB. 9,000 nodes, 4 graphs. | → PostgreSQL + Apache AGE ([AMP-141](https://linear.app/amplifiedpartners/issue/AMP-141)) |
-| **Qdrant** | `qdrant` | `/opt/amplified/docker-compose.yml` | 6333-6334 (internal) | Vector DB. 57,434 embeddings (384-dim). | → PostgreSQL + pgvector ([AMP-139](https://linear.app/amplifiedpartners/issue/AMP-139)) |
-| **ClickHouse** | `clickhouse` | `/opt/amplified/docker-compose.yml` | 8123 (HTTP), 9000 (native) | Columnar analytics. | No migration planned |
+| Service | Container | Compose File | Port | What It Does | Status |
+|---------|-----------|-------------|------|-------------|--------|
+| **FalkorDB** | ~~`falkordb-temp`~~ | `/opt/amplified/docker-compose.yml` | ~~6379~~ | Graph DB. Was 9,000 nodes, 4 graphs. | **Decommissioned** (AMP-329, 2026-05-13). Data migrated to PostgreSQL + Apache AGE: 53,959 entities, 34,488 relationships, 4,257 episodes. See `02_build/brain-migration/README.md`. |
+| **Qdrant** | ~~`qdrant-temp`~~ | `/opt/amplified/docker-compose.yml` | ~~6333-6334~~ | Vector DB. Was 57,434 embeddings (384-dim). | **Decommissioned** (AMP-329, 2026-05-13). Data migrated to `knowledge_vectors` table in PostgreSQL + pgvector. See `02_build/brain-migration/README.md`. |
+| **ClickHouse** | `clickhouse` | `/opt/amplified/docker-compose.yml` | 8123 (HTTP), 9000 (native) | Columnar analytics. | Running |
+
+**Note:** `STATUS.md:59` and `02_build/security/2026-05-09_beast-hardening-phase2_v1.md:34-35` confirm FalkorDB and Qdrant were decommissioned under AMP-329 (2026-05-13). `02_build/INFRASTRUCTURE.md` v2 (2026-05-03) predates the decommission and needs updating.
 
 ### 1.9 Dashboards & Tools
 
@@ -144,6 +146,8 @@ Beast server: `135.181.161.131` — Hetzner AX162-R, 96 cores, 252 GB RAM, Ubunt
 | **Voice Pipeline** | `voice-pipeline` | **Stopped** | Exited 6 weeks ago. Deepgram + LiteLLM + Redis pipeline. | Needs investigation before restart. |
 
 ### 1.12 Devin Scheduled Sessions (Cloud — not on Beast)
+
+`[SOURCE REQUIRED]` — Schedule below is from org-wide knowledge notes (`00_authority/AGENT_ROUTING.md:64` marks this as `[SOURCE REQUIRED]` for in-repo authority). Verify against live Devin schedule configuration.
 
 | Time (UTC) | Purpose |
 |-----------|---------|
@@ -266,7 +270,7 @@ All in `app/intelligence/` — Python Logic Canon pattern (published formulas, d
 | Trade Landing Page | `frontend/components/landing/TradeLandingPageClient.tsx` | Customer-facing landing |
 | Demo system | `frontend/app/demo/` | Full demo flow |
 
-**To deploy the CRM:** Build Docker image from `crm/Dockerfile`, create a `docker-compose.yml` in `/opt/amplified/apps/crm/` on Beast, wire to `amplified-net`, point to existing PostgreSQL, add Traefik labels. The Dockerfile is ready.
+**Deployment status:** CRM Docker image `amplified-crm:dev` (9.95GB) was previously built on Beast. Containers `amplified-crm` (port 8001) and `amplified-crm-dev` (port 8003) exist on Beast but are **blocked** — CRM codebase has import issues (missing `twilio_integration.py` module, eager imports). Ports were bound to `127.0.0.1` during Beast hardening (2026-05-09). **Next step:** fix CRM codebase import issues, then restart containers. Source: `agent-comms/beast-ops/handoff-kimmy-2026-05-05.md`, `02_build/security/2026-05-09_beast-hardening-phase2_v1.md`.
 
 ### 2.2 Covered AI v2 (Standalone Product)
 
@@ -387,23 +391,15 @@ These appear in architecture docs, specs, or knowledge notes but have no impleme
 | **Current state** | Old shape ("deduplicate → refine → ingest") is the running version. The three new non-negotiable stages (epistemic tier tagging, provenance, expiry) are specified but not implemented as a running pipeline. |
 | **Partial code** | `02_build/routing/epistemic_status.py` (tier engine) and `02_build/routing/harvest_to_label.py` (classification adapter) exist as components but are not wired into a running pipeline. |
 
-### 3.5 FalkorDB → Apache AGE Migration
+### 3.5 ~~FalkorDB → Apache AGE Migration~~ DONE
 
-| Property | Value |
-|----------|-------|
-| **Source** | `00_authority/BRAIN_ARCHITECTURE.md` § 5 — canonical decision 2026-05-08 |
-| **Linear** | [AMP-141](https://linear.app/amplifiedpartners/issue/AMP-141) |
-| **Scope** | 9,000 nodes across 4 graphs. FalkorDB container still running (legacy data). |
-| **Code** | No migration scripts found. AGE extension not yet installed on Beast PostgreSQL. |
+**Correction:** Migration was completed and FalkorDB decommissioned (AMP-329, 2026-05-13). 53,959 entities, 34,488 relationships, 4,257 episodes migrated. Scripts archived to `90_archive/legacy-writers/`. See `02_build/brain-migration/README.md`. Updated in Section 1.8.
 
-### 3.6 Qdrant → pgvector Migration
+### 3.6 ~~Qdrant → pgvector Migration~~ DONE
 
-| Property | Value |
-|----------|-------|
-| **Source** | `00_authority/BRAIN_ARCHITECTURE.md` § 5 — canonical decision 2026-05-08 |
-| **Linear** | [AMP-139](https://linear.app/amplifiedpartners/issue/AMP-139) |
-| **Scope** | 57,434 embeddings (384-dim). Qdrant container still running. Token-proxy semantic cache (`llm_cache` collection) also needs migrating. |
-| **Code** | No migration scripts found. pgvector extension not yet installed on Beast PostgreSQL. |
+**Correction:** Migration was completed and Qdrant decommissioned (AMP-329, 2026-05-13). 57,434 vectors migrated to `knowledge_vectors` table. Scripts archived to `90_archive/legacy-writers/`. See `02_build/brain-migration/README.md`. Updated in Section 1.8.
+
+**Remaining:** Token-proxy semantic cache (`llm_cache` collection) — status unclear. Token-proxy `docker-compose.yml` may still reference Qdrant for the cache layer.
 
 ### 3.7 Email Learning Reports to Ewan
 
@@ -442,9 +438,9 @@ These are listed in `BRAIN_ARCHITECTURE.md:463` as intelligence features but hav
 
 | Property | Value |
 |----------|-------|
-| **Source** | Container `tailscale` on Beast — stuck in Created state since 2026-05-02 |
+| **Source** | `02_build/security/2026-05-09_beast-hardening-phase2_v1.md:66-73` |
 | **Linear** | [AMP-136](https://linear.app/amplifiedpartners/issue/AMP-136) |
-| **Context** | Container exists but never started. ~4+ days stuck at time of last health sweep. |
+| **Context** | Container is **running** (Tailscale image on `openclaw_default` network) but **not authenticated** — `TS_AUTHKEY` is empty. Needs interactive login via Tailscale admin. Has `CAP_NET_ADMIN` and `CAP_SYS_MODULE` with `/dev/net/tun` mounted. |
 
 ### 3.12 Linear-to-Vellum Migration
 
