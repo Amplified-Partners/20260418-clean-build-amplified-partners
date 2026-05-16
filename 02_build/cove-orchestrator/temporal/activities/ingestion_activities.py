@@ -48,6 +48,9 @@ SEEN_HASHES = STORE_B_CLEAN / "seen_hashes.json"
 # Pipeline version tag for provenance
 PIPELINE_VERSION = "v2-deterministic"
 
+# Runtime pipeline identity (used for signed_by — not a build-time session UUID)
+SIGNED_BY = "brain_writer_pipeline"
+
 # ── Ollama (Beast internal) ─────────────────────────────────────────
 OLLAMA_URL = os.getenv("OLLAMA_URL", "http://172.18.0.3:11434/api/generate")
 OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "llama3.1:8b")
@@ -504,7 +507,14 @@ _AI_ENRICHMENT_PROMPT = (
 
 
 async def _ai_enrich(content: str, client: Any, sem: Any) -> dict[str, Any] | None:
-    """Light AI pass for fields that need semantic understanding."""
+    """Light AI pass for fields that need semantic understanding.
+
+    Returns parsed enrichment dict on success, or None on failure.
+    Failures are logged at ERROR level with full exception detail
+    (Radical Honesty + Radical Transparency — never silently swallow).
+    The caller is responsible for recording the failure reason in the
+    audit trail so the system remains inspectable.
+    """
     try:
         async with sem:
             response = await client.messages.create(
@@ -521,8 +531,11 @@ async def _ai_enrich(content: str, client: Any, sem: Any) -> dict[str, Any] | No
             if raw.endswith("```"):
                 raw = raw[:-3]
             return json.loads(raw.strip())
+    except json.JSONDecodeError as e:
+        logger.error("AI enrichment JSON parse failed: %s", e)
+        return None
     except Exception as e:
-        logger.warning(f"AI enrichment failed: {e}")
+        logger.error("AI enrichment failed (%s): %s", type(e).__name__, e)
         return None
 
 
@@ -626,12 +639,6 @@ async def run_pudding_extraction(input: PuddingInput) -> PuddingResult:
                     file_hash,
                 )
                 if existing:
-                    # Update recurrence_count
-                    await conn.execute(
-                        "UPDATE pudding_packets SET recurrence_count = recurrence_count + 1, "
-                        "updated_at = now() WHERE file_hash = $1",
-                        file_hash,
-                    )
                     skipped += 1
                     continue
 
@@ -646,8 +653,11 @@ async def run_pudding_extraction(input: PuddingInput) -> PuddingResult:
                     "claim_type": None,
                     "evidence_summary": None,
                 }
+                ai_enrichment_error: str | None = None
                 if ai_client is not None:
                     enrichment = await _ai_enrich(content, ai_client, ai_sem)
+                    if enrichment is None:
+                        ai_enrichment_error = "AI enrichment returned None (see logs for detail)"
                     if enrichment:
                         ai_fields["confidence"] = min(
                             1.0, max(0.0, float(enrichment.get("confidence", 0.5)))
@@ -675,7 +685,7 @@ async def run_pudding_extraction(input: PuddingInput) -> PuddingResult:
 
                 # ── Step 3: Write 20-field packet ─────────────────
                 packet_id = _uuid.uuid4()
-                await conn.execute(
+                row = await conn.fetchrow(
                     """INSERT INTO pudding_packets (
                         id, file_hash, file_path, filename,
                         pudding_label, pudding_code,
@@ -705,7 +715,8 @@ async def run_pudding_extraction(input: PuddingInput) -> PuddingResult:
                         evidence_summary = EXCLUDED.evidence_summary,
                         bridge_terms = EXCLUDED.bridge_terms,
                         recurrence_count = pudding_packets.recurrence_count + 1,
-                        updated_at = now()""",
+                        updated_at = now()
+                    RETURNING (xmax = 0) AS inserted""",
                     packet_id,
                     file_hash,
                     str(fp),
@@ -726,15 +737,25 @@ async def run_pudding_extraction(input: PuddingInput) -> PuddingResult:
                     label_result["word_count"],
                     "deterministic-labeler-v2",
                     run_id,
-                    f"Devon-cb28 | {datetime.now(timezone.utc).date().isoformat()} | devin-cb283993cf974c7babc3307e140d63e4",
+                    SIGNED_BY,
                 )
-                packets_written += 1
+                was_insert = row is not None and row["inserted"]
+                if was_insert:
+                    packets_written += 1
 
                 # ── Step 4: Write to AGE business_brain graph ─────
-                safe_name = fp.name.replace("'", "''")
-                safe_label = label_result["pudding_label"].replace("'", "''")
-                safe_code = label_result["pudding_code"].replace("'", "''")
-                safe_hash = file_hash[:16]
+                def _esc(val: str) -> str:
+                    """Escape a value for embedding in Cypher string literals."""
+                    return val.replace("\\", "\\\\").replace("'", "''")
+
+                safe_name = _esc(fp.name)
+                safe_label = _esc(label_result["pudding_label"])
+                safe_code = _esc(label_result["pudding_code"])
+                safe_hash = _esc(file_hash)
+                safe_dim_what = _esc(label_result["dim_what"])
+                safe_dim_how = _esc(label_result["dim_how"])
+                safe_dim_scale = _esc(label_result["dim_scale"])
+                safe_dim_time = _esc(label_result["dim_time"])
 
                 # Create Document vertex
                 await conn.execute(
@@ -743,21 +764,25 @@ async def run_pudding_extraction(input: PuddingInput) -> PuddingResult:
                         SET d.name = '{safe_name}',
                             d.pudding_label = '{safe_label}',
                             d.pudding_code = '{safe_code}',
-                            d.dim_what = '{label_result["dim_what"]}',
-                            d.dim_how = '{label_result["dim_how"]}',
-                            d.dim_scale = '{label_result["dim_scale"]}',
-                            d.dim_time = '{label_result["dim_time"]}'
+                            d.dim_what = '{safe_dim_what}',
+                            d.dim_how = '{safe_dim_how}',
+                            d.dim_scale = '{safe_dim_scale}',
+                            d.dim_time = '{safe_dim_time}'
                         RETURN d
                     $$) AS (v agtype)"""
                 )
 
                 # Create Pattern vertex + edge if pattern detected
                 if label_result["dim_pattern"]:
-                    safe_pattern = label_result["dim_pattern"].replace("'", "''")
+                    safe_pattern = _esc(label_result["dim_pattern"])
+                    pattern_name = PATTERN_CODES.get(
+                        label_result["dim_pattern"], label_result["dim_pattern"]
+                    ) or label_result["dim_pattern"]
+                    safe_pattern_name = _esc(pattern_name)
                     await conn.execute(
                         f"""SELECT * FROM cypher('business_brain', $$
                             MERGE (p:Pattern {{code: '{safe_pattern}'}})
-                            SET p.name = '{PATTERN_CODES.get(label_result["dim_pattern"], label_result["dim_pattern"]).replace("'", "''")}'
+                            SET p.name = '{safe_pattern_name}'
                             WITH p
                             MATCH (d:Document {{file_hash: '{safe_hash}'}})
                             MERGE (d)-[:EXHIBITS_PATTERN]->(p)
@@ -767,7 +792,7 @@ async def run_pudding_extraction(input: PuddingInput) -> PuddingResult:
 
                 # Create bridge term edges
                 for term in bridge_terms[:5]:
-                    safe_term = term.replace("'", "''")
+                    safe_term = _esc(term)
                     await conn.execute(
                         f"""SELECT * FROM cypher('business_brain', $$
                             MERGE (c:Concept {{name: '{safe_term}'}})
@@ -780,19 +805,23 @@ async def run_pudding_extraction(input: PuddingInput) -> PuddingResult:
 
                 # ── Step 5: Audit log ─────────────────────────────
                 await conn.execute(
-                    """INSERT INTO audit_log (event_type, event_data, agent)
-                    VALUES ($1, $2::jsonb, $3)""",
-                    "pudding_packet_written",
+                    """INSERT INTO audit_log
+                       (actor, action, resource_type, resource_id, details)
+                    VALUES ($1, $2, $3, $4, $5::jsonb)""",
+                    SIGNED_BY,
+                    "pudding.packet_written",
+                    "pudding_packet",
+                    str(packet_id),
                     json.dumps({
                         "file": fp.name,
-                        "file_hash": file_hash[:16],
+                        "file_hash": file_hash,
                         "pudding_label": label_result["pudding_label"],
                         "pudding_code": label_result["pudding_code"],
                         "ai_enriched": ai_client is not None and ai_fields["confidence"] is not None,
+                        "ai_enrichment_error": ai_enrichment_error,
                         "bridge_terms_count": len(bridge_terms),
                         "run_id": run_id,
                     }),
-                    "deterministic-labeler-v2",
                 )
 
                 # Progress logging

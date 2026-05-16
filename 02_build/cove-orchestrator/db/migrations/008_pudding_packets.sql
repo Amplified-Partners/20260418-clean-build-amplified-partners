@@ -82,7 +82,7 @@ CREATE INDEX IF NOT EXISTS idx_pp_recurrence ON pudding_packets (recurrence_coun
 -- Provenance
 CREATE INDEX IF NOT EXISTS idx_pp_run_id ON pudding_packets (run_id);
 CREATE INDEX IF NOT EXISTS idx_pp_ingested_at ON pudding_packets (ingested_at DESC);
-CREATE INDEX IF NOT EXISTS idx_pp_file_hash ON pudding_packets (file_hash);
+-- idx_pp_file_hash omitted — UNIQUE (file_hash) already creates a B-tree index
 
 -- Claim type filtering
 CREATE INDEX IF NOT EXISTS idx_pp_claim_type ON pudding_packets (claim_type)
@@ -118,27 +118,14 @@ DO $$ BEGIN PERFORM create_elabel('business_brain', 'BRIDGES_TO'); EXCEPTION WHE
 SET search_path = "$user", public;
 
 -- ═══════════════════════════════════════════════════════════════════════
--- 4. Audit log entry type for pudding pipeline
+-- 4. Audit log — reuses existing table from 001_initial_schema.sql
 -- ═══════════════════════════════════════════════════════════════════════
 
--- audit_log table should already exist from prior migrations; add type if needed
-DO $$
-BEGIN
-    IF NOT EXISTS (
-        SELECT 1 FROM information_schema.tables
-        WHERE table_name = 'audit_log'
-    ) THEN
-        CREATE TABLE audit_log (
-            id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-            event_type  TEXT NOT NULL,
-            event_data  JSONB DEFAULT '{}',
-            agent       TEXT NOT NULL DEFAULT 'brain_writer_pipeline',
-            created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
-        );
-        CREATE INDEX idx_audit_log_type ON audit_log (event_type);
-        CREATE INDEX idx_audit_log_created ON audit_log (created_at DESC);
-    END IF;
-END $$;
+-- audit_log already exists (001) with columns:
+--   (actor, action, resource_type, resource_id, details, task_id)
+-- No schema changes needed.  The ingestion pipeline writes via:
+--   INSERT INTO audit_log (actor, action, resource_type, resource_id, details)
+--   VALUES ($1, $2, $3, $4, $5::jsonb)
 
 -- ═══════════════════════════════════════════════════════════════════════
 -- 5. Updated_at trigger
