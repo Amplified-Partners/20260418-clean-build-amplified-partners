@@ -1,7 +1,7 @@
 ---
 title: Decision log
-date: 2026-05-13
-version: 22
+date: 2026-05-16
+version: 23
 status: draft
 ---
 
@@ -12,6 +12,14 @@ status: draft
 One entry per decision. Keep it short. Link out to supporting docs.
 
 ## Entries
+
+### 2026-05-16 — Canonical terminology law: TAXONOMY.md v3→v4
+
+- **Decision**: Expand `00_authority/TAXONOMY.md` from a 13-row flat glossary to a structured terminology law. Four meta-rules (standard English in prose, standard Python in code, UK English spelling, one canonical form per concept) plus an 8-category locked glossary covering Five Rods, infrastructure, agents, methodology, data architecture, products, pipeline/orchestration, and Pudding taxonomy dimensions. Deprecated technology table with migration counts. All decisions derived from a single meta-rule: "standard English, standard Python, no arbitrary caps" (Ewan Bramley, 2026-05-16).
+- **Why**: Estate-wide terminology audit (32 repos, 1,456 load-bearing files, 155 distinct terms, 28,281 occurrences) identified 16 major inconsistency clusters. Same concepts had different names across repos (e.g. Beast/The Beast/the Core ×1,094; PUDDING/Pudding ×2,426; Devon/Devin ×725; Win-Win/Win-win ×105; labeller/labeler ×102). Deprecated technology (FalkorDB ×1,037, Qdrant ×726, Neo4j ×188) still outnumbers canonical replacements 5:1. The terminology law locks canonical forms so all agents, all repos, all files use the same words for the same things. OPINION 88% — all individual term decisions are reversible.
+- **Where encoded**: `00_authority/TAXONOMY.md` v4, `00_authority/MANIFEST.md` v61, this entry.
+- **Status**: candidate (pending Ewan review via PR).
+- **Signed-by**: Devon-cb28 | 2026-05-16 | devin-cb283993cf974c7babc3307e140d63e4
 
 ### 2026-05-13 — Five Rods Auto-Review: replace manual authority-file block with structural Five Rods enforcement
 

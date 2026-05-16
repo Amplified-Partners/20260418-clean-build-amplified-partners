@@ -1,7 +1,7 @@
 ---
 title: Governed workspace manifest (authoritative inventory)
-date: 2026-05-14
-version: 60
+date: 2026-05-16
+version: 61
 status: draft
 ---
 
@@ -63,7 +63,7 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
 
 - `AGENTS.md`
 - `00_authority/AGENTS.md`
-- `00_authority/TAXONOMY.md` (entity definitions, agent roles, locked terminology — company structure, operating model)
+- `00_authority/TAXONOMY.md` (entity definitions, agent roles, locked terminology v4 — company structure, operating model, 4 meta-rules, 8-category glossary, deprecated tech table, Pudding dimension conventions)
 - `00_authority/README.md`
 - `00_authority/MANIFEST.md`
 - `00_authority/NORTH_STAR.md`
@@ -177,6 +177,12 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
     - `P10-kill-switch-master-reference.md` `[NON-AUTHORITATIVE]` (510 lines — binary shutdown architecture)
 
 ## Changelog
+
+### v61 — 2026-05-16
+
+- Updated `00_authority/TAXONOMY.md` from v3 to v4: major expansion of terminology section. Replaced 13-row flat glossary with structured terminology law: 4 meta-rules (standard English, standard Python, UK spelling, one canonical form per concept) + 8 category tables (Five Rods, infrastructure, agents, methodology, data architecture, products, pipeline/orchestration, Pudding dimensions) + deprecated technology table with migration counts. Evidence base: estate-wide scan of 32 repos, 1,456 load-bearing files, 155 distinct terms, 28,281 occurrences. Fixed Amplified Core description to reference canonical data stack (PostgreSQL + AGE + pgvector) instead of deprecated FalkorDB/Qdrant. Meta-rule source: Ewan Bramley verbal direction 2026-05-16.
+
+Signed-by: Devon-cb28 | 2026-05-16 | devin-cb283993cf974c7babc3307e140d63e4
 
 ### v60 — 2026-05-14
 

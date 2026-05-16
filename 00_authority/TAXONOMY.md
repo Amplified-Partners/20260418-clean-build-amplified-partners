@@ -1,7 +1,7 @@
 ---
 title: Taxonomy — Amplified Partners entity definitions and agent roles
-date: 2026-05-03
-version: 3
+date: 2026-05-16
+version: 4
 status: draft
 ---
 
@@ -30,7 +30,7 @@ This file defines **entities, agents, and locked terminology**. It does **not** 
 | Entity | Type | What it is | What it is not |
 |--------|------|------------|----------------|
 | **Amplified Partners** | Umbrella / parent | The business. The brand. The operating entity. | A product. A legal subdivision (yet). |
-| **Amplified Core** | Infrastructure | The Hetzner AX162-R server (`amplified-core`, `135.181.161.131`). The physical compute home. FalkorDB, Qdrant, LLM inference, marketing engine. | A team, a product, or a department. Strictly infrastructure. |
+| **Amplified Core** | Infrastructure | The Hetzner AX162-R server (`amplified-core`, `135.181.161.131`). The physical compute home. PostgreSQL (+ AGE + pgvector), LLM inference, marketing engine. | A team, a product, or a department. Strictly infrastructure. |
 | **Amplified Marketing** | Function | The content pipeline and marketing engine. Runs on the Core. Produces social, GMB, LinkedIn content. Evaluated by Bob/Lisa/Marcus synthetic avatars. | The marketing *team* or strategy. The engine that executes the strategy. |
 | **Amplified Central Ops** | Function | AI-native governance layer. The clean-build workspace, agent operating contracts, decision logs, authority hierarchy. The spine of how the business runs. | A tech team. Not code. Not infrastructure. The rules and governance that infrastructure runs under. |
 | **Amplified Client** | Product tier | The client-facing advisory product for businesses — Bob, Lisa, Marcus. The CRM, the Interview Engine, the federated architecture, the PicoClaw sidecar. | Internal tooling. Does not include personal/consumer products. |
@@ -76,39 +76,148 @@ The principle: one person does one thing. Clean boundaries. No stepping on each 
 
 ---
 
-## Terminology locked
+## Terminology — rules
 
-| Term | Canonical meaning | Do not confuse with |
-|------|------------------|---------------------|
-| **the Core** | Hetzner AX162-R server, `amplified-core`, `135.181.161.131` | "Core" as in "core product" or "core team" |
-| **the vault** | `/opt/amplified/vault/` on the Core — 4,891 files, 7M words, 30 folders | real-vault (local Obsidian on the Mac) |
-| **real-vault** | `/Users/ewanbramley/Manual Library/real-vault/` — local Obsidian vault | the Core vault |
-| **clean-build** | The governed agent workspace at `/Users/ewanbramley/AG/clean-build/` and `Amplified-Partners/20260417-clean-build-amplified-partners` | The Core. Not infrastructure — governance. |
-| **ground-truth** | The portable spine repo at `Amplified-Partners/ground-truth`, local at `/Users/ewanbramley/Manual Library/Projects/open-claw-build/` | clean-build. Different purpose: spine vs governed workspace. |
-| **Chit** | The ghost sidecar product for multi-person SMBs | The CRM. Not the data store — the UI/interaction layer that sits beside existing tools. |
-| **Cove** | The WhatsApp-native product surface (conversational interface to AI for clients) | The Core. Not hardware. Not Covered AI. |
-| **Covered AI** | Separate product — definition `[DECISION REQUIRED]`, to be provided by Ewan | Cove. Do not use interchangeably. |
-| **Byker** | Codename for the production system on Railway. The factory runtime. | The Core. Different infrastructure. |
-| **Pudding** | The cross-client anonymised discovery technique | A specific tool or library. It is a methodology. |
-| **PicoClaw** | Beelink N150 mini PC placed physically on-site at Tier 3+ clients | The Core. Client-side hardware, not central infrastructure. |
-| **Devon** | Devin's name within the Amplified Partners ecosystem | Any other agent |
-| **Sam / Clawd / Cassian** | OpenClaw's names within the ecosystem (all three are aliases for the same agent; Ewan uses them interchangeably in chat and knowledge notes) | Devon |
+Four meta-rules that resolve capitalisation, spelling, and naming questions across the entire estate. All files, all repos, all agents.
+
+1. **Standard English in prose.** Capitalise proper nouns and sentence starts. Nothing else. No arbitrary title case. No all-caps for concept names in prose.
+2. **Standard Python in code.** PEP 8: constants `UPPER_SNAKE`, variables/functions `snake_case`, classes `PascalCase`.
+3. **UK English spelling.** `labeller`, `capitalise`, `organise`. The architect is British.
+4. **One canonical form per concept.** If a term is in the glossary below, use only the canonical form. If it is not in the glossary, it is not locked — use standard English and move on.
+
+**Pudding dimensions in particular:** in prose, capitalise the first letter only ("the What dimension"). In Python constants, all-caps (`WHAT`, `PATTERN`). In Python variables, `dim_what`, `dim_pattern`.
 
 ---
 
-## What is not decided yet (as of 2026-04-29)
+## Terminology — locked glossary
+
+Three columns: the canonical form, what it means, and what not to write. If a term has a code form that differs from the prose form, the code form is shown in backticks after the canonical name.
+
+### Five Rods
+
+Source: Ray Dalio (*Principles*), adapted by Ewan Bramley. Bedrock. Nobody changes these.
+
+| Canonical form | Meaning | Not this |
+|----------------|---------|----------|
+| **Radical Honesty** | Only claim fact when it is fact. Rod #1. | |
+| **Radical Transparency** | Show the reasoning path. Rod #2. | |
+| **Radical Attribution** | Every decision has a named source. Rod #3. | |
+| **Win-win** | If somebody loses, the decision is wrong. Rod #4. | Win-Win, win win |
+| **Idea Meritocracy** | Best idea wins regardless of source. Rod #5. | Ideas Meritocracy, ideas meritocracy |
+
+### Infrastructure
+
+| Canonical form | Meaning | Not this |
+|----------------|---------|----------|
+| **the Core** · `amplified_core` | Hetzner AX162-R server, `135.181.161.131`. The physical compute home. | Beast, The Beast, the Beast |
+| **the vault** · `vault` | Content store at `/opt/amplified/vault/` on the Core. | The Vault, Core Vault |
+| **real-vault** | Local Obsidian vault on Ewan's Mac. | the vault (different thing) |
+| **clean-build** | The governed agent workspace. GitHub: `Amplified-Partners/clean-build`. | The Core (not infrastructure — governance) |
+| **ground-truth** | The portable spine repo. GitHub: `Amplified-Partners/ground-truth`. | clean-build (spine vs workspace) |
+| **Mini** · `mini` | Local Mac development environment. | |
+| **Air** · `air` | Sandbox / research / discovery environment. | |
+| **Byker** | Production system codename on Railway. The factory runtime. | the Core (different infrastructure) |
+
+### Agents
+
+| Canonical form | Meaning | Not this |
+|----------------|---------|----------|
+| **Devon** · `devon` | Devin platform sessions within Amplified Partners. The phonetic name Ewan uses. Sign as Devon. | Devin (only when referring to Cognition's platform itself) |
+| **Sam / Clawd / Cassian** | OpenClaw aliases. Ewan uses all three interchangeably. One agent, three names. | Devon (different agent) |
+| **Antigravity / AG** | Business Arbiter and COO. Strategic decisions. | Andy Gravity, A Energy (speech-to-text artefacts) |
+| **Cursor** | Builder. Code tasks in clean-build workspace. | |
+| **Copilot** | GitHub code suggestions. | |
+| **Comet** | Perplexity in-browser. Researcher. | |
+
+### Methodology
+
+| Canonical form | Meaning | Not this |
+|----------------|---------|----------|
+| **Pudding** · `PUDDING` (constant), `pudding_*` (variables) | Cross-domain discovery methodology. Swanson's LBD adapted by Ewan Bramley + Claude. In prose: "Pudding". In constants only: `PUDDING`. | PUDDING in prose, pudding as common noun |
+| **Kaizen** | Continuous refinement. The pipeline itself is subject to Kaizen. | |
+| **Swanson** | Don R. Swanson (1924–2012). Literature-based discovery originator. | |
+| **LBD** | Literature-based discovery. Abbreviation acceptable alongside full form. | |
+| **ABC model** | Swanson's A→B→C bridging logic. | |
+| **Compound Engineering** | Each unit of work makes the next unit easier. Attributed to Every (Shipper, Klaassen). | |
+| **Plan-Execution Mirror** | Every non-trivial work unit has two receipts: plan before, execution log after. The delta is the learning. | |
+| **Portable Spine** | Constitutional framework every agent loads before project-specific instructions. | |
+| **Ulysses Clause** | Ewan's pre-commitment: if he overrides the Five Rods, the system removes his ability to override. | |
+| **Baton Pass** | Structured handover between sessions. | |
+
+### Data architecture
+
+| Canonical form | Meaning | Not this |
+|----------------|---------|----------|
+| **PostgreSQL** | The canonical database engine. One instance, three capabilities (relational + graph + vector). | Postgres (acceptable in speech, not in docs or code) |
+| **Apache AGE** | PostgreSQL extension for graph queries (openCypher syntax). Not a separate process. | FalkorDB (deprecated), Neo4j (deprecated) |
+| **pgvector** | PostgreSQL extension for vector/embedding search (HNSW indexing). Not a separate process. | Qdrant (deprecated) |
+| **HNSW** | Hierarchical Navigable Small World. The vector indexing algorithm (Malkov & Yashunin, 2016). | "the Russian maths" (Ewan's informal name — acceptable in speech) |
+| **Business Brain** · `business_brain` | The PostgreSQL schema powering the product. Where the Brain lives. | amplified_brain, business_knowledge, knowledge_graph, Unified Business Brain |
+| **Cypher** | Query language for graph operations via Apache AGE (openCypher dialect). | |
+
+### Products
+
+| Canonical form | Meaning | Not this |
+|----------------|---------|----------|
+| **Cove** · `cove_*` (Python), `cove-orchestrator` (Docker) | WhatsApp-native AI interface for clients + the orchestration layer. | Covered AI (separate product) |
+| **Covered AI** | Separate product from Cove. `[DECISION REQUIRED]` — definition to be provided by Ewan. | Cove (do not conflate) |
+| **Chit** | Ghost sidecar product for multi-person SMBs. Sits beside existing tools. | the CRM (Chit is UI, not data) |
+| **PicoClaw** | Beelink N150 mini PC placed on-site at Tier 3+ clients. Client-side hardware. | the Core (not central infrastructure) |
+
+### Pipeline and orchestration
+
+| Canonical form | Meaning | Not this |
+|----------------|---------|----------|
+| **labeller** · `labeller`, `pudding_labeller` | Component that applies Pudding taxonomy labels. UK spelling. | labeler (US spelling — do not use) |
+| **brain writer** · `brain_writer`, `brain_writer_pipeline` | Pipeline that writes extracted knowledge to the Business Brain. | |
+| **Temporal** | Workflow orchestration engine (Temporal.io). | |
+| **ingestion pipe** · `ingestion_activities` | The pipeline that harvests, extracts, labels, and writes content. | canonical pipeline (vague — avoid) |
+| **audit log** · `audit_log` | Append-only record of pipeline actions. | |
+
+### Pudding taxonomy dimensions
+
+| Dimension | In prose | In constants | In variables | What it captures |
+|-----------|---------|-------------|-------------|------------------|
+| What | "the What dimension" | `WHAT` | `dim_what` | Content subject matter |
+| How | "the How dimension" | `HOW` | `dim_how` | Mechanism or methodology |
+| Scale | "the Scale dimension" | `SCALE` | `dim_scale` | Level of application |
+| Time | "the Time dimension" | `TIME` | `dim_time` | Temporal relevance |
+| Pattern | "the Pattern dimension" | `PATTERN` | `dim_pattern` | Recurrence signature |
+
+### Deprecated technology (do not use in new work)
+
+See `00_authority/DATA_ARCHITECTURE.md` (knowledge note) for full migration context.
+
+| Deprecated | Replaced by | References remaining | Action |
+|------------|-------------|---------------------|--------|
+| FalkorDB | PostgreSQL + Apache AGE | ×1,037 across 9 repos | Migrate graph queries. Mark legacy references. |
+| Qdrant | PostgreSQL + pgvector | ×726 across 13 repos | Migrate embeddings. Mark legacy references. |
+| Neo4j | PostgreSQL + Apache AGE | ×188 across 3 repos | Never used in production. Remove references. |
+
+**Ratio:** deprecated terms (1,951 occurrences) outnumber canonical replacements (392) by 5:1 as of 2026-05-16.
+
+---
+
+## What is not decided yet (as of 2026-05-16)
 
 - `[DECISION REQUIRED]` — Legal registration of Amplified Partners Ltd. Required before Google My Business can be set up under the brand.
 - `[DECISION REQUIRED]` — The confirmed product name for Amplified Personal (content captured in `ground-truth/PERSONAL-VAULT.md` `[SOURCE REQUIRED — not in this repo]`; name deferred by Ewan).
+- `[DECISION REQUIRED]` — Covered AI definition. Distinct from Cove. To be provided by Ewan.
 - `[LOGIC TO BE CONFIRMED]` — Legal sub-entity structure for each department/product (currently all functions of one entity).
 
 ---
 
-*Written by: Devon (Devin) | 2026-04-29 | ground-truth session*
-
----
-
 ## Changelog
+
+### v4 — 2026-05-16
+
+- **Major expansion of terminology section.** Replaced the 13-row flat glossary with a structured terminology law: 4 meta-rules (standard English, standard Python, UK spelling, one canonical form per concept) + 8 category tables covering Five Rods, infrastructure, agents, methodology, data architecture, products, pipeline/orchestration, and Pudding dimensions + deprecated technology table with migration counts.
+- **Evidence base:** full estate scan of 32 repos, 1,456 load-bearing files, 155 distinct terms, 28,281 total occurrences. Terminology audit identified 16 major inconsistency clusters; this version locks the canonical forms.
+- **Company structure fix:** updated Amplified Core description to reference canonical data stack (PostgreSQL + AGE + pgvector) instead of deprecated FalkorDB/Qdrant.
+- **Decisions taken (all reversible, OPINION 88%):** Win-win not Win-Win; Idea Meritocracy not Ideas Meritocracy; labeller not labeler (UK English); Pudding in prose / PUDDING in constants only; Devon not Devin for the agent identity; Business Brain as canonical database name; the Core not Beast for the server. Meta-rule source: Ewan Bramley verbal direction 2026-05-16 ("standard English, standard Python, no arbitrary caps, UK English").
+- Frontmatter `version` bumped to v4, `date` to 2026-05-16.
+
+Signed-by: Devon-cb28 | Devin (Cognition AI) | 2026-05-16 | session `devin-cb283993cf974c7babc3307e140d63e4`
 
 ### v3 — 2026-05-03
 
