@@ -211,9 +211,19 @@ jobs:
           GH_TOKEN: ${{ secrets.AUTO_MERGE_PAT }}
         run: |
           if [ "${{ steps.authority_check.outputs.touches_authority }}" == "true" ]; then
-            gh pr review ${{ github.event.pull_request.number }} --approve --body "Five Rods Authority Review: PASSED. All five principles intact. Auto-approved."
+            REVIEW_BODY="Five Rods Authority Review: PASSED. All five principles intact. Auto-approved."
           else
-            gh pr review ${{ github.event.pull_request.number }} --approve --body "Five Rods Review: PASSED. Auto-approved."
+            REVIEW_BODY="Five Rods Review: PASSED. Auto-approved."
+          fi
+
+          if ! output=$(gh pr review ${{ github.event.pull_request.number }} --approve --body "$REVIEW_BODY" 2>&1); then
+            if echo "$output" | grep -q "Can not approve your own pull request"; then
+              echo "Skipping approval: token cannot approve its own pull request."
+              echo "$output"
+            else
+              echo "$output" >&2
+              exit 1
+            fi
           fi
 
       - name: Enable auto-merge
