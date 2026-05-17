@@ -1,12 +1,13 @@
 ---
 title: The Amplified Brain — Architecture, Estate, and Operating Map
-date: 2026-05-14
-version: 5
+date: 2026-05-17
+version: 6
 status: authoritative now
 refresh: This document MUST be refreshed every 24–48 hours by a scheduled Devon session.
 supersedes: Linear doc "The Amplified Brain Architecture (Where the Brain Lives)" (c655776f3baa)
 source-materials: Onboarding package (Devon-6098, 2026-05-14), 17-and-3 Principle (Ewan Bramley, 2026-05-14 21:19 BST), AI-is-a-Pudding insight, Systems Design & Three Specs methodology, Ingestion Pipe Rewrite spec, Linear-to-Vellum migration spec, Reflective Loop pattern audit, Perplexity Research (99 verified sources — pipeline metrics, AI council, Kaizen, governance-by-exception, 2026-05-14)
 signed-by:
+  - Devon-496d | 2026-05-17 | devin-496d150647b540c183dfcc0829d53f2c
   - Devon-3386 | 2026-05-14 | devin-338635b0d3cd4a868f1cf7e7fcb8d461
 ---
 
@@ -408,9 +409,9 @@ The sovereign compute infrastructure. Everything production runs here.
 | **RAM** | 256 GB DDR5 |
 | **Disk** | 1.8 TB RAID (`/dev/md2`), ~170 GB used (11%) |
 | **OS** | Ubuntu 24.04.4 LTS (Noble Numbat) |
-| **Containers** | ~40 running |
+| **Containers** | 45 running |
 | **Docker network** | `amplified-net` |
-| **SSH (Devon)** | `ssh -i ~/.ssh/beastkey ubuntu@135.181.161.131` |
+| **SSH (Devon)** | `ssh -i ~/.ssh/beastssh root@135.181.161.131` |
 
 **Rule: The Beast is the ONLY place where production intelligence is generated and stored.**
 
@@ -458,7 +459,7 @@ The client-facing product. Gives small business owners their own data so they ca
 | **Stack** | Python/FastAPI backend, Next.js frontend, PostgreSQL |
 | **Core product** | The Founder Interview (7 phases → Business Bible) |
 | **Endpoints** | 50+ REST API endpoints |
-| **Status** | Code in GitHub. NOT yet deployed to Beast. Next milestone: Docker-compose on Beast. |
+| **Status** | **Deployed to Beast.** `amplified-crm` (healthy), `amplified-crm-dev` (dev instance) both running. |
 
 Intelligence features: Cash Flow Predictor, Death Spiral Detector, CLV Tracker, Exit Strategy, Quote Follow-Up, Payment Chaser, Service Reminder, Parts Concierge, Portfolio Generator, Bottleneck Finder, Voice Quote Generator.
 
@@ -473,7 +474,8 @@ Under the 17-and-3 Principle, the CRM is the **17-store** — the substrate from
 | **Cove API** | `cove-api:8081` (host: `localhost:8081`) | Cove API server |
 | **Cove Temporal** | `cove-temporal:7233` (host: `localhost:7233`) | Temporal workflow engine |
 | **Cove Temporal UI** | `cove-temporal-ui:8233` (host: `localhost:8233`) | Temporal web dashboard |
-| **Cove Workers** | `cove-worker`, `-alpha`, `-bravo`, `-charlie`, `-delta` | Workflow execution fleet |
+| **Cove Workers** | `cove-worker` | Workflow execution (single worker; alpha–delta fleet not yet deployed) |
+| **Cove Heal Watchdog** | `cove-heal-watchdog` | Self-healing monitor for Cove containers |
 | **Cove Postgres** | `cove-postgres:5433` | Cove-specific TimescaleDB |
 | **Cove Translator** | `cove-translator:8090` | Translation layer |
 
@@ -484,6 +486,8 @@ Compose: `/root/cove-repo/infrastructure/docker-compose.yml`
 | Service | Address | Purpose |
 |---------|---------|---------|
 | **Ollama** | `ollama:11434` | Local LLM inference (Llama 3.1 8B/70B, Qwen3 Coder 30B) |
+| **Ollama-2** | `ollama-2:11435` | Second Ollama instance (parallel inference) |
+| **Ollama-Pudding** | `ollama-pudding:11436` | Dedicated Ollama for PUDDING labelling pipeline |
 | **LiteLLM** | `litellm:4000` | Unified LLM proxy — routes local + remote models with failover chains |
 | **Token-proxy** | `token-proxy:8088` | Anthropic reverse proxy — Sonnet→Haiku routing, semantic cache, $100/day budget breaker |
 | **Langfuse** | `langfuse` | LLM observability — traces, costs, prompt versioning |
@@ -494,19 +498,30 @@ Compose: `/root/cove-repo/infrastructure/docker-compose.yml`
 | Service | Address | Purpose |
 |---------|---------|---------|
 | **Amplified Core API** | `amplified-core` → `api.amplifiedpartners.ai` | Main API gateway |
-| **Amplified Worker** | `amplified-worker` | Background async tasks |
-| **Finance Engine** | `finance-engine:8700` → `/api/v1/finance` | CLV, cash flow, valuation |
 | **Marketing Engine** | `amplified-marketing-engine:8000` → `/api/v1/marketing` | Content pipeline + Kaizen |
-| **Kaizen Optimizer** | `kaizen-kaizen` | Continuous improvement loop |
+| **Kaizen Optimizer** | `kaizen-optimizer` | Continuous improvement loop |
 | **Enforcer** | `enforcer:8000` | Codebase health monitor + build circuit breaker |
-| **Knowledge MCP** | `amplified-knowledge-mcp` | MCP server for agent knowledge queries |
-| **Voice Agent** | `amplified-voice-agent:8080` → `voice.beast.amplifiedpartners.ai` | Twilio/Deepgram/Anthropic voice AI |
+| **Knowledge MCP** | `amplified-knowledge-mcp:8401` | MCP server for agent knowledge queries |
+| **Beast Control MCP** | `beast-control-mcp:8402` | Beast infrastructure control plane |
+| **Brain MCP Writer** | `brain-mcp-writer` | Write-path MCP for Brain database |
+| **Brain MCP Readonly** | `brain-mcp-readonly:8090` | Read-only MCP for Brain queries |
+| **Brain Web** | `brain-web` | Brain web interface |
+| **Vellum** | `vellum:8400` | Contact surface — Brief + Council + Correspondence (unhealthy — investigating) |
+| **Infisical** | `infisical:8403` | Secrets management |
+| **OpenClaw Agents** | `openclaw-agents:8100` | OpenClaw agent runtime |
+| **Plumb Knowledge** | `plumb-knowledge-http` | Plumb agent knowledge HTTP server |
+| **Nexus Dashboard** | `nexus-dashboard:8090` | System dashboard |
 | **Traefik** | Ports 80/443 | Reverse proxy + TLS for `api.amplifiedpartners.ai` |
 | **Redis** | `redis:6379` | Shared cache + message broker |
 | **ClickHouse** | `clickhouse:8123` (HTTP), `:9000` (native) | Columnar analytics |
 | **MinIO** | `minio:9000` | S3-compatible object storage |
-| **Portainer** | Ports 8000/9000/9443 | Docker management GUI |
+| **Tailscale** | `tailscale` | VPN mesh networking (now running) |
+| **Watchtower** | `watchtower` | Automatic container image updates |
+| **Docker Socket Proxy** | `docker-socket-proxy:2375` | Secure Docker API access |
+| **Mission Control** | `mission-control:3000` | Governance dashboard |
 | **Code Server** | Port 8443 | VS Code in browser |
+
+**Not running (removed or not yet redeployed):** `amplified-worker`, `finance-engine`, `amplified-voice-agent`, `portainer`.
 
 ---
 
@@ -586,13 +601,14 @@ Every issue belongs to a spine. No orphan issues. Issue naming: `AMP-` prefix (e
   - Priority (`!escalate` label, orange) — first priority at next session
   - Urgent (`!urgent` label, red) — triggers immediate Devin session via webhook
 
-#### Vellum — Ready
+#### Vellum — Deployed (unhealthy)
 
-Vellum absorbs Linear's ticket-flow, agent-alerting, and loop-closing. It is ready.
+Vellum absorbs Linear's ticket-flow, agent-alerting, and loop-closing. Now deployed on Beast as `vellum:8400` but reporting unhealthy — under investigation.
 
 | Property | Value |
 |----------|-------|
 | **Architecture** | Multi-writer, hash-chained, attributed, additive-only, token-scoped |
+| **Beast container** | `vellum:8400` — Up 5 hours (unhealthy as of 2026-05-17 00:20 UTC) |
 | **Brief mode** | Running — 1-to-1 scoped exchanges (most ticket activity) |
 | **Council mode** | Running on Ewan's UI — cross-agent deliberation for big decisions |
 | **Correspondence mode** | Not yet built |
@@ -933,6 +949,20 @@ These are not decorative. They are the signal.
 ---
 
 ## Changelog
+
+### v6 — 2026-05-17 (24h refresh)
+
+- **§ 5 Beast:** Container count 40 → 45. SSH access updated (`root@` with `beastssh` key).
+- **§ 5 CRM:** Status changed from "NOT yet deployed" to **deployed on Beast** — `amplified-crm` (healthy) and `amplified-crm-dev` both running.
+- **§ 5 Cove:** Corrected worker fleet — only `cove-worker` running (alpha–delta not yet deployed). Added `cove-heal-watchdog`.
+- **§ 5 AI/ML:** Added `ollama-2` (parallel inference) and `ollama-pudding` (dedicated PUDDING labelling).
+- **§ 5 Services:** Added 13 new services: `beast-control-mcp`, `brain-mcp-writer`, `brain-mcp-readonly`, `brain-web`, `vellum`, `infisical`, `openclaw-agents`, `plumb-knowledge-http`, `nexus-dashboard`, `tailscale`, `watchtower`, `docker-socket-proxy`, `mission-control`. Removed 4 not running: `amplified-worker`, `finance-engine`, `amplified-voice-agent`, `portainer`. Renamed `kaizen-kaizen` → `kaizen-optimizer`.
+- **§ 7 Vellum:** Status from "Ready" to **Deployed (unhealthy)** — container `vellum:8400` live on Beast but health check failing.
+- **§ 5 Previously broken services now fixed:** `amplified-crm-dev` (was Exited → Up 3 days), `tailscale` (was stuck in Created → Up 7 days), `traefik` (was unreachable → Up 2 days).
+- **Linear:** 13 new tickets since v5 (AMP-345 through AMP-357). Key: AMP-357 EPIC migrate FalkorDB+Qdrant → PostgreSQL (In Review), AMP-356 Ingestion Pipe v2 (In Review), AMP-351 Collaboration Drop Zone (In Review), AMP-353 Beast SSH over Tailscale (Done).
+- **GitHub:** No new merges to clean-build main since v5. crm: added AGENTS.md. ground-truth: added AGENTS.md. 38 repos in org (no new repos).
+
+Signed-by: Devon-496d | 2026-05-17 | devin-496d150647b540c183dfcc0829d53f2c
 
 ### v5 — 2026-05-14
 
