@@ -1,5 +1,19 @@
 #!/usr/bin/env python3
 """
+DEPRECATED — FalkorDB dependency. Superseded by AMP-345.
+
+The proven async Haiku extraction logic from this file has been migrated into
+the Temporal activity `run_pudding_extraction` in:
+    cove-orchestrator/temporal/activities/ingestion_activities.py
+
+The write path (FalkorDB) is no longer used. All new PUDDING writes go to
+PostgreSQL + Apache AGE (business_brain graph) + pgvector.
+
+Do NOT run this script for new work. It is retained for reference only.
+
+Deprecated-by: Devon-86e7 | 2026-05-15 | devin-86e7ca10cd27467baff9669b1d7113b5
+───────────────────────────────────────────────────────────────────────────────
+
 APDS Labeller v3.0 -- AMP-173 async Haiku extraction.
 
 Replaces the sequential Ollama-based extraction (v2.2) with concurrent calls to

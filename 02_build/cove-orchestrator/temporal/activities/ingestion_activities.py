@@ -279,18 +279,26 @@ async def run_unified_ingestion(input: IngestionInput) -> IngestionResult:
 
 @activity.defn(name="run_pudding_extraction")
 async def run_pudding_extraction(input: PuddingInput) -> PuddingResult:
-    """Run the PUDDING extractor against clean vault files.
+    """PUDDING extraction: async Haiku labelling → PostgreSQL+AGE+pgvector.
 
-    Hits Anthropic Claude Haiku for taxonomy labelling
-    and injects PUDDING 2026 Taxonomy frontmatter into each file.
+    Rewritten for AMP-345. Takes the proven async Haiku extraction from
+    apds_labeller_v3_amp173.py and replaces the FalkorDB write path with:
+      - PostgreSQL pudding_labels table (with tier, provenance, expiry)
+      - Apache AGE business_brain graph (Document nodes with PUDDING labels)
+
+    Three non-negotiable stages (Brain Architecture v3, §6):
+      1. Tier tagging — every node defaults to INTUITED
+      2. Provenance — source_agent, source_session, source_model, ingest_timestamp
+      3. Expiry — valid_until per content type
+
+    Signed-by: Devon-86e7 | 2026-05-15 | devin-86e7ca10cd27467baff9669b1d7113b5
     """
-    import os
-    import yaml
     import asyncio
-    from anthropic import AsyncAnthropic
+    import httpx
+    import asyncpg
 
     activity.logger.info(
-        f"PUDDING extraction (Async Haiku): dir={input.target_dir}"
+        f"PUDDING extraction (AMP-345 — PostgreSQL+AGE): dir={input.target_dir}"
     )
 
     target = Path(input.target_dir)
@@ -299,6 +307,41 @@ async def run_pudding_extraction(input: PuddingInput) -> PuddingResult:
             success=False,
             error=f"Target directory not found: {target}",
         )
+
+    # ── Configuration ─────────────────────────────────────────────
+    api_key = os.environ.get("ANTHROPIC_API_KEY")
+    if not api_key:
+        return PuddingResult(
+            success=False,
+            error="ANTHROPIC_API_KEY environment variable not set",
+        )
+
+    dsn = os.getenv("BRAIN_DSN", BRAIN_DSN)
+    model = "claude-haiku-4-5-20251001"
+    source_agent = "pudding_extractor"
+    source_session = os.getenv("DEVIN_SESSION_ID", "temporal-scheduled")
+    run_id = f"pudding-{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S')}"
+
+    # Expiry defaults (Brain Architecture v3, §6)
+    # market/competitive = 90 days, methodology = 1 year, LLM-generated = 90 days
+    default_expiry_days = 90
+
+    # ── PUDDING system prompt (from proven v3 labeller) ───────────
+    system_prompt = (
+        "You are a PUDDING taxonomy labeller. Assign exactly one label per dimension.\n\n"
+        "Dimensions:\n"
+        "- WHAT: FIN | OPS | MKT | TECH | PPL | GOV | EXT\n"
+        "- HOW: METRIC | PROCESS | ASSET | RISK | OPPORTUNITY | RELATIONSHIP | KNOWLEDGE\n"
+        "- SCALE: NANO | MICRO | MESO | MACRO | MEGA | META | TEMPORAL\n"
+        "- TIME: NOW | NEAR | MID | FAR | EVERGREEN | CYCLICAL | LEGACY\n"
+        "- PATTERN: LOG-CAU | LOG-ANA | LOG-SYN | SYS-FB | SYS-EM | SYS-HM | "
+        "SYS-BM | HUM-TRUST | HUM-INCENT | HUM-COG | HUM-CULT | VAL-EFF | "
+        "VAL-ACC | VAL-ROB | VAL-ADAPT | VAL-ETH\n\n"
+        "Output ONLY valid JSON:\n"
+        '{"WHAT": "...", "HOW": "...", "SCALE": "...", "TIME": "...", '
+        '"PATTERN": "...", "confidence": 0.0-1.0}'
+    )
+    required_dims = {"WHAT", "HOW", "SCALE", "TIME", "PATTERN"}
 
     # ── Collect eligible files ────────────────────────────────────
     files: list[Path] = []
@@ -311,111 +354,253 @@ async def run_pudding_extraction(input: PuddingInput) -> PuddingResult:
 
     activity.logger.info(f"Eligible files: {len(files)}")
 
-    labelled = 0
-    skipped = 0
-    errors = 0
-    
-    api_key = os.environ.get("ANTHROPIC_API_KEY")
-    if not api_key:
-        return PuddingResult(success=False, error="ANTHROPIC_API_KEY environment variable not set")
-        
-    client = AsyncAnthropic(api_key=api_key)
+    if not files:
+        return PuddingResult(success=True, labelled=0, skipped=0, errors=0)
 
-    # ── System prompt ─────────────────────────────────────────────
-    system_prompt = (
-        "You are the PUDDING GATE (Amplified Pudding Discovery System - APDS).\n"
-        "Your sole function is to take raw, unstructured text and extract scientific hypotheses, "
-        "methodologies, business logic, and content themes into a strictly formatted YAML taxonomy.\n"
-        "DO NOT output any conversational text. DO NOT output markdown blocks. ONLY output raw YAML.\n\n"
-        "Required YAML Structure:\n"
-        "taxonomy_version: PUDDING_2026\n"
-        "concepts:\n"
-        "  - name: <Concept Name>\n"
-        "    pudding_code: <4-character WHAT.HOW.SCALE.TIME code>\n"
-        "    description: <Brief description>\n"
-        "    confidence: 0.95\n"
-        "sources:\n"
-        "  - name: <Source Name>\n"
-        "    source_type: <T1, T2, T3, or T4>\n"
-        "recipes:\n"
-        "  - name: <Falsifiable hypothesis, recipe, or content angle>\n"
-        "    description: <What needs to be tested or created>\n"
-        "signals:\n"
-        "  - name: <Signal Name>\n"
-        "    signal_type: <anomaly, drift, spike, weak signal, convergence, or co-occurrence>\n"
-        "domains:\n"
-        "  - name: <Domain/Vertical Name>\n"
-        "type: <principle|framework|sop|technique|case_study|hypothesis|recipe|content_asset|business_logic|raw_notes>\n"
-    )
+    # ── Connect to PostgreSQL ─────────────────────────────────────
+    try:
+        conn = await asyncpg.connect(dsn)
+    except Exception as e:
+        return PuddingResult(
+            success=False,
+            error=f"PostgreSQL connection failed: {e}",
+        )
 
-    sem = asyncio.Semaphore(input.max_workers)
+    try:
+        # ── Load already-processed hashes (idempotency) ───────────
+        existing_hashes: set[str] = set()
+        rows = await conn.fetch("SELECT file_hash FROM pudding_labels")
+        for row in rows:
+            existing_hashes.add(row["file_hash"])
+        activity.logger.info(f"Already labelled: {len(existing_hashes)} files")
 
-    async def process_one(fp: Path) -> None:
-        nonlocal labelled, skipped, errors
-        try:
-            content = fp.read_text(encoding="utf-8", errors="ignore")
+        # ── Haiku extraction helper (from proven v3 labeller) ─────
+        sem = asyncio.Semaphore(input.max_workers)
 
-            # Skip already-processed files
-            if "lbd_attribution" in content and "PUDDING" in content:
-                skipped += 1
-                return
+        async def extract_label(
+            text: str, client: httpx.AsyncClient, max_retries: int = 5
+        ) -> dict:
+            truncated = (text or "")[:2000]
+            if not truncated.strip():
+                return {"_error": "empty_text"}
 
-            # ── Call Haiku ────────────────────────────────────
+            payload = {
+                "model": model,
+                "max_tokens": 150,
+                "system": system_prompt,
+                "messages": [{"role": "user", "content": f"Text to label:\n{truncated}"}],
+                "temperature": 0.1,
+            }
+
             async with sem:
-                prompt = f"RAW DATA TO PROCESS:\n{content[:4000]}"
-                response = await client.messages.create(
-                    model="claude-haiku-4-5-20251001",
-                    max_tokens=1500,
-                    system=system_prompt,
-                    messages=[{"role": "user", "content": prompt}],
-                    temperature=0.0
-                )
-                
-                yaml_output = response.content[0].text
-                
-                if "taxonomy_version:" in yaml_output:
-                    start_idx = yaml_output.find("taxonomy_version:")
-                    yaml_output = yaml_output[start_idx:]
-                if yaml_output.startswith("```yaml"):
-                    yaml_output = yaml_output[7:]
-                if yaml_output.startswith("```"):
-                    yaml_output = yaml_output[3:]
-                if yaml_output.endswith("```"):
-                    yaml_output = yaml_output[:-3]
-                    
-                yaml_output = yaml_output.strip()
+                for attempt in range(1, max_retries + 1):
+                    try:
+                        response = await client.post(
+                            "https://api.anthropic.com/v1/messages",
+                            headers={
+                                "x-api-key": api_key,
+                                "anthropic-version": "2023-06-01",
+                                "content-type": "application/json",
+                            },
+                            json=payload,
+                            timeout=30.0,
+                        )
 
-                # Basic validation
-                parsed_yaml = yaml.safe_load(yaml_output)
-                if not isinstance(parsed_yaml, dict):
-                    raise ValueError("Parsed YAML is not a dictionary.")
+                        if response.status_code == 200:
+                            data = response.json()
+                            text_out = data["content"][0]["text"].strip()
+                            if text_out.startswith("```"):
+                                text_out = text_out.split("\n", 1)[-1].rsplit("```", 1)[0]
+                            result = json.loads(text_out)
+                            if required_dims.issubset(result.keys()):
+                                usage = data.get("usage", {})
+                                result["_input_tokens"] = usage.get("input_tokens", 0)
+                                result["_output_tokens"] = usage.get("output_tokens", 0)
+                                return result
+                            return {"_error": "missing_dims"}
 
-                # ── Inject frontmatter ─────────────────────────────
-                if content.startswith("---"):
-                    parts = content.split("---", 2)
-                    if len(parts) >= 3:
-                        fm = parts[1]
-                        body = parts[2]
-                        
-                        # Add attribution to new YAML
-                        parsed_yaml["lbd_attribution"] = "PUDDING 2026 Taxonomy (Amplified Partners)"
-                        
-                        # Convert dict to nicely formatted yaml string
-                        new_yaml = yaml.dump(parsed_yaml, sort_keys=False)
-                        
-                        final = f"---{fm}\n{new_yaml}---{body}"
-                        fp.write_text(final, encoding="utf-8")
+                        if response.status_code == 429:
+                            retry_after = float(
+                                response.headers.get("retry-after", attempt * 2)
+                            )
+                            await asyncio.sleep(retry_after)
+                            continue
+
+                        if response.status_code >= 500:
+                            await asyncio.sleep(attempt * 2)
+                            continue
+
+                        return {"_error": f"http_{response.status_code}"}
+
+                    except (httpx.TimeoutException, httpx.ConnectError):
+                        if attempt < max_retries:
+                            await asyncio.sleep(attempt * 2)
+                            continue
+                        return {"_error": "timeout"}
+                    except json.JSONDecodeError:
+                        return {"_error": "json_parse"}
+                    except Exception as e:
+                        return {"_error": f"unexpected:{str(e)[:60]}"}
+
+            return {"_error": "max_retries_exhausted"}
+
+        # ── Compute valid_until based on content type ─────────────
+        from datetime import timedelta as _td
+
+        def compute_expiry(labels: dict) -> datetime | None:
+            time_dim = labels.get("TIME", "")
+            if time_dim == "EVERGREEN":
+                return None  # no expiry for evergreen content
+            if time_dim in ("NOW", "NEAR"):
+                # market/competitive data: 90 days
+                return datetime.now(timezone.utc) + _td(days=90)
+            if time_dim in ("MID", "FAR"):
+                # methodology/process: 1 year
+                return datetime.now(timezone.utc) + _td(days=365)
+            # Default: 90 days (LLM-generated INTUITED content)
+            return datetime.now(timezone.utc) + _td(days=default_expiry_days)
+
+        # ── Process files ─────────────────────────────────────────
+        labelled = 0
+        skipped = 0
+        errors = 0
+
+        async with httpx.AsyncClient() as http_client:
+            for batch_start in range(0, len(files), 50):
+                batch = files[batch_start : batch_start + 50]
+                tasks_data: list[tuple[Path, str, str]] = []
+
+                for fp in batch:
+                    try:
+                        content = fp.read_text(encoding="utf-8", errors="ignore")
+                        file_hash = hashlib.sha256(content.encode()).hexdigest()
+                        if file_hash in existing_hashes:
+                            skipped += 1
+                            continue
+                        tasks_data.append((fp, file_hash, content))
+                    except Exception:
+                        errors += 1
+
+                if not tasks_data:
+                    continue
+
+                # Extract labels concurrently
+                async def process_one(fp: Path, file_hash: str, content: str) -> None:
+                    nonlocal labelled, skipped, errors
+                    try:
+                        labels = await extract_label(content, http_client)
+                        if "_error" in labels:
+                            errors += 1
+                            activity.logger.warning(
+                                f"Extraction failed for {fp.name}: {labels['_error']}"
+                            )
+                            return
+
+                        valid_until = compute_expiry(labels)
+                        now_ts = datetime.now(timezone.utc)
+
+                        # ── Write to pudding_labels table ─────────
+                        await conn.execute(
+                            """INSERT INTO pudding_labels
+                               (file_hash, file_path, file_name,
+                                what, how, scale, time_dim, pattern, confidence,
+                                epistemic_tier, source_agent, source_session,
+                                source_model, ingest_timestamp, valid_until,
+                                run_id, signed_by)
+                            VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17)
+                            ON CONFLICT (file_hash) DO UPDATE SET
+                               what = EXCLUDED.what,
+                               how = EXCLUDED.how,
+                               scale = EXCLUDED.scale,
+                               time_dim = EXCLUDED.time_dim,
+                               pattern = EXCLUDED.pattern,
+                               confidence = EXCLUDED.confidence,
+                               valid_until = EXCLUDED.valid_until,
+                               run_id = EXCLUDED.run_id,
+                               updated_at = now()""",
+                            file_hash,
+                            str(fp),
+                            fp.name,
+                            labels.get("WHAT", "UNKNOWN"),
+                            labels.get("HOW", "UNKNOWN"),
+                            labels.get("SCALE", "UNKNOWN"),
+                            labels.get("TIME", "UNKNOWN"),
+                            labels.get("PATTERN", "UNKNOWN"),
+                            float(labels.get("confidence", 0.0)),
+                            "INTUITED",  # tier tagging: always INTUITED at ingestion
+                            source_agent,
+                            source_session,
+                            model,
+                            now_ts,
+                            valid_until,
+                            run_id,
+                            source_agent,
+                        )
+
+                        # ── Write Document node to AGE graph ──────
+                        def _esc(s: str) -> str:
+                            return (s or "").replace("\\", "\\\\").replace("'", "\\'").replace("\n", " ")
+
+                        expiry_val = (
+                            f"'{valid_until.isoformat()}'"
+                            if valid_until else "null"
+                        )
+                        cypher_stmt = (
+                            "SELECT * FROM cypher('business_brain', $$"
+                            f" MERGE (d:Document {{file_hash: '{_esc(file_hash)}'}})"
+                            f" SET d.file_path = '{_esc(str(fp)[:500])}',"
+                            f"     d.title = '{_esc(fp.stem[:200])}',"
+                            f"     d.what = '{_esc(labels.get('WHAT', 'UNKNOWN'))}',"
+                            f"     d.how = '{_esc(labels.get('HOW', 'UNKNOWN'))}',"
+                            f"     d.scale = '{_esc(labels.get('SCALE', 'UNKNOWN'))}',"
+                            f"     d.time_dim = '{_esc(labels.get('TIME', 'UNKNOWN'))}',"
+                            f"     d.pattern = '{_esc(labels.get('PATTERN', 'UNKNOWN'))}',"
+                            f"     d.confidence = {float(labels.get('confidence', 0.0))},"
+                            f"     d.epistemic_tier = 'INTUITED',"
+                            f"     d.source_agent = '{_esc(source_agent)}',"
+                            f"     d.source_session = '{_esc(source_session)}',"
+                            f"     d.source_model = '{_esc(model)}',"
+                            f"     d.ingest_timestamp = '{now_ts.isoformat()}',"
+                            f"     d.valid_until = {expiry_val}"
+                            " RETURN d"
+                            " $$) AS (v agtype)"
+                        )
+
+                        try:
+                            await conn.execute("LOAD 'age'")
+                            await conn.execute(
+                                'SET search_path = ag_catalog, "$user", public'
+                            )
+                            await conn.execute(cypher_stmt)
+                        except Exception as age_err:
+                            # AGE write is best-effort; relational table is the
+                            # source of truth. Log and continue.
+                            activity.logger.warning(
+                                f"AGE graph write skipped for {fp.name}: {age_err}"
+                            )
+
+                        existing_hashes.add(file_hash)
                         labelled += 1
-                else:
-                    skipped += 1
 
-        except Exception as e:
-            errors += 1
-            activity.logger.warning(f"PUDDING failed for {fp.name}: {e}")
+                    except Exception as e:
+                        errors += 1
+                        activity.logger.warning(
+                            f"PUDDING failed for {fp.name}: {e}"
+                        )
 
-    # ── Execute fleet ─────────────────────────────────────────────
-    tasks = [process_one(fp) for fp in files]
-    await asyncio.gather(*tasks)
+                extract_tasks = [
+                    process_one(fp, fh, content)
+                    for fp, fh, content in tasks_data
+                ]
+                await asyncio.gather(*extract_tasks)
+
+                activity.logger.info(
+                    f"Batch progress: labelled={labelled}, skipped={skipped}, "
+                    f"errors={errors}"
+                )
+
+    finally:
+        await conn.close()
 
     activity.logger.info(
         f"PUDDING complete: {labelled} labelled, {skipped} skipped, {errors} errors"
