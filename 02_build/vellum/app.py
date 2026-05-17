@@ -5,7 +5,7 @@ FastAPI app serving:
 - Simple HTMX-powered UI for Ewan
 - Scheduled morning/evening brief generation
 
-Devon-b5dc | 2026-05-14
+Devon-b5dc | 2026-05-14 | session <id>
 """
 
 from __future__ import annotations
