@@ -30,7 +30,13 @@ function submitReply(event, sheetId) {
 
 function refreshEntries(sheetId) {
     const el = document.getElementById("entries");
-    if (el) htmx.trigger(el, "htmx:load");
+    if (!el) return;
+
+    const url = el.getAttribute("hx-get") || el.getAttribute("data-hx-get");
+    if (!url) return;
+
+    const swap = el.getAttribute("hx-swap") || el.getAttribute("data-hx-swap") || "innerHTML";
+    htmx.ajax("GET", url, { target: el, swap: swap });
 }
 
 function showToast(intent, confidence) {
