@@ -54,17 +54,35 @@ class MemorySheetStore:
         decisions.sort(key=lambda e: e.timestamp, reverse=True)
         return decisions
 
-    async def get_unread(self, tenant_id: str) -> list[SheetEntry]:
+    async def get_unread(
+        self,
+        tenant_id: str,
+        reader_id: str | None = None,
+    ) -> list[SheetEntry]:
         unread = []
         for sheet in self._sheets.values():
             if sheet.meta.tenant_id != tenant_id:
                 continue
-            read_by: set[str] = set()
+
+            last_read_timestamp = None
             for entry in sheet.entries:
-                if entry.entry_type == "read_receipt":
-                    read_by.add(entry.author)
+                if entry.entry_type != "read_receipt":
+                    continue
+                if reader_id is not None and entry.author != reader_id:
+                    continue
+                if (
+                    last_read_timestamp is None
+                    or entry.timestamp > last_read_timestamp
+                ):
+                    last_read_timestamp = entry.timestamp
+
             for entry in sheet.entries:
-                if entry.entry_type == "agent_write" and entry.author not in read_by:
+                if entry.entry_type != "agent_write":
+                    continue
+                if (
+                    last_read_timestamp is None
+                    or entry.timestamp > last_read_timestamp
+                ):
                     unread.append(entry)
         return unread
 
