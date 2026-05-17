@@ -1,11 +1,12 @@
-"""Scheduled brief generation — morning and evening.
+"""Brief generation helpers — morning and evening.
 
-Morning (06:30 UTC): What happened overnight, what's planned, what needs attention.
-Evening (18:00 UTC): What got done today, what's still open, what needs Ewan tomorrow.
+Morning brief target time: 06:30 UTC.
+Evening brief target time: 18:00 UTC.
 
-Uses APScheduler. In production, agents populate the brief content
-via the /api/v1/sheets/generate endpoint. This module provides
-the scheduling harness and placeholder generators.
+In production, agents populate the brief content via the
+/api/v1/sheets/generate endpoint. This module defines async
+placeholder generators for creating the morning and evening
+brief sheets; any scheduling is handled elsewhere.
 
 Devon-b5dc | 2026-05-14
 """
