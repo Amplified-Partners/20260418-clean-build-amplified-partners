@@ -25,6 +25,8 @@ EntryType = Literal[
     "task_created",
     "brief_summary",
     "cleaned_prompt",
+    "council_question",
+    "council_answer",
 ]
 
 

@@ -11,7 +11,7 @@ from uuid import uuid4
 
 from pydantic import BaseModel, Field
 
-SheetMode = Literal["brief", "correspondence"]
+SheetMode = Literal["brief", "correspondence", "council"]
 
 
 class SheetMeta(BaseModel):

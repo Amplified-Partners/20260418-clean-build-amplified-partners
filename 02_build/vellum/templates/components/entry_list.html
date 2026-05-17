@@ -1,4 +1,49 @@
 {% for e in entries %}
+{% if e.entry_type == 'council_question' %}
+<div class="entry entry-council_question">
+    <div class="entry-header">
+        <span class="entry-author author-human">{{ e.author }}</span>
+        <span class="entry-type-badge badge-council">council question</span>
+        <span class="entry-time">{{ e.time_ago }}</span>
+        <span class="entry-hash" title="{{ e.entry_hash }}">{{ e.entry_hash }}</span>
+    </div>
+    <div class="entry-body council-question-body">
+        <strong>{{ e.content }}</strong>
+    </div>
+    {% if e.metadata and e.metadata.get('options') %}
+    <div class="council-options">
+        <span class="options-label">Options:</span>
+        {% for opt in e.metadata['options'] %}
+        <span class="option-chip">{{ opt }}</span>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+{% elif e.entry_type == 'council_answer' and e.metadata.get('layer') == 'council_verdict' %}
+<div class="entry entry-council_verdict">
+    <div class="entry-header">
+        <span class="entry-author author-agent">{{ e.author }}</span>
+        <span class="entry-type-badge badge-verdict">verdict</span>
+        <span class="entry-time">{{ e.time_ago }}</span>
+        <span class="entry-hash" title="{{ e.entry_hash }}">{{ e.entry_hash }}</span>
+    </div>
+    <div class="entry-body verdict-body">
+        <pre class="verdict-content">{{ e.content }}</pre>
+    </div>
+</div>
+{% elif e.entry_type == 'council_answer' %}
+<div class="entry entry-council_answer council-panel-{{ e.metadata.get('model_label', 'X') | lower }}">
+    <div class="entry-header">
+        <span class="entry-author author-council">Model {{ e.metadata.get('model_label', '?') }}</span>
+        <span class="entry-type-badge badge-council">
+            round {{ e.metadata.get('round', 1) }}
+        </span>
+        <span class="entry-time">{{ e.time_ago }}</span>
+        <span class="entry-hash" title="{{ e.entry_hash }}">{{ e.entry_hash }}</span>
+    </div>
+    <div class="entry-body council-answer-body">{{ e.content }}</div>
+</div>
+{% else %}
 <div class="entry entry-{{ e.entry_type }}">
     <div class="entry-header">
         <span class="entry-author
@@ -25,6 +70,7 @@
     </div>
     {% endif %}{% endif %}
 </div>
+{% endif %}
 {% endfor %}
 
 {% if not entries %}
