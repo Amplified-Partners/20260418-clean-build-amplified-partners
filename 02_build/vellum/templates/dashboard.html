@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Vellum — Dashboard{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <!-- Decisions strip -->
+    {% if decisions %}
+    <section class="decisions-strip">
+        <h2>Pinned decisions</h2>
+        <div class="decision-cards">
+            {% for d in decisions %}
+            <a href="/sheet/{{ d.sheet_id }}" class="decision-card">
+                <span class="decision-content">{{ d.content }}</span>
+                <span class="decision-meta">{{ d.author }} &middot; {{ d.time_ago }}</span>
+            </a>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- Sheets list -->
+    <section class="sheets-section">
+        <div class="section-header">
+            <h2>Sheets</h2>
+            <button class="btn-sm" hx-get="/partials/sheets" hx-target="#sheets-list" hx-swap="innerHTML">Refresh</button>
+        </div>
+        <div id="sheets-list" hx-get="/partials/sheets" hx-trigger="every 30s" hx-swap="innerHTML">
+            {% include "components/sheet_list.html" %}
+        </div>
+    </section>
+</div>
+{% endblock %}

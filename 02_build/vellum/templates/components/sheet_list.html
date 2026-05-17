@@ -1,0 +1,22 @@
+{% for s in sheets %}
+<a href="/sheet/{{ s.id }}" class="sheet-card {% if s.unread_count is defined and s.unread_count > 0 %}unread{% endif %}">
+    <div class="sheet-card-top">
+        <span class="sheet-title">{{ s.title }}</span>
+        <span class="sheet-badge">{{ s.mode }}</span>
+    </div>
+    <div class="sheet-card-preview">{{ s.last_content }}</div>
+    <div class="sheet-card-bottom">
+        <span class="sheet-entries">{{ s.entry_count }} entries</span>
+        {% if s.unread_count is defined and s.unread_count > 0 %}
+        <span class="unread-badge">{{ s.unread_count }} new</span>
+        {% endif %}
+        <span class="sheet-time">{{ s.time_ago }}</span>
+    </div>
+</a>
+{% endfor %}
+
+{% if not sheets %}
+<div class="empty-state">
+    <p>No sheets yet. Agents will generate your first brief.</p>
+</div>
+{% endif %}
