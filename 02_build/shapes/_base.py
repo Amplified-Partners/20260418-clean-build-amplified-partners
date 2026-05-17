@@ -76,6 +76,15 @@ class ShapeBase:
             source_id=source_id,
         )
 
+    def verify_preconditions(self) -> tuple[Any, ...]:
+        """Return precondition checks for epistemic enforcement.
+
+        Override in subclasses to declare preconditions that affect the
+        epistemic status of outputs. Default: no preconditions (empty tuple).
+        Each item should be a PreconditionCheck from _epistemic module.
+        """
+        return ()
+
     def log_receipt(self, tracking_id: str) -> None:
         """Log that data was received by this shape."""
         log.info(

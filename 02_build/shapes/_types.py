@@ -313,3 +313,32 @@ class TelemetryError(ShapeError):
 
     def __init__(self, message: str, **kwargs: Any) -> None:
         super().__init__(message, shape_kind="telemetry", **kwargs)
+
+
+class EpistemicViolation(ShapeError):
+    """P0-class error — epistemic invariant violated. System halts.
+
+    Raised when:
+    - A bare value crosses a protected boundary (laundering trap)
+    - A shape over-claims its status (declares higher than declared_max)
+    - Illegal promotion or tier-skipping detected
+    - Gap >= 2 between declared and effective status
+    """
+
+    def __init__(
+        self,
+        message: str,
+        *,
+        declared_tier: str = "",
+        effective_tier: str = "",
+        violation_type: str = "",
+        shape_name: str = "",
+        boundary_method: str = "",
+        **kwargs: Any,
+    ) -> None:
+        super().__init__(message, shape_kind="epistemic", **kwargs)
+        self.declared_tier = declared_tier
+        self.effective_tier = effective_tier
+        self.violation_type = violation_type
+        self.shape_name = shape_name
+        self.boundary_method = boundary_method

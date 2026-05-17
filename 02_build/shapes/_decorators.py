@@ -13,6 +13,7 @@ from __future__ import annotations
 import dataclasses
 import datetime as dt
 import functools
+import uuid
 import hashlib
 import json
 import logging
@@ -299,19 +300,192 @@ def no_bypass(cls: type) -> type:
 # ---------------------------------------------------------------------------
 
 
-def epistemic(tier: str = "intuited", canon_ref: str = "") -> Any:
+def epistemic(
+    tier: str = "intuited",
+    canon_ref: str = "",
+    protected: str | list[str] | None = None,
+    strict: bool = False,
+) -> Any:
     """Declares the epistemic tier of a shape's output.
 
     tier: intuited | structured | measured | proven
     canon_ref: reference to the Logic Canon method, if any
+    protected: method name(s) to wrap with runtime epistemic enforcement.
+        None = metadata only (backward compatible, no runtime enforcement).
+    strict: if True, bare values at protected boundary raise P0.
+        if False (default), bare values auto-wrap as INTUITED with provenance note.
     """
 
     def decorator(cls: type) -> type:
         cls._epistemic_tier = tier  # type: ignore[attr-defined]
         cls._canon_ref = canon_ref  # type: ignore[attr-defined]
+        cls._epistemic_strict = strict  # type: ignore[attr-defined]
+
+        if protected is not None:
+            methods = [protected] if isinstance(protected, str) else protected
+            cls._epistemic_protected = tuple(methods)  # type: ignore[attr-defined]
+            _wire_enforcement(cls, methods, tier, strict)
+        else:
+            cls._epistemic_protected = ()  # type: ignore[attr-defined]
+
         return cls
 
     return decorator
+
+
+def _wire_enforcement(
+    cls: type, methods: list[str], declared_tier: str, strict: bool
+) -> None:
+    """Wrap protected methods with epistemic boundary enforcement."""
+    from ._epistemic import (
+        EpistemicTier,
+        PreconditionCheck,
+        ShapeProvenance,
+        StatusedOutput,
+        ShapeAuditRecord,
+        SHAPE_AUDIT_LOG,
+        _demote,
+    )
+    from ._types import EpistemicViolation
+
+    tier_enum = EpistemicTier.from_string(declared_tier)
+
+    # We defer wrapping to __init_subclass__ time won't work here because
+    # the class is being constructed. Instead we use __init_subclass__ hook
+    # via a sentinel, OR we wrap directly on the class after definition.
+    # Since @epistemic is a class decorator applied AFTER the class body,
+    # we can wrap methods directly.
+
+    for method_name in methods:
+        original = getattr(cls, method_name, None)
+        if original is None:
+            continue
+
+        def make_wrapper(orig_fn, m_name):
+            @functools.wraps(orig_fn)
+            def wrapper(self, *args, **kwargs):
+                shape_name = type(self).__qualname__
+
+                # 1. Collect input statuses from StatusedOutput args
+                input_statuses: list[EpistemicTier] = []
+                input_ids: list[str] = []
+                unwrapped_args = []
+
+                for arg in args:
+                    if isinstance(arg, StatusedOutput):
+                        input_statuses.append(arg.status)
+                        input_ids.append(arg.output_id)
+                        unwrapped_args.append(arg.value)
+                    elif strict:
+                        raise EpistemicViolation(
+                            f"{shape_name}.{m_name}: bare value at protected boundary "
+                            f"(type={type(arg).__name__}). All inputs to enforced "
+                            "boundaries must be StatusedOutput. This is the laundering trap.",
+                            declared_tier=declared_tier,
+                            effective_tier="",
+                            violation_type="bare_value",
+                            shape_name=shape_name,
+                            boundary_method=m_name,
+                        )
+                    else:
+                        # Lenient mode: auto-wrap as INTUITED
+                        input_statuses.append(EpistemicTier.INTUITED)
+                        auto_id = str(uuid.uuid4())
+                        input_ids.append(auto_id)
+                        unwrapped_args.append(arg)
+
+                # Unwrap StatusedOutput kwargs too
+                unwrapped_kwargs = {}
+                for k, v in kwargs.items():
+                    if isinstance(v, StatusedOutput):
+                        input_statuses.append(v.status)
+                        input_ids.append(v.output_id)
+                        unwrapped_kwargs[k] = v.value
+                    elif strict and k != "tracking_id":
+                        raise EpistemicViolation(
+                            f"{shape_name}.{m_name}: bare kwarg '{k}' at protected boundary.",
+                            declared_tier=declared_tier,
+                            violation_type="bare_value",
+                            shape_name=shape_name,
+                            boundary_method=m_name,
+                        )
+                    else:
+                        unwrapped_kwargs[k] = v
+
+                # 2. Check for stale inputs (demote by one tier)
+                for arg in args:
+                    if isinstance(arg, StatusedOutput) and arg.is_stale():
+                        idx = next(
+                            i for i, a in enumerate(args) if a is arg
+                        )
+                        input_statuses[idx] = _demote(input_statuses[idx])
+
+                # 3. Verify preconditions
+                preconditions: tuple[PreconditionCheck, ...] = ()
+                if hasattr(self, "verify_preconditions"):
+                    preconditions = self.verify_preconditions()
+
+                # 4. Apply min-rule
+                input_floor = min(input_statuses, default=EpistemicTier.PROVEN)
+                precondition_floor = (
+                    tier_enum
+                    if all(p.holds for p in preconditions)
+                    else _demote(tier_enum)
+                )
+                effective = min(tier_enum, input_floor, precondition_floor)
+
+                # 5. Check for over-claiming (gap >= 2 is P0)
+                gap = tier_enum.value - effective.value
+                if gap >= 2:
+                    raise EpistemicViolation(
+                        f"{shape_name}.{m_name}: declared {tier_enum.label()} but "
+                        f"effective is {effective.label()}. Gap={gap} tiers (>= 2 = P0).",
+                        declared_tier=declared_tier,
+                        effective_tier=effective.label(),
+                        violation_type="gap_exceeded",
+                        shape_name=shape_name,
+                        boundary_method=m_name,
+                    )
+
+                # 6. Execute the actual method
+                raw_result = orig_fn(self, *unwrapped_args, **unwrapped_kwargs)
+
+                # 7. Wrap output
+                provenance = ShapeProvenance(
+                    shape_name=shape_name,
+                    method=m_name,
+                    input_ids=tuple(input_ids),
+                )
+                output = StatusedOutput(
+                    value=raw_result,
+                    status=effective,
+                    provenance=provenance,
+                    preconditions=preconditions,
+                )
+
+                # 8. Write audit record
+                import datetime as _dt
+
+                SHAPE_AUDIT_LOG.write(
+                    ShapeAuditRecord(
+                        record_id=output.output_id,
+                        timestamp=_dt.datetime.now(_dt.timezone.utc),
+                        shape_name=shape_name,
+                        method=m_name,
+                        declared_status=tier_enum,
+                        effective_status=effective,
+                        input_statuses=tuple(input_statuses),
+                        preconditions=preconditions,
+                        reason=f"min({tier_enum.label()}, input_floor={input_floor.label()}, "
+                               f"precondition_floor={precondition_floor.label()})",
+                    )
+                )
+
+                return output
+
+            return wrapper
+
+        setattr(cls, method_name, make_wrapper(original, method_name))
 
 
 # ---------------------------------------------------------------------------

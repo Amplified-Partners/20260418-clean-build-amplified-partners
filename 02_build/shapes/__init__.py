@@ -18,6 +18,7 @@ from ._types import (
     ConfigError,
     ConnectorError,
     EntryError,
+    EpistemicViolation,
     EscalationFlag,
     GuardHalt,
     HandoffProtocol,
@@ -61,6 +62,17 @@ from ._decorators import (
     validated,
     workflow,
     METRICS,
+)
+
+# --- Epistemic bridge ---
+from ._epistemic import (
+    EpistemicTier,
+    PreconditionCheck,
+    ShapeProvenance,
+    StatusedOutput,
+    ShapeAuditRecord,
+    ShapeAuditLog,
+    SHAPE_AUDIT_LOG,
 )
 
 # --- Registry ---
@@ -113,6 +125,15 @@ __all__ = [
     "ConfigError",
     "AgentError",
     "TelemetryError",
+    "EpistemicViolation",
+    # Epistemic
+    "EpistemicTier",
+    "PreconditionCheck",
+    "ShapeProvenance",
+    "StatusedOutput",
+    "ShapeAuditRecord",
+    "ShapeAuditLog",
+    "SHAPE_AUDIT_LOG",
     # Decorators
     "monitored",
     "tracked",
