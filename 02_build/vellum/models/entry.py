@@ -27,6 +27,7 @@ EntryType = Literal[
     "cleaned_prompt",
     "council_question",
     "council_answer",
+    "baton_pass",
 ]
 
 
