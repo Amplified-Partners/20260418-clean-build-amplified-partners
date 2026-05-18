@@ -1,7 +1,7 @@
 ---
 title: Governed workspace manifest (authoritative inventory)
 date: 2026-05-14
-version: 60
+version: 61
 status: draft
 ---
 
@@ -80,6 +80,7 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
 - `00_authority/PR_WORKFLOW.md` (branch protection + Linear linkage + review authority for active repos; AMP-70)
 - `STATUS.md` (operations status board — async handshake between Devon and OpenClaw; versioned handoffs, no chat)
 - `00_authority/BRAIN_ARCHITECTURE.md` (canonical Amplified Brain architecture v5 — Layer 0, Portable Spine, work pipeline, Council governance gate (SAC protocol, heterogeneity, Challenger role), Two-Engine Architecture, 17-and-3 Principle, AI-is-a-Pudding, Vellum (ready), estate map, ingestion pipe, agent roster, Python Logic Canon, Kaizen (surprise heuristic with four-tradition science), pipeline health metrics, research grounding (99 Perplexity sources), fifteen hard constraints + governance-by-exception; Cursor full read/write access; supersedes Linear doc c655776f3baa)
+- `00_authority/HUF_HAUS_SHAPES.md` (Huf Haus fifteen code shapes — shape taxonomy, enforced checklists, Vellum pre-fill rules, five shaped questions, three flags, hard boundaries, contracts, Python skeletons; source: Ewan Bramley shape taxonomy 2026-05-17 + Devon-58ca doctrine sessions)
 - `02_build/INFRASTRUCTURE.md` (canonical infrastructure manifest — single source of truth for all 40 containers, services, scheduled jobs, and server specs on Amplified Core)
 - `.github/CODEOWNERS` (GitHub CODEOWNERS — requires `@ewanbramley` review for `00_authority/**` and `01_truth/**` changes; no default owner)
 - `.cursor/rules/stateless-handover-kaizen.mdc` `[LOGIC TO BE CONFIRMED]` (mechanical enforcement of existing handover policy; not a separate policy spine)
