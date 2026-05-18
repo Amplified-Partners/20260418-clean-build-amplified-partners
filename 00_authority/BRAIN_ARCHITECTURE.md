@@ -1,12 +1,13 @@
 ---
 title: The Amplified Brain — Architecture, Estate, and Operating Map
-date: 2026-05-17
-version: 6
+date: 2026-05-18
+version: 7
 status: authoritative now
 refresh: This document MUST be refreshed every 24–48 hours by a scheduled Devon session.
 supersedes: Linear doc "The Amplified Brain Architecture (Where the Brain Lives)" (c655776f3baa)
 source-materials: Onboarding package (Devon-6098, 2026-05-14), 17-and-3 Principle (Ewan Bramley, 2026-05-14 21:19 BST), AI-is-a-Pudding insight, Systems Design & Three Specs methodology, Ingestion Pipe Rewrite spec, Linear-to-Vellum migration spec, Reflective Loop pattern audit, Perplexity Research (99 verified sources — pipeline metrics, AI council, Kaizen, governance-by-exception, 2026-05-14)
 signed-by:
+  - Devon-b27c | 2026-05-18 | devin-b27ce6b2b0674d08b7e553e843cc956a
   - Devon-9977 | 2026-05-17 | devin-9977948e4f1a4201823693be3bed5325
   - Devon-3386 | 2026-05-14 | devin-338635b0d3cd4a868f1cf7e7fcb8d461
 ---
@@ -507,6 +508,7 @@ Compose: `/root/cove-repo/infrastructure/docker-compose.yml`
 | **Brain MCP Readonly** | `brain-mcp-readonly:8090` | Read-only MCP for Brain queries |
 | **Brain Web** | `brain-web` | Brain web interface |
 | **Vellum** | `vellum:8400` | Contact surface — Brief + Council + Correspondence (unhealthy — investigating) |
+| **HUF HAUS Shapes** | `02_build/shapes/` (library, not container) | 15 base classes + 15 decorators — canonical code shape taxonomy, registry, and runtime invariants |
 | **Infisical** | `infisical:8403` | Secrets management |
 | **OpenClaw Agents** | `openclaw-agents:8100` | OpenClaw agent runtime |
 | **Plumb Knowledge** | `plumb-knowledge-http` | Plumb agent knowledge HTTP server |
@@ -611,7 +613,7 @@ Vellum absorbs Linear's ticket-flow, agent-alerting, and loop-closing. Now deplo
 | **Beast container** | `vellum:8400` — Up 11 hours (unhealthy as of 2026-05-17 06:05 UTC) |
 | **Brief mode** | Running — 1-to-1 scoped exchanges (most ticket activity) |
 | **Council mode** | Running on Ewan's UI — cross-agent deliberation for big decisions |
-| **Correspondence mode** | Not yet built |
+| **Correspondence mode** | Built — bidirectional async communication with intent routing (PR #115, 2026-05-17) |
 | **Migration spec** | `2026-05-14_SPEC_linear-to-vellum-migration.md` |
 
 Vellum is Ewan's UI + inter-agent comms + customer FAQ + updater into the pipe + delivery surface for customer artefacts. It closes the loop and alerts agents when a ticket is in for them.
@@ -673,6 +675,7 @@ If it is not in GitHub, it is not real.
 
 | Repo | Purpose | Status |
 |------|---------|--------|
+| [`vellum`](https://github.com/Amplified-Partners/vellum) | Vellum contact surface — hash-chained, additive-only, token-scoped agent/human comms | Active — Comms |
 | [`amplified-hermes-team`](https://github.com/Amplified-Partners/amplified-hermes-team) | Agent orchestration framework — team manager, BATON protocol | Active |
 | [`agent-comms`](https://github.com/Amplified-Partners/agent-comms) | Agent status boards, handover files | Active — Comms |
 
@@ -950,6 +953,17 @@ These are not decorative. They are the signal.
 
 ## Changelog
 
+### v7 — 2026-05-18 (24h refresh)
+
+- **§ 5 Infrastructure:** Added HUF HAUS Shapes (`02_build/shapes/`) — 15 base classes (EntryBase, ServiceBase, WorkerBase, ConnectorBase, ModelBase, StoreBase, PipelineBase, OrchestratorBase, GuardBase, ScorerBase, AgentBase, TestBase, ConfigBase, TelemetryBase, GlueBase), 15 decorators (@monitored, @tracked, @validated, @retryable, @circuit_breaker, @no_bypass, @epistemic, @reader_first, @confidence_floor, @hash_protected, @transactional, @debt_tracked, @step, @workflow, @signal_classifier), shape registry. 55 tests passing. Stdlib only. (PR #138)
+- **§ 7 Vellum:** Correspondence mode now **built** — bidirectional async communication with intent routing, emoji routing, text reply parsing, pinned decisions, HTMX dark-theme UI, token-scoped share links. 29 tests passing. (PR #115)
+- **§ 7 GitHub:** Added `vellum` repo to Agent Infrastructure. Org total: 39 repos (was 38).
+- **§ 5 Beast:** Container status unverified this refresh — SSH key (`devin-beast-2026-05-11`) not authorized on Beast. No infrastructure PRs merged since v6; status presumed unchanged (45 containers).
+- **Linear:** No new structural changes since v6. AMP-345 (PUDDING extraction rewrite), AMP-349 (Marketing Engine), AMP-147 (Devon always-on ops) still In Progress.
+- **GitHub (crm, ground-truth):** No new merges since v6.
+
+Signed-by: Devon-b27c | 2026-05-18 | devin-b27ce6b2b0674d08b7e553e843cc956a
+
 ### v6 — 2026-05-17 (24h refresh)
 
 - **§ 5 Beast:** Container count ~40 → 45. SSH access updated (`root@` with `beastssh` key).
@@ -960,7 +974,7 @@ These are not decorative. They are the signal.
 - **§ 7 Vellum:** Status from "Ready" to **Deployed (unhealthy)** — container `vellum:8400` live on Beast but health check failing.
 - **§ 5 Previously broken services now fixed:** `amplified-crm-dev` (was Exited → Up 4 days), `tailscale` (was stuck in Created → Up 7 days), `traefik` (was unreachable → Up 2 days).
 - **Linear:** AMP-345 PUDDING extraction rewrite (In Progress), AMP-356 Ingestion Pipe v2 (In Review), AMP-357 EPIC FalkorDB+Qdrant→PostgreSQL migration (In Review), AMP-353 Beast SSH over Tailscale (Done), AMP-141 CRM-dev health (Done — fixed), AMP-349 Marketing Engine consolidation (In Progress).
-- **GitHub:** No new merges to clean-build/crm/ground-truth main since v5. 38 repos in org (no new repos).
+- **GitHub:** No new merges to clean-build/crm/ground-truth main since v5. 38 repos in org.
 
 Signed-by: Devon-9977 | 2026-05-17 | devin-9977948e4f1a4201823693be3bed5325
 
