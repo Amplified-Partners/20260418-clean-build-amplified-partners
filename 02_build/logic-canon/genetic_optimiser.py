@@ -146,7 +146,7 @@ def create_population(
 
     # Random mutations with wider initial spread
     for i in range(cfg.population_size - 1):
-        mutated = mutate(base_params, mutation_rate=0.30)
+        mutated = mutate(base_params, rate=0.30)
         org = Organism(
             org_id=f"g0_org{i}",
             generation=0,
