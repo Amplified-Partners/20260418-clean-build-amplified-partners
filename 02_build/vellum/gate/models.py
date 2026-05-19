@@ -3,12 +3,11 @@
 Pure domain logic. No I/O, no database, no LLM calls.
 All models are Pydantic v2. Immutable where possible.
 
-Terminology matches the epistemic_status.py v2 reference implementation:
-- EpistemicStatus (IntEnum, not Literal strings)
-- min-rule enforcement
-- P0Incident on status laundering
+EpistemicStatus is imported from epistemic_core (single source of truth).
 
 Devon-b5dc | 2026-05-14
+Refactored by Devon-d493 | 2026-05-19 | devin-d49302e4179d43d0892997a7f3a9f57f
+  — import EpistemicStatus from epistemic_core (consolidation PR 1)
 """
 
 from __future__ import annotations
@@ -18,23 +17,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
-
-# ---------------------------------------------------------------------------
-# EpistemicStatus — the four tiers, per v2 reference implementation.
-# Order matters: min() works because IntEnum.
-# ---------------------------------------------------------------------------
-
-
-class EpistemicStatus(enum.IntEnum):
-    """Four tiers of honest knowledge claim."""
-
-    INTUITED = 1       # Vibe with footnotes (raw LLM output, gut, narrative)
-    STRUCTURED = 2     # Honest heuristic (reproducible rule, judgement weights)
-    MEASURED = 3       # Empirically calibrated (data + CI + sample size + drift)
-    PROVEN = 4         # Mathematically proven (closed form + verified preconditions)
-
-    def label(self) -> str:
-        return {1: "intuited", 2: "structured", 3: "measured", 4: "proven"}[self]
+from epistemic_core.tiers import EpistemicTier as EpistemicStatus
 
 
 # ---------------------------------------------------------------------------

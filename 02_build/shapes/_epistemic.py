@@ -2,78 +2,33 @@
 Epistemic bridge for the Huf Haus shape system.
 
 Connects the shapes system to the Layer 0 epistemic invariant
-(02_build/routing/epistemic_status.py) without tight coupling.
+via the canonical epistemic_core module.
 
-This module is intentionally small. It provides:
+This module provides:
 1. StatusedOutput — a shape's output wrapped with epistemic metadata
 2. ShapeAuditRecord — one audit entry per boundary crossing
 3. ShapeAuditLog — append-only, thread-safe, inspectable in tests
-4. EpistemicTier — re-export of the four tiers for shapes to use
+4. EpistemicTier — re-export from epistemic_core (single source of truth)
 5. Helper functions for the min-rule and demotion
 
 Authored by Devon-b5dc | 2026-05-17 | session devin-b5dc68e1aefa4982b9c083714ac968c6
+Refactored by Devon-d493 | 2026-05-19 | devin-d49302e4179d43d0892997a7f3a9f57f
+  — import tiers + min-rule from epistemic_core (consolidation PR 1)
 """
 
 from __future__ import annotations
 
 import dataclasses
 import datetime as dt
-import enum
 import logging
 import threading
 import uuid
 from typing import Any, Sequence
 
+from epistemic_core.tiers import EpistemicTier
+from epistemic_core.min_rule import demote as _demote, PreconditionCheck
+
 log = logging.getLogger("amplified.shapes.epistemic")
-
-
-# ---------------------------------------------------------------------------
-# 1. The four tiers (self-contained to avoid circular import with routing)
-# ---------------------------------------------------------------------------
-
-
-class EpistemicTier(enum.IntEnum):
-    """Four tiers of honest knowledge claim. Order matters: min() works."""
-
-    INTUITED = 1
-    STRUCTURED = 2
-    MEASURED = 3
-    PROVEN = 4
-
-    def label(self) -> str:
-        return {1: "intuited", 2: "structured", 3: "measured", 4: "proven"}[self]
-
-    @classmethod
-    def from_string(cls, s: str) -> EpistemicTier:
-        mapping = {
-            "intuited": cls.INTUITED,
-            "structured": cls.STRUCTURED,
-            "measured": cls.MEASURED,
-            "proven": cls.PROVEN,
-        }
-        return mapping[s.lower()]
-
-
-def _demote(tier: EpistemicTier) -> EpistemicTier:
-    """One-tier demotion. PROVEN→MEASURED→STRUCTURED→INTUITED."""
-    return EpistemicTier(max(EpistemicTier.INTUITED.value, tier.value - 1))
-
-
-# ---------------------------------------------------------------------------
-# 2. Precondition check (local definition, same semantics as reference)
-# ---------------------------------------------------------------------------
-
-
-@dataclasses.dataclass(frozen=True)
-class PreconditionCheck:
-    """A precondition with its verification state."""
-
-    name: str
-    holds: bool
-    verified_at: dt.datetime = dataclasses.field(
-        default_factory=lambda: dt.datetime.now(dt.timezone.utc)
-    )
-    evidence: str = ""
 
 
 # ---------------------------------------------------------------------------
