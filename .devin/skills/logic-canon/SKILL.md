@@ -1,45 +1,43 @@
 ---
 name: logic-canon
-description: Shared algorithmic toolbox for all Amplified Partners systems. Use when you need adaptive allocation, circuit breakers, A/B testing, genetic optimisation, multi-factor ranking, regime detection, correlation monitoring, signal normalisation, or tamper-evident constraints.
+description: Python safety-net toolbox for all Amplified Partners systems. Use when you need circuit breakers, A/B testing, regime detection, correlation monitoring, signal normalisation, or tamper-evident constraints. These modules protect — they do not think.
 ---
 
-# Logic Canon — Shared Algorithmic Toolbox
+# Logic Canon — Python Safety Net Toolbox
 
 **Location:** `02_build/logic-canon/`
 **Registry:** `02_build/logic-canon/REGISTRY.md` (full problem→module lookup table)
 **Dependencies:** numpy, pandas
 
+## Design rule
+
+**Python holds the safety net. AI holds the intelligence. Human holds the decision.**
+
+These modules are deterministic guards. They detect thresholds, enforce constraints, and prevent damage. They do not rank, optimise, or decide — that's AI's job.
+
 ## When to reach for this
 
 Before writing any of the following patterns from scratch, check if Logic Canon already solves it:
 
-- Allocating resources across N competing channels based on performance
-- Stopping a system before it causes cascading damage
-- Testing new approaches in parallel without real-world risk
-- Finding optimal parameters for a tuneable system
-- Ranking items by multiple weighted criteria
-- Detecting environmental regime shifts
-- Detecting redundancy / overlap between channels
-- Converting confidence scores into proportional allocations
-- Enforcing tamper-evident constraints
+- Stopping a system before it causes cascading damage → `circuit_breaker`
+- Testing new approaches in parallel without real-world risk → `shadow_tester`
+- Detecting environmental regime shifts → `regime_detector`
+- Detecting redundancy / overlap between channels → `correlation_monitor`
+- Converting confidence scores into proportional allocations → `signal_normaliser`
+- Enforcing tamper-evident constraints → `ulysses_clause`
 
 ## Quick import
 
 ```python
-from logic_canon import adaptive_allocator, circuit_breaker, shadow_tester
-from logic_canon import genetic_optimiser, multi_factor_ranker, regime_detector
+from logic_canon import circuit_breaker, shadow_tester, regime_detector
 from logic_canon import correlation_monitor, signal_normaliser, ulysses_clause
 ```
 
-## The 3-Tier Kaizen Loop
+## What's NOT here (AI's job)
 
-```
-L1: adaptive_allocator  — DAILY  — reweight based on performance
-L2: shadow_tester       — WEEKLY — A/B test parameter variants  
-L3: genetic_optimiser   — MONTHLY — evolve via genetic algorithm
-```
-
-Any system with tuneable parameters + measurable outcomes can use all three together.
+- Ranking items by multiple criteria — AI reasons, Python cleans the data
+- Finding optimal parameters — AI thinks, Python caps the damage
+- Deciding resource allocation — AI decides, Python holds the safety net
 
 ## Key design principles
 
@@ -47,3 +45,4 @@ Any system with tuneable parameters + measurable outcomes can use all three toge
 - **Domain-agnostic.** No trading language. Works for marketing, agents, CRM, content, anything.
 - **Composable.** Modules work independently or together. Combine as needed.
 - **All maths documented.** Every formula is in the module docstring. No black boxes.
+- **Deterministic.** Same input = same output. No randomness, no LLM calls.
