@@ -18,6 +18,8 @@ from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from typing import Any
 
+import requests
+
 from marketing_consumer.models import MarketingArtifact
 
 log = logging.getLogger("amplified.marketing.brevo")
@@ -156,10 +158,8 @@ def send_email(
             request_payload=payload,
         )
 
-    # Live send path — uses requests if available
+    # Live send path
     try:
-        import requests  # noqa: F811
-
         response = requests.post(
             config.api_url,
             headers={
@@ -204,14 +204,14 @@ def send_email(
             request_payload=payload,
         )
 
-    except ImportError:
-        log.error("requests library not available — cannot send live emails")
+    except requests.RequestException as exc:
+        log.error("Brevo request failed: %s", exc)
         return BrevoSendResult(
             sent=False,
             dry_run=False,
             message_id="",
             status_code=0,
-            detail="requests library not installed. Install it or use dry-run mode.",
+            detail=f"Brevo request failed: {exc}",
             request_payload=payload,
         )
     except Exception as exc:

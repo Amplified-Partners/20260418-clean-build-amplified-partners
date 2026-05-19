@@ -20,7 +20,6 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from marketing_consumer.models import MarketingArtifact  # noqa: E402
 from marketing_consumer.brevo_adapter import (  # noqa: E402
     BrevoConfig,
-    BrevoSendResult,
     build_payload,
     send_email,
 )
@@ -169,20 +168,108 @@ class TestStateGate:
 
 
 # ===================================================================
-# 5. Live mode without requests library
+# 5. Import / dependency visibility
 # ===================================================================
 
 
-class TestLiveModeNoRequests:
-    def test_live_config_on_sent_artifact_without_requests(self) -> None:
-        """Live config will attempt to import requests.
+class TestDependencyVisibility:
+    def test_requests_is_top_level_import(self) -> None:
+        """requests must be importable at module level, not hidden inside a function."""
+        import marketing_consumer.brevo_adapter as mod
 
-        If requests is not installed, it should handle gracefully.
-        This test validates the error path exists.
-        """
+        assert hasattr(mod, "requests"), "requests should be a top-level module attribute"
+
+    def test_requests_importable(self) -> None:
+        """requests must be installed — it is a declared dependency."""
+        import requests  # noqa: F401
+
+
+# ===================================================================
+# 6. Missing API key behaviour
+# ===================================================================
+
+
+class TestMissingApiKey:
+    def test_no_key_defaults_to_dry_run(self) -> None:
+        cfg = BrevoConfig()  # no key, dry_run=True
+        assert cfg.is_live is False
+
+    def test_no_key_dry_run_false_is_not_live(self) -> None:
+        """dry_run=False without an API key must NOT be live."""
+        cfg = BrevoConfig(api_key="", dry_run=False)
+        assert cfg.is_live is False
+
+    def test_no_key_dry_run_false_returns_dry_run_result(self) -> None:
+        """Even with dry_run=False, missing key means dry-run behaviour."""
         a = _artifact(state="sent", approval_signal="explicit_approval")
-        cfg = BrevoConfig(api_key="xkeysib-test", dry_run=False)
+        cfg = BrevoConfig(api_key="", dry_run=False)
         result = send_email(a, config=cfg, to_email="bob@example.com")
-        # Either sends (if requests available) or fails gracefully
-        assert isinstance(result, BrevoSendResult)
-        assert isinstance(result.sent, bool)
+        # is_live is False (no key), so dry-run path
+        assert result.sent is False
+        assert result.dry_run is True
+        assert result.message_id == "dry-run"
+
+
+# ===================================================================
+# 7. Live mode with mocked requests
+# ===================================================================
+
+
+class TestLiveModeMocked:
+    def test_live_send_success(self) -> None:
+        """Live send with a mocked requests.post returning 201."""
+        import unittest.mock as mock
+
+        a = _artifact(state="sent", approval_signal="explicit_approval")
+        cfg = BrevoConfig(api_key="xkeysib-real-key", dry_run=False)
+
+        fake_response = mock.MagicMock()
+        fake_response.status_code = 201
+        fake_response.content = b'{"messageId": "msg-abc"}'
+        fake_response.json.return_value = {"messageId": "msg-abc"}
+
+        with mock.patch("marketing_consumer.brevo_adapter.requests.post", return_value=fake_response):
+            result = send_email(a, config=cfg, to_email="bob@example.com")
+
+        assert result.sent is True
+        assert result.dry_run is False
+        assert result.message_id == "msg-abc"
+        assert result.status_code == 201
+
+    def test_live_send_api_error(self) -> None:
+        """Live send with a mocked 400 response."""
+        import unittest.mock as mock
+
+        a = _artifact(state="sent", approval_signal="explicit_approval")
+        cfg = BrevoConfig(api_key="xkeysib-real-key", dry_run=False)
+
+        fake_response = mock.MagicMock()
+        fake_response.status_code = 400
+        fake_response.content = b'{"message": "invalid"}'
+        fake_response.json.return_value = {"message": "invalid"}
+
+        with mock.patch("marketing_consumer.brevo_adapter.requests.post", return_value=fake_response):
+            result = send_email(a, config=cfg, to_email="bob@example.com")
+
+        assert result.sent is False
+        assert result.status_code == 400
+        assert "400" in result.detail
+
+    def test_live_send_network_error(self) -> None:
+        """Network failure must return a clear error, not crash."""
+        import unittest.mock as mock
+
+        import requests as req
+
+        a = _artifact(state="sent", approval_signal="explicit_approval")
+        cfg = BrevoConfig(api_key="xkeysib-real-key", dry_run=False)
+
+        with mock.patch(
+            "marketing_consumer.brevo_adapter.requests.post",
+            side_effect=req.ConnectionError("DNS resolution failed"),
+        ):
+            result = send_email(a, config=cfg, to_email="bob@example.com")
+
+        assert result.sent is False
+        assert result.status_code == 0
+        assert "DNS resolution failed" in result.detail

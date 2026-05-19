@@ -1,0 +1,8 @@
+# marketing_consumer — runtime dependencies
+# Devon-d493 | 2026-05-19
+
+pydantic>=2.5.0
+requests>=2.31.0
+
+# Testing
+pytest>=8.0.0
