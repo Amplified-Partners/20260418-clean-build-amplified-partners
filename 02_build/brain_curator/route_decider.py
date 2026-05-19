@@ -5,10 +5,12 @@ epistemic tier, and evidence presence. Never deletes source —
 drop_from_active only excludes from active retrieval.
 
 Signed-by: Devon-d493 | 2026-05-19 | devin-d49302e4179d43d0892997a7f3a9f57f
+Modified-by: Devon-71c4 | 2026-05-19 | Audit logging + metadata for routing decisions (Radical Transparency)
 """
 
 from __future__ import annotations
 
+import json
 import logging
 import re
 from typing import Any
@@ -134,13 +136,15 @@ async def decide_routes(run_id: str) -> dict[str, Any]:
             # Check provenance
             has_provenance = packet["source_document_id"] is not None
 
-            # Check duplicate status
+            # Check duplicate status — returns (is_dup, has_better, dup_info) for audit
             is_exact_duplicate = False
             has_better_canonical = False
+            dup_info: str | None = None
             if packet["source_document_id"]:
-                dup_info = await conn.fetchrow(
+                dup_row = await conn.fetchrow(
                     """
-                    SELECT bdm.member_role, bdc.canonical_member_id
+                    SELECT bdm.member_role, bdc.canonical_member_id,
+                           bdc.cluster_id
                     FROM brain_dedupe_members bdm
                     JOIN brain_dedupe_clusters bdc ON bdc.cluster_id = bdm.cluster_id
                     WHERE bdm.chunk_id = $1 AND bdc.cluster_type = 'exact'
@@ -148,10 +152,14 @@ async def decide_routes(run_id: str) -> dict[str, Any]:
                     """,
                     packet["source_document_id"],
                 )
-                if dup_info:
+                if dup_row:
                     is_exact_duplicate = True
                     has_better_canonical = (
-                        dup_info["member_role"] != "canonical"
+                        dup_row["member_role"] != "canonical"
+                    )
+                    dup_info = (
+                        f"cluster={dup_row['cluster_id']}, "
+                        f"canonical_member={dup_row['canonical_member_id']}"
                     )
 
             # Get a content sample for secret/PII detection
@@ -179,12 +187,46 @@ async def decide_routes(run_id: str) -> dict[str, Any]:
                 content_sample=content_sample,
             )
 
+            # Audit logging — Radical Transparency on routing decisions
+            if route == ROUTE_DROP_FROM_ACTIVE:
+                log.info(
+                    "packet=%s routed=drop_from_active reason=exact_duplicate "
+                    "superseded_by=[%s] packet_type=%s tier=%s",
+                    packet_id, dup_info, packet_type, epistemic_tier,
+                )
+            elif route == ROUTE_QUARANTINE:
+                secret_detected, pii_unsure = detect_secret_or_pii(content_sample)
+                reasons = []
+                if secret_detected:
+                    reasons.append("secret_detected")
+                if pii_unsure:
+                    reasons.append("pii_unsure")
+                log.info(
+                    "packet=%s routed=quarantine reasons=%s packet_type=%s",
+                    packet_id, ",".join(reasons), packet_type,
+                )
+
+            # Store routing rationale in packet metadata for auditability
+            route_metadata: dict[str, Any] = {"route_reason": route}
+            if route == ROUTE_DROP_FROM_ACTIVE and dup_info:
+                route_metadata["superseded_by"] = dup_info
+            if route == ROUTE_QUARANTINE:
+                secret_detected, pii_unsure = detect_secret_or_pii(content_sample)
+                if secret_detected:
+                    route_metadata["quarantine_reason"] = "secret_detected"
+                elif pii_unsure:
+                    route_metadata["quarantine_reason"] = "pii_detected"
+
+            existing_meta = packet["metadata"] or "{}"
+            merged_meta = {**json.loads(existing_meta), **route_metadata}
+
             await conn.execute(
                 """UPDATE brain_packets
-                SET route = $2, updated_at = now()
+                SET route = $2, metadata = $3, updated_at = now()
                 WHERE packet_id = $1""",
                 packet_id,
                 route,
+                json.dumps(merged_meta),
             )
             routed += 1
             route_counts[route] = route_counts.get(route, 0) + 1
