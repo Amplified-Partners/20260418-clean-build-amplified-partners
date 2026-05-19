@@ -1,7 +1,7 @@
 ---
 title: Governed workspace manifest (authoritative inventory)
-date: 2026-05-14
-version: 61
+date: 2026-05-15
+version: 62
 status: draft
 ---
 
@@ -131,6 +131,7 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
 
 ## Reference only (sanitised; never authoritative by default)
 
+- `00_authority/ESTATE-CHAOS-CASE-STUDY-2026-05-15.md` `[CURRENT BEST EVIDENCE]` (forensic estate analysis: 44 repos, 8 stubs, 7 duplicates, ~1,420 markers, 8,000+ corpus-raw files, AI tool format chaos, hidden value, governance vs reality gap, lessons learned, path forward. Radical transparency case study — diagnostic, not policy.)
 - `.cursor/HOOKS_TESTING_NEED.md` `[NON-AUTHORITATIVE]` (**TESTING NEED** — gate checklist before any Cursor hook wiring; production posture is **no hooks**)
 - `README.md` `[NON-AUTHORITATIVE]` (root quick-start pointer to authority entrypoints)
 - `90_archive/` `[NON-AUTHORITATIVE]`
@@ -178,6 +179,13 @@ not the GitHub slug. Do not guess another pattern under this org for this lane.
     - `P10-kill-switch-master-reference.md` `[NON-AUTHORITATIVE]` (510 lines — binary shutdown architecture)
 
 ## Changelog
+
+### v62 — 2026-05-15
+
+- Added `00_authority/ESTATE-CHAOS-CASE-STUDY-2026-05-15.md` to **Reference only** as `[CURRENT BEST EVIDENCE]`. Forensic snapshot of the full Amplified Partners estate: 44 repos (38 org + 6 personal), 8 stubs, 7 duplicate pairs, ~1,420 incomplete-work markers, 8,010 corpus-raw files across 7 AI tool formats, 3,102 voice transcripts, £100–140k hidden engineering value, governance-vs-reality gap analysis, root cause, lessons learned, and 3-day remediation plan. Purpose: radical transparency and learning.
+- Note: v61 was consumed by PR #138 (Huf Haus shapes) which bumped version but did not add a changelog entry.
+
+Signed-by: Devon (Devin) | 2026-05-15 | devin-106e319e9c8a43eab8d09e00ab1046e3
 
 ### v60 — 2026-05-14
 

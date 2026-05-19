@@ -1,7 +1,7 @@
 ---
 title: Decision log
-date: 2026-05-13
-version: 22
+date: 2026-05-15
+version: 23
 status: draft
 ---
 
@@ -12,6 +12,14 @@ status: draft
 One entry per decision. Keep it short. Link out to supporting docs.
 
 ## Entries
+
+### 2026-05-15 — Estate Chaos Case Study: radical transparency forensic snapshot
+
+- **Decision**: Commit `00_authority/ESTATE-CHAOS-CASE-STUDY-2026-05-15.md` — a comprehensive forensic analysis of the full Amplified Partners digital estate. Documents: 44 repos (38 org + 6 personal stubs), 8 stubs, 7 duplicate pairs, ~1,420 incomplete-work markers, 8,010 corpus-raw files across 7 AI tool formats, 3,102 voice transcripts, £100–140k hidden engineering value, governance-vs-reality gap, root cause analysis, lessons learned, and a 3-day remediation plan. Filed under **Reference only** in MANIFEST (diagnostic, not policy).
+- **Why**: Ewan requested radical transparency — "other people can learn from how bad it is to not think about organisation from the start." This document is a history of learning, not an audit finding. It cites filesystem evidence throughout and makes no unsupported claims.
+- **Where encoded**: `00_authority/ESTATE-CHAOS-CASE-STUDY-2026-05-15.md`, `00_authority/MANIFEST.md` v62.
+- **Status**: active (Ewan verbal request in session).
+- **Signed-by**: Devon (Devin) | 2026-05-15 | devin-106e319e9c8a43eab8d09e00ab1046e3
 
 ### 2026-05-13 — Five Rods Auto-Review: replace manual authority-file block with structural Five Rods enforcement
 
