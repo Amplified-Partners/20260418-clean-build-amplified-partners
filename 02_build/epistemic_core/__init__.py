@@ -49,6 +49,15 @@ from epistemic_core.context_packet import (
     packet_to_context,
     context_to_frontmatter,
 )
+from epistemic_core.vellum_event import VellumEvent
+from epistemic_core.vellum_emitter import (
+    VellumEmitter,
+    VellumStore,
+    MemoryVellumStore,
+    JSONLBuffer,
+    ReconcilerResult,
+    reconcile,
+)
 
 # Backward compat alias — routing/ and vellum/ use EpistemicStatus
 EpistemicStatus = EpistemicTier
@@ -88,4 +97,12 @@ __all__ = [
     "PermissionsBlock",
     "packet_to_context",
     "context_to_frontmatter",
+    # Vellum witnessing (PR 5)
+    "VellumEvent",
+    "VellumEmitter",
+    "VellumStore",
+    "MemoryVellumStore",
+    "JSONLBuffer",
+    "ReconcilerResult",
+    "reconcile",
 ]
