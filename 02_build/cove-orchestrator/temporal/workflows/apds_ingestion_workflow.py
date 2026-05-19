@@ -18,6 +18,7 @@ schedule on first boot; subsequent worker restarts are idempotent.
 
 Signed-by: Devon-ad8f | 2026-05-09 | devin-ad8f2a94b2ca4d9a8e7690fcec0c11bb
 Modified-by: Devon-0de2 | 2026-05-11 | AMP-302 — manifest-first canonical pipeline
+Modified-by: Devon-d493 | 2026-05-19 | Add optional Stage 6 (curation) after canonical write
 """
 
 from __future__ import annotations
@@ -46,6 +47,11 @@ with workflow.unsafe.imports_passed_through():
         CanonicalWriterInput,
         write_canonical_vectors,
     )
+    from temporal.activities.curation_activities import (  # noqa: F401
+        CurationInput,
+        CurationPipelineResult,
+        run_curation_pipeline,
+    )
 
 # ── Schedule constants (Architect directive, AMP-158) ─────────────────
 # Cron: */10 * * * *  — every 10 minutes, on the minute.
@@ -63,6 +69,7 @@ class APDSIngestionInput:
     max_ingestion_workers: int = 8
     max_pudding_workers: int = 4
     pudding_limit: int = 0
+    enable_curation: bool = False  # opt-in via config flag
 
 
 @dataclass
@@ -244,10 +251,31 @@ class APDSIngestionWorkflow:
                 error=f"Canonical write failed: {e}",
             )
 
-        # ── Stage 5: Log & Return ─────────────────────────────────────
+        # ── Stage 5: Log pipeline run ─────────────────────────────────
         pipeline.status = "completed"
         pipeline.completed_at = workflow.now().isoformat()
         await self._log_run(pipeline)
+
+        # ── Stage 6: Curation (optional, post-write) ──────────────────
+        if input.enable_curation:
+            try:
+                curation_result = await workflow.execute_activity(
+                    run_curation_pipeline,
+                    args=[
+                        CurationInput(
+                            run_id_prefix=f"curation-{run_id}",
+                        )
+                    ],
+                    start_to_close_timeout=timedelta(minutes=30),
+                    retry_policy=retry,
+                )
+                if not curation_result.success:
+                    workflow.logger.warning(
+                        "Curation completed with errors: %s",
+                        curation_result.error,
+                    )
+            except Exception as e:
+                workflow.logger.warning("Curation stage failed (non-fatal): %s", e)
 
         return APDSIngestionResult(
             run_id=run_id,
