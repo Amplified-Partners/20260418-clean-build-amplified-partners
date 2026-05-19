@@ -39,6 +39,16 @@ from epistemic_core.drift import (
     DriftDetector,
     DriftSignal,
 )
+from epistemic_core.context_packet import (
+    ContextPacket,
+    CanonicalRefs,
+    RuntimeBlock,
+    CuratorBlock,
+    PuddingBlock,
+    PermissionsBlock,
+    packet_to_context,
+    context_to_frontmatter,
+)
 
 # Backward compat alias — routing/ and vellum/ use EpistemicStatus
 EpistemicStatus = EpistemicTier
@@ -69,4 +79,13 @@ __all__ = [
     # Drift
     "DriftDetector",
     "DriftSignal",
+    # Context Packet (PR 3)
+    "ContextPacket",
+    "CanonicalRefs",
+    "RuntimeBlock",
+    "CuratorBlock",
+    "PuddingBlock",
+    "PermissionsBlock",
+    "packet_to_context",
+    "context_to_frontmatter",
 ]
